@@ -6,7 +6,7 @@
 //  Copyright (c) 2012年 __MyCompanyName__. All rights reserved.
 //
 
-#import <UIKit/UIKit.h>
+#import "RFUI.h"
 
 @interface RFModalView : UIView 
 @property (RF_STRONG, nonatomic) UIView *contentView;

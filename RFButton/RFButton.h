@@ -5,7 +5,7 @@
     ver -.-.-
  */
 
-#import <UIKit/UIKit.h>
+#import "RFUI.h"
 
 @interface RFButton : UIView
 @property (RF_STRONG, nonatomic) __block IBOutlet UIButton *agentButton;

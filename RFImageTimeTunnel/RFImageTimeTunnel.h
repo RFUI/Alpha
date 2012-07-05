@@ -3,7 +3,7 @@
 	 ver 0.0.1
  */
 
-#import <UIKit/UIKit.h>
+#import "RFUI.h"
 
 enum RFImageTimeTunnelGestureMode {
 	RFImageTimeTunnelGestureModePosition = 0,

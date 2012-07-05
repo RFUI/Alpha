@@ -12,12 +12,8 @@
 @synthesize webPageTitle, lastWebPageTitle, webPageTitleLabel;
 @synthesize webPageTitleMonitor;
 
-- (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil {
-    self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
-    if (self) {
-		[self performSelector:@selector(doAfterInit) withObject:self afterDelay:0];
-    }
-    return self;
+- (void)awakeFromNib {
+    [self performSelector:@selector(doAfterInit) withObject:self afterDelay:0];
 }
 
 - (void)doAfterInit {
@@ -72,6 +68,7 @@
 }
 
 - (void)loadRequest:(NSURLRequest *)request {
+    douto(request)
 	[self.webView loadRequest:request];
 }
 

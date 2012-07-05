@@ -6,7 +6,7 @@
 //  Copyright (c) 2012年 Chinamobo. All rights reserved.
 //
 
-#import <UIKit/UIKit.h>
+#import "RFUI.h"
 
 @protocol RFTableViewCellDelegate;
 

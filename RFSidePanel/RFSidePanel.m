@@ -110,7 +110,9 @@ static CGFloat kToggleAnimateDuration = 0.5f;
     [super viewDidUnload];
 	self.root = nil;
 	self.masterView = nil;
-	[RFKit rls:vBarBg, vBarButton];
+    
+    RF_RELEASE_OBJ(vBarBg)
+    RF_RELEASE_OBJ(vBarButton)
 }
 
 

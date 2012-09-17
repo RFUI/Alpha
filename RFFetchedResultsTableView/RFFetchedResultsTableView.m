@@ -22,26 +22,27 @@
 }
 
 - (void)setupFetchController {
-    static dispatch_once_t oncePredicate;
-    dispatch_once(&oncePredicate, ^{
-        if (self.managedObjectContext && self.request) {
-            self.fetchController = [[NSFetchedResultsController alloc] initWithFetchRequest:self.request managedObjectContext:self.managedObjectContext sectionNameKeyPath:self.fetchSectionNameKeyPath cacheName:self.fetchCacheName];
-            self.fetchController.delegate = self;
-            [self performFetch];
-        }
-        
-        [self addObserver:self forKeyPath:@"request" options:NSKeyValueObservingOptionNew context:NULL];
-        [self addObserver:self forKeyPath:@"request.predicate" options:NSKeyValueObservingOptionNew context:NULL];
-        [self addObserver:self forKeyPath:@"request.sortDescriptors" options:NSKeyValueObservingOptionNew context:NULL];
-        [self addObserver:self forKeyPath:@"managedObjectContext" options:NSKeyValueObservingOptionNew context:NULL];
-    });
+    if (self.managedObjectContext && self.request) {
+        self.fetchController = [[NSFetchedResultsController alloc] initWithFetchRequest:self.request managedObjectContext:self.managedObjectContext sectionNameKeyPath:self.fetchSectionNameKeyPath cacheName:self.fetchCacheName];
+        self.fetchController.delegate = self;
+        [self performFetch];
+    }
+    
+    [self addObserver:self forKeyPath:@"request" options:NSKeyValueObservingOptionNew context:NULL];
+    [self addObserver:self forKeyPath:@"request.predicate" options:NSKeyValueObservingOptionNew context:NULL];
+    [self addObserver:self forKeyPath:@"request.sortDescriptors" options:NSKeyValueObservingOptionNew context:NULL];
+    [self addObserver:self forKeyPath:@"managedObjectContext" options:NSKeyValueObservingOptionNew context:NULL];
 }
 
 - (void)performFetch {
     if (self.fetchController) {
-        NSError *e = nil;
-        [self.fetchController performFetch:&e];
-        if (e) douto(e);
+        dispatch_async(dispatch_get_main_queue(), ^{
+            NSError *e = nil;
+            [self.fetchController performFetch:&e];
+            if (e) douto(e);
+            
+            [self reloadData];
+        });
     }
 }
 
@@ -74,7 +75,6 @@
         }
         return;
     }
-    
     [super observeValueForKeyPath:keyPath ofObject:object change:change context:context];
 }
 

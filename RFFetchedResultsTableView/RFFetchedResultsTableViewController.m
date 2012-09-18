@@ -1,10 +1,3 @@
-//
-//  RFFetchedResultsTableViewController.m
-//  MIPS
-//
-//  Created by BB9z on 12-9-13.
-//  Copyright (c) 2012年 __MyCompanyName__. All rights reserved.
-//
 
 #import "RFFetchedResultsTableViewController.h"
 
@@ -18,11 +11,7 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     
-    if (self.managedObjectContext && self.request) {
-        self.fetchController = [[NSFetchedResultsController alloc] initWithFetchRequest:self.request managedObjectContext:self.managedObjectContext sectionNameKeyPath:self.fetchSectionNameKeyPath cacheName:self.fetchCacheName];
-        self.fetchController.delegate = self;
-        [self performFetch];
-    }
+    [self setupFetchController];
     
     [self addObserver:self forKeyPath:@"request" options:NSKeyValueObservingOptionNew context:NULL];
     [self addObserver:self forKeyPath:@"request.predicate" options:NSKeyValueObservingOptionNew context:NULL];
@@ -30,11 +19,23 @@
     [self addObserver:self forKeyPath:@"managedObjectContext" options:NSKeyValueObservingOptionNew context:NULL];
 }
 
+- (void)setupFetchController {
+    if (self.managedObjectContext && self.request) {
+        self.fetchController = [[NSFetchedResultsController alloc] initWithFetchRequest:self.request managedObjectContext:self.managedObjectContext sectionNameKeyPath:self.fetchSectionNameKeyPath cacheName:self.fetchCacheName];
+        self.fetchController.delegate = self;
+        [self performFetch];
+    }
+}
+
 - (void)performFetch {
     if (self.fetchController) {
-        NSError *e = nil;
-        [self.fetchController performFetch:&e];
-        if (e) douto(e);
+        dispatch_async(dispatch_get_main_queue(), ^{
+            NSError *e = nil;
+            [self.fetchController performFetch:&e];
+            if (e) douto(e);
+            
+            [self.tableView reloadData];
+        });
     }
 }
 
@@ -48,8 +49,7 @@
 - (void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary *)change context:(void *)context {
     if ([keyPath isEqualToString:@"request"]) {
         if (self.managedObjectContext) {
-            self.fetchController = [[NSFetchedResultsController alloc] initWithFetchRequest:self.request managedObjectContext:self.managedObjectContext sectionNameKeyPath:self.fetchSectionNameKeyPath cacheName:self.fetchCacheName];
-            [self performFetch];
+            [self setupFetchController];
         }
         return;
     }
@@ -61,10 +61,7 @@
     }
     
     if ([keyPath isEqualToString:@"managedObjectContext"]) {
-        if (self.request) {
-            self.fetchController = [[NSFetchedResultsController alloc] initWithFetchRequest:self.request managedObjectContext:self.managedObjectContext sectionNameKeyPath:self.fetchSectionNameKeyPath cacheName:self.fetchCacheName];
-            [self performFetch];
-        }
+        [self setupFetchController];
         return;
     }
 
@@ -76,9 +73,15 @@
 
 #pragma mark - UITableViewDataSource
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
+    if (self.cellForRowAtIndexPathBlock) {
+        return self.cellForRowAtIndexPathBlock(tableView, indexPath);
+    }
+    
     static NSString *CellIdentifier = @"Cell";
     UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:CellIdentifier];
-    [self configureCell:cell atIndexPath:indexPath];
+    if (self.cellConfigureBlock) {
+        self.cellConfigureBlock(cell, indexPath);
+    }
     return cell;
 }
 
@@ -95,7 +98,6 @@
 #pragma mark - NSFetchedResultsControllerDelegate
 - (void)controllerWillChangeContent:(NSFetchedResultsController *)controller {
 	UITableView *table = self.tableView;
-    // The fetch controller is about to start sending change notifications, so prepare the table view for updates.
 	[table beginUpdates];
 }
 
@@ -112,12 +114,12 @@
 			break;
 			
 		case NSFetchedResultsChangeUpdate:
-			[self configureCell:[table cellForRowAtIndexPath:indexPath] atIndexPath:newIndexPath];
+			if (self.cellConfigureBlock) {
+                self.cellConfigureBlock([table cellForRowAtIndexPath:indexPath], indexPath);
+            }
 			break;
 			
 		case NSFetchedResultsChangeMove:
-//			[table deleteRowsAtIndexPaths:[NSArray arrayWithObject:indexPath] withRowAnimation:UITableViewRowAnimationAutomatic];
-//            [table insertRowsAtIndexPaths:[NSArray arrayWithObject:newIndexPath] withRowAnimation:UITableViewRowAnimationAutomatic];
             [table moveRowAtIndexPath:[NSArray arrayWithObject:indexPath] toIndexPath:[NSArray arrayWithObject:newIndexPath]];
 			break;
 	}
@@ -145,7 +147,6 @@
 
 - (void)controllerDidChangeContent:(NSFetchedResultsController *)controller {
 	UITableView *table = self.tableView;
-    // The fetch controller has sent all current change notifications, so tell the table view to process all updates.
 	[table endUpdates];
 }
 

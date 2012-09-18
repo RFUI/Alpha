@@ -11,11 +11,17 @@
 - (void)awakeFromNib {
     [super awakeFromNib];
     
+    if (self.dataSource == nil) {
+        self.dataSource = self;
+    }
+    
+    [self registObservers];
     [self setupFetchController];
 }
 
 - (id)initWithFrame:(CGRect)frame style:(UITableViewStyle)style {
     if (self = [super initWithFrame:frame style:style]) {
+        [self registObservers];
         [self setupFetchController];
     }
     return self;
@@ -27,11 +33,6 @@
         self.fetchController.delegate = self;
         [self performFetch];
     }
-    
-    [self addObserver:self forKeyPath:@"request" options:NSKeyValueObservingOptionNew context:NULL];
-    [self addObserver:self forKeyPath:@"request.predicate" options:NSKeyValueObservingOptionNew context:NULL];
-    [self addObserver:self forKeyPath:@"request.sortDescriptors" options:NSKeyValueObservingOptionNew context:NULL];
-    [self addObserver:self forKeyPath:@"managedObjectContext" options:NSKeyValueObservingOptionNew context:NULL];
 }
 
 - (void)performFetch {
@@ -46,6 +47,13 @@
     }
 }
 
+- (void)registObservers {
+    [self addObserver:self forKeyPath:@"request" options:NSKeyValueObservingOptionNew context:NULL];
+    [self addObserver:self forKeyPath:@"request.predicate" options:NSKeyValueObservingOptionNew context:NULL];
+    [self addObserver:self forKeyPath:@"request.sortDescriptors" options:NSKeyValueObservingOptionNew context:NULL];
+    [self addObserver:self forKeyPath:@"managedObjectContext" options:NSKeyValueObservingOptionNew context:NULL];
+}
+
 - (void)dealloc {
     [self removeObserver:self forKeyPath:@"request"];
     [self removeObserver:self forKeyPath:@"request.predicate"];
@@ -56,8 +64,7 @@
 - (void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary *)change context:(void *)context {
     if ([keyPath isEqualToString:@"request"]) {
         if (self.managedObjectContext) {
-            self.fetchController = [[NSFetchedResultsController alloc] initWithFetchRequest:self.request managedObjectContext:self.managedObjectContext sectionNameKeyPath:self.fetchSectionNameKeyPath cacheName:self.fetchCacheName];
-            [self performFetch];
+            [self setupFetchController];
         }
         return;
     }
@@ -70,8 +77,7 @@
     
     if ([keyPath isEqualToString:@"managedObjectContext"]) {
         if (self.request) {
-            self.fetchController = [[NSFetchedResultsController alloc] initWithFetchRequest:self.request managedObjectContext:self.managedObjectContext sectionNameKeyPath:self.fetchSectionNameKeyPath cacheName:self.fetchCacheName];
-            [self performFetch];
+            [self setupFetchController];
         }
         return;
     }
@@ -80,6 +86,10 @@
 
 #pragma mark - UITableViewDataSource
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
+    if (self.cellForRowAtIndexPathBlock) {
+        return self.cellForRowAtIndexPathBlock(tableView, indexPath);
+    }
+    
     static NSString *CellIdentifier = @"Cell";
     UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:CellIdentifier];
     if (self.cellConfigureBlock) {
@@ -106,7 +116,6 @@
 - (void)controller:(NSFetchedResultsController *)controller didChangeObject:(id)anObject atIndexPath:(NSIndexPath *)indexPath forChangeType:(NSFetchedResultsChangeType)type newIndexPath:(NSIndexPath *)newIndexPath {
 	UITableView *table = self;
 	switch(type) {
-			
 		case NSFetchedResultsChangeInsert:
 			[table insertRowsAtIndexPaths:[NSArray arrayWithObject:newIndexPath] withRowAnimation:UITableViewRowAnimationAutomatic];
 			break;

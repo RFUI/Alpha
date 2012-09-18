@@ -23,7 +23,11 @@
 @property (copy, nonatomic) NSString *fetchCacheName;
 @property (copy, nonatomic) NSString *fetchSectionNameKeyPath;
 
+@property (copy, nonatomic) void (^cellConfigureBlock)(UITableViewCell *cell,  NSIndexPath *indexPath);
 
-- (void)configureCell:(UITableViewCell *)cell atIndexPath:(NSIndexPath *)indexPath;
-
+/**
+ If this block was set, cellConfigureBlock won`t call in tableView:cellForRowAtIndexPath:.
+ But cellConfigureBlock will still call when fetch result change.
+ */
+@property (copy, nonatomic) UITableViewCell *(^cellForRowAtIndexPathBlock)(UITableView *tableView,  NSIndexPath *indexPath);
 @end

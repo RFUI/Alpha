@@ -1,25 +1,27 @@
 /*!
 	RFUI SidePanel
-	ver 0.2.0
+	ver 0.3.0
  */
 
 #import "RFKit.h"
 
-@interface RFSidePanel : UIViewController {
+@interface RFSidePanel : UIViewController
+<UIGestureRecognizerDelegate>
+{
 	IBOutlet UIImageView * vBarBg;
 	IBOutlet UIButton * vBarButton;
 }
 
-@property (RF_STRONG, nonatomic) IBOutlet UIView * masterView;
-@property ( nonatomic, assign) IBOutlet UIView * root;
-@property (nonatomic, assign) BOOL isShow;
+@property (RF_WEAK, nonatomic) IBOutlet UIView * masterView;
+@property (readonly, nonatomic) BOOL isShow;
 
-- (id)initWithManagedView:(UIView *)root;
+- (id)initWithRootController:(UIViewController *)parent;
 
 - (void)show:(BOOL)animated;
 - (void)hide:(BOOL)animated;
+- (BOOL)toggle:(BOOL)animated;
+- (IBAction)onSwipeLeft:(UISwipeGestureRecognizer *)sender;
+- (IBAction)onSwipRight:(UISwipeGestureRecognizer *)sender;
+- (IBAction)onPanelDragging:(UIPanGestureRecognizer *)sender;
 
-// 返回是否显示
-- (BOOL)toggle;
-- (void)savePreferences;
 @end

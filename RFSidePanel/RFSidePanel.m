@@ -2,21 +2,47 @@
 
 static CGFloat kToggleAnimateDuration = 0.5f;
 
-@implementation RFSidePanel
-@synthesize masterView = _masterView;
-@synthesize root = _root, isShow = _isShow;
+@interface RFSidePanel ()
+@property (readwrite, nonatomic) BOOL isShow;
+@end
 
-- (id)initWithManagedView:(UIView *)root {
-    self = [super initWithNibName:@"SidePanel" bundle:nil];
+@implementation RFSidePanel
+RFUIInterfaceOrientationSupportAll
+
+- (id)initWithRootController:(UIViewController *)parent {
+    self = [super initWithNibName:@"RFSidePanel" bundle:nil];
     if (self) {
         // Custom initialization
-		self.root = root;
+        [parent addChildViewController:self];
+        self.view.autoresizingMask = UIViewAutoresizingFlexibleHeight | UIViewAutoresizingFlexibleRightMargin;
+        [parent.view addSubview:self.view resizeOption:RFViewResizeOptionOnlyHeight];
     }
     return self;
 }
 
-- (void)didReceiveMemoryWarning {
-    [super didReceiveMemoryWarning];
+- (void)viewDidLoad {
+    [super viewDidLoad];
+    
+    UISwipeGestureRecognizer * recognizer;
+	recognizer = [[UISwipeGestureRecognizer alloc] initWithTarget:self action:@selector(onSwipRight:)];
+	recognizer.direction = UISwipeGestureRecognizerDirectionRight;
+	[self.view addGestureRecognizer:recognizer];
+    RF_RELEASE_OBJ(recognizer)
+	
+	recognizer = [[UISwipeGestureRecognizer alloc] initWithTarget:self action:@selector(onSwipeLeft:)];
+	recognizer.direction = UISwipeGestureRecognizerDirectionLeft;
+	[self.view addGestureRecognizer:recognizer];
+    RF_RELEASE_OBJ(recognizer)
+}
+
+- (void)viewWillAppear:(BOOL)animated {
+    [super viewWillAppear:animated];
+    
+    static dispatch_once_t onceToken;
+    dispatch_once(&onceToken, ^{
+        _isShow = !_isShow;
+        [self toggle:NO];
+    });
 }
 
 - (void)show:(BOOL)animated {
@@ -25,15 +51,15 @@ static CGFloat kToggleAnimateDuration = 0.5f;
 	if(animated) {
 		[vBarButton setImage:[UIImage resourceName:@"SidePanel-off.active"] forState:UIControlStateNormal];
 		
-		[UIView animateWithDuration:kToggleAnimateDuration delay:0 options:UIViewAnimationOptionCurveEaseInOut animations:^{
-			[self.view moveToX:0 Y:CGFLOAT_MAX];
+		[UIView animateWithDuration:kToggleAnimateDuration delay:0 options:UIViewAnimationOptionCurveEaseInOut|UIViewAnimationOptionBeginFromCurrentState animations:^{
+			[self.view moveToX:0 Y:RFMathNotChange];
 		} completion:^(BOOL finished) {
 			[vBarButton setImage:[UIImage resourceName:@"SidePanel-on"] forState:UIControlStateNormal];
 			[vBarButton setImage:[UIImage resourceName:@"SidePanel-on.active"] forState:UIControlStateHighlighted];
 		}];
 	}
 	else {
-		[self.view moveToX:0 Y:CGFLOAT_MAX];
+		[self.view moveToX:0 Y:RFMathNotChange];
 		[vBarButton setImage:[UIImage resourceName:@"SidePanel-on"] forState:UIControlStateNormal];
 		[vBarButton setImage:[UIImage resourceName:@"SidePanel-on.active"] forState:UIControlStateHighlighted];
 	}
@@ -46,78 +72,84 @@ static CGFloat kToggleAnimateDuration = 0.5f;
 	if(animated) {
 		[vBarButton setImage:[UIImage resourceName:@"SidePanel-on.active"] forState:UIControlStateNormal];
 		
-		[UIView animateWithDuration:kToggleAnimateDuration delay:0 options:UIViewAnimationOptionCurveEaseInOut animations:^{
-			[self.view moveToX:-_masterView.bounds.size.width Y:CGFLOAT_MAX];
+		[UIView animateWithDuration:kToggleAnimateDuration delay:0 options:UIViewAnimationOptionCurveEaseInOut|UIViewAnimationOptionBeginFromCurrentState animations:^{
+			[self.view moveToX:-_masterView.bounds.size.width Y:RFMathNotChange];
 		} completion:^(BOOL finished) {
 			[vBarButton setImage:[UIImage resourceName:@"SidePanel-off"] forState:UIControlStateNormal];
 			[vBarButton setImage:[UIImage resourceName:@"SidePanel-off.active"] forState:UIControlStateHighlighted];
 		}];
 	}
 	else {
-		[self.view moveToX:-_masterView.bounds.size.width Y:CGFLOAT_MAX];
+		[self.view moveToX:-_masterView.bounds.size.width Y:RFMathNotChange];
 		[vBarButton setImage:[UIImage resourceName:@"SidePanel-off"] forState:UIControlStateNormal];
 		[vBarButton setImage:[UIImage resourceName:@"SidePanel-off.active"] forState:UIControlStateHighlighted];
 	}
 	_isShow = NO;
 }
 
-- (BOOL)toggle {
+- (BOOL)toggle:(BOOL)animated {
 	if(_isShow) {
-		[self hide:YES];
+		[self hide:animated];
 	}
 	else {
-		[self show:YES];
+		[self show:animated];
 	}
 	return _isShow;
 }
 
-- (void)viewDidLoad
-{
-    [super viewDidLoad];
-	[self.masterView addSubview:self.root];
-	
-	// 默认认为自己是展开的
-	_isShow = true;
-	if (![[NSUserDefaults standardUserDefaults] boolForKey:@"RFSidePanel_isShow"]) {
-		[self hide:NO];
-	}
-	
-	[self performSelector:@selector(doAfterViewLoad) withObject:nil afterDelay:0.f];
+- (IBAction)onSwipeLeft:(UISwipeGestureRecognizer *)sender {
+    [self hide:YES];
 }
 
--(void)doAfterViewLoad {
-	UISwipeGestureRecognizer * recognizer;
-	recognizer = [[UISwipeGestureRecognizer alloc] initWithTarget:self action:@selector(show:)];
-	recognizer.direction = UISwipeGestureRecognizerDirectionRight;
-	[self.view addGestureRecognizer:recognizer];
-    RF_RELEASE_OBJ(recognizer)
-	
-	recognizer = [[UISwipeGestureRecognizer alloc] initWithTarget:self action:@selector(hide:)];
-	recognizer.direction = UISwipeGestureRecognizerDirectionLeft;
-	[self.view addGestureRecognizer:recognizer];
-    RF_RELEASE_OBJ(recognizer)
-	
-	[vBarButton addTarget:self action:@selector(toggle) forControlEvents:UIControlEventTouchUpInside];
-	
-	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(savePreferences) name:@"MSGRFUISavePreferences" object:nil];
+- (IBAction)onSwipRight:(UISwipeGestureRecognizer *)sender {
+    [self show:YES];
 }
 
-- (void)savePreferences {
-	[[NSUserDefaults standardUserDefaults] setBool:_isShow forKey:@"RFSidePanel_isShow"];
-}
-
-- (void)viewDidUnload {
-    [super viewDidUnload];
-	self.root = nil;
-	self.masterView = nil;
+- (IBAction)onPanelDragging:(UIPanGestureRecognizer *)sender {
+    CGFloat x = [sender translationInView:self.view].x;
+    CGFloat wBounds = self.masterView.bounds.size.width;
+    CGFloat xFrame = self.view.frame.origin.x;
     
-    RF_RELEASE_OBJ(vBarBg)
-    RF_RELEASE_OBJ(vBarButton)
+    static CGFloat xStartFrame;
+    
+    switch (sender.state) {
+        case UIGestureRecognizerStateBegan:
+            _douts(@"UIGestureRecognizerStateBegan")
+            xStartFrame = xFrame;
+            break;
+            
+        case UIGestureRecognizerStateChanged:
+            _douts(@"UIGestureRecognizerStateChanged")
+            if (xStartFrame+x < 0) {
+                [self.view moveToX:xStartFrame+x Y:RFMathNotChange];
+            }
+            break;
+            
+        case UIGestureRecognizerStateFailed:            
+        case UIGestureRecognizerStateCancelled:
+        case UIGestureRecognizerStateEnded:
+            _douts(@"UIGestureRecognizerStateRecognized")
+            if (ABS(x) > wBounds*0.5) {
+                if (x > 0) {
+                    [self show:YES];
+                }
+                else {
+                    [self hide:YES];
+                }
+            }
+            else {
+                _isShow = !_isShow;
+                [self toggle:YES];
+            }
+            break;
+            
+        default:
+            break;
+    }
 }
 
-
-- (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation {
-	return YES;
+- (IBAction)onBarButtonTapped:(id)sender {
+    [self toggle:YES];
 }
 
 @end

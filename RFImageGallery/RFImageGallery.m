@@ -53,11 +53,11 @@
 
 #pragma mark 滑动方法
 - (void)scrollToIndex:(NSUInteger)toIndex animated:(BOOL)animated {
-    if (self.index == toIndex) {
+    if (self.index == toIndex || toIndex == NSUIntegerMax) {
         return;
     }
     
-    if (self.index >= _imageCountCached) {
+    if (toIndex >= _imageCountCached) {
         [self scrollToIndex:(_imageCountCached-1) animated:animated];
         return;
     }
@@ -115,7 +115,6 @@
     
     // 更新缓存变量
     _imageCountCached = [self.dataSource numberOfImageInGallery:self];
-    _cellWidthCached = self.frame.size.width;
     dout_int(_imageCountCached)
     
     [self scrollToIndex:0 animated:NO];
@@ -151,6 +150,7 @@
     if ([keyPath isEqualToString:@"frame"]) {
         dout_int(_imageCountCached)
         dout_float(_cellWidthCached)
+        _cellWidthCached = self.frame.size.width;
         self.contentSize = CGSizeMake(_imageCountCached*_cellWidthCached, 0);
         return;
     }

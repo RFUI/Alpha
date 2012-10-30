@@ -20,6 +20,8 @@
 - (void)reloadData;
 
 @property (assign, nonatomic) NSUInteger index;
+
+/// 动画还不支持
 - (void)scrollToIndex:(NSUInteger)toIndex animated:(BOOL)animated;
 
 @property (RF_STRONG, nonatomic) IBOutlet RFImageGalleryScrollContainer *scrollContainer;
@@ -39,6 +41,7 @@
 
 /// 
 @interface RFImageGalleryCell : UIScrollView
+<UIScrollViewDelegate>
 @property (RF_STRONG, nonatomic) IBOutlet UIImageView *imageView;
 @property (assign, nonatomic) NSUInteger index;
 

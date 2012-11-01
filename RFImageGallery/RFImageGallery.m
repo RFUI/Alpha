@@ -5,7 +5,7 @@
     /// 滚动一页超过百分之多少时认为翻页，这可以避免在硬分界出现的抖动，默认80%
     CGFloat pageChangeTolerance;
     
-    __block BOOL isFrameChanging;
+    BOOL isFastMoving;
 }
 @property (assign, nonatomic) NSUInteger imageCountCached;
 @property (assign, nonatomic) CGFloat cellWidthCached;
@@ -47,11 +47,29 @@
         [self addSubview:self.scrollContainer];
     }
     
-    [self reloadData];
-    
-    [self addObserver:self forKeyPath:@"contentOffset" options:NSKeyValueObservingOptionNew context:NULL];
-    [self addObserver:self forKeyPath:@"frame" options:NSKeyValueObservingOptionNew context:NULL];
-    [self addObserver:self forKeyPath:@"index" options:NSKeyValueObservingOptionNew context:NULL];
+//    [self performSelector:@selector(reloadData) withObject:self afterDelay:0];
+}
+
+- (void)willMoveToWindow:(UIWindow *)newWindow {
+    [super willMoveToWindow:newWindow];
+    if (newWindow) {
+        [self addObserver:self forKeyPath:@"contentOffset" options:NSKeyValueObservingOptionNew context:NULL];
+        [self addObserver:self forKeyPath:@"frame" options:NSKeyValueObservingOptionNew context:NULL];
+        [self addObserver:self forKeyPath:@"index" options:NSKeyValueObservingOptionNew context:NULL];
+        static dispatch_once_t onceToken;
+        dispatch_once(&onceToken, ^{
+            [self reloadData];
+        });
+    }
+    else {
+        [self removeObserver:self forKeyPath:@"contentOffset"];
+        [self removeObserver:self forKeyPath:@"frame"];
+        [self removeObserver:self forKeyPath:@"index"];
+    }
+}
+
+- (void)dealloc {
+    doutwork()
 }
 
 /// 初始化时会调用
@@ -59,6 +77,7 @@
     doutwork()
     if (![self checkDateSource]) return;
     _imageCountCached = [self.dataSource numberOfImageInGallery:self];
+    _cellWidthCached = self.frame.size.width;
     
     [self scrollToIndex:0 animated:NO forced:YES];
 }
@@ -83,6 +102,7 @@
     }
     
     if (animated) {
+        isFastMoving = YES;
         [self setContentOffset:CGPointMake(_cellWidthCached*toIndex, 0) animated:YES];
     }
     else {
@@ -123,22 +143,23 @@
     [self.scrollContainer.lCell setImage:[self imageForIndex:index-1]];
     [self.scrollContainer.mCell setImage:[self imageForIndex:index]];
     [self.scrollContainer.rCell setImage:[self imageForIndex:index+1]];
-    [self.scrollContainer layoutCells];
+//    [self.scrollContainer layoutCells];
 }
 
 - (void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary *)change context:(void *)context {
     if ([keyPath isEqualToString:@"contentOffset"]) {
-        if (_cellWidthCached == 0) return;
-        
-        if (self.isDragging) {
+        // 仅当拖拽
+        if (self.isDragging || isFastMoving) {
+            if (_cellWidthCached == 0) return;
+            
             CGFloat pageDiff = self.contentOffset.x/_cellWidthCached - _index;
-            dout_float(self.contentOffset.x)
-            _dout_float(pageDiff)
-            dout_int(_index)
-            dout_float(_cellWidthCached)
-            dout_rect(self.scrollContainer.frame)
-            dout_size(self.contentSize)
-            douto(self.scrollContainer.subviews)
+            //            dout_float(self.contentOffset.x)
+            //            _dout_float(pageDiff)
+            //            dout_int(_index)
+            //            dout_float(_cellWidthCached)
+            //            dout_rect(self.scrollContainer.frame)
+            //            dout_size(self.contentSize)
+            //            douto(self.scrollContainer.subviews)
             
             if (ABS(pageDiff) > pageChangeTolerance) {
                 if (pageDiff > 0) {
@@ -151,17 +172,14 @@
             
             NSAssert(_index >= 0, @"");
         }
-        
-        
         return;
     }
     
     if ([keyPath isEqualToString:@"frame"]) {
-        NSAssert(self.scrollContainer.frame.size.width > 0, @"");
         CGRect frame = self.frame;
         if (frame.size.width > 0) {
-            isFrameChanging = YES;
             _cellWidthCached = frame.size.width;
+            dout_float(_cellWidthCached)
             
             self.contentSize = CGSizeMake(_imageCountCached*_cellWidthCached, 0);
             [self setContentOffset:CGPointMake(_index*_cellWidthCached, 0) animated:NO];
@@ -208,46 +226,25 @@
 
 - (id)initWithMaster:(RFImageGallery *)master {
     CGRect frame = master.bounds;
-    dout_rect(frame)
-    CGFloat wCell = frame.size.width;
-    CGFloat hCell = frame.size.height;
     frame.size.width = frame.size.width*3;
     
     self = [super initWithFrame:frame];
     if (self) {
-        self.backgroundColor = [UIColor colorWithRGBHex:0xFFFFFF alpha:0.5];
-        
-        self.lCell = [[RFImageGalleryCell alloc] initWithFrame:CGRectMake(0, 0, wCell, hCell)];
-        self.mCell = [[RFImageGalleryCell alloc] initWithFrame:CGRectMake(wCell, 0, wCell, hCell)];
-        self.rCell = [[RFImageGalleryCell alloc] initWithFrame:CGRectMake(wCell*2, 0, wCell, hCell)];
-        
         if (RFUIDebugEnableRandomBackgroundColor) {
-            _lCell.backgroundColor = [UIColor randColorWithAlpha:.5];
-            _mCell.backgroundColor = [UIColor randColorWithAlpha:.5];
-            _rCell.backgroundColor = [UIColor randColorWithAlpha:.5];
+            self.backgroundColor = [UIColor colorWithRGBHex:0xFFFFFF alpha:0.5];
         }
         
-        UIViewAutoresizing mask = UIViewAutoresizingFlexibleHeight | UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleRightMargin |UIViewAutoresizingFlexibleLeftMargin;
-        _lCell.autoresizingMask = mask;
-        _mCell.autoresizingMask = mask;
-        _rCell.autoresizingMask = mask;
-
-        [self addSubview:_lCell];
-        [self addSubview:_mCell];
-        [self addSubview:_rCell];
-
-        douto(self.subviews)
+        [self setupCellFromNib:NO];
     }
     return self;
 }
 
-- (void)awakeFromNib {
-    [super awakeFromNib];
-    
+- (void)setupCellFromNib:(BOOL)isLoadFromNib {
     CGRect frame = self.bounds;
-    CGFloat wCell = frame.size.width;
+    CGFloat wCell = frame.size.width/3;
     CGFloat hCell = frame.size.height;
     
+    NSAssert(wCell == 300, @"");
     if (!self.lCell) {
         self.lCell = [[RFImageGalleryCell alloc] initWithFrame:CGRectMake(0, 0, wCell, hCell)];
         [self addSubview:_lCell];
@@ -260,10 +257,30 @@
         self.rCell = [[RFImageGalleryCell alloc] initWithFrame:CGRectMake(wCell*2, 0, wCell, hCell)];
         [self addSubview:_rCell];
     }
+    
+    if (!isLoadFromNib) {
+        if (RFUIDebugEnableRandomBackgroundColor) {
+            _lCell.backgroundColor = [UIColor randColorWithAlpha:.5];
+            _mCell.backgroundColor = [UIColor randColorWithAlpha:.5];
+            _rCell.backgroundColor = [UIColor randColorWithAlpha:.5];
+        }
+        
+        UIViewAutoresizing mask = UIViewAutoresizingFlexibleHeight | UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleRightMargin | UIViewAutoresizingFlexibleLeftMargin;
+        _lCell.autoresizingMask = mask;
+        _mCell.autoresizingMask = mask;
+        _rCell.autoresizingMask = mask;
+    }
+}
+
+- (void)awakeFromNib {
+    [super awakeFromNib];
+    [self setupCellFromNib:YES];
 }
 
 - (void)layoutCells {
     NSAssert(self.bounds.size.width > 0, @"");
+    dout_rect(self.bounds)
+    dout_rect(self.frame)
     CGRect frame = self.bounds;
     CGFloat cellWidth = frame.size.width/3;
     CGFloat cellHeight = frame.size.height;
@@ -271,6 +288,7 @@
     self.lCell.frame = CGRectMake(0, 0, cellWidth, cellHeight);
     self.mCell.frame = CGRectMake(cellWidth, 0, cellWidth, cellHeight);
     self.rCell.frame = CGRectMake(cellWidth*2, 0, cellWidth, cellHeight);
+    douto(self.subviews)
 }
 
 - (void)layoutExchangeCellToLeft {
@@ -279,7 +297,10 @@
     self.lCell = self.rCell;
     self.rCell = tmpCell;
     
-    [self layoutCells];
+    CGRect tmpFrame = self.mCell.frame;
+    self.mCell.frame = self.rCell.frame;
+    self.rCell.frame = self.lCell.frame;
+    self.lCell.frame = tmpFrame;
 }
 - (void)layoutExchangeCellToRight {
     __strong RFImageGalleryCell *tmpCell = self.mCell;
@@ -287,7 +308,10 @@
     self.rCell = self.lCell;
     self.lCell = tmpCell;
     
-    [self layoutCells];
+    CGRect tmpFrame = self.mCell.frame;
+    self.mCell.frame = self.lCell.frame;
+    self.lCell.frame = self.rCell.frame;
+    self.rCell.frame = tmpFrame;
 }
 
 @end
@@ -299,11 +323,15 @@
     if (self = [super initWithFrame:frame]) {
         self.imageView = [[UIImageView alloc] initWithFrame:self.frame];
         _imageView.contentMode = UIViewContentModeScaleAspectFit;
-        _imageView.autoresizingMask = UIViewAutoresizingFlexibleHeight | UIViewAutoresizingFlexibleWidth;
+        _imageView.autoresizingMask = UIViewAutoresizingFlexibleHeight | UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleBottomMargin | UIViewAutoresizingFlexibleTopMargin | UIViewAutoresizingFlexibleLeftMargin | UIViewAutoresizingFlexibleRightMargin;
         [self addSubview:_imageView resizeOption:RFViewResizeOptionFill];
-        self.minimumZoomScale = 0.3;
+        self.minimumZoomScale = 0.5;
         self.maximumZoomScale = 2.0;
         self.delegate = self;
+        
+        self.contentSize = self.bounds.size;
+        dout_size(self.contentSize)
+        douts(@"RFImageGalleryCell init end")
     }
     return self;
 }
@@ -313,20 +341,33 @@
 
 }
 
+- (void)scrollViewDidEndZooming:(UIScrollView *)scrollView withView:(UIView *)view atScale:(float)scale {
+    dout_float(scale)
+}
+
 - (UIView *)viewForZoomingInScrollView:(UIScrollView *)scrollView {
     return self.imageView;
 }
 
+- (void)layoutSubviews {
+    [super layoutSubviews];
+    dout_size(self.contentSize)
+}
 
-- (void)setImage:(UIImage *)image {
-    if (image == nil) {
-        dout_info(@"nil image!")
-    }
+- (void)setImage:(UIImage *)image {    
     if (self.imageView == nil) {
-        dout_info(@"no view image!")
+        dout_warning(@"no view image!")
     }
-    self.imageView.image = image;
-    self.imageView.frame = CGRectResize(self.imageView.frame, image.size, RFResizeAnchorTopLeft);
+    
+    if (self.imageView.image != image) {
+        self.imageView.image = image;
+        
+        _dout_size(image.size);
+        _dout_size(self.bounds.size)
+        _dout_float(self.zoomScale)
+        self.zoomScale = 1;
+        self.contentSize = self.bounds.size;
+    }
 }
 
 @end

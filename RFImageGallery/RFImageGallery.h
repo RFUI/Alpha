@@ -15,6 +15,7 @@
 
 /// 
 @interface RFImageGallery : UIScrollView
+<UIScrollViewDelegate>
 
 @property (RF_WEAK, nonatomic) IBOutlet id<RFImageGalleryDataSource> dataSource;
 - (void)reloadData;

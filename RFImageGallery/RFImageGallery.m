@@ -39,15 +39,6 @@
 - (void)setup {
     pageChangeTolerance = 0.8;
     _index = 0;
-    _cellWidthCached = self.frame.size.width;
-    
-    if (self.scrollContainer == nil) {
-        self.scrollContainer = [[RFImageGalleryScrollContainer alloc] initWithMaster:self];
-        self.scrollContainer.autoresizingMask = UIViewAutoresizingFlexibleHeight|UIViewAutoresizingFlexibleWidth;
-        [self addSubview:self.scrollContainer];
-    }
-    
-//    [self performSelector:@selector(reloadData) withObject:self afterDelay:0];
 }
 
 - (void)willMoveToWindow:(UIWindow *)newWindow {
@@ -58,6 +49,16 @@
         [self addObserver:self forKeyPath:@"index" options:NSKeyValueObservingOptionNew context:NULL];
         static dispatch_once_t onceToken;
         dispatch_once(&onceToken, ^{
+            _douts(@"dispatch_once");
+            _dout_rect(self.frame)
+            _cellWidthCached = self.frame.size.width;
+            
+            if (self.scrollContainer == nil) {
+                self.scrollContainer = [[RFImageGalleryScrollContainer alloc] initWithMaster:self];
+                self.scrollContainer.autoresizingMask = UIViewAutoresizingFlexibleHeight|UIViewAutoresizingFlexibleWidth;
+                [self addSubview:self.scrollContainer];
+            }
+            
             [self reloadData];
         });
     }
@@ -74,7 +75,7 @@
 
 /// 初始化时会调用
 - (void)reloadData {
-    doutwork()
+    _doutwork()
     if (![self checkDateSource]) return;
     _imageCountCached = [self.dataSource numberOfImageInGallery:self];
     _cellWidthCached = self.frame.size.width;
@@ -121,29 +122,28 @@
 //    NSAssert(!CGRectEqualToRect(self.scrollContainer.lCell.frame, self.scrollContainer.rCell.frame) , @"");
     
     if (toIndex == 0) {
-//        self.scrollContainer.frame = CGRectMake(-_cellWidthCached, 0, _cellWidthCached*3, self.frame.size.height);
-        [self.scrollContainer moveToX:-_cellWidthCached Y:RFMathNotChange];
+        self.scrollContainer.frame = CGRectMake(-_cellWidthCached, 0, _cellWidthCached*3, self.frame.size.height);
+//        [self.scrollContainer moveToX:-_cellWidthCached Y:RFMathNotChange];
     }
     else if (toIndex == _imageCountCached) {
-//        self.scrollContainer.frame = CGRectMake(toIndex*_cellWidthCached, 0, _cellWidthCached*3, self.frame.size.height);
+        self.scrollContainer.frame = CGRectMake(toIndex*_cellWidthCached, 0, _cellWidthCached*3, self.frame.size.height);
 
-        [self.scrollContainer moveToX:toIndex*_cellWidthCached Y:RFMathNotChange];
+//        [self.scrollContainer moveToX:toIndex*_cellWidthCached Y:RFMathNotChange];
     }
     else {
-//        self.scrollContainer.frame = CGRectMake((toIndex-1)*_cellWidthCached, 0, _cellWidthCached*3, self.frame.size.height);
+        self.scrollContainer.frame = CGRectMake((toIndex-1)*_cellWidthCached, 0, _cellWidthCached*3, self.frame.size.height);
 
-        [self.scrollContainer moveToX:(toIndex-1)*_cellWidthCached Y:RFMathNotChange];
+//        [self.scrollContainer moveToX:(toIndex-1)*_cellWidthCached Y:RFMathNotChange];
     }
 //    NSAssert(!CGRectEqualToRect(self.scrollContainer.lCell.frame, self.scrollContainer.rCell.frame) , @"");
 }
 
-/// 当index改变时调整图像和子视图位置
+/// 当index改变时调整图像
 - (void)setupCellForIndex:(NSUInteger)index {
     _doutwork()
     [self.scrollContainer.lCell setImage:[self imageForIndex:index-1]];
     [self.scrollContainer.mCell setImage:[self imageForIndex:index]];
     [self.scrollContainer.rCell setImage:[self imageForIndex:index+1]];
-//    [self.scrollContainer layoutCells];
 }
 
 - (void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary *)change context:(void *)context {
@@ -177,14 +177,16 @@
     
     if ([keyPath isEqualToString:@"frame"]) {
         CGRect frame = self.frame;
+        _douts(@"KVO : frame")
+        _dout_rect(frame);
         if (frame.size.width > 0) {
             _cellWidthCached = frame.size.width;
-            dout_float(_cellWidthCached)
+            _dout_float(_cellWidthCached)
             
             self.contentSize = CGSizeMake(_imageCountCached*_cellWidthCached, 0);
             [self setContentOffset:CGPointMake(_index*_cellWidthCached, 0) animated:NO];
             [self setScrollContainerFrameForIndex:_index];
-            [self.scrollContainer layoutCells];
+//            [self.scrollContainer layoutCells];
         }
         return;
         
@@ -239,12 +241,16 @@
     return self;
 }
 
+- (void)awakeFromNib {
+    [super awakeFromNib];
+    [self setupCellFromNib:YES];
+}
+
 - (void)setupCellFromNib:(BOOL)isLoadFromNib {
     CGRect frame = self.bounds;
     CGFloat wCell = frame.size.width/3;
     CGFloat hCell = frame.size.height;
     
-    NSAssert(wCell == 300, @"");
     if (!self.lCell) {
         self.lCell = [[RFImageGalleryCell alloc] initWithFrame:CGRectMake(0, 0, wCell, hCell)];
         [self addSubview:_lCell];
@@ -272,15 +278,19 @@
     }
 }
 
-- (void)awakeFromNib {
-    [super awakeFromNib];
-    [self setupCellFromNib:YES];
+- (void)willMoveToSuperview:(UIView *)newSuperview {
+    [super willMoveToSuperview:newSuperview];
+    
+    _douto(newSuperview)
+    CGRect frame = newSuperview.bounds;
+    frame.size.width = frame.size.width*3;
+    self.frame = frame;
 }
 
 - (void)layoutCells {
     NSAssert(self.bounds.size.width > 0, @"");
-    dout_rect(self.bounds)
-    dout_rect(self.frame)
+    _dout_rect(self.bounds)
+    _dout_rect(self.frame)
     CGRect frame = self.bounds;
     CGFloat cellWidth = frame.size.width/3;
     CGFloat cellHeight = frame.size.height;
@@ -288,7 +298,7 @@
     self.lCell.frame = CGRectMake(0, 0, cellWidth, cellHeight);
     self.mCell.frame = CGRectMake(cellWidth, 0, cellWidth, cellHeight);
     self.rCell.frame = CGRectMake(cellWidth*2, 0, cellWidth, cellHeight);
-    douto(self.subviews)
+    _douto(self.subviews)
 }
 
 - (void)layoutExchangeCellToLeft {
@@ -329,9 +339,10 @@
         self.maximumZoomScale = 2.0;
         self.delegate = self;
         
+        self.delaysContentTouches = YES;
         self.contentSize = self.bounds.size;
-        dout_size(self.contentSize)
-        douts(@"RFImageGalleryCell init end")
+        _dout_size(self.contentSize)
+        _douts(@"RFImageGalleryCell init end")
     }
     return self;
 }
@@ -339,6 +350,37 @@
 - (void)awakeFromNib {
     [super awakeFromNib];
 
+}
+
+- (void)willMoveToWindow:(UIWindow *)newWindow {
+    [super willMoveToWindow:newWindow];
+    if (newWindow) {
+        [self addObserver:self forKeyPath:@"frame" options:NSKeyValueObservingOptionNew context:NULL];
+    }
+    else {
+        [self removeObserver:self forKeyPath:@"frame"];
+    }
+}
+
+- (void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary *)change context:(void *)context {
+    if ([keyPath isEqualToString:@"frame"]) {
+        self.contentSize = CGSizeScaled(self.frame.size, self.zoomScale);
+//        douts(@"KVO : frame")
+//        dout_rect(frame);
+//        if (frame.size.width > 0) {
+//            _cellWidthCached = frame.size.width;
+//            dout_float(_cellWidthCached)
+//            
+//            self.contentSize = CGSizeMake(_imageCountCached*_cellWidthCached, 0);
+//            [self setContentOffset:CGPointMake(_index*_cellWidthCached, 0) animated:NO];
+//            [self setScrollContainerFrameForIndex:_index];
+//            //            [self.scrollContainer layoutCells];
+
+        return;
+        
+    }
+    
+    [super observeValueForKeyPath:keyPath ofObject:object change:change context:context];
 }
 
 - (void)scrollViewDidEndZooming:(UIScrollView *)scrollView withView:(UIView *)view atScale:(float)scale {
@@ -351,12 +393,12 @@
 
 - (void)layoutSubviews {
     [super layoutSubviews];
-    dout_size(self.contentSize)
+    _dout_size(self.contentSize)
 }
 
 - (void)setImage:(UIImage *)image {    
     if (self.imageView == nil) {
-        dout_warning(@"no view image!")
+        _dout_warning(@"no view image!")
     }
     
     if (self.imageView.image != image) {

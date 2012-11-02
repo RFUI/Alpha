@@ -1,6 +1,8 @@
 
 #import "RFUI.h"
 
+// TODO: 布局仍旧存在问题
+
 @class RFImageGallery, RFImageGalleryScrollContainer, RFImageGalleryCell;
 
 

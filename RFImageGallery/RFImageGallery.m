@@ -90,6 +90,9 @@
 
 - (void)scrollToIndex:(NSUInteger)toIndex animated:(BOOL)animated forced:(BOOL)forced {
     NSAssert(_cellWidthCached > 0, @"Cell宽啥时候变成0的呢？");
+    if (_imageCountCached == 0) {
+        return;
+    }
     
     // 非强制，检查重复性
     if (!forced) {

@@ -6,10 +6,14 @@
 //
 //
 
-#import <UIKit/UIKit.h>
+#import "RFUI.h"
+#import "RFUIThemeDelegate.h"
 
 @interface RFResizableBackgroundImageButton : UIButton
-@property (assign, nonatomic) UIEdgeInsets backgroundImageCapInsets;
-@end
+<RFUIThemeDelegate>
 
-static NSString *const RFUDRAkBackgroundImageCapInsets = @"backgroundImageCapInsets";
+@property (assign, nonatomic) UIEdgeInsets backgroundImageCapInsets;
+@property (copy, nonatomic) NSString *backgroundImageName;
+
+- (void)setupBackgroundImageWithName:(NSString *)backGroundImageName;
+@end

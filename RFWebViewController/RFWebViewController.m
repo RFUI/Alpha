@@ -17,14 +17,14 @@
 }
 
 - (void)doAfterInit {
-	RFKit_RUN_ONCE_START
-	self.webView.delegate = self;
-	
-	titleMonitorInterval = 0.5;
-	titleMonitorIntervalAfterLoaded = 5;
-	self.lastWebPageTitle = @"";
-	
-	RFKit_RUN_ONCE_END
+    static dispatch_once_t onceToken;
+    dispatch_once(&onceToken, ^{
+        self.webView.delegate = self;
+        
+        titleMonitorInterval = 0.5;
+        titleMonitorIntervalAfterLoaded = 5;
+        self.lastWebPageTitle = @"";
+    });
 }
 
 - (void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary *)change context:(void *)context {

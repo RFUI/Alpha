@@ -1,10 +1,13 @@
-//
-//  RFResizableBackgroundImageButton.h
-//  MIPS
-//
-//  Created by BB9z on 12-11-6.
-//
-//
+/*!
+    RFResizableBackgroundImageButton
+    RFUI
+
+    Copyright (c) 2012 BB9z
+    http://github.com/bb9z/RFKit
+
+    The MIT License (MIT)
+    http://www.opensource.org/licenses/mit-license.php
+ */
 
 #import "RFUI.h"
 #import "RFUIThemeDelegate.h"
@@ -17,3 +20,6 @@
 
 - (void)setupBackgroundImageWithName:(NSString *)backGroundImageName;
 @end
+
+static NSString *const RFThemeRulekRBIButton_backgroundImageName = @"Background Image Name";
+static NSString *const RFThemeRulekRBIButton_backgroundImageCapInsets = @"Background Image CapInsets";

@@ -1,10 +1,3 @@
-//
-//  RFResizableBackgroundImageButton.m
-//  MIPS
-//
-//  Created by BB9z on 12-11-6.
-//
-//
 
 #import "RFResizableBackgroundImageButton.h"
 #import "RFThemeBundle.h"
@@ -26,6 +19,16 @@
 - (void)changeThemeWithBundle:(RFThemeBundle *)themeBundle {
     self.bundle = themeBundle;
     [self setupBackgroundImageWithName:self.backgroundImageName];
+}
+
+- (void)applyThemeWithRule:(NSDictionary *)dict {
+    if (dict[RFThemeRulekRBIButton_backgroundImageName]) {
+        self.backgroundImageName = dict[RFThemeRulekRBIButton_backgroundImageName];
+    }
+    
+    if (dict[RFThemeRulekRBIButton_backgroundImageCapInsets]) {
+        self.backgroundImageCapInsets = [dict[RFThemeRulekRBIButton_backgroundImageCapInsets] UIEdgeInsetsValue];
+    }
 }
 
 - (RFThemeBundle *)bundle {

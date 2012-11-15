@@ -34,7 +34,7 @@ static NSString *const RFThemeBundlekThemeName = @"Theme Name";
 }
 
 - (NSString *)themeName {
-    return [self.themeInfo objectForKey:RFThemeBundlekThemeName];
+    return self.themeInfo[RFThemeBundlekThemeName];
 }
 
 

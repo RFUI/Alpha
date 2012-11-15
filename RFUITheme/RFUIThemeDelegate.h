@@ -1,12 +1,19 @@
 
 #import "RFUI.h"
 
-@class RFThemeBundle;
+@class RFThemeBundle, RFUIThemeManager;
 @protocol RFUIThemeDelegate <NSObject>
 
 @required
-- (void)changeThemeWithBundle:(RFThemeBundle *)themeBundle;
+//- (NSString *)themeDefineRuleKey;
+//- (NSDictionary *)themeSupportKeys;
+- (void)applyThemeWithRule:(NSDictionary *)dict;
 
 @optional
+- (void)changeThemeWithBundle:(RFThemeBundle *)themeBundle;
+- (void)changeThemeWithManager:(RFUIThemeManager *)manager;
+- (NSDictionary *)themeVersionSupportInfo;
 
 @end
+
+

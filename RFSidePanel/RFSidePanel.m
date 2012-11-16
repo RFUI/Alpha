@@ -5,7 +5,6 @@ static CGFloat kToggleAnimateDuration = 0.5f;
 @interface RFSidePanel ()
 @property (readwrite, nonatomic) BOOL isShow;
 
-@property (RF_WEAK, nonatomic) IBOutlet UIImageView * vBarBg;
 @property (RF_WEAK, nonatomic) IBOutlet UIButton * vBarButton;
 @end
 

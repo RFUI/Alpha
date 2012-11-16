@@ -29,4 +29,7 @@
 
 @property (RF_WEAK, nonatomic) IBOutlet UIView * containerView;
 
+@property (RF_WEAK, nonatomic) IBOutlet UIImageView * vBarBg;
+@property (RF_WEAK, nonatomic) IBOutlet UIImageView *backgroundImageView;
+
 @end

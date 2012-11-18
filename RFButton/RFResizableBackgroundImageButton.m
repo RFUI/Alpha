@@ -1,6 +1,7 @@
 
 #import "RFResizableBackgroundImageButton.h"
 #import "RFThemeBundle.h"
+#import "RFUIThemeManager.h"
 
 @interface RFResizableBackgroundImageButton ()
 @property (RF_STRONG, nonatomic) RFThemeBundle *bundle;
@@ -9,60 +10,76 @@
 @implementation RFResizableBackgroundImageButton
 
 - (void)awakeFromNib {
+    [super awakeFromNib];
+    
     _douts(NSStringFromUIEdgeInsets(self.backgroundImageCapInsets));
     UIImage *image = [self backgroundImageForState:UIControlStateNormal];
     [self setBackgroundImage:[image resizableImageWithCapInsets:self.backgroundImageCapInsets] forState:UIControlStateNormal];
-    
-    [self setBackgroundImageName:self.backgroundImageName];
 }
 
-- (void)changeThemeWithBundle:(RFThemeBundle *)themeBundle {
-    self.bundle = themeBundle;
-    [self setupBackgroundImageWithName:self.backgroundImageName];
+- (RFUIThemeManager *)themeManager {
+    if (!_themeManager) {
+        _themeManager = [RFUIThemeManager sharedInstance];
+    }
+    return _themeManager;
 }
+
+- (void)willMoveToSuperview:(UIView *)newSuperview {
+    [super willMoveToSuperview:newSuperview];
+    
+    if (newSuperview) {
+        [[NSNotificationCenter defaultCenter] addObserverForName:MSGRFUIThemeChange object:nil queue:nil usingBlock:^(NSNotification *note) {
+            NSDictionary *rule = [self.themeManager themeRuleForKey:[self RFUIThemeRuleKey]];
+            [self applyThemeWithRule:rule];
+        }];
+        [self applyThemeWithRule:[self.themeManager themeRuleForKey:[self RFUIThemeRuleKey]]];
+    }
+    else {
+        [[NSNotificationCenter defaultCenter] removeObserver:self name:MSGRFUIThemeChange object:nil];
+    }
+}
+
+//- (void)changeThemeWithBundle:(RFThemeBundle *)themeBundle {
+//    self.bundle = themeBundle;
+//    [self setupBackgroundImageWithName:self.backgroundImageName];
+//}
 
 - (void)applyThemeWithRule:(NSDictionary *)dict {
+    if (dict[RFThemeRulekRBIButton_backgroundImageCapInsets]) {
+        self.backgroundImageCapInsets = UIEdgeInsetsFromString(dict[RFThemeRulekRBIButton_backgroundImageCapInsets]);
+    }
     if (dict[RFThemeRulekRBIButton_backgroundImageName]) {
         self.backgroundImageName = dict[RFThemeRulekRBIButton_backgroundImageName];
     }
-    
-    if (dict[RFThemeRulekRBIButton_backgroundImageCapInsets]) {
-        self.backgroundImageCapInsets = [dict[RFThemeRulekRBIButton_backgroundImageCapInsets] UIEdgeInsetsValue];
-    }
+    [self setupBackgroundImageWithName:self.backgroundImageName];
 }
 
-- (RFThemeBundle *)bundle {
-    if (_bundle) {
-        return _bundle;
-    }
-    else {
-        return (RFThemeBundle *)[NSBundle mainBundle];
-    }
+- (NSString *)RFUIThemeRuleKey {
+    return NSStringFromClass([self class]);
 }
 
 - (void)setupBackgroundImageWithName:(NSString *)backGroundImageName {
+    douto(self.themeManager.currentBundle)
     douto(backGroundImageName)
     if (backGroundImageName.length > 0) {
-        NSString *type = @"png";
+        NSString *imageName = backGroundImageName;
 
-        #define _RFResizableBackgroundImageButtonSetImage(file, state)\
-            if (file) {\
-                UIImage *resizeImage = [[UIImage imageWithContentsOfFile:file] resizableImageWithCapInsets:self.backgroundImageCapInsets];\
+        #define _RFResizableBackgroundImageButtonSetImage(imageName, state)\
+            if (imageName) {\
+                UIImage *resizeImage = [[self.themeManager imageWithName:imageName] resizableImageWithCapInsets:self.backgroundImageCapInsets];\
                 [self setBackgroundImage:resizeImage forState:state];\
             }
         
-        NSString *file = [self.bundle pathForResource:backGroundImageName ofType:type];
-        douto(file)
-        _RFResizableBackgroundImageButtonSetImage(file, UIControlStateNormal)
+        _RFResizableBackgroundImageButtonSetImage(imageName, UIControlStateNormal)
         
-        file = [self.bundle pathForResource:[NSString stringWithFormat:@"%@_highlighted",backGroundImageName] ofType:type];
-        _RFResizableBackgroundImageButtonSetImage(file, UIControlStateHighlighted)
+        imageName = [NSString stringWithFormat:@"%@_highlighted",backGroundImageName];
+        _RFResizableBackgroundImageButtonSetImage(imageName, UIControlStateHighlighted)
         
-        file = [self.bundle pathForResource:[NSString stringWithFormat:@"%@_disabled",backGroundImageName] ofType:type];
-        _RFResizableBackgroundImageButtonSetImage(file, UIControlStateDisabled)
+        imageName = [NSString stringWithFormat:@"%@_disabled",backGroundImageName];
+        _RFResizableBackgroundImageButtonSetImage(imageName, UIControlStateDisabled)
         
-        file = [self.bundle pathForResource:[NSString stringWithFormat:@"%@_selected",backGroundImageName] ofType:type];
-        _RFResizableBackgroundImageButtonSetImage(file, UIControlStateSelected)
+        imageName = [NSString stringWithFormat:@"%@_selected",backGroundImageName];
+        _RFResizableBackgroundImageButtonSetImage(imageName, UIControlStateSelected)
         
         #undef _RFResizableBackgroundImageButtonSetImage
     }
@@ -74,16 +91,5 @@
     }
 }
 
-
-
-/*
-// Only override drawRect: if you perform custom drawing.
-// An empty implementation adversely affects performance during animation.
-- (void)drawRect:(CGRect)rect
-{
-    // Drawing code
-}
- 
-*/
 
 @end

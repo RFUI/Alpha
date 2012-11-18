@@ -15,4 +15,5 @@
 - (id)initWithPath:(NSString *)path;
 
 - (NSString *)themeName;
+- (NSDictionary *)themeRuleForKey:(NSString *)string;
 @end

@@ -10,15 +10,21 @@
  */
 
 #import "RFRuntime.h"
-
-@class RFThemeBundle;
+#import "RFThemeBundle.h"
 
 @interface RFUIThemeManager : NSObject
++ (RFUIThemeManager *)sharedInstance;
+
 @property (RF_STRONG, nonatomic) RFThemeBundle *defaultBundle;
 
 @property (readonly, nonatomic) RFThemeBundle *currentBundle;
 @property (readonly, copy, nonatomic) NSString *currentThemeName;
 
+- (void)changeThemeToName:(NSString *)themeName;
+
+
+#pragma mark - Rule
+- (NSDictionary *)themeRuleForKey:(NSString *)string;
 
 #pragma mark - Resource Method
 /// 资源文件的搜寻会先尝试当前主题包，若没有从默认主题包获取

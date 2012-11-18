@@ -9,7 +9,11 @@
 //- (NSDictionary *)themeSupportKeys;
 - (void)applyThemeWithRule:(NSDictionary *)dict;
 
+
 @optional
+/// Default
+- (NSString *)RFUIThemeRuleKey;
+
 - (void)changeThemeWithBundle:(RFThemeBundle *)themeBundle;
 - (void)changeThemeWithManager:(RFUIThemeManager *)manager;
 - (NSDictionary *)themeVersionSupportInfo;

@@ -11,9 +11,11 @@
 
 #import "RFUI.h"
 #import "RFUIThemeDelegate.h"
+#import "RFUIThemeManager.h"
 
 @interface RFResizableBackgroundImageButton : UIButton
 <RFUIThemeDelegate>
+@property (RF_STRONG, nonatomic) RFUIThemeManager *themeManager;
 
 @property (assign, nonatomic) UIEdgeInsets backgroundImageCapInsets;
 @property (copy, nonatomic) NSString *backgroundImageName;

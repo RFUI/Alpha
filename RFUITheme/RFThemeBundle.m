@@ -9,6 +9,7 @@
 #import "RFThemeBundle.h"
 
 static NSString *const RFThemeBundlekThemeName = @"Theme Name";
+static NSString *const RFThemeBundlekThemeRules = @"Theme Rules";
 
 @implementation RFThemeBundle
 
@@ -25,16 +26,12 @@ static NSString *const RFThemeBundlekThemeName = @"Theme Name";
 }
 
 #pragma mark - Theme Info
-- (NSDictionary *)themeInfo {
-    if (!_themeInfo) {
-        _themeInfo = [NSDictionary dictionaryWithContentsOfFile:[self pathForResource:@"Info" ofType:@"plist"]];
-        douto(_themeInfo)
-    }
-    return _themeInfo;
+- (NSString *)themeName {
+    return [self infoDictionary][RFThemeBundlekThemeName];
 }
 
-- (NSString *)themeName {
-    return self.themeInfo[RFThemeBundlekThemeName];
+- (NSDictionary *)themeRuleForKey:(NSString *)string {
+    return [self infoDictionary][RFThemeBundlekThemeRules][string];
 }
 
 

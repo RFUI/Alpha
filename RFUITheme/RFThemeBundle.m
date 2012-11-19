@@ -31,6 +31,4 @@
     return [self infoDictionary][RFThemeBundlekThemeRules][string];
 }
 
-
-
 @end

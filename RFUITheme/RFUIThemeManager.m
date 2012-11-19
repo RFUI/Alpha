@@ -7,7 +7,17 @@
 @end
 
 @implementation RFUIThemeManager
+#pragma mark - Property
+- (RFThemeBundle *)currentBundle {
+    if (_currentBundle) {
+        return _currentBundle;
+    }
+    else {
+        return self.defaultBundle;
+    }
+}
 
+#pragma mark -
 + (RFUIThemeManager *)sharedInstance {
 	static RFUIThemeManager *sharedInstance = nil;
     static dispatch_once_t oncePredicate;
@@ -21,17 +31,13 @@
     return [NSString stringWithFormat:@"<%@: %p, Theme Name:%@, bundle:%@, default:%@>", [self class], self, self.currentThemeName, self.currentBundle, self.defaultBundle];
 }
 
-- (void)changeThemeToName:(NSString *)themeName {
-    if (themeName.length == 0) return;
-    
-    if (![themeName isEqualToString:self.currentThemeName]) {
-        RFThemeBundle *bundle = [RFThemeBundle bundleWithName:themeName];
-        if (bundle) {
-            self.currentThemeName = themeName;
-            self.currentBundle = bundle;
-            
-            [[NSNotificationCenter defaultCenter] postNotificationName:MSGRFUIThemeChange object:self userInfo:[NSDictionary dictionaryWithObjectsAndKeys:RFNotificationKeyThemeName, self.currentThemeName, nil]];
-        }
+- (void)changeThemeWithBundle:(RFThemeBundle *)themeBundle {
+    RFAssert(themeBundle, @"nil theme bundle");
+    if (![[themeBundle themeName] isEqualToString:self.currentThemeName]) {
+        self.currentThemeName = [themeBundle themeName];
+        self.currentBundle = themeBundle;
+        
+        [[NSNotificationCenter defaultCenter] postNotificationName:MSGRFUIThemeChange object:self userInfo:[NSDictionary dictionaryWithObjectsAndKeys:RFNotificationKeyThemeName, self.currentThemeName, nil]];
     }
 }
 
@@ -46,6 +52,7 @@
     }
 }
 
+#pragma mark - Resource Method
 - (UIImage *)imageWithName:(NSString *)imageName {
     NSString *imagePath = [self pathForResource:imageName ofType:@"png"];
     if (!imagePath) {
@@ -59,9 +66,7 @@
     if (self.currentBundle) {
         path = [self.currentBundle pathForResource:name ofType:extension];
     }
-    if (!path) {
-        path = [self.defaultBundle pathForResource:name ofType:extension];
-    }
     return path;
 }
+
 @end

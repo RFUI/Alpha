@@ -20,7 +20,7 @@
 @property (readonly, nonatomic) RFThemeBundle *currentBundle;
 @property (readonly, copy, nonatomic) NSString *currentThemeName;
 
-- (void)changeThemeToName:(NSString *)themeName;
+- (void)changeThemeWithBundle:(RFThemeBundle *)themeBundle;
 
 
 #pragma mark - Rule

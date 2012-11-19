@@ -8,10 +8,10 @@
 
 #import "RFUI.h"
 
-@interface RFThemeBundle : NSBundle
+@interface RFUIThemeBundle : NSBundle
 @property (RF_STRONG, nonatomic) NSDictionary *themeInfo;
 
-+ (RFThemeBundle *)bundleWithName:(NSString *)bundleName;
++ (RFUIThemeBundle *)bundleWithName:(NSString *)bundleName;
 - (id)initWithPath:(NSString *)path;
 
 - (NSString *)themeName;

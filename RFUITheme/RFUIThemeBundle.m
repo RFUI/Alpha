@@ -6,13 +6,13 @@
 //
 //
 
-#import "RFThemeBundle.h"
+#import "RFUIThemeBundle.h"
 
-@implementation RFThemeBundle
+@implementation RFUIThemeBundle
 
-+ (RFThemeBundle *)bundleWithName:(NSString *)bundleName {
++ (RFUIThemeBundle *)bundleWithName:(NSString *)bundleName {
     NSString *path = [[NSBundle mainBundle] pathForResource:bundleName ofType:@"bundle"];
-    RFThemeBundle *bundle = [[RFThemeBundle alloc] initWithPath:path];
+    RFUIThemeBundle *bundle = [[RFUIThemeBundle alloc] initWithPath:path];
     return bundle;
 }
 

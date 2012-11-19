@@ -10,17 +10,17 @@
  */
 
 #import "RFRuntime.h"
-#import "RFThemeBundle.h"
+#import "RFUIThemeBundle.h"
 
 @interface RFUIThemeManager : NSObject
 + (RFUIThemeManager *)sharedInstance;
 
-@property (RF_STRONG, nonatomic) RFThemeBundle *defaultBundle;
+@property (RF_STRONG, nonatomic) RFUIThemeBundle *defaultBundle;
 
-@property (readonly, nonatomic) RFThemeBundle *currentBundle;
+@property (readonly, nonatomic) RFUIThemeBundle *currentBundle;
 @property (readonly, copy, nonatomic) NSString *currentThemeName;
 
-- (void)changeThemeWithBundle:(RFThemeBundle *)themeBundle;
+- (void)changeThemeWithBundle:(RFUIThemeBundle *)themeBundle;
 
 
 #pragma mark - Rule

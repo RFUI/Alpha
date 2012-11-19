@@ -1,10 +1,10 @@
 
 #import "RFResizableBackgroundImageButton.h"
-#import "RFThemeBundle.h"
+#import "RFUIThemeBundle.h"
 #import "RFUIThemeManager.h"
 
 @interface RFResizableBackgroundImageButton ()
-@property (RF_STRONG, nonatomic) RFThemeBundle *bundle;
+@property (RF_STRONG, nonatomic) RFUIThemeBundle *bundle;
 @end
 
 @implementation RFResizableBackgroundImageButton

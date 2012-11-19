@@ -3,12 +3,12 @@
 
 @interface RFUIThemeManager ()
 @property (readwrite, copy, nonatomic) NSString *currentThemeName;
-@property (readwrite, nonatomic) RFThemeBundle *currentBundle;
+@property (readwrite, nonatomic) RFUIThemeBundle *currentBundle;
 @end
 
 @implementation RFUIThemeManager
 #pragma mark - Property
-- (RFThemeBundle *)currentBundle {
+- (RFUIThemeBundle *)currentBundle {
     if (_currentBundle) {
         return _currentBundle;
     }
@@ -31,7 +31,7 @@
     return [NSString stringWithFormat:@"<%@: %p, Theme Name:%@, bundle:%@, default:%@>", [self class], self, self.currentThemeName, self.currentBundle, self.defaultBundle];
 }
 
-- (void)changeThemeWithBundle:(RFThemeBundle *)themeBundle {
+- (void)changeThemeWithBundle:(RFUIThemeBundle *)themeBundle {
     RFAssert(themeBundle, @"nil theme bundle");
     if (![[themeBundle themeName] isEqualToString:self.currentThemeName]) {
         self.currentThemeName = [themeBundle themeName];

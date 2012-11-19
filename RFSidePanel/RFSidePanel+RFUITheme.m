@@ -3,18 +3,19 @@
 
 @implementation RFSidePanel (RFUITheme)
 
+
+- (RFUIThemeManager *)themeManager {
+    return [RFUIThemeManager sharedInstance];
+}
+
 - (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
 
-    douts(@"Load in RFUITheme");
-    RFUIThemeManager *themeManager = [RFUIThemeManager sharedInstance];
-
     [[NSNotificationCenter defaultCenter] addObserverForName:MSGRFUIThemeChange object:nil queue:nil usingBlock:^(NSNotification *note) {
-        douto([themeManager.currentBundle infoDictionary])
-        NSDictionary *rule = [themeManager themeRuleForKey:[self RFUIThemeRuleKey]];
+        NSDictionary *rule = [self.themeManager themeRuleForKey:[self RFUIThemeRuleKey]];
         [self applyThemeWithRule:rule];
     }];
-    [self applyThemeWithRule:[themeManager themeRuleForKey:[self RFUIThemeRuleKey]]];
+    [self applyThemeWithRule:[self.themeManager themeRuleForKey:[self RFUIThemeRuleKey]]];
 }
 
 - (void)viewWillDisappear:(BOOL)animated {
@@ -38,38 +39,32 @@
 //}
 
 - (void)applyThemeWithRule:(NSDictionary *)dict {
-    RFUIThemeManager *themeManager = [RFUIThemeManager sharedInstance];
+    RFUIThemeManager *themeManager = self.themeManager;
     id rule = nil;
     
-    #define _RFSidePanelRule(key) rule = dict[key]; if (rule)
-    
-    _RFSidePanelRule(@"Separator Background") {
+    _RFUIThemeApplayRule(@"Separator Background") {
         self.separatorBackground.image = [themeManager imageWithName:rule];
     }
     
-    _RFSidePanelRule(@"Separator ON") {
+    _RFUIThemeApplayRule(@"Separator ON") {
         [self.separatorButtonON setImage:[themeManager imageWithName:rule] forState:UIControlStateNormal];
     }
     
-    _RFSidePanelRule(@"Separator ON Active") {
+    _RFUIThemeApplayRule(@"Separator ON Active") {
         [self.separatorButtonON setImage:[themeManager imageWithName:rule] forState:UIControlStateHighlighted];
     }
     
-    _RFSidePanelRule(@"Separator OFF") {
+    _RFUIThemeApplayRule(@"Separator OFF") {
         [self.separatorButtonOFF setImage:[themeManager imageWithName:rule] forState:UIControlStateHighlighted];
     }
     
-    _RFSidePanelRule(@"Separator OFF Active") {
+    _RFUIThemeApplayRule(@"Separator OFF Active") {
         [self.separatorButtonOFF setImage:[themeManager imageWithName:rule] forState:UIControlStateHighlighted];
     }
     
-    _RFSidePanelRule(@"Container Background") {
-        douto(rule)
-        douto([themeManager imageWithName:rule])
+    _RFUIThemeApplayRule(@"Container Background") {
         self.containerBackground.image = [themeManager imageWithName:rule];
     }
-        
-    #undef _RFSidePanelRule
 }
 
 @end

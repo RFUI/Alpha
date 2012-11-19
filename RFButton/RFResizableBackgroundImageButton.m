@@ -45,14 +45,22 @@
 //}
 
 - (void)applyThemeWithRule:(NSDictionary *)dict {
-    if (dict[RFThemeRulekRBIButton_backgroundImageCapInsets]) {
-        self.backgroundImageCapInsets = UIEdgeInsetsFromString(dict[RFThemeRulekRBIButton_backgroundImageCapInsets]);
+    id rule = nil;
+    
+    _RFUIThemeApplayRule(@"Background Image CapInsets") {
+        self.backgroundImageCapInsets = UIEdgeInsetsFromString(rule);
     }
-    if (dict[RFThemeRulekRBIButton_backgroundImageName]) {
-        self.backgroundImageName = dict[RFThemeRulekRBIButton_backgroundImageName];
+    _RFUIThemeApplayRule(@"Background Image Name") {
+        self.backgroundImageName = rule;
     }
-    if (dict[RFThemeRulekRBIButton_showsTouchWhenHighlighted]) {
-        self.showsTouchWhenHighlighted = [dict[RFThemeRulekRBIButton_showsTouchWhenHighlighted] boolValue];
+    _RFUIThemeApplayRule(@"Shows Touch When Highlighted") {
+        self.showsTouchWhenHighlighted = [rule boolValue];
+    }
+    _RFUIThemeApplayRule(@"Color Highlighted") {
+        [self setTitleColor:[UIColor colorWithRGBString:rule] forState:UIControlStateHighlighted];
+    }
+    _RFUIThemeApplayRule(@"Color") {
+        [self setTitleColor:[UIColor colorWithRGBString:rule] forState:UIControlStateNormal];
     }
     [self setupBackgroundImageWithName:self.backgroundImageName];
 }

@@ -12,3 +12,7 @@
 #import "RFUIThemeDelegate.h"
 #import "RFUIThemeManager.h"
 #import "RFUIThemeBundle.h"
+
+#ifndef _RFUIThemeApplayRule
+#define _RFUIThemeApplayRule(key) rule = dict[key]; if (rule)
+#endif

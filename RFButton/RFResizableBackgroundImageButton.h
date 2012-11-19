@@ -10,8 +10,7 @@
  */
 
 #import "RFUI.h"
-#import "RFUIThemeDelegate.h"
-#import "RFUIThemeManager.h"
+#import "RFUITheme.h"
 
 @interface RFResizableBackgroundImageButton : UIButton
 <RFUIThemeDelegate>

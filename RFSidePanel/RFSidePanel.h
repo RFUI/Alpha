@@ -23,13 +23,14 @@
 - (void)hide:(BOOL)animated;
 - (BOOL)toggle:(BOOL)animated;
 
-- (IBAction)onSwipeLeft:(UISwipeGestureRecognizer *)sender;
-- (IBAction)onSwipRight:(UISwipeGestureRecognizer *)sender;
 - (IBAction)onPanelDragging:(UIPanGestureRecognizer *)sender;
+- (IBAction)onHide:(UIButton *)sender;
+- (IBAction)onShow:(UIButton *)sender;
 
-@property (RF_WEAK, nonatomic) IBOutlet UIView * containerView;
+@property (RF_WEAK, nonatomic) IBOutlet UIView *containerView;
+@property (RF_WEAK, nonatomic) IBOutlet UIImageView *containerBackground;
 
-@property (RF_WEAK, nonatomic) IBOutlet UIImageView * vBarBg;
-@property (RF_WEAK, nonatomic) IBOutlet UIImageView *backgroundImageView;
-
+@property (RF_WEAK, nonatomic) IBOutlet UIImageView *separatorBackground;
+@property (RF_WEAK, nonatomic) IBOutlet UIButton *separatorButtonOFF;
+@property (RF_WEAK, nonatomic) IBOutlet UIButton *separatorButtonON;
 @end

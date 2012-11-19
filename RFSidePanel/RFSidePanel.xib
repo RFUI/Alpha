@@ -2,7 +2,7 @@
 <archive type="com.apple.InterfaceBuilder3.CocoaTouch.iPad.XIB" version="8.00">
 	<data>
 		<int key="IBDocument.SystemTarget">1536</int>
-		<string key="IBDocument.SystemVersion">12C3006</string>
+		<string key="IBDocument.SystemVersion">12C60</string>
 		<string key="IBDocument.InterfaceBuilderVersion">2844</string>
 		<string key="IBDocument.AppKitVersion">1187.34</string>
 		<string key="IBDocument.HIToolboxVersion">625.00</string>
@@ -88,6 +88,7 @@
 						<string key="NSFrame">{{320, 324}, {40, 100}}</string>
 						<reference key="NSSuperview" ref="766721923"/>
 						<reference key="NSWindow"/>
+						<reference key="NSNextKeyView" ref="609177380"/>
 						<string key="NSReuseIdentifierKey">_NS:225</string>
 						<bool key="IBUIOpaque">NO</bool>
 						<string key="targetRuntimeIdentifier">IBIPadFramework</string>
@@ -98,7 +99,7 @@
 						<double key="IBUIImageEdgeInsets.left">-1</double>
 						<double key="IBUIImageEdgeInsets.right">5</double>
 						<string key="IBUINormalTitle">sw</string>
-						<object class="NSColor" key="IBUIHighlightedTitleColor">
+						<object class="NSColor" key="IBUIHighlightedTitleColor" id="253625007">
 							<int key="NSColorSpace">3</int>
 							<bytes key="NSWhite">MQA</bytes>
 						</object>
@@ -106,7 +107,7 @@
 							<int key="NSColorSpace">1</int>
 							<bytes key="NSRGB">MC4xOTYwNzg0MzQ2IDAuMzA5ODAzOTMyOSAwLjUyMTU2ODY1NgA</bytes>
 						</object>
-						<object class="NSColor" key="IBUINormalTitleShadowColor">
+						<object class="NSColor" key="IBUINormalTitleShadowColor" id="19696548">
 							<int key="NSColorSpace">3</int>
 							<bytes key="NSWhite">MC41AA</bytes>
 						</object>
@@ -118,15 +119,49 @@
 							<string key="NSClassName">NSImage</string>
 							<string key="NSResourceName">SidePanel-on.png</string>
 						</object>
-						<object class="IBUIFontDescription" key="IBUIFontDescription">
+						<object class="IBUIFontDescription" key="IBUIFontDescription" id="901273800">
 							<int key="type">2</int>
 							<double key="pointSize">15</double>
 						</object>
-						<object class="NSFont" key="IBUIFont">
+						<object class="NSFont" key="IBUIFont" id="951243466">
 							<string key="NSName">Helvetica-Bold</string>
 							<double key="NSSize">15</double>
 							<int key="NSfFlags">16</int>
 						</object>
+					</object>
+					<object class="IBUIButton" id="609177380">
+						<reference key="NSNextResponder" ref="766721923"/>
+						<int key="NSvFlags">313</int>
+						<string key="NSFrame">{{320, 324}, {40, 100}}</string>
+						<reference key="NSSuperview" ref="766721923"/>
+						<reference key="NSWindow"/>
+						<reference key="NSNextKeyView"/>
+						<string key="NSReuseIdentifierKey">_NS:225</string>
+						<bool key="IBUIOpaque">NO</bool>
+						<string key="targetRuntimeIdentifier">IBIPadFramework</string>
+						<int key="IBUIContentHorizontalAlignment">0</int>
+						<int key="IBUIContentVerticalAlignment">0</int>
+						<double key="IBUIImageEdgeInsets.top">4</double>
+						<double key="IBUIImageEdgeInsets.bottom">4</double>
+						<double key="IBUIImageEdgeInsets.left">-1</double>
+						<double key="IBUIImageEdgeInsets.right">5</double>
+						<string key="IBUINormalTitle">sw</string>
+						<reference key="IBUIHighlightedTitleColor" ref="253625007"/>
+						<object class="NSColor" key="IBUINormalTitleColor">
+							<int key="NSColorSpace">1</int>
+							<bytes key="NSRGB">MC4xOTYwNzg0MzQ2IDAuMzA5ODAzOTMyOSAwLjUyMTU2ODY1NgA</bytes>
+						</object>
+						<reference key="IBUINormalTitleShadowColor" ref="19696548"/>
+						<object class="NSCustomResource" key="IBUIHighlightedImage">
+							<string key="NSClassName">NSImage</string>
+							<string key="NSResourceName">SidePanel-off.active.png</string>
+						</object>
+						<object class="NSCustomResource" key="IBUINormalImage">
+							<string key="NSClassName">NSImage</string>
+							<string key="NSResourceName">SidePanel-off.png</string>
+						</object>
+						<reference key="IBUIFontDescription" ref="901273800"/>
+						<reference key="IBUIFont" ref="951243466"/>
 					</object>
 				</array>
 				<string key="NSFrameSize">{360, 748}</string>
@@ -159,22 +194,6 @@
 				</object>
 				<object class="IBConnectionRecord">
 					<object class="IBCocoaTouchOutletConnection" key="connection">
-						<string key="label">vBarBg</string>
-						<reference key="source" ref="841351856"/>
-						<reference key="destination" ref="64522261"/>
-					</object>
-					<int key="connectionID">9</int>
-				</object>
-				<object class="IBConnectionRecord">
-					<object class="IBCocoaTouchOutletConnection" key="connection">
-						<string key="label">vBarButton</string>
-						<reference key="source" ref="841351856"/>
-						<reference key="destination" ref="283200385"/>
-					</object>
-					<int key="connectionID">14</int>
-				</object>
-				<object class="IBConnectionRecord">
-					<object class="IBCocoaTouchOutletConnection" key="connection">
 						<string key="label">containerView</string>
 						<reference key="source" ref="841351856"/>
 						<reference key="destination" ref="1042040143"/>
@@ -183,11 +202,35 @@
 				</object>
 				<object class="IBConnectionRecord">
 					<object class="IBCocoaTouchOutletConnection" key="connection">
-						<string key="label">backgroundImageView</string>
+						<string key="label">separatorBackground</string>
+						<reference key="source" ref="841351856"/>
+						<reference key="destination" ref="64522261"/>
+					</object>
+					<int key="connectionID">38</int>
+				</object>
+				<object class="IBConnectionRecord">
+					<object class="IBCocoaTouchOutletConnection" key="connection">
+						<string key="label">containerBackground</string>
 						<reference key="source" ref="841351856"/>
 						<reference key="destination" ref="680523297"/>
 					</object>
-					<int key="connectionID">37</int>
+					<int key="connectionID">40</int>
+				</object>
+				<object class="IBConnectionRecord">
+					<object class="IBCocoaTouchOutletConnection" key="connection">
+						<string key="label">separatorButtonON</string>
+						<reference key="source" ref="841351856"/>
+						<reference key="destination" ref="609177380"/>
+					</object>
+					<int key="connectionID">49</int>
+				</object>
+				<object class="IBConnectionRecord">
+					<object class="IBCocoaTouchOutletConnection" key="connection">
+						<string key="label">separatorButtonOFF</string>
+						<reference key="source" ref="841351856"/>
+						<reference key="destination" ref="283200385"/>
+					</object>
+					<int key="connectionID">50</int>
 				</object>
 				<object class="IBConnectionRecord">
 					<object class="IBCocoaTouchOutletCollectionConnection" key="connection">
@@ -201,12 +244,12 @@
 				</object>
 				<object class="IBConnectionRecord">
 					<object class="IBCocoaTouchEventConnection" key="connection">
-						<string key="label">onBarButtonTapped:</string>
+						<string key="label">onHide:</string>
 						<reference key="source" ref="283200385"/>
 						<reference key="destination" ref="841351856"/>
 						<int key="IBEventType">7</int>
 					</object>
-					<int key="connectionID">17</int>
+					<int key="connectionID">45</int>
 				</object>
 				<object class="IBConnectionRecord">
 					<object class="IBCocoaTouchEventConnection" key="connection">
@@ -223,6 +266,15 @@
 						<reference key="destination" ref="841351856"/>
 					</object>
 					<int key="connectionID">24</int>
+				</object>
+				<object class="IBConnectionRecord">
+					<object class="IBCocoaTouchEventConnection" key="connection">
+						<string key="label">onShow:</string>
+						<reference key="source" ref="609177380"/>
+						<reference key="destination" ref="841351856"/>
+						<int key="IBEventType">7</int>
+					</object>
+					<int key="connectionID">46</int>
 				</object>
 			</array>
 			<object class="IBMutableOrderedSet" key="objectRecords">
@@ -251,6 +303,7 @@
 							<reference ref="1042040143"/>
 							<reference ref="64522261"/>
 							<reference ref="283200385"/>
+							<reference ref="609177380"/>
 						</array>
 						<reference key="parent" ref="0"/>
 					</object>
@@ -261,17 +314,19 @@
 							<reference ref="680523297"/>
 						</array>
 						<reference key="parent" ref="766721923"/>
+						<string key="objectName">Container View</string>
 					</object>
 					<object class="IBObjectRecord">
 						<int key="objectID">5</int>
 						<reference key="object" ref="64522261"/>
 						<reference key="parent" ref="766721923"/>
-						<string key="objectName">sw-bg</string>
+						<string key="objectName">Separator Background</string>
 					</object>
 					<object class="IBObjectRecord">
 						<int key="objectID">12</int>
 						<reference key="object" ref="283200385"/>
 						<reference key="parent" ref="766721923"/>
+						<string key="objectName">Separator Button OFF</string>
 					</object>
 					<object class="IBObjectRecord">
 						<int key="objectID">21</int>
@@ -282,6 +337,13 @@
 						<int key="objectID">36</int>
 						<reference key="object" ref="680523297"/>
 						<reference key="parent" ref="1042040143"/>
+						<string key="objectName">Container Background</string>
+					</object>
+					<object class="IBObjectRecord">
+						<int key="objectID">41</int>
+						<reference key="object" ref="609177380"/>
+						<reference key="parent" ref="766721923"/>
+						<string key="objectName">Separator Button ON</string>
 					</object>
 				</array>
 			</object>
@@ -297,13 +359,16 @@
 				<string key="21.IBPluginDependency">com.apple.InterfaceBuilder.IBCocoaTouchPlugin</string>
 				<string key="36.IBPluginDependency">com.apple.InterfaceBuilder.IBCocoaTouchPlugin</string>
 				<string key="4.IBPluginDependency">com.apple.InterfaceBuilder.IBCocoaTouchPlugin</string>
+				<string key="41.IBPluginDependency">com.apple.InterfaceBuilder.IBCocoaTouchPlugin</string>
+				<real value="2" key="41.IBUIButtonInspectorSelectedEdgeInsetMetadataKey"/>
+				<real value="1" key="41.IBUIButtonInspectorSelectedStateConfigurationMetadataKey"/>
 				<string key="5.IBPluginDependency">com.apple.InterfaceBuilder.IBCocoaTouchPlugin</string>
 			</dictionary>
 			<dictionary class="NSMutableDictionary" key="unlocalizedProperties"/>
 			<nil key="activeLocalization"/>
 			<dictionary class="NSMutableDictionary" key="localizations"/>
 			<nil key="sourceID"/>
-			<int key="maxID">37</int>
+			<int key="maxID">50</int>
 		</object>
 		<object class="IBClassDescriber" key="IBDocument.Classes">
 			<array class="NSMutableArray" key="referencedPartialClassDescriptions">
@@ -311,19 +376,24 @@
 					<string key="className">RFSidePanel</string>
 					<string key="superclassName">UIViewController</string>
 					<dictionary class="NSMutableDictionary" key="actions">
-						<string key="onBarButtonTapped:">id</string>
+						<string key="onHide:">UIButton</string>
 						<string key="onPanelDragging:">UIPanGestureRecognizer</string>
+						<string key="onShow:">UIButton</string>
 						<string key="onSwipRight:">UISwipeGestureRecognizer</string>
 						<string key="onSwipeLeft:">UISwipeGestureRecognizer</string>
 					</dictionary>
 					<dictionary class="NSMutableDictionary" key="actionInfosByName">
-						<object class="IBActionInfo" key="onBarButtonTapped:">
-							<string key="name">onBarButtonTapped:</string>
-							<string key="candidateClassName">id</string>
+						<object class="IBActionInfo" key="onHide:">
+							<string key="name">onHide:</string>
+							<string key="candidateClassName">UIButton</string>
 						</object>
 						<object class="IBActionInfo" key="onPanelDragging:">
 							<string key="name">onPanelDragging:</string>
 							<string key="candidateClassName">UIPanGestureRecognizer</string>
+						</object>
+						<object class="IBActionInfo" key="onShow:">
+							<string key="name">onShow:</string>
+							<string key="candidateClassName">UIButton</string>
 						</object>
 						<object class="IBActionInfo" key="onSwipRight:">
 							<string key="name">onSwipRight:</string>
@@ -335,26 +405,31 @@
 						</object>
 					</dictionary>
 					<dictionary class="NSMutableDictionary" key="outlets">
-						<string key="backgroundImageView">UIImageView</string>
+						<string key="containerBackground">UIImageView</string>
 						<string key="containerView">UIView</string>
-						<string key="vBarBg">UIImageView</string>
-						<string key="vBarButton">UIButton</string>
+						<string key="separatorBackground">UIImageView</string>
+						<string key="separatorButtonOFF">UIButton</string>
+						<string key="separatorButtonON">UIButton</string>
 					</dictionary>
 					<dictionary class="NSMutableDictionary" key="toOneOutletInfosByName">
-						<object class="IBToOneOutletInfo" key="backgroundImageView">
-							<string key="name">backgroundImageView</string>
+						<object class="IBToOneOutletInfo" key="containerBackground">
+							<string key="name">containerBackground</string>
 							<string key="candidateClassName">UIImageView</string>
 						</object>
 						<object class="IBToOneOutletInfo" key="containerView">
 							<string key="name">containerView</string>
 							<string key="candidateClassName">UIView</string>
 						</object>
-						<object class="IBToOneOutletInfo" key="vBarBg">
-							<string key="name">vBarBg</string>
+						<object class="IBToOneOutletInfo" key="separatorBackground">
+							<string key="name">separatorBackground</string>
 							<string key="candidateClassName">UIImageView</string>
 						</object>
-						<object class="IBToOneOutletInfo" key="vBarButton">
-							<string key="name">vBarButton</string>
+						<object class="IBToOneOutletInfo" key="separatorButtonOFF">
+							<string key="name">separatorButtonOFF</string>
+							<string key="candidateClassName">UIButton</string>
+						</object>
+						<object class="IBToOneOutletInfo" key="separatorButtonON">
+							<string key="name">separatorButtonON</string>
 							<string key="candidateClassName">UIButton</string>
 						</object>
 					</dictionary>
@@ -371,6 +446,8 @@
 		<int key="IBDocument.defaultPropertyAccessControl">3</int>
 		<dictionary class="NSMutableDictionary" key="IBDocument.LastKnownImageSizes">
 			<string key="SidePanel-bg.png">{20, 748}</string>
+			<string key="SidePanel-off.active.png">{37, 92}</string>
+			<string key="SidePanel-off.png">{37, 92}</string>
 			<string key="SidePanel-on.active.png">{37, 92}</string>
 			<string key="SidePanel-on.png">{37, 92}</string>
 		</dictionary>

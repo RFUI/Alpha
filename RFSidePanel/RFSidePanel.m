@@ -1,11 +1,12 @@
 #import "RFSidePanel.h"
 
-static CGFloat kToggleAnimateDuration = 0.5f;
+static const CGFloat RFSidePanelToggleAnimateDurationDefault = 0.5;
 
-@interface RFSidePanel ()
+@interface RFSidePanel () {
+    CGFloat toggleAnimateDuration;
+}
 @property (readwrite, nonatomic) BOOL isShow;
 
-@property (RF_WEAK, nonatomic) IBOutlet UIButton * vBarButton;
 @end
 
 @implementation RFSidePanel
@@ -37,40 +38,39 @@ RFUIInterfaceOrientationSupportAll
         [self.containerView addSubview:self.rootViewController.view resizeOption:RFViewResizeOptionFill];
     }
     
-    UISwipeGestureRecognizer * recognizer;
-	recognizer = [[UISwipeGestureRecognizer alloc] initWithTarget:self action:@selector(onSwipRight:)];
-	recognizer.direction = UISwipeGestureRecognizerDirectionRight;
-	[self.view addGestureRecognizer:recognizer];
-    RF_RELEASE_OBJ(recognizer)
-	
-	recognizer = [[UISwipeGestureRecognizer alloc] initWithTarget:self action:@selector(onSwipeLeft:)];
-	recognizer.direction = UISwipeGestureRecognizerDirectionLeft;
-	[self.view addGestureRecognizer:recognizer];
-    RF_RELEASE_OBJ(recognizer)
+    toggleAnimateDuration = RFSidePanelToggleAnimateDurationDefault;
+}
+
+- (void)viewDidAppear:(BOOL)animated {
+    [super viewDidAppear:animated];
 }
 
 - (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
     
+    douts(@"Load in org");
 }
 
 - (void)show:(BOOL)animated {
 	if(self.isShow == YES && [self isViewLoaded]) return;
 	
 	if(animated) {
-		[self.vBarButton setImage:[UIImage resourceName:@"SidePanel-off.active"] forState:UIControlStateNormal];
+        self.separatorButtonOFF.hidden = NO;
+        self.separatorButtonON.highlighted = YES;
+        [self.separatorButtonON bringAboveView:self.separatorButtonOFF];
 		
-		[UIView animateWithDuration:kToggleAnimateDuration delay:0 options:UIViewAnimationOptionCurveEaseInOut|UIViewAnimationOptionBeginFromCurrentState animations:^{
+		[UIView animateWithDuration:toggleAnimateDuration delay:0 options:UIViewAnimationOptionCurveEaseInOut|UIViewAnimationOptionBeginFromCurrentState animations:^{
 			[self.view moveToX:0 Y:RFMathNotChange];
 		} completion:^(BOOL finished) {
-			[self.vBarButton setImage:[UIImage resourceName:@"SidePanel-on"] forState:UIControlStateNormal];
-			[self.vBarButton setImage:[UIImage resourceName:@"SidePanel-on.active"] forState:UIControlStateHighlighted];
+            self.separatorButtonON.highlighted = NO;
+            self.separatorButtonON.hidden = YES;
+            toggleAnimateDuration = RFSidePanelToggleAnimateDurationDefault;
 		}];
 	}
 	else {
 		[self.view moveToX:0 Y:RFMathNotChange];
-		[self.vBarButton setImage:[UIImage resourceName:@"SidePanel-on"] forState:UIControlStateNormal];
-		[self.vBarButton setImage:[UIImage resourceName:@"SidePanel-on.active"] forState:UIControlStateHighlighted];
+		self.separatorButtonOFF.hidden = NO;
+        self.separatorButtonON.hidden = YES;
 	}
 	_isShow = YES;
 }
@@ -79,19 +79,22 @@ RFUIInterfaceOrientationSupportAll
 	if(self.isShow == NO && [self isViewLoaded]) return;
 	
 	if(animated) {
-		[self.vBarButton setImage:[UIImage resourceName:@"SidePanel-on.active"] forState:UIControlStateNormal];
-		
-		[UIView animateWithDuration:kToggleAnimateDuration delay:0 options:UIViewAnimationOptionCurveEaseInOut|UIViewAnimationOptionBeginFromCurrentState animations:^{
+		self.separatorButtonON.hidden = NO;
+        self.separatorButtonOFF.highlighted = YES;
+        [self.separatorButtonOFF bringAboveView:self.separatorButtonON];
+        
+		[UIView animateWithDuration:toggleAnimateDuration delay:0 options:UIViewAnimationOptionCurveEaseInOut|UIViewAnimationOptionBeginFromCurrentState animations:^{
 			[self.view moveToX:-self.containerView.bounds.size.width Y:RFMathNotChange];
 		} completion:^(BOOL finished) {
-			[self.vBarButton setImage:[UIImage resourceName:@"SidePanel-off"] forState:UIControlStateNormal];
-			[self.vBarButton setImage:[UIImage resourceName:@"SidePanel-off.active"] forState:UIControlStateHighlighted];
+			self.separatorButtonOFF.highlighted = NO;
+            self.separatorButtonOFF.hidden = YES;
+            toggleAnimateDuration = RFSidePanelToggleAnimateDurationDefault;
 		}];
 	}
 	else {
 		[self.view moveToX:-self.containerView.bounds.size.width Y:RFMathNotChange];
-		[self.vBarButton setImage:[UIImage resourceName:@"SidePanel-off"] forState:UIControlStateNormal];
-		[self.vBarButton setImage:[UIImage resourceName:@"SidePanel-off.active"] forState:UIControlStateHighlighted];
+		self.separatorButtonOFF.hidden = YES;
+        self.separatorButtonON.hidden = NO;
 	}
 	_isShow = NO;
 }
@@ -106,16 +109,18 @@ RFUIInterfaceOrientationSupportAll
 	return _isShow;
 }
 
-- (IBAction)onSwipeLeft:(UISwipeGestureRecognizer *)sender {
+- (IBAction)onHide:(UIButton *)sender {
     [self hide:YES];
 }
 
-- (IBAction)onSwipRight:(UISwipeGestureRecognizer *)sender {
+- (IBAction)onShow:(UIButton *)sender {
     [self show:YES];
 }
 
 - (IBAction)onPanelDragging:(UIPanGestureRecognizer *)sender {
     CGFloat x = [sender translationInView:self.view].x;
+    CGFloat v = [sender velocityInView:sender.view].x;
+    _dout_float(v);
     CGFloat wBounds = self.containerView.bounds.size.width;
     CGFloat xFrame = self.view.frame.origin.x;
     
@@ -138,7 +143,11 @@ RFUIInterfaceOrientationSupportAll
         case UIGestureRecognizerStateCancelled:
         case UIGestureRecognizerStateEnded:
             _douts(@"UIGestureRecognizerStateRecognized")
-            if (ABS(x) > wBounds*0.5) {
+            if (ABS(x*3+v) > wBounds*3) {
+                if (v != 0) {
+                    toggleAnimateDuration = ABS(wBounds/v)*2;
+                }
+                
                 if (x > 0) {
                     [self show:YES];
                 }
@@ -155,10 +164,6 @@ RFUIInterfaceOrientationSupportAll
         default:
             break;
     }
-}
-
-- (IBAction)onBarButtonTapped:(id)sender {
-    [self toggle:YES];
 }
 
 @end

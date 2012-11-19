@@ -11,7 +11,6 @@
 
 
 @optional
-/// Default
 - (NSString *)RFUIThemeRuleKey;
 
 - (void)changeThemeWithBundle:(RFThemeBundle *)themeBundle;

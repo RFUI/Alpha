@@ -25,3 +25,4 @@
 
 static NSString *const RFThemeRulekRBIButton_backgroundImageName = @"Background Image Name";
 static NSString *const RFThemeRulekRBIButton_backgroundImageCapInsets = @"Background Image CapInsets";
+static NSString *const RFThemeRulekRBIButton_showsTouchWhenHighlighted = @"Shows Touch When Highlighted";

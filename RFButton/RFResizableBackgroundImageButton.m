@@ -51,6 +51,9 @@
     if (dict[RFThemeRulekRBIButton_backgroundImageName]) {
         self.backgroundImageName = dict[RFThemeRulekRBIButton_backgroundImageName];
     }
+    if (dict[RFThemeRulekRBIButton_showsTouchWhenHighlighted]) {
+        self.showsTouchWhenHighlighted = [dict[RFThemeRulekRBIButton_showsTouchWhenHighlighted] boolValue];
+    }
     [self setupBackgroundImageWithName:self.backgroundImageName];
 }
 
@@ -59,8 +62,6 @@
 }
 
 - (void)setupBackgroundImageWithName:(NSString *)backGroundImageName {
-    douto(self.themeManager.currentBundle)
-    douto(backGroundImageName)
     if (backGroundImageName.length > 0) {
         NSString *imageName = backGroundImageName;
 

@@ -8,9 +8,6 @@
 
 #import "RFThemeBundle.h"
 
-static NSString *const RFThemeBundlekThemeName = @"Theme Name";
-static NSString *const RFThemeBundlekThemeRules = @"Theme Rules";
-
 @implementation RFThemeBundle
 
 + (RFThemeBundle *)bundleWithName:(NSString *)bundleName {

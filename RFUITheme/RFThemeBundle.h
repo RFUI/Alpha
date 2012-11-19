@@ -17,3 +17,7 @@
 - (NSString *)themeName;
 - (NSDictionary *)themeRuleForKey:(NSString *)string;
 @end
+
+static NSString *const RFThemeBundlekThemeName = @"Theme Name";
+static NSString *const RFThemeBundlekThemeRules = @"Theme Rules";
+static NSString *const RFThemeBundlekThemePreview = @"Preview";

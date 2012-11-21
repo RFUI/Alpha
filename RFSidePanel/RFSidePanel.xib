@@ -132,10 +132,9 @@
 					<object class="IBUIButton" id="609177380">
 						<reference key="NSNextResponder" ref="766721923"/>
 						<int key="NSvFlags">313</int>
-						<string key="NSFrame">{{320, 324}, {40, 100}}</string>
+						<string key="NSFrame">{{319, 324}, {40, 100}}</string>
 						<reference key="NSSuperview" ref="766721923"/>
 						<reference key="NSWindow"/>
-						<reference key="NSNextKeyView"/>
 						<string key="NSReuseIdentifierKey">_NS:225</string>
 						<bool key="IBUIOpaque">NO</bool>
 						<string key="targetRuntimeIdentifier">IBIPadFramework</string>
@@ -145,7 +144,6 @@
 						<double key="IBUIImageEdgeInsets.bottom">4</double>
 						<double key="IBUIImageEdgeInsets.left">-1</double>
 						<double key="IBUIImageEdgeInsets.right">5</double>
-						<string key="IBUINormalTitle">sw</string>
 						<reference key="IBUIHighlightedTitleColor" ref="253625007"/>
 						<object class="NSColor" key="IBUINormalTitleColor">
 							<int key="NSColorSpace">1</int>
@@ -361,7 +359,7 @@
 				<string key="4.IBPluginDependency">com.apple.InterfaceBuilder.IBCocoaTouchPlugin</string>
 				<string key="41.IBPluginDependency">com.apple.InterfaceBuilder.IBCocoaTouchPlugin</string>
 				<real value="2" key="41.IBUIButtonInspectorSelectedEdgeInsetMetadataKey"/>
-				<real value="1" key="41.IBUIButtonInspectorSelectedStateConfigurationMetadataKey"/>
+				<real value="0.0" key="41.IBUIButtonInspectorSelectedStateConfigurationMetadataKey"/>
 				<string key="5.IBPluginDependency">com.apple.InterfaceBuilder.IBCocoaTouchPlugin</string>
 			</dictionary>
 			<dictionary class="NSMutableDictionary" key="unlocalizedProperties"/>
@@ -379,8 +377,6 @@
 						<string key="onHide:">UIButton</string>
 						<string key="onPanelDragging:">UIPanGestureRecognizer</string>
 						<string key="onShow:">UIButton</string>
-						<string key="onSwipRight:">UISwipeGestureRecognizer</string>
-						<string key="onSwipeLeft:">UISwipeGestureRecognizer</string>
 					</dictionary>
 					<dictionary class="NSMutableDictionary" key="actionInfosByName">
 						<object class="IBActionInfo" key="onHide:">
@@ -394,14 +390,6 @@
 						<object class="IBActionInfo" key="onShow:">
 							<string key="name">onShow:</string>
 							<string key="candidateClassName">UIButton</string>
-						</object>
-						<object class="IBActionInfo" key="onSwipRight:">
-							<string key="name">onSwipRight:</string>
-							<string key="candidateClassName">UISwipeGestureRecognizer</string>
-						</object>
-						<object class="IBActionInfo" key="onSwipeLeft:">
-							<string key="name">onSwipeLeft:</string>
-							<string key="candidateClassName">UISwipeGestureRecognizer</string>
 						</object>
 					</dictionary>
 					<dictionary class="NSMutableDictionary" key="outlets">

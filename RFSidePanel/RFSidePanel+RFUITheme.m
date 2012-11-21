@@ -55,7 +55,7 @@
     }
     
     _RFUIThemeApplayRule(@"Separator OFF") {
-        [self.separatorButtonOFF setImage:[themeManager imageWithName:rule] forState:UIControlStateHighlighted];
+        [self.separatorButtonOFF setImage:[themeManager imageWithName:rule] forState:UIControlStateNormal];
     }
     
     _RFUIThemeApplayRule(@"Separator OFF Active") {

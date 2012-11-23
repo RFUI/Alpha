@@ -54,6 +54,10 @@ RFUIInterfaceOrientationSupportAll
 - (void)show:(BOOL)animated {
 	if(self.isShow == YES && [self isViewLoaded]) return;
 	
+    if ([self.delegate respondsToSelector:@selector(sidePanelWillShow:)]) {
+        [self.delegate sidePanelWillShow:self];
+    }
+    
 	if(animated) {
         self.separatorButtonOFF.hidden = NO;
         self.separatorButtonON.highlighted = YES;
@@ -65,12 +69,18 @@ RFUIInterfaceOrientationSupportAll
             self.separatorButtonON.highlighted = NO;
             self.separatorButtonON.hidden = YES;
             toggleAnimateDuration = RFSidePanelToggleAnimateDurationDefault;
+            if ([self.delegate respondsToSelector:@selector(sidePanelDidShow:)]) {
+                [self.delegate sidePanelDidShow:self];
+            }
 		}];
 	}
 	else {
 		[self.view moveToX:0 Y:RFMathNotChange];
 		self.separatorButtonOFF.hidden = NO;
         self.separatorButtonON.hidden = YES;
+        if ([self.delegate respondsToSelector:@selector(sidePanelDidShow:)]) {
+            [self.delegate sidePanelDidShow:self];
+        }
 	}
 	_isShow = YES;
 }
@@ -78,6 +88,9 @@ RFUIInterfaceOrientationSupportAll
 - (void)hide:(BOOL)animated {
 	if(self.isShow == NO && [self isViewLoaded]) return;
 	
+    if ([self.delegate respondsToSelector:@selector(sidePanelWillHidden:)]) {
+        [self.delegate sidePanelWillHidden:self];
+    }
 	if(animated) {
 		self.separatorButtonON.hidden = NO;
         self.separatorButtonOFF.highlighted = YES;
@@ -89,12 +102,18 @@ RFUIInterfaceOrientationSupportAll
 			self.separatorButtonOFF.highlighted = NO;
             self.separatorButtonOFF.hidden = YES;
             toggleAnimateDuration = RFSidePanelToggleAnimateDurationDefault;
+            if ([self.delegate respondsToSelector:@selector(sidePanelDidHidden:)]) {
+                [self.delegate sidePanelDidHidden:self];
+            }
 		}];
 	}
 	else {
 		[self.view moveToX:-self.containerView.bounds.size.width Y:RFMathNotChange];
 		self.separatorButtonOFF.hidden = YES;
         self.separatorButtonON.hidden = NO;
+        if ([self.delegate respondsToSelector:@selector(sidePanelDidHidden:)]) {
+            [self.delegate sidePanelDidHidden:self];
+        }
 	}
 	_isShow = NO;
 }

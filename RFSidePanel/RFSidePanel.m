@@ -51,9 +51,7 @@ RFUIInterfaceOrientationSupportAll
     douts(@"Load in org");
 }
 
-- (void)show:(BOOL)animated {
-	if(self.isShow == YES && [self isViewLoaded]) return;
-	
+- (void)show:(BOOL)animated {	
     if ([self.delegate respondsToSelector:@selector(sidePanelWillShow:)]) {
         [self.delegate sidePanelWillShow:self];
     }
@@ -63,7 +61,7 @@ RFUIInterfaceOrientationSupportAll
         self.separatorButtonON.highlighted = YES;
         [self.separatorButtonON bringAboveView:self.separatorButtonOFF];
 		
-		[UIView animateWithDuration:toggleAnimateDuration delay:0 options:UIViewAnimationOptionCurveEaseInOut|UIViewAnimationOptionBeginFromCurrentState animations:^{
+		[UIView animateWithDuration:toggleAnimateDuration delay:0 options:UIViewAnimationCurveEaseOut|UIViewAnimationOptionBeginFromCurrentState animations:^{
 			[self.view moveToX:0 Y:RFMathNotChange];
 		} completion:^(BOOL finished) {
             self.separatorButtonON.highlighted = NO;
@@ -87,9 +85,7 @@ RFUIInterfaceOrientationSupportAll
 	_isShow = YES;
 }
 
-- (void)hide:(BOOL)animated {
-	if(self.isShow == NO && [self isViewLoaded]) return;
-	
+- (void)hide:(BOOL)animated {	
     if ([self.delegate respondsToSelector:@selector(sidePanelWillHidden:)]) {
         [self.delegate sidePanelWillHidden:self];
     }
@@ -98,7 +94,7 @@ RFUIInterfaceOrientationSupportAll
         self.separatorButtonOFF.highlighted = YES;
         [self.separatorButtonOFF bringAboveView:self.separatorButtonON];
         
-		[UIView animateWithDuration:toggleAnimateDuration delay:0 options:UIViewAnimationOptionCurveEaseInOut|UIViewAnimationOptionBeginFromCurrentState animations:^{
+		[UIView animateWithDuration:toggleAnimateDuration delay:0 options:UIViewAnimationCurveEaseOut|UIViewAnimationOptionBeginFromCurrentState animations:^{
 			[self.view moveToX:-self.containerView.bounds.size.width Y:RFMathNotChange];
 		} completion:^(BOOL finished) {
 			self.separatorButtonOFF.highlighted = NO;
@@ -142,7 +138,7 @@ RFUIInterfaceOrientationSupportAll
 - (IBAction)onPanelDragging:(UIPanGestureRecognizer *)sender {
     CGFloat x = [sender translationInView:self.view].x;
     CGFloat v = [sender velocityInView:sender.view].x;
-    _dout_float(v);
+
     CGFloat wBounds = self.containerView.bounds.size.width;
     CGFloat xFrame = self.view.frame.origin.x;
     
@@ -156,21 +152,26 @@ RFUIInterfaceOrientationSupportAll
             
         case UIGestureRecognizerStateChanged:
             _douts(@"UIGestureRecognizerStateChanged")
+            _dout_float(x)
+
             if (xStartFrame+x < 0) {
                 [self.view moveToX:xStartFrame+x Y:RFMathNotChange];
             }
             break;
             
-        case UIGestureRecognizerStateFailed:            
+        case UIGestureRecognizerStateFailed:
         case UIGestureRecognizerStateCancelled:
         case UIGestureRecognizerStateEnded:
             _douts(@"UIGestureRecognizerStateRecognized")
-            if (ABS(x*3+v) > wBounds*3) {
+            _dout_float(v);
+            if (ABS(x+v*0.1) > wBounds*0.5) {
+                doutwork()
                 if (v != 0) {
-                    toggleAnimateDuration = ABS(wBounds/v)*2;
+                    toggleAnimateDuration = MAX(ABS(wBounds/v)*3, RFSidePanelToggleAnimateDurationDefault*1.2);
+                    dout_float(toggleAnimateDuration)
                 }
                 
-                if (x > 0) {
+                if (x+v*0.1 > 0) {
                     [self show:YES];
                 }
                 else {

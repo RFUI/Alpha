@@ -58,9 +58,9 @@
 						<reference key="NSWindow"/>
 						<reference key="NSNextKeyView" ref="680523297"/>
 						<string key="NSReuseIdentifierKey">_NS:196</string>
-						<object class="NSColor" key="IBUIBackgroundColor" id="673177029">
+						<object class="NSColor" key="IBUIBackgroundColor" id="253625007">
 							<int key="NSColorSpace">3</int>
-							<bytes key="NSWhite">MCAwAA</bytes>
+							<bytes key="NSWhite">MQA</bytes>
 						</object>
 						<array key="IBUIGestureRecognizers" id="0"/>
 						<string key="targetRuntimeIdentifier">IBIPadFramework</string>
@@ -84,7 +84,7 @@
 					</object>
 					<object class="IBUIButton" id="283200385">
 						<reference key="NSNextResponder" ref="766721923"/>
-						<int key="NSvFlags">313</int>
+						<int key="NSvFlags">297</int>
 						<string key="NSFrame">{{320, 324}, {40, 100}}</string>
 						<reference key="NSSuperview" ref="766721923"/>
 						<reference key="NSWindow"/>
@@ -99,10 +99,7 @@
 						<double key="IBUIImageEdgeInsets.left">-1</double>
 						<double key="IBUIImageEdgeInsets.right">5</double>
 						<string key="IBUINormalTitle">sw</string>
-						<object class="NSColor" key="IBUIHighlightedTitleColor" id="253625007">
-							<int key="NSColorSpace">3</int>
-							<bytes key="NSWhite">MQA</bytes>
-						</object>
+						<reference key="IBUIHighlightedTitleColor" ref="253625007"/>
 						<object class="NSColor" key="IBUINormalTitleColor">
 							<int key="NSColorSpace">1</int>
 							<bytes key="NSRGB">MC4xOTYwNzg0MzQ2IDAuMzA5ODAzOTMyOSAwLjUyMTU2ODY1NgA</bytes>
@@ -131,7 +128,7 @@
 					</object>
 					<object class="IBUIButton" id="609177380">
 						<reference key="NSNextResponder" ref="766721923"/>
-						<int key="NSvFlags">313</int>
+						<int key="NSvFlags">297</int>
 						<string key="NSFrame">{{319, 324}, {40, 100}}</string>
 						<reference key="NSSuperview" ref="766721923"/>
 						<reference key="NSWindow"/>
@@ -166,7 +163,10 @@
 				<reference key="NSSuperview"/>
 				<reference key="NSWindow"/>
 				<reference key="NSNextKeyView" ref="1042040143"/>
-				<reference key="IBUIBackgroundColor" ref="673177029"/>
+				<object class="NSColor" key="IBUIBackgroundColor">
+					<int key="NSColorSpace">3</int>
+					<bytes key="NSWhite">MCAwAA</bytes>
+				</object>
 				<bool key="IBUIClearsContextBeforeDrawing">NO</bool>
 				<reference key="IBUIGestureRecognizers" ref="0"/>
 				<object class="IBUISimulatedOrientationMetrics" key="IBUISimulatedOrientationMetrics">

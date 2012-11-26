@@ -1,7 +1,7 @@
 /*!
     RFSidePanel
     RFUI
-    ver 0.4.0
+    ver 0.5.0
  
     Copyright (c) 2012 BB9z
     http://github.com/bb9z/RFUIAlpha

@@ -68,6 +68,8 @@ RFUIInterfaceOrientationSupportAll
 		} completion:^(BOOL finished) {
             self.separatorButtonON.highlighted = NO;
             self.separatorButtonON.hidden = YES;
+            // Avoid two button was hidden at the same time, for a long animat duration.
+            self.separatorButtonOFF.hidden = NO;
             toggleAnimateDuration = RFSidePanelToggleAnimateDurationDefault;
             if ([self.delegate respondsToSelector:@selector(sidePanelDidShow:)]) {
                 [self.delegate sidePanelDidShow:self];
@@ -101,6 +103,7 @@ RFUIInterfaceOrientationSupportAll
 		} completion:^(BOOL finished) {
 			self.separatorButtonOFF.highlighted = NO;
             self.separatorButtonOFF.hidden = YES;
+            self.separatorButtonON.hidden = NO;
             toggleAnimateDuration = RFSidePanelToggleAnimateDurationDefault;
             if ([self.delegate respondsToSelector:@selector(sidePanelDidHidden:)]) {
                 [self.delegate sidePanelDidHidden:self];

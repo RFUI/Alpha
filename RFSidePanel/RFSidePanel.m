@@ -165,10 +165,9 @@ RFUIInterfaceOrientationSupportAll
             _douts(@"UIGestureRecognizerStateRecognized")
             _dout_float(v);
             if (ABS(x+v*0.1) > wBounds*0.5) {
-                doutwork()
                 if (v != 0) {
                     toggleAnimateDuration = MAX(ABS(wBounds/v)*3, RFSidePanelToggleAnimateDurationDefault*1.2);
-                    dout_float(toggleAnimateDuration)
+                    _dout_float(toggleAnimateDuration)
                 }
                 
                 if (x+v*0.1 > 0) {

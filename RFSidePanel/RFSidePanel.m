@@ -166,7 +166,7 @@ RFUIInterfaceOrientationSupportAll
             _dout_float(v);
             if (ABS(x+v*0.1) > wBounds*0.5) {
                 if (v != 0) {
-                    toggleAnimateDuration = MAX(ABS(wBounds/v)*3, RFSidePanelToggleAnimateDurationDefault*1.2);
+                    toggleAnimateDuration = MIN(ABS(wBounds/v)*3, RFSidePanelToggleAnimateDurationDefault*1.2);
                     _dout_float(toggleAnimateDuration)
                 }
                 

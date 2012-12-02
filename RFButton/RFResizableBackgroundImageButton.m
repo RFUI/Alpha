@@ -8,6 +8,7 @@
 @end
 
 @implementation RFResizableBackgroundImageButton
+_RFAlloctionLog
 
 - (void)awakeFromNib {
     [super awakeFromNib];
@@ -28,9 +29,10 @@
     [super willMoveToSuperview:newSuperview];
     
     if (newSuperview) {
+        __weak RFResizableBackgroundImageButton *selfRef = self;
         [[NSNotificationCenter defaultCenter] addObserverForName:MSGRFUIThemeChange object:nil queue:nil usingBlock:^(NSNotification *note) {
-            NSDictionary *rule = [self.themeManager themeRuleForKey:[self RFUIThemeRuleKey]];
-            [self applyThemeWithRule:rule];
+            NSDictionary *rule = [selfRef.themeManager themeRuleForKey:[selfRef RFUIThemeRuleKey]];
+            [selfRef applyThemeWithRule:rule];
         }];
         [self applyThemeWithRule:[self.themeManager themeRuleForKey:[self RFUIThemeRuleKey]]];
     }

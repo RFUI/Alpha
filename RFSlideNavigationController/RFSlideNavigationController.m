@@ -2,13 +2,25 @@
 #import "RFSlideNavigationController.h"
 #import <QuartzCore/CALayer.h>
 
-@interface RFSlideNavigationController ()
+@interface RFSlideNavigationController () {
+    CGFloat stackViewsWidthSum;
+}
 @property (RF_WEAK, readwrite, nonatomic) UIScrollView *container;
 @property (RF_STRONG, nonatomic) NSMutableArray *viewControllers;
 @property (RF_STRONG, nonatomic) NSMutableArray *viewControllerWidths;
 @end
 
 @implementation RFSlideNavigationController
+
+#define _RFSlideNavigationControllerSendWillShowDelegete(v, a) \
+    if (self.delegate && [self.delegate respondsToSelector:@selector(RFSlideNavigationController:willShowViewController:animated:)]) {\
+        [self.delegate RFSlideNavigationController:self willShowViewController:v animated:a];\
+    }
+
+#define _RFSlideNavigationControllerSendDidShowDelegete(v, a) \
+    if (self.delegate && [self.delegate respondsToSelector:@selector(RFSlideNavigationController:didShowViewController:animated:)]) {\
+        [self.delegate RFSlideNavigationController:self didShowViewController:v animated:a];\
+    }
 
 #pragma mark - Property
 - (NSArray *)viewControllers {
@@ -54,7 +66,7 @@
         [viewController viewWidthForRFSlideNavigationController:self] : view.bounds.size.width;
     [_viewControllerWidths addObject:@(width)];
     
-    view.hidden = YES;
+    _RFSlideNavigationControllerSendWillShowDelegete(viewController, animated)
     CGFloat xFinal = stackViewsWidthSum;
     CGFloat xBeforeAnimate = xFinal - view.bounds.size.width -50;
     stackViewsWidthSum += width-1;
@@ -66,7 +78,6 @@
     
     if (animated) {
         CALayer *layer = view.layer;
-        view.hidden = NO;
         view.alpha = 0.5;
         [view moveToX:xBeforeAnimate Y:0];
         layer.shadowOpacity = 0.5f;
@@ -86,11 +97,12 @@
             } completion:^(BOOL finished) {
                 layer.shadowOpacity = 0.f;
                 layer.shouldRasterize = NO;
+                _RFSlideNavigationControllerSendDidShowDelegete(viewController, YES);
             }];
         }];
     }
     else {
-        view.hidden = NO;
+        _RFSlideNavigationControllerSendDidShowDelegete(viewController, NO);
     }
 }
 
@@ -101,12 +113,14 @@
     }
 	
     UIViewController *viewControllerWillRemove = [_viewControllers lastObject];
+    UIViewController *viewControllerWillShow = (_viewControllers.count > 1)? [_viewControllers objectAtIndex:(_viewControllers.count-2)] : nil;
     [_viewControllers removeLastObject];
     
 	UIView *viewWillPop = viewControllerWillRemove.view;
     CGFloat width = [[_viewControllerWidths lastObject] floatValue];
     stackViewsWidthSum -= width;
 	
+    _RFSlideNavigationControllerSendWillShowDelegete(viewControllerWillShow, animated)
 	if (animated) {
 		[UIView animateWithDuration:0.2 delay:0 options:UIViewAnimationOptionCurveEaseOut animations:^{
 			[viewWillPop moveX:-100 Y:0];
@@ -117,12 +131,14 @@
             viewWillPop.alpha = 1.f;
 			[viewWillPop removeFromSuperview];
             [viewControllerWillRemove removeFromParentViewController];
+            _RFSlideNavigationControllerSendDidShowDelegete(viewControllerWillShow, YES);
 		}];
 	}
 	else {
 		[viewWillPop removeFromSuperview];
 		self.container.contentSize = CGSizeMake(stackViewsWidthSum, 0);
         [viewControllerWillRemove removeFromParentViewController];
+        _RFSlideNavigationControllerSendDidShowDelegete(viewControllerWillShow, NO);
 	}
     return viewControllerWillRemove;
 }
@@ -131,6 +147,7 @@
 	CGFloat tmp_delay = 0.f;
 	CGFloat animationDelayIncrease = 0.2f;
 	
+    _RFSlideNavigationControllerSendWillShowDelegete(nil, animated)
 	if (animated) {
         UIView *view;
 		for (UIViewController *viewController in [self.viewControllers reverseObjectEnumerator]) {
@@ -145,9 +162,14 @@
 			}];
 			tmp_delay += animationDelayIncrease;
 		}
+        dispatch_time_t popTime = dispatch_time(DISPATCH_TIME_NOW, tmp_delay * NSEC_PER_SEC);
+        dispatch_after(popTime, dispatch_get_main_queue(), ^(void){
+            _RFSlideNavigationControllerSendDidShowDelegete(nil, YES);
+        });
 	}
 	else {
 		self.container.contentSize = CGSizeZero;
+        _RFSlideNavigationControllerSendDidShowDelegete(nil, NO);
 	}
     
     // reset

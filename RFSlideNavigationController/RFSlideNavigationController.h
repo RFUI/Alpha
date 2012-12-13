@@ -10,11 +10,11 @@
 @protocol RFSlideNavigationControllerDelegate;
 
 @interface RFSlideNavigationController : UIViewController
-<UIScrollViewDelegate, RFSupportIOS5_0> {
-    CGFloat stackViewsWidthSum;
-}
+<UIScrollViewDelegate, RFNotSupportLoadFromNib, RFSupportIOS5_0>
+
 @property (RF_WEAK, readonly, nonatomic) UIScrollView *container;
 
+- (id)init;
 //- (id)initWithRootViewController:(UIViewController *)rootViewController;
 //@property(nonatomic, readonly, retain) UIViewController *topViewController
 //@property(nonatomic, readonly, retain) UIViewController *visibleViewController
@@ -45,5 +45,11 @@
 
 @protocol RFSlideNavigationControllerDelegate <NSObject>
 
+@optional
+- (void)RFSlideNavigationController:(RFSlideNavigationController *)navigationController didShowViewController:(UIViewController *)viewController animated:(BOOL)animated;
+
+- (void)RFSlideNavigationController:(RFSlideNavigationController *)navigationController willShowViewController:(UIViewController *)viewController animated:(BOOL)animated;
+
 - (CGFloat)viewWidthForRFSlideNavigationController:(RFSlideNavigationController *)sender;
+
 @end

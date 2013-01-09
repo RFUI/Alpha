@@ -2,6 +2,7 @@
 #import "RFResizableBackgroundImageButton.h"
 #import "RFUIThemeBundle.h"
 #import "RFUIThemeManager.h"
+#import "RFPerformance.h"
 
 @interface RFResizableBackgroundImageButton ()
 @property (RF_STRONG, nonatomic) RFUIThemeBundle *bundle;

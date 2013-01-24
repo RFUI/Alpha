@@ -13,10 +13,10 @@
     
     [self setupFetchController];
     
-    [self addObserver:self forKeyPath:@"request" options:NSKeyValueObservingOptionNew context:NULL];
-    [self addObserver:self forKeyPath:@"request.predicate" options:NSKeyValueObservingOptionNew context:NULL];
-    [self addObserver:self forKeyPath:@"request.sortDescriptors" options:NSKeyValueObservingOptionNew context:NULL];
-    [self addObserver:self forKeyPath:@"managedObjectContext" options:NSKeyValueObservingOptionNew context:NULL];
+    [self addObserver:self forKeyPath:@keypath(self, request) options:NSKeyValueObservingOptionNew context:NULL];
+    [self addObserver:self forKeyPath:@keypath(self, request.predicate) options:NSKeyValueObservingOptionNew context:NULL];
+    [self addObserver:self forKeyPath:@keypath(self, request.sortDescriptors) options:NSKeyValueObservingOptionNew context:NULL];
+    [self addObserver:self forKeyPath:@keypath(self, managedObjectContext) options:NSKeyValueObservingOptionNew context:NULL];
 }
 
 - (void)setupFetchController {
@@ -40,27 +40,27 @@
 }
 
 - (void)dealloc {
-    [self removeObserver:self forKeyPath:@"request"];
-    [self removeObserver:self forKeyPath:@"request.predicate"];
-    [self removeObserver:self forKeyPath:@"request.sortDescriptors"];
-    [self removeObserver:self forKeyPath:@"managedObjectContext"];
+    [self removeObserver:self forKeyPath:@keypath(self, request)];
+    [self removeObserver:self forKeyPath:@keypath(self, request.predicate)];
+    [self removeObserver:self forKeyPath:@keypath(self, request.sortDescriptors)];
+    [self removeObserver:self forKeyPath:@keypath(self, managedObjectContext)];
 }
 
 - (void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary *)change context:(void *)context {
-    if ([keyPath isEqualToString:@"request"]) {
+    if ([keyPath isEqualToString:@keypath(self, request)]) {
         if (self.managedObjectContext) {
             [self setupFetchController];
         }
         return;
     }
     
-    if ([keyPath isEqualToString:@"request.predicate"] ||
-        [keyPath isEqualToString:@"request.sortDescriptors"]) {
+    if ([keyPath isEqualToString:@keypath(self, request.predicate)] ||
+        [keyPath isEqualToString:@keypath(self, request.sortDescriptors)]) {
         [self performFetch];
         return;
     }
     
-    if ([keyPath isEqualToString:@"managedObjectContext"]) {
+    if ([keyPath isEqualToString:@keypath(self, managedObjectContext)]) {
         [self setupFetchController];
         return;
     }

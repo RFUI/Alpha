@@ -69,4 +69,12 @@
     return path;
 }
 
+- (NSURL *)urlForResource:(NSString *)name ofType:(NSString *)extension {
+    NSURL *path = nil;
+    if (self.currentBundle) {
+        path = [self.currentBundle URLForResource:name withExtension:extension];
+    }
+    return path;
+}
+
 @end

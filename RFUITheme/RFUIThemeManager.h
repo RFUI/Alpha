@@ -33,6 +33,8 @@
 - (UIImage *)imageWithName:(NSString *)imageName;
 - (NSString *)pathForResource:(NSString *)name ofType:(NSString *)extension;
 
+- (NSURL *)urlForResource:(NSString *)name ofType:(NSString *)extension;
+
 @end
 
 static NSString *const MSGRFUIThemeChange = @"com.github.bb9z.rfui.RFUIThemeChange";

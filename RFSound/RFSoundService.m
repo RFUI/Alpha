@@ -27,12 +27,14 @@
 - (BOOL)addSoundWithURL:(NSURL *)soundFileURL identifier:(NSString *)identifier {
     SystemSoundID sound;
     
-    AudioServicesCreateSystemSoundID((__bridge CFURLRef)RF_RETAIN(soundFileURL), &sound);
+    AudioServicesCreateSystemSoundID((__bridge CFURLRef)soundFileURL, &sound);
     [self.soundStack setObject:@(sound) forKey:identifier];
     return YES;
 }
 
 - (BOOL)removeSound:(NSString *)soundIdentifier {
+    SystemSoundID sound = [self.soundStack[soundIdentifier] intValue];
+    AudioServicesDisposeSystemSoundID(sound);
     [self.soundStack removeObjectForKey:soundIdentifier];
     return YES;
 }
@@ -47,6 +49,18 @@
     SystemSoundID sound = [soundRef intValue];
     AudioServicesPlayAlertSound(sound);
     return YES;
+}
+
+- (void)vibrate {
+    AudioServicesPlaySystemSound (kSystemSoundID_Vibrate);
+}
+
+- (void)dealloc {
+    for (id soundRefObj in self.soundStack) {
+        AudioServicesDisposeSystemSoundID([soundRefObj intValue]);
+    }
+    
+    RF_RELEASE_OBJ(super)
 }
 
 @end

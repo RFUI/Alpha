@@ -1,12 +1,22 @@
 
 #import "RFSoundService.h"
-#include <AudioToolbox/AudioToolbox.h>
 
 @interface RFSoundService ()
 @property (RF_STRONG, nonatomic) NSMutableDictionary *soundStack;
 @end
 
 @implementation RFSoundService
+@dynamic volume;
+
+- (float)volume {
+    return [[MPMusicPlayerController applicationMusicPlayer] volume];
+}
+
+- (void)setVolume:(float)volume {
+    [[MPMusicPlayerController applicationMusicPlayer] setVolume:volume];
+}
+
+#pragma mark -
 + (instancetype)sharedInstance {
 	static RFSoundService *sharedInstance = nil;
     static dispatch_once_t oncePredicate;
@@ -47,12 +57,12 @@
     }
     
     SystemSoundID sound = [soundRef intValue];
-    AudioServicesPlayAlertSound(sound);
+    AudioServicesPlaySystemSound(sound);
     return YES;
 }
 
 - (void)vibrate {
-    AudioServicesPlaySystemSound (kSystemSoundID_Vibrate);
+    AudioServicesPlaySystemSound(kSystemSoundID_Vibrate);
 }
 
 - (void)dealloc {

@@ -1,0 +1,462 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 46;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		D521074415C68A8200DA92B1 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D521074315C68A8200DA92B1 /* UIKit.framework */; };
+		D521074615C68A8200DA92B1 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D521074515C68A8200DA92B1 /* Foundation.framework */; };
+		D521074815C68A8200DA92B1 /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D521074715C68A8200DA92B1 /* CoreGraphics.framework */; };
+		D521074E15C68A8200DA92B1 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = D521074C15C68A8200DA92B1 /* InfoPlist.strings */; };
+		D521075015C68A8200DA92B1 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = D521074F15C68A8200DA92B1 /* main.m */; };
+		D521075415C68A8200DA92B1 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = D521075315C68A8200DA92B1 /* AppDelegate.m */; };
+		D521075715C68A8200DA92B1 /* MainStoryboard_iPhone.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = D521075515C68A8200DA92B1 /* MainStoryboard_iPhone.storyboard */; };
+		D521075A15C68A8200DA92B1 /* MainStoryboard_iPad.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = D521075815C68A8200DA92B1 /* MainStoryboard_iPad.storyboard */; };
+		D521075D15C68A8300DA92B1 /* MasterViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = D521075C15C68A8300DA92B1 /* MasterViewController.m */; };
+		D521076015C68A8300DA92B1 /* DetailViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = D521075F15C68A8300DA92B1 /* DetailViewController.m */; };
+		D521076D15C68ABD00DA92B1 /* RFGridView.m in Sources */ = {isa = PBXBuildFile; fileRef = D521076C15C68ABD00DA92B1 /* RFGridView.m */; };
+		D521079F15C68AED00DA92B1 /* dout.m in Sources */ = {isa = PBXBuildFile; fileRef = D521077015C68AED00DA92B1 /* dout.m */; };
+		D52107A015C68AED00DA92B1 /* NSArray+RFKit.m in Sources */ = {isa = PBXBuildFile; fileRef = D521077315C68AED00DA92B1 /* NSArray+RFKit.m */; };
+		D52107A115C68AED00DA92B1 /* NSBundle+RFKit.m in Sources */ = {isa = PBXBuildFile; fileRef = D521077515C68AED00DA92B1 /* NSBundle+RFKit.m */; };
+		D52107A215C68AED00DA92B1 /* NSDate+RFKit.m in Sources */ = {isa = PBXBuildFile; fileRef = D521077715C68AED00DA92B1 /* NSDate+RFKit.m */; };
+		D52107A315C68AED00DA92B1 /* NSDateFormatter+RFKit.m in Sources */ = {isa = PBXBuildFile; fileRef = D521077915C68AED00DA92B1 /* NSDateFormatter+RFKit.m */; };
+		D52107A415C68AED00DA92B1 /* NSDictionary+RFKit.m in Sources */ = {isa = PBXBuildFile; fileRef = D521077B15C68AED00DA92B1 /* NSDictionary+RFKit.m */; };
+		D52107A515C68AED00DA92B1 /* NSFileManager+RFKit.m in Sources */ = {isa = PBXBuildFile; fileRef = D521077D15C68AED00DA92B1 /* NSFileManager+RFKit.m */; };
+		D52107A615C68AED00DA92B1 /* NSNumberFormatter+RFKit.m in Sources */ = {isa = PBXBuildFile; fileRef = D521077F15C68AED00DA92B1 /* NSNumberFormatter+RFKit.m */; };
+		D52107A715C68AED00DA92B1 /* NSObject+RFKit.m in Sources */ = {isa = PBXBuildFile; fileRef = D521078115C68AED00DA92B1 /* NSObject+RFKit.m */; };
+		D52107A815C68AED00DA92B1 /* NSString+RFKit.m in Sources */ = {isa = PBXBuildFile; fileRef = D521078315C68AED00DA92B1 /* NSString+RFKit.m */; };
+		D52107A915C68AED00DA92B1 /* NSURL+RFKit.m in Sources */ = {isa = PBXBuildFile; fileRef = D521078515C68AED00DA92B1 /* NSURL+RFKit.m */; };
+		D52107AA15C68AED00DA92B1 /* UIAlertView+RFKit.m in Sources */ = {isa = PBXBuildFile; fileRef = D521078715C68AED00DA92B1 /* UIAlertView+RFKit.m */; };
+		D52107AB15C68AED00DA92B1 /* UIButton+RFKit.m in Sources */ = {isa = PBXBuildFile; fileRef = D521078915C68AED00DA92B1 /* UIButton+RFKit.m */; };
+		D52107AC15C68AED00DA92B1 /* UIColor+RFKit.m in Sources */ = {isa = PBXBuildFile; fileRef = D521078B15C68AED00DA92B1 /* UIColor+RFKit.m */; };
+		D52107AD15C68AED00DA92B1 /* UIImage+RFKit.m in Sources */ = {isa = PBXBuildFile; fileRef = D521078D15C68AED00DA92B1 /* UIImage+RFKit.m */; };
+		D52107AE15C68AED00DA92B1 /* UIView+RFKit.m in Sources */ = {isa = PBXBuildFile; fileRef = D521078F15C68AED00DA92B1 /* UIView+RFKit.m */; };
+		D52107AF15C68AED00DA92B1 /* UIViewController+RFKit.m in Sources */ = {isa = PBXBuildFile; fileRef = D521079115C68AED00DA92B1 /* UIViewController+RFKit.m */; };
+		D52107B215C68AED00DA92B1 /* RFKit.m in Sources */ = {isa = PBXBuildFile; fileRef = D521079915C68AED00DA92B1 /* RFKit.m */; };
+		D52107B315C68AED00DA92B1 /* RFMath.m in Sources */ = {isa = PBXBuildFile; fileRef = D521079C15C68AED00DA92B1 /* RFMath.m */; };
+		D52107B415C68AED00DA92B1 /* RFUI.m in Sources */ = {isa = PBXBuildFile; fileRef = D521079E15C68AED00DA92B1 /* RFUI.m */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXFileReference section */
+		D521073F15C68A8200DA92B1 /* RFGridView.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = RFGridView.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		D521074315C68A8200DA92B1 /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
+		D521074515C68A8200DA92B1 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
+		D521074715C68A8200DA92B1 /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = System/Library/Frameworks/CoreGraphics.framework; sourceTree = SDKROOT; };
+		D521074B15C68A8200DA92B1 /* RFGridView-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "RFGridView-Info.plist"; sourceTree = "<group>"; };
+		D521074D15C68A8200DA92B1 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
+		D521074F15C68A8200DA92B1 /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
+		D521075115C68A8200DA92B1 /* RFGridView-Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "RFGridView-Prefix.pch"; sourceTree = "<group>"; };
+		D521075215C68A8200DA92B1 /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
+		D521075315C68A8200DA92B1 /* AppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AppDelegate.m; sourceTree = "<group>"; };
+		D521075615C68A8200DA92B1 /* en */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = en; path = en.lproj/MainStoryboard_iPhone.storyboard; sourceTree = "<group>"; };
+		D521075915C68A8200DA92B1 /* en */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = en; path = en.lproj/MainStoryboard_iPad.storyboard; sourceTree = "<group>"; };
+		D521075B15C68A8200DA92B1 /* MasterViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MasterViewController.h; sourceTree = "<group>"; };
+		D521075C15C68A8300DA92B1 /* MasterViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = MasterViewController.m; sourceTree = "<group>"; };
+		D521075E15C68A8300DA92B1 /* DetailViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = DetailViewController.h; sourceTree = "<group>"; };
+		D521075F15C68A8300DA92B1 /* DetailViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = DetailViewController.m; sourceTree = "<group>"; };
+		D521076B15C68ABD00DA92B1 /* RFGridView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = RFGridView.h; path = ../RFGridView.h; sourceTree = "<group>"; };
+		D521076C15C68ABD00DA92B1 /* RFGridView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = RFGridView.m; path = ../RFGridView.m; sourceTree = "<group>"; };
+		D521076F15C68AED00DA92B1 /* dout.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = dout.h; sourceTree = "<group>"; };
+		D521077015C68AED00DA92B1 /* dout.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = dout.m; sourceTree = "<group>"; };
+		D521077215C68AED00DA92B1 /* NSArray+RFKit.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSArray+RFKit.h"; sourceTree = "<group>"; };
+		D521077315C68AED00DA92B1 /* NSArray+RFKit.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSArray+RFKit.m"; sourceTree = "<group>"; };
+		D521077415C68AED00DA92B1 /* NSBundle+RFKit.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSBundle+RFKit.h"; sourceTree = "<group>"; };
+		D521077515C68AED00DA92B1 /* NSBundle+RFKit.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSBundle+RFKit.m"; sourceTree = "<group>"; };
+		D521077615C68AED00DA92B1 /* NSDate+RFKit.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSDate+RFKit.h"; sourceTree = "<group>"; };
+		D521077715C68AED00DA92B1 /* NSDate+RFKit.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSDate+RFKit.m"; sourceTree = "<group>"; };
+		D521077815C68AED00DA92B1 /* NSDateFormatter+RFKit.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSDateFormatter+RFKit.h"; sourceTree = "<group>"; };
+		D521077915C68AED00DA92B1 /* NSDateFormatter+RFKit.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSDateFormatter+RFKit.m"; sourceTree = "<group>"; };
+		D521077A15C68AED00DA92B1 /* NSDictionary+RFKit.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSDictionary+RFKit.h"; sourceTree = "<group>"; };
+		D521077B15C68AED00DA92B1 /* NSDictionary+RFKit.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSDictionary+RFKit.m"; sourceTree = "<group>"; };
+		D521077C15C68AED00DA92B1 /* NSFileManager+RFKit.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSFileManager+RFKit.h"; sourceTree = "<group>"; };
+		D521077D15C68AED00DA92B1 /* NSFileManager+RFKit.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSFileManager+RFKit.m"; sourceTree = "<group>"; };
+		D521077E15C68AED00DA92B1 /* NSNumberFormatter+RFKit.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSNumberFormatter+RFKit.h"; sourceTree = "<group>"; };
+		D521077F15C68AED00DA92B1 /* NSNumberFormatter+RFKit.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSNumberFormatter+RFKit.m"; sourceTree = "<group>"; };
+		D521078015C68AED00DA92B1 /* NSObject+RFKit.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSObject+RFKit.h"; sourceTree = "<group>"; };
+		D521078115C68AED00DA92B1 /* NSObject+RFKit.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSObject+RFKit.m"; sourceTree = "<group>"; };
+		D521078215C68AED00DA92B1 /* NSString+RFKit.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSString+RFKit.h"; sourceTree = "<group>"; };
+		D521078315C68AED00DA92B1 /* NSString+RFKit.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSString+RFKit.m"; sourceTree = "<group>"; };
+		D521078415C68AED00DA92B1 /* NSURL+RFKit.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSURL+RFKit.h"; sourceTree = "<group>"; };
+		D521078515C68AED00DA92B1 /* NSURL+RFKit.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSURL+RFKit.m"; sourceTree = "<group>"; };
+		D521078615C68AED00DA92B1 /* UIAlertView+RFKit.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIAlertView+RFKit.h"; sourceTree = "<group>"; };
+		D521078715C68AED00DA92B1 /* UIAlertView+RFKit.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIAlertView+RFKit.m"; sourceTree = "<group>"; };
+		D521078815C68AED00DA92B1 /* UIButton+RFKit.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIButton+RFKit.h"; sourceTree = "<group>"; };
+		D521078915C68AED00DA92B1 /* UIButton+RFKit.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIButton+RFKit.m"; sourceTree = "<group>"; };
+		D521078A15C68AED00DA92B1 /* UIColor+RFKit.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIColor+RFKit.h"; sourceTree = "<group>"; };
+		D521078B15C68AED00DA92B1 /* UIColor+RFKit.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIColor+RFKit.m"; sourceTree = "<group>"; };
+		D521078C15C68AED00DA92B1 /* UIImage+RFKit.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIImage+RFKit.h"; sourceTree = "<group>"; };
+		D521078D15C68AED00DA92B1 /* UIImage+RFKit.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIImage+RFKit.m"; sourceTree = "<group>"; };
+		D521078E15C68AED00DA92B1 /* UIView+RFKit.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIView+RFKit.h"; sourceTree = "<group>"; };
+		D521078F15C68AED00DA92B1 /* UIView+RFKit.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIView+RFKit.m"; sourceTree = "<group>"; };
+		D521079015C68AED00DA92B1 /* UIViewController+RFKit.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIViewController+RFKit.h"; sourceTree = "<group>"; };
+		D521079115C68AED00DA92B1 /* UIViewController+RFKit.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIViewController+RFKit.m"; sourceTree = "<group>"; };
+		D521079715C68AED00DA92B1 /* RFARC.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RFARC.h; sourceTree = "<group>"; };
+		D521079815C68AED00DA92B1 /* RFKit.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RFKit.h; sourceTree = "<group>"; };
+		D521079915C68AED00DA92B1 /* RFKit.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RFKit.m; sourceTree = "<group>"; };
+		D521079A15C68AED00DA92B1 /* RFKitDefaultExtensions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RFKitDefaultExtensions.h; sourceTree = "<group>"; };
+		D521079B15C68AED00DA92B1 /* RFMath.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RFMath.h; sourceTree = "<group>"; };
+		D521079C15C68AED00DA92B1 /* RFMath.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RFMath.m; sourceTree = "<group>"; };
+		D521079D15C68AED00DA92B1 /* RFUI.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RFUI.h; sourceTree = "<group>"; };
+		D521079E15C68AED00DA92B1 /* RFUI.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RFUI.m; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		D521073C15C68A8200DA92B1 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				D521074415C68A8200DA92B1 /* UIKit.framework in Frameworks */,
+				D521074615C68A8200DA92B1 /* Foundation.framework in Frameworks */,
+				D521074815C68A8200DA92B1 /* CoreGraphics.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		D521073415C68A8200DA92B1 = {
+			isa = PBXGroup;
+			children = (
+				D521076E15C68AED00DA92B1 /* RFUICore */,
+				D521076B15C68ABD00DA92B1 /* RFGridView.h */,
+				D521076C15C68ABD00DA92B1 /* RFGridView.m */,
+				D521074915C68A8200DA92B1 /* Example */,
+				D521074215C68A8200DA92B1 /* Frameworks */,
+				D521074015C68A8200DA92B1 /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		D521074015C68A8200DA92B1 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				D521073F15C68A8200DA92B1 /* RFGridView.app */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		D521074215C68A8200DA92B1 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				D521074315C68A8200DA92B1 /* UIKit.framework */,
+				D521074515C68A8200DA92B1 /* Foundation.framework */,
+				D521074715C68A8200DA92B1 /* CoreGraphics.framework */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		D521074915C68A8200DA92B1 /* Example */ = {
+			isa = PBXGroup;
+			children = (
+				D521075215C68A8200DA92B1 /* AppDelegate.h */,
+				D521075315C68A8200DA92B1 /* AppDelegate.m */,
+				D521075515C68A8200DA92B1 /* MainStoryboard_iPhone.storyboard */,
+				D521075815C68A8200DA92B1 /* MainStoryboard_iPad.storyboard */,
+				D521075B15C68A8200DA92B1 /* MasterViewController.h */,
+				D521075C15C68A8300DA92B1 /* MasterViewController.m */,
+				D521075E15C68A8300DA92B1 /* DetailViewController.h */,
+				D521075F15C68A8300DA92B1 /* DetailViewController.m */,
+				D521074A15C68A8200DA92B1 /* Supporting Files */,
+			);
+			name = Example;
+			path = RFGridView;
+			sourceTree = "<group>";
+		};
+		D521074A15C68A8200DA92B1 /* Supporting Files */ = {
+			isa = PBXGroup;
+			children = (
+				D521074B15C68A8200DA92B1 /* RFGridView-Info.plist */,
+				D521074C15C68A8200DA92B1 /* InfoPlist.strings */,
+				D521074F15C68A8200DA92B1 /* main.m */,
+				D521075115C68A8200DA92B1 /* RFGridView-Prefix.pch */,
+			);
+			name = "Supporting Files";
+			sourceTree = "<group>";
+		};
+		D521076E15C68AED00DA92B1 /* RFUICore */ = {
+			isa = PBXGroup;
+			children = (
+				D521076F15C68AED00DA92B1 /* dout.h */,
+				D521077015C68AED00DA92B1 /* dout.m */,
+				D521077115C68AED00DA92B1 /* extension */,
+				D521079215C68AED00DA92B1 /* external */,
+				D521079715C68AED00DA92B1 /* RFARC.h */,
+				D521079815C68AED00DA92B1 /* RFKit.h */,
+				D521079915C68AED00DA92B1 /* RFKit.m */,
+				D521079A15C68AED00DA92B1 /* RFKitDefaultExtensions.h */,
+				D521079B15C68AED00DA92B1 /* RFMath.h */,
+				D521079C15C68AED00DA92B1 /* RFMath.m */,
+				D521079D15C68AED00DA92B1 /* RFUI.h */,
+				D521079E15C68AED00DA92B1 /* RFUI.m */,
+			);
+			name = RFUICore;
+			path = ../../RFUICore;
+			sourceTree = "<group>";
+		};
+		D521077115C68AED00DA92B1 /* extension */ = {
+			isa = PBXGroup;
+			children = (
+				D521077215C68AED00DA92B1 /* NSArray+RFKit.h */,
+				D521077315C68AED00DA92B1 /* NSArray+RFKit.m */,
+				D521077415C68AED00DA92B1 /* NSBundle+RFKit.h */,
+				D521077515C68AED00DA92B1 /* NSBundle+RFKit.m */,
+				D521077615C68AED00DA92B1 /* NSDate+RFKit.h */,
+				D521077715C68AED00DA92B1 /* NSDate+RFKit.m */,
+				D521077815C68AED00DA92B1 /* NSDateFormatter+RFKit.h */,
+				D521077915C68AED00DA92B1 /* NSDateFormatter+RFKit.m */,
+				D521077A15C68AED00DA92B1 /* NSDictionary+RFKit.h */,
+				D521077B15C68AED00DA92B1 /* NSDictionary+RFKit.m */,
+				D521077C15C68AED00DA92B1 /* NSFileManager+RFKit.h */,
+				D521077D15C68AED00DA92B1 /* NSFileManager+RFKit.m */,
+				D521077E15C68AED00DA92B1 /* NSNumberFormatter+RFKit.h */,
+				D521077F15C68AED00DA92B1 /* NSNumberFormatter+RFKit.m */,
+				D521078015C68AED00DA92B1 /* NSObject+RFKit.h */,
+				D521078115C68AED00DA92B1 /* NSObject+RFKit.m */,
+				D521078215C68AED00DA92B1 /* NSString+RFKit.h */,
+				D521078315C68AED00DA92B1 /* NSString+RFKit.m */,
+				D521078415C68AED00DA92B1 /* NSURL+RFKit.h */,
+				D521078515C68AED00DA92B1 /* NSURL+RFKit.m */,
+				D521078615C68AED00DA92B1 /* UIAlertView+RFKit.h */,
+				D521078715C68AED00DA92B1 /* UIAlertView+RFKit.m */,
+				D521078815C68AED00DA92B1 /* UIButton+RFKit.h */,
+				D521078915C68AED00DA92B1 /* UIButton+RFKit.m */,
+				D521078A15C68AED00DA92B1 /* UIColor+RFKit.h */,
+				D521078B15C68AED00DA92B1 /* UIColor+RFKit.m */,
+				D521078C15C68AED00DA92B1 /* UIImage+RFKit.h */,
+				D521078D15C68AED00DA92B1 /* UIImage+RFKit.m */,
+				D521078E15C68AED00DA92B1 /* UIView+RFKit.h */,
+				D521078F15C68AED00DA92B1 /* UIView+RFKit.m */,
+				D521079015C68AED00DA92B1 /* UIViewController+RFKit.h */,
+				D521079115C68AED00DA92B1 /* UIViewController+RFKit.m */,
+			);
+			path = extension;
+			sourceTree = "<group>";
+		};
+		D521079215C68AED00DA92B1 /* external */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = external;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		D521073E15C68A8200DA92B1 /* RFGridView */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = D521076315C68A8300DA92B1 /* Build configuration list for PBXNativeTarget "RFGridView" */;
+			buildPhases = (
+				D521073B15C68A8200DA92B1 /* Sources */,
+				D521073C15C68A8200DA92B1 /* Frameworks */,
+				D521073D15C68A8200DA92B1 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = RFGridView;
+			productName = RFGridView;
+			productReference = D521073F15C68A8200DA92B1 /* RFGridView.app */;
+			productType = "com.apple.product-type.application";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		D521073615C68A8200DA92B1 /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				LastUpgradeCheck = 0440;
+			};
+			buildConfigurationList = D521073915C68A8200DA92B1 /* Build configuration list for PBXProject "RFGridView" */;
+			compatibilityVersion = "Xcode 3.2";
+			developmentRegion = English;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+			);
+			mainGroup = D521073415C68A8200DA92B1;
+			productRefGroup = D521074015C68A8200DA92B1 /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				D521073E15C68A8200DA92B1 /* RFGridView */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		D521073D15C68A8200DA92B1 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				D521074E15C68A8200DA92B1 /* InfoPlist.strings in Resources */,
+				D521075715C68A8200DA92B1 /* MainStoryboard_iPhone.storyboard in Resources */,
+				D521075A15C68A8200DA92B1 /* MainStoryboard_iPad.storyboard in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		D521073B15C68A8200DA92B1 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				D521075015C68A8200DA92B1 /* main.m in Sources */,
+				D521075415C68A8200DA92B1 /* AppDelegate.m in Sources */,
+				D521075D15C68A8300DA92B1 /* MasterViewController.m in Sources */,
+				D521076015C68A8300DA92B1 /* DetailViewController.m in Sources */,
+				D521076D15C68ABD00DA92B1 /* RFGridView.m in Sources */,
+				D521079F15C68AED00DA92B1 /* dout.m in Sources */,
+				D52107A015C68AED00DA92B1 /* NSArray+RFKit.m in Sources */,
+				D52107A115C68AED00DA92B1 /* NSBundle+RFKit.m in Sources */,
+				D52107A215C68AED00DA92B1 /* NSDate+RFKit.m in Sources */,
+				D52107A315C68AED00DA92B1 /* NSDateFormatter+RFKit.m in Sources */,
+				D52107A415C68AED00DA92B1 /* NSDictionary+RFKit.m in Sources */,
+				D52107A515C68AED00DA92B1 /* NSFileManager+RFKit.m in Sources */,
+				D52107A615C68AED00DA92B1 /* NSNumberFormatter+RFKit.m in Sources */,
+				D52107A715C68AED00DA92B1 /* NSObject+RFKit.m in Sources */,
+				D52107A815C68AED00DA92B1 /* NSString+RFKit.m in Sources */,
+				D52107A915C68AED00DA92B1 /* NSURL+RFKit.m in Sources */,
+				D52107AA15C68AED00DA92B1 /* UIAlertView+RFKit.m in Sources */,
+				D52107AB15C68AED00DA92B1 /* UIButton+RFKit.m in Sources */,
+				D52107AC15C68AED00DA92B1 /* UIColor+RFKit.m in Sources */,
+				D52107AD15C68AED00DA92B1 /* UIImage+RFKit.m in Sources */,
+				D52107AE15C68AED00DA92B1 /* UIView+RFKit.m in Sources */,
+				D52107AF15C68AED00DA92B1 /* UIViewController+RFKit.m in Sources */,
+				D52107B215C68AED00DA92B1 /* RFKit.m in Sources */,
+				D52107B315C68AED00DA92B1 /* RFMath.m in Sources */,
+				D52107B415C68AED00DA92B1 /* RFUI.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin PBXVariantGroup section */
+		D521074C15C68A8200DA92B1 /* InfoPlist.strings */ = {
+			isa = PBXVariantGroup;
+			children = (
+				D521074D15C68A8200DA92B1 /* en */,
+			);
+			name = InfoPlist.strings;
+			sourceTree = "<group>";
+		};
+		D521075515C68A8200DA92B1 /* MainStoryboard_iPhone.storyboard */ = {
+			isa = PBXVariantGroup;
+			children = (
+				D521075615C68A8200DA92B1 /* en */,
+			);
+			name = MainStoryboard_iPhone.storyboard;
+			sourceTree = "<group>";
+		};
+		D521075815C68A8200DA92B1 /* MainStoryboard_iPad.storyboard */ = {
+			isa = PBXVariantGroup;
+			children = (
+				D521075915C68A8200DA92B1 /* en */,
+			);
+			name = MainStoryboard_iPad.storyboard;
+			sourceTree = "<group>";
+		};
+/* End PBXVariantGroup section */
+
+/* Begin XCBuildConfiguration section */
+		D521076115C68A8300DA92B1 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				COPY_PHASE_STRIP = NO;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				GCC_VERSION = com.apple.compilers.llvm.clang.1_0;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 5.1;
+				SDKROOT = iphoneos;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		D521076215C68A8300DA92B1 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				COPY_PHASE_STRIP = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_VERSION = com.apple.compilers.llvm.clang.1_0;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 5.1;
+				OTHER_CFLAGS = "-DNS_BLOCK_ASSERTIONS=1";
+				SDKROOT = iphoneos;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				VALIDATE_PRODUCT = YES;
+			};
+			name = Release;
+		};
+		D521076415C68A8300DA92B1 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "RFGridView/RFGridView-Prefix.pch";
+				INFOPLIST_FILE = "RFGridView/RFGridView-Info.plist";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				WRAPPER_EXTENSION = app;
+			};
+			name = Debug;
+		};
+		D521076515C68A8300DA92B1 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "RFGridView/RFGridView-Prefix.pch";
+				INFOPLIST_FILE = "RFGridView/RFGridView-Info.plist";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				WRAPPER_EXTENSION = app;
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		D521073915C68A8200DA92B1 /* Build configuration list for PBXProject "RFGridView" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				D521076115C68A8300DA92B1 /* Debug */,
+				D521076215C68A8300DA92B1 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		D521076315C68A8300DA92B1 /* Build configuration list for PBXNativeTarget "RFGridView" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				D521076415C68A8300DA92B1 /* Debug */,
+				D521076515C68A8300DA92B1 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = D521073615C68A8200DA92B1 /* Project object */;
+}

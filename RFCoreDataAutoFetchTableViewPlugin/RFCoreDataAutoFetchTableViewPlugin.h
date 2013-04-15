@@ -11,6 +11,15 @@
     Alpha
  */
 
+/**
+ Advice
+ ----
+ 
+ ViewController should retain plugin.
+ Set plugin´s tableView property, not tableView´s.
+ 
+ */
+
 #import "RFPlugin.h"
 #import <CoreData/CoreData.h>
 
@@ -23,8 +32,6 @@
 - (NSInteger)RFCoreDataAutoFetchTableViewPlugin:(RFCoreDataAutoFetchTableViewPlugin *)plugin numberOfRowsBeforeFetchedRowsInSection:(NSInteger)section;
 
 - (NSInteger)RFCoreDataAutoFetchTableViewPlugin:(RFCoreDataAutoFetchTableViewPlugin *)plugin numberOfRowsAfterFetchedRowsInSection:(NSInteger)section;
-
-
 
 @end
 
@@ -53,6 +60,6 @@
 @end
 
 @interface UITableView (RFCoreDataAutoFetchTableViewPlugin)
-@property (RF_WEAK, nonatomic) IBOutlet RFCoreDataAutoFetchTableViewPlugin *coreDataAutoFetchTableViewPlugin;
+@property (RF_STRONG, nonatomic) RFCoreDataAutoFetchTableViewPlugin *coreDataAutoFetchTableViewPlugin;
 @end
 

@@ -8,6 +8,17 @@
 
 @implementation RFCoreDataAutoFetchTableViewPlugin
 
+- (void)setTableView:(UITableView *)tableView {
+    if (_tableView != tableView) {
+        [self willChangeValueForKey:@keypath(self, tableView)];
+        tableView.coreDataAutoFetchTableViewPlugin = self;
+        tableView.dataSource = self;
+        _tableView = tableView;
+        [self didChangeValueForKey:@keypath(self, tableView)];
+    }
+}
+
+#pragma mark -
 - (void)setup {
     [super setup];
     
@@ -186,13 +197,7 @@ static char RFCoreDataAutoFetchTableViewPluginCateogryProperty;
 - (void)setCoreDataAutoFetchTableViewPlugin:(RFCoreDataAutoFetchTableViewPlugin *)coreDataAutoFetchTableViewPlugin {
     if (self.coreDataAutoFetchTableViewPlugin != coreDataAutoFetchTableViewPlugin) {
         [self willChangeValueForKey:@keypath(self, coreDataAutoFetchTableViewPlugin)];
-        objc_setAssociatedObject(self, &RFCoreDataAutoFetchTableViewPluginCateogryProperty, coreDataAutoFetchTableViewPlugin, OBJC_ASSOCIATION_ASSIGN);
-        if (coreDataAutoFetchTableViewPlugin) {
-            coreDataAutoFetchTableViewPlugin.tableView = self;
-            if (!self.dataSource) {
-                self.dataSource = coreDataAutoFetchTableViewPlugin;
-            }
-        }
+        objc_setAssociatedObject(self, &RFCoreDataAutoFetchTableViewPluginCateogryProperty, coreDataAutoFetchTableViewPlugin, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
         [self didChangeValueForKey:@keypath(self, coreDataAutoFetchTableViewPlugin)];
     }
 }

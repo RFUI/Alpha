@@ -8,13 +8,13 @@
     The MIT License (MIT)
     http://www.opensource.org/licenses/mit-license.php
  
-    Alpha
+    TEST
  */
 
 #import "RFUI.h"
 
 @interface RFBackgroundImageView : UIImageView
-<RFOnlySupportLoadFromNib>
-@property (assign, nonatomic) UIEdgeInsets resizeCapInsets;
+@property (assign, nonatomic) UIEdgeInsets imageResizeCapInsets;
+@property (assign, nonatomic) UIEdgeInsets highlightedImageResizeCapInsets;
 
 @end

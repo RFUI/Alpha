@@ -38,13 +38,10 @@
     if (self.fetchController) {
         dispatch_async(dispatch_get_main_queue(), ^{
             NSError *e = nil;
-            douto(self.fetchController.fetchRequest)
             BOOL success = [self.fetchController performFetch:&e];
             if (e || !success) {
                 dout_error(@"RFCoreDataAutoFetchTableViewPlugin fetch error:%@", e);
-            }
-            douto(self.fetchController.fetchedObjects)
-            
+            }            
             [self.tableView reloadData];
         });
     }

@@ -38,8 +38,12 @@
     if (self.fetchController) {
         dispatch_async(dispatch_get_main_queue(), ^{
             NSError *e = nil;
-            [self.fetchController performFetch:&e];
-            if (e) douto(e);
+            douto(self.fetchController.fetchRequest)
+            BOOL success = [self.fetchController performFetch:&e];
+            if (e || !success) {
+                dout_error(@"RFCoreDataAutoFetchTableViewPlugin fetch error:%@", e);
+            }
+            douto(self.fetchController.fetchedObjects)
             
             [self.tableView reloadData];
         });
@@ -86,13 +90,17 @@
 }
 
 - (NSManagedObject *)fetchedObjectAtIndexPath:(NSIndexPath *)indexPath {
+    return [self.fetchController objectAtIndexPath:[self indexPathForFetchedObjectAtTableIndexPath:indexPath]];
+}
+
+- (NSIndexPath *)indexPathForFetchedObjectAtTableIndexPath:(NSIndexPath *)indexPath {
     NSInteger countBefore = 0;
     if ([self.master respondsToSelector:@selector(RFCoreDataAutoFetchTableViewPlugin:numberOfRowsBeforeFetchedRowsInSection:)]) {
         countBefore = [self.master RFCoreDataAutoFetchTableViewPlugin:self numberOfRowsBeforeFetchedRowsInSection:indexPath.section];
     }
     
     if (indexPath.row >= countBefore) {
-        return [self.fetchController objectAtIndexPath:[NSIndexPath indexPathForRow:indexPath.row-countBefore inSection:indexPath.section]];
+        return [NSIndexPath indexPathForRow:indexPath.row-countBefore inSection:indexPath.section];
     }
     return nil;
 }
@@ -135,13 +143,22 @@
 
 - (void)controller:(NSFetchedResultsController *)controller didChangeObject:(id)anObject atIndexPath:(NSIndexPath *)indexPath forChangeType:(NSFetchedResultsChangeType)type newIndexPath:(NSIndexPath *)newIndexPath {
 	UITableView *table = self.tableView;
+    
+    // Convert from fetch indexPath to table indexPath, add rows before.
+    NSInteger countBefore = 0;
+    if ([self.master respondsToSelector:@selector(RFCoreDataAutoFetchTableViewPlugin:numberOfRowsBeforeFetchedRowsInSection:)]) {
+        countBefore = [self.master RFCoreDataAutoFetchTableViewPlugin:self numberOfRowsBeforeFetchedRowsInSection:indexPath.section];
+    }
+    indexPath = [NSIndexPath indexPathForRow:indexPath.row+countBefore inSection:indexPath.section];
+    newIndexPath = [NSIndexPath indexPathForRow:newIndexPath.row+countBefore inSection:newIndexPath.section];
+    
 	switch(type) {
 		case NSFetchedResultsChangeInsert:
-			[table insertRowsAtIndexPaths:[NSArray arrayWithObject:newIndexPath] withRowAnimation:UITableViewRowAnimationAutomatic];
+            [table insertRowsAtIndexPaths:@[newIndexPath] withRowAnimation:UITableViewRowAnimationAutomatic];
 			break;
 			
 		case NSFetchedResultsChangeDelete:
-			[table deleteRowsAtIndexPaths:[NSArray arrayWithObject:indexPath] withRowAnimation:UITableViewRowAnimationAutomatic];
+			[table deleteRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationAutomatic];
 			break;
 			
 		case NSFetchedResultsChangeUpdate:
@@ -149,7 +166,7 @@
 			break;
 			
 		case NSFetchedResultsChangeMove:
-            [table moveRowAtIndexPath:[NSArray arrayWithObject:indexPath] toIndexPath:[NSArray arrayWithObject:newIndexPath]];
+            [table moveRowAtIndexPath:indexPath toIndexPath:newIndexPath];
 			break;
 	}
 }

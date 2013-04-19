@@ -44,6 +44,22 @@
     return self;
 }
 
+- (id)initWithImage:(UIImage *)image {
+    self = [super initWithImage:image];
+    if (self) {
+        [self onInit];
+    }
+    return self;
+}
+
+- (id)initWithImage:(UIImage *)image highlightedImage:(UIImage *)highlightedImage {
+    self = [super initWithImage:image highlightedImage:highlightedImage];
+    if (self) {
+        [self onInit];
+    }
+    return self;
+}
+
 - (void)onInit {
     [self addObserver:self forKeyPath:@keypath(self, imageResized) options:NSKeyValueObservingOptionNew context:NULL];
     [self addObserver:self forKeyPath:@keypath(self, highlightedImageResized) options:NSKeyValueObservingOptionNew context:NULL];

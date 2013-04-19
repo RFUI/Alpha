@@ -3,7 +3,6 @@
 
 @interface RFCoreDataAutoFetchTableViewPlugin ()
 @property (RF_STRONG, readwrite, nonatomic) NSFetchedResultsController *fetchController;
-
 @end
 
 @implementation RFCoreDataAutoFetchTableViewPlugin
@@ -16,6 +15,10 @@
         _tableView = tableView;
         [self didChangeValueForKey:@keypath(self, tableView)];
     }
+}
+
+- (NSString *)description {
+    return [NSString stringWithFormat:@"<%@: %p, fetchedResultsController = %@ ,tableView = %p>", [self class], self, self.tableView, self.fetchController];
 }
 
 #pragma mark -
@@ -91,30 +94,21 @@
 }
 
 - (NSIndexPath *)indexPathForFetchedObjectAtTableIndexPath:(NSIndexPath *)indexPath {
-    NSInteger countBefore = 0;
-    if ([self.master respondsToSelector:@selector(RFCoreDataAutoFetchTableViewPlugin:numberOfRowsBeforeFetchedRowsInSection:)]) {
-        countBefore = [self.master RFCoreDataAutoFetchTableViewPlugin:self numberOfRowsBeforeFetchedRowsInSection:indexPath.section];
-    }
-    
+    NSInteger countBefore = [self numberOfRowsBeforeFetchedRowsInSection:indexPath.section];
     if (indexPath.row >= countBefore) {
         return [NSIndexPath indexPathForRow:indexPath.row-countBefore inSection:indexPath.section];
     }
     return nil;
 }
 
+- (NSUInteger)numberOfRowsBeforeFetchedRowsInSection:(NSInteger)section {
+    if ([self.master respondsToSelector:@selector(RFCoreDataAutoFetchTableViewPlugin:numberOfRowsBeforeFetchedRowsInSection:)]) {
+        return [self.master RFCoreDataAutoFetchTableViewPlugin:self numberOfRowsBeforeFetchedRowsInSection:section];
+    }
+    return 0;
+}
+
 #pragma mark - UITableViewDataSource
-- (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
-    if (!self.master) return nil;
-        
-    UITableViewCell *cell = [self.master RFCoreDataAutoFetchTableViewPlugin:self cellForRowAtIndexPath:indexPath managedObject:[self fetchedObjectAtIndexPath:indexPath]];
-    return cell;
-}
-
-- (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
-    NSInteger count = [[self.fetchController sections] count];
-    return count;
-}
-
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
     NSInteger extraCount = 0;
     if ([self.master respondsToSelector:@selector(RFCoreDataAutoFetchTableViewPlugin:numberOfRowsBeforeFetchedRowsInSection:)]) {
@@ -128,9 +122,76 @@
     return [sectionInfo numberOfObjects] + extraCount;
 }
 
+- (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
+    if (!self.master) return nil;
+        
+    UITableViewCell *cell = [self.master RFCoreDataAutoFetchTableViewPlugin:self cellForRowAtIndexPath:indexPath managedObject:[self fetchedObjectAtIndexPath:indexPath]];
+    return cell;
+}
+
+- (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
+    NSInteger count = [[self.fetchController sections] count];
+    return count;
+}
+
 - (NSString *)tableView:(UITableView *)tableView titleForHeaderInSection:(NSInteger)section {
     id <NSFetchedResultsSectionInfo> sectionInfo = [self.fetchController sections][section];
     return [sectionInfo indexTitle];
+}
+
+#pragma mark - Other fallback table view data source
+- (NSString *)tableView:(UITableView *)tableView titleForFooterInSection:(NSInteger)section {
+    if ([self.master respondsToSelector:@selector(tableView:titleForFooterInSection:)]) {
+        return [self.master tableView:tableView titleForFooterInSection:section];
+    }
+    return nil;
+}
+
+// Default changed to NO.
+- (BOOL)tableView:(UITableView *)tableView canEditRowAtIndexPath:(NSIndexPath *)indexPath {
+    if ([self.master respondsToSelector:@selector(tableView:canEditRowAtIndexPath:)]) {
+        return [self.master tableView:tableView canEditRowAtIndexPath:indexPath];
+    }
+    return NO;
+}
+
+- (BOOL)tableView:(UITableView *)tableView canMoveRowAtIndexPath:(NSIndexPath *)indexPath {
+    if ([self.master respondsToSelector:@selector(tableView:canMoveRowAtIndexPath:)]) {
+        return [self.master tableView:tableView canMoveRowAtIndexPath:indexPath];
+    }
+    return YES;
+}
+
+- (NSArray *)sectionIndexTitlesForTableView:(UITableView *)tableView {
+    if ([self.master respondsToSelector:@selector(sectionIndexTitlesForTableView:)]) {
+        return [self sectionIndexTitlesForTableView:tableView];
+    }
+    return nil;
+}
+
+- (NSInteger)tableView:(UITableView *)tableView sectionForSectionIndexTitle:(NSString *)title atIndex:(NSInteger)index {
+    for (id <NSFetchedResultsSectionInfo> sectionInfo in [self.fetchController sections]) {
+        if ([[sectionInfo indexTitle] isEqualToString:title]) {
+            return [[self.fetchController sections] indexOfObject:sectionInfo];
+        }
+    }
+    
+    if ([self.master respondsToSelector:@selector(tableView:sectionForSectionIndexTitle:atIndex:)]) {
+        return [self.master tableView:tableView sectionForSectionIndexTitle:title atIndex:index];
+    }
+    return NSNotFound;
+}
+
+- (void)tableView:(UITableView *)tableView commitEditingStyle:(UITableViewCellEditingStyle)editingStyle forRowAtIndexPath:(NSIndexPath *)indexPath {
+    if ([self.master respondsToSelector:@selector(tableView:commitEditingStyle:forRowAtIndexPath:)]) {
+        [self.master tableView:tableView commitEditingStyle:editingStyle forRowAtIndexPath:indexPath];
+    }
+}
+
+- (void)tableView:(UITableView *)tableView moveRowAtIndexPath:(NSIndexPath *)sourceIndexPath toIndexPath:(NSIndexPath *)destinationIndexPath {
+    if ([self.master respondsToSelector:@selector(tableView:moveRowAtIndexPath:toIndexPath:)]) {
+        [self.master tableView:tableView moveRowAtIndexPath:sourceIndexPath toIndexPath:destinationIndexPath];
+    }
 }
 
 #pragma mark - NSFetchedResultsControllerDelegate
@@ -142,10 +203,7 @@
 	UITableView *table = self.tableView;
     
     // Convert from fetch indexPath to table indexPath, add rows before.
-    NSInteger countBefore = 0;
-    if ([self.master respondsToSelector:@selector(RFCoreDataAutoFetchTableViewPlugin:numberOfRowsBeforeFetchedRowsInSection:)]) {
-        countBefore = [self.master RFCoreDataAutoFetchTableViewPlugin:self numberOfRowsBeforeFetchedRowsInSection:indexPath.section];
-    }
+    NSInteger countBefore = [self numberOfRowsBeforeFetchedRowsInSection:indexPath.section];
     indexPath = [NSIndexPath indexPathForRow:indexPath.row+countBefore inSection:indexPath.section];
     newIndexPath = [NSIndexPath indexPathForRow:newIndexPath.row+countBefore inSection:newIndexPath.section];
     

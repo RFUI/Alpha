@@ -25,7 +25,7 @@
 
 @class RFCoreDataAutoFetchTableViewPlugin;
 
-@protocol RFCoreDataAutoFetchTableViewPluginDataSource <RFPluginSupported>
+@protocol RFCoreDataAutoFetchTableViewPluginDataSource <RFPluginSupported, UITableViewDataSource>
 - (UITableViewCell *)RFCoreDataAutoFetchTableViewPlugin:(RFCoreDataAutoFetchTableViewPlugin *)plugin cellForRowAtIndexPath:(NSIndexPath *)indexPath managedObject:(NSManagedObject *)managedObject;
 
 @optional
@@ -39,7 +39,7 @@
 <NSFetchedResultsControllerDelegate, UITableViewDataSource>
 
 @property (RF_WEAK, nonatomic) IBOutlet UITableView *tableView;
-@property (RF_WEAK, nonatomic) IBOutlet id<RFCoreDataAutoFetchTableViewPluginDataSource> master;
+@property (RF_WEAK, nonatomic) IBOutlet id<RFCoreDataAutoFetchTableViewPluginDataSource, UITableViewDataSource> master;
 
 @property (RF_STRONG, readonly, nonatomic) NSFetchedResultsController *fetchController;
 @property (RF_STRONG, nonatomic) NSManagedObjectContext *managedObjectContext;

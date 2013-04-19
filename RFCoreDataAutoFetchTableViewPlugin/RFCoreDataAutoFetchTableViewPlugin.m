@@ -18,7 +18,7 @@
 }
 
 - (NSString *)description {
-    return [NSString stringWithFormat:@"<%@: %p, fetchedResultsController = %@ ,tableView = %p>", [self class], self, self.tableView, self.fetchController];
+    return [NSString stringWithFormat:@"<%@: %p, fetchedResultsController = %@ ,tableView = %p>", [self class], self, self.fetchController, self.tableView];
 }
 
 #pragma mark -

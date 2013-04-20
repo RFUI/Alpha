@@ -3,10 +3,11 @@
 
 @interface RFSoundService ()
 @property (RF_STRONG, nonatomic) NSMutableDictionary *soundStack;
+@property (assign, nonatomic) float lastNotZeroVolumn;
 @end
 
 @implementation RFSoundService
-@dynamic volume;
+@dynamic volume, mute;
 
 - (float)volume {
     return [[MPMusicPlayerController applicationMusicPlayer] volume];
@@ -14,6 +15,18 @@
 
 - (void)setVolume:(float)volume {
     [[MPMusicPlayerController applicationMusicPlayer] setVolume:volume];
+    
+    if (volume != 0.f) {
+        self.lastNotZeroVolumn = volume;
+    }
+}
+
+- (BOOL)isMute {
+    return (self.volume == 0);
+}
+
+- (void)setMute:(BOOL)mute {
+    self.volume = (mute)? 0 : self.lastNotZeroVolumn;
 }
 
 #pragma mark -
@@ -30,6 +43,7 @@
     self = [super init];
     if (self) {
         self.soundStack = [NSMutableDictionary dictionary];
+        self.lastNotZeroVolumn = (self.volume != 0)? self.volume : 0.1;
     }
     return self;
 }

@@ -23,6 +23,9 @@
 /// This property not support KVO.
 @property (assign, nonatomic) float volume;
 
+/// This property not support KVO.
+@property (assign, nonatomic, getter = isMute) BOOL mute;
+
 /// In the Simulator and on devices with no vibration element, this method does nothing.
 - (void)vibrate;
 @end

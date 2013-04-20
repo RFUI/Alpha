@@ -123,7 +123,7 @@
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
-    if (!self.master) return nil;
+    RFAssert(self.master, @"RFCoreDataAutoFetchTableViewPlugin must have a master.");
         
     UITableViewCell *cell = [self.master RFCoreDataAutoFetchTableViewPlugin:self cellForRowAtIndexPath:indexPath managedObject:[self fetchedObjectAtIndexPath:indexPath]];
     return cell;

@@ -1,20 +1,30 @@
 /*!
     RFButton
     RFUI
+
+    Copyright (c) 2012-2013 BB9z
+    https://github.com/RFUI/Alpha
+
+    The MIT License (MIT)
+    http://www.opensource.org/licenses/mit-license.php
  
-    ver -.-.-
+    Alpha
  */
 
 #import "RFUI.h"
 
 @interface RFButton : UIView
-@property (RF_STRONG, nonatomic) __block IBOutlet UIButton *agentButton;
-@property (RF_STRONG, nonatomic) IBOutlet UIImageView *icon;
-@property (RF_STRONG, nonatomic) IBOutlet UILabel *titleLabel;
+@property (weak, nonatomic) IBOutlet UIImageView *icon;
+@property (weak, nonatomic) IBOutlet UILabel *titleLabel;
 
-- (void)setTappedBlock:(void (^)(RFButton *sender))onTappedBlock;
-- (void)setTouchDownBlock:(void (^)(RFButton *sender))onTouchDownBlock;
-- (void)setTouchUpBlock:(void (^)(RFButton *sender))onTouchUpBlock;
+@property (copy, nonatomic, setter = setTappedBlock:) void (^tappedBlock)(RFButton *);
+
+// Defalut was nil.
+- (void)setHighlightEffectBlock:(void (^)(RFButton *sender))highlightEffectBlock;
+- (void)setUnhighlightEffectBlock:(void (^)(RFButton *sender))unhighlightEffectBlock;
 
 - (void)onTouchUpInside;
+
+@property (weak, nonatomic, readonly) UIButton *agentButton;
+
 @end

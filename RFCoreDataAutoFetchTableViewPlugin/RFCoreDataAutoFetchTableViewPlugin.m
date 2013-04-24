@@ -18,7 +18,7 @@
 }
 
 - (NSString *)description {
-    return [NSString stringWithFormat:@"<%@: %p, fetchedResultsController = %@ ,tableView = %p>", [self class], self, self.fetchController, self.tableView];
+    return [NSString stringWithFormat:@"<%@: %p, fetchedResultsController = %@, master = %@, tableView = %p>", [self class], self, self.fetchController, self.master, self.tableView];
 }
 
 #pragma mark -
@@ -124,8 +124,8 @@
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
     RFAssert(self.master, @"RFCoreDataAutoFetchTableViewPlugin must have a master.");
-        
     UITableViewCell *cell = [self.master RFCoreDataAutoFetchTableViewPlugin:self cellForRowAtIndexPath:indexPath managedObject:[self fetchedObjectAtIndexPath:indexPath]];
+    RFAssert(cell, @"Master must return a cell.");
     return cell;
 }
 

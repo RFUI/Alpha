@@ -1,6 +1,8 @@
 
 #import "RFCoreDataAutoFetchTableViewPlugin.h"
 
+static void *const RFCoreDataAutoFetchTableViewPluginKVOContext = (void *)&RFCoreDataAutoFetchTableViewPluginKVOContext;
+
 @interface RFCoreDataAutoFetchTableViewPlugin ()
 @property (RF_STRONG, readwrite, nonatomic) NSFetchedResultsController *fetchController;
 @end
@@ -51,21 +53,21 @@
 }
 
 - (void)registObservers {
-    [self addObserver:self forKeyPath:@keypath(self, request) options:NSKeyValueObservingOptionNew context:NULL];
-    [self addObserver:self forKeyPath:@keypath(self, request.predicate) options:NSKeyValueObservingOptionNew context:NULL];
-    [self addObserver:self forKeyPath:@keypath(self, request.sortDescriptors) options:NSKeyValueObservingOptionNew context:NULL];
-    [self addObserver:self forKeyPath:@keypath(self, managedObjectContext) options:NSKeyValueObservingOptionNew context:NULL];
+    [self addObserver:self forKeyPath:@keypath(self, request) options:NSKeyValueObservingOptionNew context:RFCoreDataAutoFetchTableViewPluginKVOContext];
+    [self addObserver:self forKeyPath:@keypath(self, request.predicate) options:NSKeyValueObservingOptionNew context:RFCoreDataAutoFetchTableViewPluginKVOContext];
+    [self addObserver:self forKeyPath:@keypath(self, request.sortDescriptors) options:NSKeyValueObservingOptionNew context:RFCoreDataAutoFetchTableViewPluginKVOContext];
+    [self addObserver:self forKeyPath:@keypath(self, managedObjectContext) options:NSKeyValueObservingOptionNew context:RFCoreDataAutoFetchTableViewPluginKVOContext];
 }
 
 - (void)dealloc {
-    [self removeObserver:self forKeyPath:@keypath(self, request)];
-    [self removeObserver:self forKeyPath:@keypath(self, request.predicate)];
-    [self removeObserver:self forKeyPath:@keypath(self, request.sortDescriptors)];
-    [self removeObserver:self forKeyPath:@keypath(self, managedObjectContext)];
+    [self removeObserver:self forKeyPath:@keypath(self, request) context:RFCoreDataAutoFetchTableViewPluginKVOContext];
+    [self removeObserver:self forKeyPath:@keypath(self, request.predicate) context:RFCoreDataAutoFetchTableViewPluginKVOContext];
+    [self removeObserver:self forKeyPath:@keypath(self, request.sortDescriptors) context:RFCoreDataAutoFetchTableViewPluginKVOContext];
+    [self removeObserver:self forKeyPath:@keypath(self, managedObjectContext) context:RFCoreDataAutoFetchTableViewPluginKVOContext];
 }
 
 - (void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary *)change context:(void *)context {
-    if (object == self) {
+    if (context == RFCoreDataAutoFetchTableViewPluginKVOContext && object == self) {
         if ([keyPath isEqualToString:@keypath(self, request)]) {
             if (self.managedObjectContext) {
                 [self setupFetchController];
@@ -86,7 +88,9 @@
             return;
         }
     }
-    [super observeValueForKeyPath:keyPath ofObject:object change:change context:context];
+    else {
+        [super observeValueForKeyPath:keyPath ofObject:object change:change context:context];
+    }
 }
 
 - (NSManagedObject *)fetchedObjectAtIndexPath:(NSIndexPath *)indexPath {

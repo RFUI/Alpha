@@ -1,6 +1,9 @@
 
 #import "RFFetchedResultsTableView.h"
 
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wdeprecated-declarations"
+
 @interface RFFetchedResultsTableView ()
 @property (RF_STRONG, readwrite, nonatomic) NSFetchedResultsController *fetchController;
 
@@ -162,3 +165,4 @@
 
 
 @end
+#pragma clang diagnostic pop

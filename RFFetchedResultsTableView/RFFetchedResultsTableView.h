@@ -13,21 +13,21 @@
 #import "RFUI.h"
 #import <CoreData/CoreData.h>
 
-@interface RFFetchedResultsTableView : UITableView
+DEPRECATED_ATTRIBUTE @interface RFFetchedResultsTableView : UITableView
 <NSFetchedResultsControllerDelegate, UITableViewDataSource>
 
-@property (RF_STRONG, readonly, nonatomic) NSFetchedResultsController *fetchController;
-@property (RF_STRONG, nonatomic) NSManagedObjectContext *managedObjectContext;
-@property (RF_STRONG, nonatomic) NSFetchRequest *request;
+@property (RF_STRONG, readonly, nonatomic) NSFetchedResultsController *fetchController  DEPRECATED_ATTRIBUTE;
+@property (RF_STRONG, nonatomic) NSManagedObjectContext *managedObjectContext DEPRECATED_ATTRIBUTE;
+@property (RF_STRONG, nonatomic) NSFetchRequest *request DEPRECATED_ATTRIBUTE;
 
-@property (copy, nonatomic) NSString *fetchCacheName;
-@property (copy, nonatomic) NSString *fetchSectionNameKeyPath;
+@property (copy, nonatomic) NSString *fetchCacheName DEPRECATED_ATTRIBUTE;
+@property (copy, nonatomic) NSString *fetchSectionNameKeyPath DEPRECATED_ATTRIBUTE;
 
-@property (copy, nonatomic) void (^cellConfigureBlock)(UITableViewCell *cell,  NSIndexPath *indexPath);
+@property (copy, nonatomic) void (^cellConfigureBlock)(UITableViewCell *cell,  NSIndexPath *indexPath) DEPRECATED_ATTRIBUTE;
 
 /**
  If this block was set, cellConfigureBlock won`t call in tableView:cellForRowAtIndexPath:.
  But cellConfigureBlock will still call when fetch result change.
  */
-@property (copy, nonatomic) UITableViewCell *(^cellForRowAtIndexPathBlock)(UITableView *tableView,  NSIndexPath *indexPath);
+@property (copy, nonatomic) UITableViewCell *(^cellForRowAtIndexPathBlock)(UITableView *tableView,  NSIndexPath *indexPath) DEPRECATED_ATTRIBUTE;
 @end

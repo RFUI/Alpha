@@ -1,13 +1,8 @@
-//
-//  RFCheckmarkSelectedTableViewCell.h
-//  MIPS
-//
-//  Created by BB9z on 12-9-13.
-//
-//
+// TEST
 
-#import <UIKit/UIKit.h>
+#import "RFUI.h"
 
 @interface RFCheckmarkSelectedTableViewCell : UITableViewCell
+@property (assign, nonatomic, getter=isOn) BOOL on;
 
 @end

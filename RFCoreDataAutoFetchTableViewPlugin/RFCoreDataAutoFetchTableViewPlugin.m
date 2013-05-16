@@ -15,6 +15,7 @@ static void *const RFCoreDataAutoFetchTableViewPluginKVOContext = (void *)&RFCor
         tableView.coreDataAutoFetchTableViewPlugin = self;
         tableView.dataSource = self;
         _tableView = tableView;
+        self.fetchController.delegate = (_tableView)?self : nil;
         [self didChangeValueForKey:@keypath(self, tableView)];
     }
 }
@@ -261,6 +262,7 @@ static void *const RFCoreDataAutoFetchTableViewPluginKVOContext = (void *)&RFCor
 
 @end
 
+#import <objc/runtime.h>
 static char RFCoreDataAutoFetchTableViewPluginCateogryProperty;
 
 @implementation UITableView (RFCoreDataAutoFetchTableViewPlugin)

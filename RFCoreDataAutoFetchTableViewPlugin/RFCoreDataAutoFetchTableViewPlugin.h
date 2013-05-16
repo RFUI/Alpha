@@ -33,13 +33,20 @@
 
 - (NSInteger)RFCoreDataAutoFetchTableViewPlugin:(RFCoreDataAutoFetchTableViewPlugin *)plugin numberOfRowsAfterFetchedRowsInSection:(NSInteger)section;
 
+// Wont call
+- (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section;
+- (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath;
+
+- (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView;
+- (NSString *)tableView:(UITableView *)tableView titleForHeaderInSection:(NSInteger)section;
+
 @end
 
 @interface RFCoreDataAutoFetchTableViewPlugin : RFPlugin
 <NSFetchedResultsControllerDelegate, UITableViewDataSource>
 
 @property (RF_WEAK, nonatomic) IBOutlet UITableView *tableView;
-@property (RF_WEAK, nonatomic) IBOutlet id<RFCoreDataAutoFetchTableViewPluginDataSource, UITableViewDataSource> master;
+@property (RF_WEAK, nonatomic) IBOutlet id<RFCoreDataAutoFetchTableViewPluginDataSource> master;
 
 @property (RF_STRONG, readonly, nonatomic) NSFetchedResultsController *fetchController;
 @property (RF_STRONG, nonatomic) NSManagedObjectContext *managedObjectContext;

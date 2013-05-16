@@ -11,7 +11,6 @@
  */
 
 #import "RFRuntime.h"
-#import <objc/runtime.h>
 
 @protocol RFPluginSupported;
 

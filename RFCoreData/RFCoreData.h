@@ -11,4 +11,5 @@
  */
 
 #import <CoreData/CoreData.h>
+#import "NSManagedObject+RFCoreData.h"
 #import "NSManagedObject+RFCoreDataSyncPurge.h"

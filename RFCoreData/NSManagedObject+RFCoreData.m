@@ -27,6 +27,7 @@
     id object = [self objectWithValue:value forKey:key inContext:context];
     if (!object) {
         object = [NSEntityDescription insertNewObjectForEntityForName:self.entityName inManagedObjectContext:context];
+        [object setValue:value forKey:key];
     }
     return object;
 }

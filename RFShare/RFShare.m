@@ -28,7 +28,7 @@ NSString *const RFShareKeychainServiceName = @"com.github.RFUI.RFShare.weibo";
         self.clientSecret = clientSecret;
         self.redirectURI = redirectURI;
     }
-    return nil;
+    return self;
 }
 
 #pragma mark - Authorize

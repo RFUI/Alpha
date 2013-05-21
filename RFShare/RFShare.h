@@ -22,11 +22,11 @@
 - (void)onReceivedAuthorizeRequest:(NSURLRequest *)request;
 
 
-@property (readonly, copy, nonatomic) NSString *authorizedCode;
+@property (copy, nonatomic) NSString *authorizedCode;
 @property (weak, nonatomic) UIViewController *authorizePresentedViewController;
 
 #pragma mark - Token
-@property (readonly, copy, nonatomic) NSString *accessToken;
+@property (copy, nonatomic) NSString *accessToken;
 @property (strong, nonatomic) NSDate *accessExpires;
 
 - (void)requestAccessToken;

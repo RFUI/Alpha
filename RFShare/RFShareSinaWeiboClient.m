@@ -11,8 +11,6 @@ NSString *const RFShareSinaWeiboClientKeychainServiceName = @"com.github.RFUI.RF
 #define DebugClearKeychainDuringInitialize 0
 
 @interface RFShareSinaWeiboClient ()
-@property (readwrite, copy, nonatomic) NSString *accessToken;
-@property (readwrite, copy, nonatomic) NSString *authorizeCode;
 @property (strong, nonatomic) AFHTTPClient *httpClient;
 @end
 
@@ -27,9 +25,13 @@ NSString *const RFShareSinaWeiboClientKeychainServiceName = @"com.github.RFUI.RF
     return self;
 }
 
+- (void)dealloc {
+    doutwork()
+}
+
 #pragma mark - Authorize
 - (void)requestAuthorize {
-    if (!self.authorizeCode) {
+    if (!self.isAuthorized) {
         [self presentDefaultAuthorizeWebViewController];
     }
 }
@@ -49,8 +51,8 @@ NSString *const RFShareSinaWeiboClientKeychainServiceName = @"com.github.RFUI.RF
 }
 
 - (void)onReceivedAuthorizeRequest:(NSURLRequest *)request {
-    self.authorizeCode = [request.URL queryDictionary][@"code"];
-    douto(self.authorizeCode)
+    self.authorizedCode = [request.URL queryDictionary][@"code"];
+    douto(self.authorizedCode)
     
     if (!self.accessToken) {
         [self requestAccessToken];
@@ -60,11 +62,11 @@ NSString *const RFShareSinaWeiboClientKeychainServiceName = @"com.github.RFUI.RF
 #pragma mark - Access token
 - (void)requestAccessToken {
     [self.httpClient postPath:@"oauth2/access_token" parameters:@{
-     @"client_id" : self.clientID,
-     @"client_secret" : self.clientSecret,
-     @"grant_type" : @"authorization_code",
-     @"code" : self.authorizeCode,
-     @"redirect_uri" : self.redirectURI
+         @"client_id" : self.clientID,
+         @"client_secret" : self.clientSecret,
+         @"grant_type" : @"authorization_code",
+         @"code" : self.authorizedCode,
+         @"redirect_uri" : self.redirectURI
      } success:^(AFHTTPRequestOperation *operation, id responseObject) {
          douto(operation.responseString)
          douto(responseObject)
@@ -116,7 +118,7 @@ NSString *const RFShareSinaWeiboClientKeychainServiceName = @"com.github.RFUI.RF
 #pragma mark - Secret staues
 - (void)saveSecret {
     [self saveSecretInfo:@{
-         @"Authorize Code" : (self.authorizeCode)?: [NSNull null],
+         @"Authorize Code" : (self.authorizedCode)?: [NSNull null],
          @"Access Token" : (self.accessToken)?: [NSNull null],
          @"Access Expires" : (self.accessExpires)?: [NSNull null]
      } forService:RFShareSinaWeiboClientKeychainServiceName account:[NSBundle mainBundle].bundleIdentifier];
@@ -124,7 +126,7 @@ NSString *const RFShareSinaWeiboClientKeychainServiceName = @"com.github.RFUI.RF
 
 - (void)loadSecret {
     NSDictionary *secInfo = [self loadSecretInfoWithService:RFShareSinaWeiboClientKeychainServiceName account:[NSBundle mainBundle].bundleIdentifier];
-    self.authorizeCode = secInfo[@"Authorize Code"];
+    self.authorizedCode = secInfo[@"Authorize Code"];
     self.accessToken = secInfo[@"Access Token"];
     self.accessExpires = secInfo[@"Access Expires"];
 }

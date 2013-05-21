@@ -1,25 +1,38 @@
 // Pre TEST
 
 #import "RFKit.h"
-#import "AFNetworking.h"
-#import "SSKeychain.h"
+#import "RFShareAuthorizeWebViewController.h"
 
-@interface RFShare : NSObject
-<UIWebViewDelegate>
+@interface RFShareClient : NSObject
+<RFShareAuthorizeWebViewControllerDelegate>
 
-+ (instancetype)sharedInstance;
+@property (readonly, copy, nonatomic) NSString *clientID;
+@property (readonly, copy, nonatomic) NSString *clientSecret;
+@property (readonly, copy, nonatomic) NSString *redirectURI;
 
-@property (copy, nonatomic) NSString *redirectURI;
-@property (copy, nonatomic) NSString *clientID;
-@property (readonly, copy, nonatomic) NSString *accessToken;
-@property (readonly, copy, nonatomic) NSString *authorizeCode;
-@property (copy, nonatomic) NSString *clientSecret;
-@property (strong, nonatomic) NSDate *accessExpires;
+- (id)initWithClientID:(NSString *)clientID clientSecret:(NSString *)clientSecret redirectURI:(NSString *)redirectURI;
 
-- (void)test;
+#pragma mark - Authorize
+@property (readonly, assign, nonatomic, getter = isAuthorized) BOOL authorized;
 
+// For overwrite
+- (void)requestAuthorize;
+
+// For overwrite
+- (void)onReceivedAuthorizeRequest:(NSURLRequest *)request;
+
+
+@property (readonly, copy, nonatomic) NSString *authorizedCode;
 @property (weak, nonatomic) UIViewController *authorizePresentedViewController;
 
-- (void)presentDefaultAuthorizeWebViewController;
+#pragma mark - Token
+@property (readonly, copy, nonatomic) NSString *accessToken;
+@property (strong, nonatomic) NSDate *accessExpires;
+
+- (void)requestAccessToken;
+
+#pragma mark -
+- (BOOL)saveSecretInfo:(NSDictionary<NSSecureCoding> *)info forService:(NSString *)serviceName account:(NSString *)account;
+- (NSDictionary *)loadSecretInfoWithService:(NSString *)serviceName account:(NSString *)account;
 
 @end

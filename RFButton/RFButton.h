@@ -11,20 +11,17 @@
     Alpha
  */
 
-#import "RFUI.h"
+#import "RFControl.h"
 
-@interface RFButton : UIView
+@interface RFButton : RFControl
 @property (weak, nonatomic) IBOutlet UIImageView *icon;
 @property (weak, nonatomic) IBOutlet UILabel *titleLabel;
 
-@property (copy, nonatomic, setter = setTappedBlock:) void (^tappedBlock)(RFButton *);
+@property (copy, nonatomic, setter = setTappedBlock:) void (^tappedBlock)(RFButton *) DEPRECATED_ATTRIBUTE;
 
 // Defalut was nil.
 - (void)setHighlightEffectBlock:(void (^)(RFButton *sender))highlightEffectBlock;
 - (void)setUnhighlightEffectBlock:(void (^)(RFButton *sender))unhighlightEffectBlock;
 
-- (void)onTouchUpInside;
-
-@property (weak, nonatomic, readonly) UIButton *agentButton;
-
+@property (weak, nonatomic, readonly) UIButton *agentButton  DEPRECATED_ATTRIBUTE;
 @end

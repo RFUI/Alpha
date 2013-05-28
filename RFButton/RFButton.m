@@ -3,8 +3,6 @@
 
 @interface RFButton ()
 @property (weak, nonatomic, readwrite) UIButton *agentButton;
-@property (copy, nonatomic, setter = setHighlightEffectBlock:) void (^highlightEffectBlock)(RFButton *);
-@property (copy, nonatomic, setter = setUnhighlightEffectBlock:) void (^unhighlightEffectBlock)(RFButton *);
 @end
 
 @implementation RFButton
@@ -14,6 +12,21 @@
 }
 
 #pragma mark -
+- (void)setSelected:(BOOL)selected {
+    [super setSelected:selected];
+    
+    if (selected) {
+        if (self.selecteEffectBlock) {
+            self.selecteEffectBlock(self);
+        }
+    }
+    else {
+        if (self.unselecteEffectBlock) {
+            self.unselecteEffectBlock(self);
+        }
+    }
+}
+
 - (void)setHighlighted:(BOOL)highlighted {
     [super setHighlighted:highlighted];
     

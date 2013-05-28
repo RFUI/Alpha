@@ -8,7 +8,7 @@
     The MIT License (MIT)
     http://www.opensource.org/licenses/mit-license.php
  
-    Alpha
+    BETA
  */
 
 #import "RFControl.h"
@@ -17,11 +17,12 @@
 @property (weak, nonatomic) IBOutlet UIImageView *icon;
 @property (weak, nonatomic) IBOutlet UILabel *titleLabel;
 
-@property (copy, nonatomic, setter = setTappedBlock:) void (^tappedBlock)(RFButton *) DEPRECATED_ATTRIBUTE;
+@property (copy, nonatomic) void (^highlightEffectBlock)(RFButton *sender);
+@property (copy, nonatomic) void (^unhighlightEffectBlock)(RFButton *sender);
+@property (copy, nonatomic) void (^selecteEffectBlock)(RFButton *sender);
+@property (copy, nonatomic) void (^unselecteEffectBlock)(RFButton *sender);
 
-// Defalut was nil.
-- (void)setHighlightEffectBlock:(void (^)(RFButton *sender))highlightEffectBlock;
-- (void)setUnhighlightEffectBlock:(void (^)(RFButton *sender))unhighlightEffectBlock;
 
 @property (weak, nonatomic, readonly) UIButton *agentButton  DEPRECATED_ATTRIBUTE;
+@property (copy, nonatomic, setter = setTappedBlock:) void (^tappedBlock)(RFButton *) DEPRECATED_ATTRIBUTE;
 @end

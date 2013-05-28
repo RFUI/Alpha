@@ -6,23 +6,28 @@
 @protocol RFTabBarDelegate, RFTabBarDataSource;
 
 @interface RFTabBar : UIView
-@property (strong, nonatomic) IBOutletCollection(RFTabBarItem) NSArray *prototypeItems;
 @property (weak, nonatomic) IBOutlet id<RFTabBarDelegate> delegate;
 @property (weak, nonatomic) IBOutlet id<RFTabBarDataSource> dataSource;
 
-@property (strong, nonatomic) IBOutletCollection(RFTabBarItem) NSMutableArray *items;
-@property(nonatomic, assign) UITabBarItem *selectedItem;
-
-- (void)setItems:(NSArray *)items animated:(BOOL)animated;
 - (void)reloadTabItem;
-- (id)dequeueReusableItemWithIdentifier:(NSString *)identifier;
+
+#pragma mark - Accessing item
+@property (strong, nonatomic) IBOutletCollection(RFTabBarItem) NSMutableArray *items;
+- (void)setItems:(NSArray *)items animated:(BOOL)animated;
+
+@property(nonatomic, assign) RFTabBarItem *selectedItem;
+
+- (RFTabBarItem *)itemAtIndex:(NSInteger)index;
+
+- (NSInteger)indexForItem:(RFTabBarItem *)item;
+- (NSInteger)indexForSelectedItem:(RFTabBarItem *)item;
 
 @end
 
 
 @protocol RFTabBarDelegate <NSObject>
 @optional
-- (void)RFTabBar:(RFTabBar *)tabBar shouldSelectItem:(RFTabBarItem *)item;
+- (BOOL)RFTabBar:(RFTabBar *)tabBar shouldSelectItem:(RFTabBarItem *)item;
 - (void)RFTabBar:(RFTabBar *)tabBar didSelectItem:(RFTabBarItem *)item;
 
 @end

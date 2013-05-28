@@ -17,11 +17,7 @@
     _douto(self.items)
 }
 
-- (void)reloadTabItem {
-    for (UIView *view in self.prototypeItems) {
-        [view removeFromSuperview];
-    }
-    
+- (void)reloadTabItem {    
     if (!self.dataSource) return;
     
     NSInteger count = 0;
@@ -32,7 +28,11 @@
     
     NSMutableArray *items = [NSMutableArray arrayWithCapacity:count];
     for (NSInteger i = 0; i < count; i++) {
-        [items addObject:[self.dataSource RFTabBar:self itemForIndex:i]];
+        RFTabBarItem *item = [self.dataSource RFTabBar:self itemForIndex:i];
+        if ([item actionsForTarget:self forControlEvent:UIControlEventTouchUpInside].count == 0) {
+            [item addTarget:self action:@selector(onTabBarItemTapped:) forControlEvents:UIControlEventTouchUpInside];
+        }
+        [items addObject:item];
     }
     
     [self setItems:items animated:YES];
@@ -75,21 +75,41 @@
     }
 }
 
-- (id)dequeueReusableItemWithIdentifier:(NSString *)identifier {
-    RFTabBarItem *prototypeItem = [self prototypeItemWithIdentifier:identifier];
-    RFAssert(prototypeItem, @"Cannot dequeue a item with identifier:%@.", identifier);
-    RFTabBarItem *copyedItem = [prototypeItem reusingCopy];
-    [copyedItem prepareForReuse];
-    return copyedItem;
-}
-
-- (RFTabBarItem *)prototypeItemWithIdentifier:(NSString *)identifier {
-    for (RFTabBarItem *item in self.prototypeItems) {
-        if ([item.reuseIdentifier isEqualToString:identifier]) {
-            return item;
-        }
+#pragma mark - Accessing item
+- (RFTabBarItem *)itemAtIndex:(NSInteger)index {
+    if (index < (NSInteger)self.items.count) {
+        return [self.items objectAtIndex:index];
     }
     return nil;
+}
+
+- (NSInteger)indexForItem:(RFTabBarItem *)item {
+    return [self.items indexOfObject:item];
+}
+
+- (NSInteger)indexForSelectedItem:(RFTabBarItem *)item {
+    return [self.items indexOfObject:self.selectedItem];
+}
+
+#pragma mark - Delegate
+- (void)onTabBarItemTapped:(RFTabBarItem *)sender {
+    if (![self.items containsObject:sender]) return;
+    if (sender == self.selectedItem) return;
+    
+    if (!sender.selected && [self.delegate respondsToSelector:@selector(RFTabBar:shouldSelectItem:)]) {
+        BOOL canSelect = [self.delegate RFTabBar:self shouldSelectItem:sender];
+        if (!canSelect) {
+            return;
+        }
+    }
+
+    self.selectedItem.selected = NO;
+    sender.selected = YES;
+    self.selectedItem = sender;
+    
+    if ([self.delegate respondsToSelector:@selector(RFTabBar:didSelectItem:)]) {
+        [self.delegate RFTabBar:self didSelectItem:sender];
+    }
 }
 
 @end

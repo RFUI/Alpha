@@ -1,30 +1,39 @@
-// WORKING
+// TEST
 
 #import "RFUI.h"
-#import "RFStoryboardReusing.h"
+#import "RFTabBarItem.h"
 
-@class RFTabItem;
-@protocol RFTabBarDelegate;
+@protocol RFTabBarDelegate, RFTabBarDataSource;
 
 @interface RFTabBar : UIView
-@property (strong, nonatomic) IBOutletCollection(RFTabItem) NSArray *prototypeItems;
-@property (strong, nonatomic) IBOutletCollection(RFTabItem) NSMutableArray *items;
+@property (strong, nonatomic) IBOutletCollection(RFTabBarItem) NSArray *prototypeItems;
+@property (weak, nonatomic) IBOutlet id<RFTabBarDelegate> delegate;
+@property (weak, nonatomic) IBOutlet id<RFTabBarDataSource> dataSource;
+
+@property (strong, nonatomic) IBOutletCollection(RFTabBarItem) NSMutableArray *items;
 @property(nonatomic, assign) UITabBarItem *selectedItem;
 
 - (void)setItems:(NSArray *)items animated:(BOOL)animated;
+- (void)reloadTabItem;
+- (id)dequeueReusableItemWithIdentifier:(NSString *)identifier;
 
 @end
 
-
-@interface RFTabItem : UIButton
-<RFStoryboardReusing>
-
-
-
-@end
 
 @protocol RFTabBarDelegate <NSObject>
-- (void)RFTabBar:(RFTabBar *)tabBar shouldSelectItem:(RFTabItem *)item;
-- (void)RFTabBar:(RFTabBar *)tabBar didSelectItem:(RFTabItem *)item;
+@optional
+- (void)RFTabBar:(RFTabBar *)tabBar shouldSelectItem:(RFTabBarItem *)item;
+- (void)RFTabBar:(RFTabBar *)tabBar didSelectItem:(RFTabBarItem *)item;
+
+@end
+
+
+@protocol RFTabBarDataSource <NSObject>
+@required
+- (NSInteger)numberOfItemInTabBar:(RFTabBar *)tabBar;
+- (RFTabBarItem *)RFTabBar:(RFTabBar *)tabBar itemForIndex:(NSInteger)index;
+
+@optional
+- (CGFloat)RFTabBar:(RFTabBar *)tabBar itemWidthForIndex:(NSInteger)index;
 
 @end

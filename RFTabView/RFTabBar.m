@@ -91,24 +91,32 @@
     return [self.items indexOfObject:self.selectedItem];
 }
 
-#pragma mark - Delegate
-- (void)onTabBarItemTapped:(RFTabBarItem *)sender {
-    if (![self.items containsObject:sender]) return;
-    if (sender == self.selectedItem) return;
+#pragma mark - Managing Selection
+- (void)selectItemAtIndex:(NSInteger)index {
+    RFTabBarItem *itemToBeSelected = [self itemAtIndex:index];
     
-    if (!sender.selected && [self.delegate respondsToSelector:@selector(RFTabBar:shouldSelectItem:)]) {
-        BOOL canSelect = [self.delegate RFTabBar:self shouldSelectItem:sender];
-        if (!canSelect) {
-            return;
-        }
+    if (!itemToBeSelected) return;
+    if (itemToBeSelected == self.selectedItem) return;
+    
+    if ([self.delegate respondsToSelector:@selector(RFTabBar:shouldSelectItem:)] && ![self.delegate RFTabBar:self shouldSelectItem:itemToBeSelected]) {
+        return;
     }
-
+    
     self.selectedItem.selected = NO;
-    sender.selected = YES;
-    self.selectedItem = sender;
+    itemToBeSelected.selected = YES;
+    self.selectedItem = itemToBeSelected;
     
     if ([self.delegate respondsToSelector:@selector(RFTabBar:didSelectItem:)]) {
-        [self.delegate RFTabBar:self didSelectItem:sender];
+        [self.delegate RFTabBar:self didSelectItem:itemToBeSelected];
+    }
+}
+
+#pragma mark - Delegate
+- (void)onTabBarItemTapped:(RFTabBarItem *)sender {
+    NSInteger indexToBeSelected = [self indexForItem:sender];
+    
+    if (indexToBeSelected != NSNotFound) {
+        [self selectItemAtIndex:indexToBeSelected];
     }
 }
 

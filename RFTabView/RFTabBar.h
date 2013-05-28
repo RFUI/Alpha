@@ -15,11 +15,13 @@
 @property (strong, nonatomic) IBOutletCollection(RFTabBarItem) NSMutableArray *items;
 - (void)setItems:(NSArray *)items animated:(BOOL)animated;
 
+- (RFTabBarItem *)itemAtIndex:(NSInteger)index;
+- (NSInteger)indexForItem:(RFTabBarItem *)item;
+
+#pragma mark - Managing Selection
 @property(nonatomic, assign) RFTabBarItem *selectedItem;
 
-- (RFTabBarItem *)itemAtIndex:(NSInteger)index;
-
-- (NSInteger)indexForItem:(RFTabBarItem *)item;
+- (void)selectItemAtIndex:(NSInteger)index;
 - (NSInteger)indexForSelectedItem:(RFTabBarItem *)item;
 
 @end

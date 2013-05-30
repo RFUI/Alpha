@@ -7,7 +7,7 @@
     The MIT License (MIT)
     http://www.opensource.org/licenses/mit-license.php
 
-    Theory Test
+    Pre TEST
  */
 
 #import "RFRuntime.h"
@@ -18,6 +18,7 @@
 @property (RF_WEAK, nonatomic) IBOutlet id<RFPluginSupported> master;
 
 - (void)setup;
+
 @end
 
 @protocol RFPluginSupported <NSObject>

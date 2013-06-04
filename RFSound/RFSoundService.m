@@ -93,7 +93,7 @@
 
 - (void)setVolume:(float)volume {
     self.applicationMusicPlayer.volume = volume;
-    if (volume != 0.f) {
+    if (volume > 0.f) {
         self.lastNotZeroVolumn = volume;
     }
 }

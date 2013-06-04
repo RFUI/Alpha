@@ -20,10 +20,8 @@
 - (BOOL)playSound:(NSString *)soundIdentifier;
 
 /// The current volume of application media, in the range of 0.0 to 1.0.
-/// This property not support KVO.
 @property (assign, nonatomic) float volume;
 
-/// This property not support KVO.
 @property (assign, nonatomic, getter = isMute) BOOL mute;
 
 /// In the Simulator and on devices with no vibration element, this method does nothing.

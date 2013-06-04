@@ -4,30 +4,14 @@
 @interface RFSoundService ()
 @property (RF_STRONG, nonatomic) NSMutableDictionary *soundStack;
 @property (assign, nonatomic) float lastNotZeroVolumn;
+@property (weak, nonatomic) MPMusicPlayerController *applicationMusicPlayer;
 @end
 
 @implementation RFSoundService
 @dynamic volume, mute;
-
-- (float)volume {
-    return [[MPMusicPlayerController applicationMusicPlayer] volume];
-}
-
-- (void)setVolume:(float)volume {
-    [[MPMusicPlayerController applicationMusicPlayer] setVolume:volume];
-    
-    if (volume != 0.f) {
-        self.lastNotZeroVolumn = volume;
-    }
-}
-
-- (BOOL)isMute {
-    return (self.volume == 0);
-}
-
-- (void)setMute:(BOOL)mute {
-    self.volume = (mute)? 0 : self.lastNotZeroVolumn;
-}
+@synthesize lastNotZeroVolumn = _lastNotZeroVolumn;
+@synthesize soundStack = _soundStack;
+@synthesize applicationMusicPlayer = _applicationMusicPlayer;
 
 #pragma mark -
 + (instancetype)sharedInstance {
@@ -85,6 +69,43 @@
     }
     
     RF_RELEASE_OBJ(super)
+}
+
+- (MPMusicPlayerController *)applicationMusicPlayer {
+    if (!_applicationMusicPlayer) {
+        _applicationMusicPlayer = [MPMusicPlayerController applicationMusicPlayer];
+    }
+    return _applicationMusicPlayer;
+}
+
+#pragma mark - Volume
++ (NSSet *)keyPathsForValuesAffectingVolume {
+    RFSoundService *this;
+    return [NSSet setWithObject:@keypath(this, applicationMusicPlayer.volume)];
+}
+
++ (NSSet *)keyPathsForValuesAffectingMute {
+    RFSoundService *this;
+    return [NSSet setWithObject:@keypath(this, applicationMusicPlayer.volume)];
+}
+
+- (float)volume {
+    return self.applicationMusicPlayer.volume;
+}
+
+- (void)setVolume:(float)volume {
+    self.applicationMusicPlayer.volume = volume;
+    if (volume != 0.f) {
+        self.lastNotZeroVolumn = volume;
+    }
+}
+
+- (BOOL)isMute {
+    return (self.applicationMusicPlayer.volume == 0);
+}
+
+- (void)setMute:(BOOL)mute {
+    self.applicationMusicPlayer.volume = (mute)? 0 : self.lastNotZeroVolumn;
 }
 
 @end

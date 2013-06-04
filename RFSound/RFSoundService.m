@@ -2,7 +2,7 @@
 #import "RFSoundService.h"
 
 @interface RFSoundService ()
-@property (RF_STRONG, nonatomic) NSMutableDictionary *soundStack;
+@property (strong, nonatomic) NSMutableDictionary *soundStack;
 @property (assign, nonatomic) float lastNotZeroVolumn;
 @property (weak, nonatomic) MPMusicPlayerController *applicationMusicPlayer;
 @end
@@ -67,8 +67,6 @@
     for (id soundRefObj in self.soundStack) {
         AudioServicesDisposeSystemSoundID([soundRefObj intValue]);
     }
-    
-    RF_RELEASE_OBJ(super)
 }
 
 - (MPMusicPlayerController *)applicationMusicPlayer {

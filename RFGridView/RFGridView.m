@@ -134,7 +134,7 @@ CGSize DEFAULT_RFGridViewCellSize = {20, 20};
         
         basePoint.x += (contentBox.size.width - (nWidth-1)*(wCell+xMMargin) - wCell)/2;
         
-        for (int i = 0; i < nCount; i++) {
+        for (NSUInteger i = 0; i < nCount; i++) {
             tmp_view = [self.subviews objectAtIndex:i];
             ixCol = i%nWidth;
             ixRow = i/nWidth;
@@ -158,7 +158,7 @@ CGSize DEFAULT_RFGridViewCellSize = {20, 20};
         
         basePoint.y += (contentBox.size.height - (nHeight-1)*(hCell+yMMargin) - hCell)/2;
         
-        for (int i = 0; i < nCount; i++) {
+        for (NSUInteger i = 0; i < nCount; i++) {
             tmp_view = [self.subviews objectAtIndex:i];
             ixRow = i%nHeight;
             ixCol = i/nHeight;

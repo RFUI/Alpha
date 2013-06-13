@@ -8,7 +8,7 @@
     The MIT License (MIT)
     http://www.opensource.org/licenses/mit-license.php
 
-    TEST
+    Alpha
  */
 
 #import "RFControl.h"
@@ -21,12 +21,12 @@
 
 @property (assign, nonatomic, getter = isOn) BOOL on;
 
-@property (strong, nonatomic) UIImage *onImage;
-@property (strong, nonatomic) UIImage *onHighlightedImage;
-@property (strong, nonatomic) UIImage *onDisabledImage;
-@property (strong, nonatomic) UIImage *offImage;
-@property (strong, nonatomic) UIImage *offHighlightedImage;
-@property (strong, nonatomic) UIImage *offDisabledImage;
+@property (strong, nonatomic) UIImage *onImage UI_APPEARANCE_SELECTOR;
+@property (strong, nonatomic) UIImage *onHighlightedImage UI_APPEARANCE_SELECTOR;
+@property (strong, nonatomic) UIImage *onDisabledImage UI_APPEARANCE_SELECTOR;
+@property (strong, nonatomic) UIImage *offImage UI_APPEARANCE_SELECTOR;
+@property (strong, nonatomic) UIImage *offHighlightedImage UI_APPEARANCE_SELECTOR;
+@property (strong, nonatomic) UIImage *offDisabledImage UI_APPEARANCE_SELECTOR;
 
 @end
 

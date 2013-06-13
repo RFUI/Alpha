@@ -10,9 +10,19 @@ static void *const RFCheckBoxKVOContext = (void *)&RFCheckBoxKVOContext;
 
 @implementation RFCheckBox
 
+- (NSString *)description {
+    NSString *orginalDescription = [super description];
+    NSUInteger toIndex = orginalDescription.length - 1;
+    return [[orginalDescription substringToIndex:toIndex] stringByAppendingFormat:@"; enabled = %@; on = %@>", self.enabled? @"YES" : @"NO", self.on? @"YES" : @"NO"];
+}
+
 - (void)onInit {
     [self addTarget:self action:@selector(_onTouchUpInside) forControlEvents:UIControlEventTouchUpInside];
-    [self addObserver:self forKeyPath:@keypath(self, needsUpdateCheckboxImageView) options:NSKeyValueObservingOptionNew context:RFCheckBoxKVOContext];
+    _needsUpdateCheckboxImageView = NO;
+    dispatch_async(dispatch_get_current_queue(), ^{
+        [self addObserver:self forKeyPath:@keypath(self, needsUpdateCheckboxImageView) options:NSKeyValueObservingOptionNew context:RFCheckBoxKVOContext];
+        self.needsUpdateCheckboxImageView = YES;
+    });
 }
 
 - (void)dealloc {
@@ -44,14 +54,11 @@ static void *const RFCheckBoxKVOContext = (void *)&RFCheckBoxKVOContext;
 }
 
 - (void)updateCheckboxImageView {
-    if (self.isOn) {
+    if (self.on) {
         if (self.enabled) {
-            if (self.onImage) {
-                self.checkBoxImageView.image = self.onImage;
-            }
-            if (self.onHighlightedImage) {
-                self.checkBoxImageView.highlightedImage = self.onHighlightedImage;
-            }
+            self.checkBoxImageView.image = self.onImage;
+            self.checkBoxImageView.highlightedImage = self.onHighlightedImage;
+            
             if (self.checkBoxImageView.alpha == RFCheckBoxNoImageDisableAlpha) {
                 self.checkBoxImageView.alpha = 1;
             }
@@ -67,12 +74,8 @@ static void *const RFCheckBoxKVOContext = (void *)&RFCheckBoxKVOContext;
     }
     else {
         if (self.enabled) {
-            if (self.offImage) {
-                self.checkBoxImageView.image = self.offImage;
-            }
-            if (self.offHighlightedImage) {
-                self.checkBoxImageView.highlightedImage = self.offHighlightedImage;
-            }
+            self.checkBoxImageView.image = self.offImage;
+            self.checkBoxImageView.highlightedImage = self.offHighlightedImage;
             if (self.checkBoxImageView.alpha == RFCheckBoxNoImageDisableAlpha) {
                 self.checkBoxImageView.alpha = 1;
             }
@@ -86,6 +89,7 @@ static void *const RFCheckBoxKVOContext = (void *)&RFCheckBoxKVOContext;
             }
         }
     }
+    _needsUpdateCheckboxImageView = NO;
 }
 
 @end

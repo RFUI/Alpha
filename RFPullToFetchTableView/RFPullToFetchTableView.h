@@ -1,5 +1,5 @@
 /*!
-    RFAutoFetchTableView
+    RFPullToFetchTableView
     RFUI
 
     Copyright (c) 2013 BB9z
@@ -21,7 +21,7 @@ typedef enum {
 	RFAutoFetchTableContainerStyleFloatSolid = 5,
 } RFAutoFetchTableContainerStyle;
 
-@interface RFAutoFetchTableView : UITableView
+@interface RFPullToFetchTableView : UITableView
 
 @property (assign, nonatomic, getter = isHeaderFetchingEnabled) BOOL headerFetchingEnabled;
 @property (assign, nonatomic, getter = isFooterFetchingEnabled) BOOL footerFetchingEnabled;

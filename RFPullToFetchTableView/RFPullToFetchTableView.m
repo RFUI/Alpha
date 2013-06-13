@@ -1,11 +1,11 @@
 
-#import "RFAutoFetchTableView.h"
+#import "RFPullToFetchTableView.h"
 
-@interface RFAutoFetchTableView ()
+@interface RFPullToFetchTableView ()
 @property (assign, nonatomic) CGFloat distanceBetweenContentAndBottom;
 @end
 
-@implementation RFAutoFetchTableView
+@implementation RFPullToFetchTableView
 #pragma mark - @property
 - (CGFloat)distanceBetweenContentAndBottom {
     static CGFloat lastDistance;

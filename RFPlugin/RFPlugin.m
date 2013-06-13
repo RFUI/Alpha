@@ -19,15 +19,13 @@
 
 - (void)setup {
 #if DEBUG
-    __weak __typeof(&*self)weakSelf = self;
-    double delayInSeconds = 2.0;
-    dispatch_time_t popTime = dispatch_time(DISPATCH_TIME_NOW, (int64_t)(delayInSeconds * NSEC_PER_SEC));
-    dispatch_after(popTime, dispatch_get_current_queue(), ^(void){
-        __strong __typeof(&*weakSelf)strongSelf = weakSelf;
-        if (!strongSelf) return;
+    @weakify(self);
+    dispatch_after_seconds(2.0, ^{
+        @strongify(self);
+        if (!self) return;
         
-        if (strongSelf.master == nil) {
-            dout_warning(@"%@: master not set yet", strongSelf)
+        if (self.master == nil) {
+            dout_warning(@"%@: master not set yet", self);
         }
     });
 #endif

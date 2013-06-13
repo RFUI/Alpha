@@ -7,7 +7,7 @@
 - (id)init {
     self = [super init];
     if (self) {
-        dispatch_async(dispatch_get_main_queue(), ^{
+        dispatch_async(dispatch_get_current_queue(), ^{
             [self onInit];
         });
     }
@@ -16,7 +16,7 @@
 - (id)initWithFrame:(CGRect)frame {
     self = [super initWithFrame:frame];
     if (self) {
-        dispatch_async(dispatch_get_main_queue(), ^{
+        dispatch_async(dispatch_get_current_queue(), ^{
             [self onInit];
         });
     }
@@ -25,7 +25,7 @@
 - (id)initWithCoder:(NSCoder *)aDecoder {
     self = [super initWithCoder:aDecoder];
     if (self) {
-        dispatch_async(dispatch_get_main_queue(), ^{
+        dispatch_async(dispatch_get_current_queue(), ^{
             [self onInit];
         });
     }

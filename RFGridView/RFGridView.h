@@ -1,8 +1,15 @@
 /*!
-	RFUI
-	RFGridView
-	
-	ver 0.3.0
+    RFGridView
+    RFUI
+
+    Copyright (c) 2012-2013 BB9z
+    http://github.com/RFUI/Alpha
+
+    The MIT License (MIT)
+    http://www.opensource.org/licenses/mit-license.php
+
+    BETA
+    ver 0.3.0
  */
 #import "RFUI.h"
 

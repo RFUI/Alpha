@@ -3,7 +3,7 @@
     RFUI
 
     Copyright (c) 2013 BB9z
-    http://github.com/bb9z/RFKit
+    https://github.com/RFUI/Alpha
 
     The MIT License (MIT)
     http://www.opensource.org/licenses/mit-license.php

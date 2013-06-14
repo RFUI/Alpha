@@ -1,54 +1,95 @@
 
 #import "RFPullToFetchTableView.h"
 
+static void *const RFPullToFetchTableViewKVOContext = (void *)&RFPullToFetchTableViewKVOContext;
+
 @interface RFPullToFetchTableView ()
-@property (assign, nonatomic) CGFloat distanceBetweenContentAndBottom;
 @end
 
 @implementation RFPullToFetchTableView
+@dynamic distanceBetweenContentAndBottom, distanceBetweenContentAndTop;
+
 #pragma mark - @property
++ (NSSet *)keyPathsForValuesAffectingDistanceBetweenContentAndTop {
+    UITableView *this;
+    return [NSSet setWithObjects:@keypath(this, contentOffset), nil];
+}
+
++ (NSSet *)keyPathsForValuesAffectingDistanceBetweenContentAndBottom {
+    UITableView *this;
+    return [NSSet setWithObjects:@keypath(this, contentOffset), @keypath(this, contentSize), @keypath(this, bounds), nil];
+}
+
+- (CGFloat)distanceBetweenContentAndTop {
+    return -self.contentOffset.x;
+}
+
 - (CGFloat)distanceBetweenContentAndBottom {
-    static CGFloat lastDistance;
-    CGFloat ctDistance = self.bounds.size.height + self.contentOffset.y - self.contentSize.height;
-    if (lastDistance != ctDistance) {
-        lastDistance = ctDistance;
-        [self onDistanceBetweenContentAndBottomChanged];
-    }
-    return ctDistance;
+    return self.bounds.size.height + self.contentOffset.y - self.contentSize.height;
 }
 
 #pragma mark -
-
-- (void)awakeFromNib {
-    [super awakeFromNib];
-    
-    self.footerStyle = RFAutoFetchTableContainerStyleStatic;
+- (id)init {
+    self = [super init];
+    if (self) {
+        dispatch_async(dispatch_get_current_queue(), ^{
+            [self onInit];
+        });
+    }
+    return self;
+}
+- (id)initWithFrame:(CGRect)frame {
+    self = [super initWithFrame:frame];
+    if (self) {
+        dispatch_async(dispatch_get_current_queue(), ^{
+            [self onInit];
+        });
+    }
+    return self;
+}
+- (id)initWithCoder:(NSCoder *)aDecoder {
+    self = [super initWithCoder:aDecoder];
+    if (self) {
+        dispatch_async(dispatch_get_current_queue(), ^{
+            [self onInit];
+        });
+    }
+    return self;
 }
 
-- (void)willMoveToWindow:(UIWindow *)newWindow {
-    if (newWindow) {
-        [self setupObserversForScrollChange];
-    }
-    else {
-        [self uninstallObserversForScrollChange];
-    }
+- (void)onInit {
+    // For overwrite
+    self.footerStyle = RFAutoFetchTableContainerStyleStatic;
+    [self setupObserversForScrollChange];
+}
+
+- (void)dealloc {
+    [self uninstallObserversForScrollChange];
 }
 
 - (void)setupObserversForScrollChange {
-    [self addObserver:self forKeyPath:@keypath(self, contentSize) options:NSKeyValueObservingOptionNew context:NULL];
-    [self addObserver:self forKeyPath:@keypath(self, contentOffset) options:NSKeyValueObservingOptionNew context:NULL];
-    [self addObserver:self forKeyPath:@keypath(self, bounds) options:NSKeyValueObservingOptionNew context:NULL];
+    [self addObserver:self forKeyPath:@keypath(self, distanceBetweenContentAndTop) options:NSKeyValueObservingOptionNew context:RFPullToFetchTableViewKVOContext];
+    [self addObserver:self forKeyPath:@keypath(self, distanceBetweenContentAndBottom) options:NSKeyValueObservingOptionNew context:RFPullToFetchTableViewKVOContext];
 }
 
 - (void)uninstallObserversForScrollChange {
-    [self removeObserver:self forKeyPath:@keypath(self, contentSize)];
-    [self removeObserver:self forKeyPath:@keypath(self, contentOffset)];
-    [self removeObserver:self forKeyPath:@keypath(self, bounds)];
+    [self removeObserver:self forKeyPath:@keypath(self, distanceBetweenContentAndBottom) context:RFPullToFetchTableViewKVOContext];
+    [self removeObserver:self forKeyPath:@keypath(self, distanceBetweenContentAndTop) context:RFPullToFetchTableViewKVOContext];
 }
 
 - (void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary *)change context:(void *)context {
-    if (object == self && ([keyPath isEqualToString:@keypath(self, contentOffset)] || [keyPath isEqualToString:@keypath(self, contentSize)] || [keyPath isEqualToString:@keypath(self, bounds)])) {
-        [self distanceBetweenContentAndBottom];
+    if (context != RFPullToFetchTableViewKVOContext) {
+        [super observeValueForKeyPath:keyPath ofObject:object change:change context:context];
+        return;
+    }
+    
+    if (object == self && [keyPath isEqualToString:@keypath(self, distanceBetweenContentAndTop)]) {
+        [self onDistanceBetweenContentAndTopChanged];
+        return;
+    }
+    
+    if (object == self && [keyPath isEqualToString:@keypath(self, distanceBetweenContentAndBottom)]) {
+        [self onDistanceBetweenContentAndBottomChanged];
         return;
     }
     
@@ -66,6 +107,14 @@
     }
 }
 
+- (void)onDistanceBetweenContentAndTopChanged {
+    if (!self.isHeaderFetchingEnabled) return;
+    
+    if (self.isDecelerating && self.headerContainer.frame.size.height && !self.headerProcessing) {
+        [self onHeaderEventTriggered];
+    }
+}
+
 - (void)onDistanceBetweenContentAndBottomChanged {
     _dout_float(self.distanceBetweenContentAndBottom);
     if (!self.isFooterFetchingEnabled) return;
@@ -77,7 +126,6 @@
 
 - (void)onFooterEventTriggered {
     self.footerProcessing = YES;
-    doutwork()
     
     if (self.footerStyle == RFAutoFetchTableContainerStyleStatic) {
         [self setFooterContainerVisible:YES animated:YES];
@@ -94,6 +142,7 @@
 }
 
 - (void)onHeaderEventTriggered {
+    self.headerProcessing = YES;
     doutwork()
 }
 

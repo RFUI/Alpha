@@ -22,6 +22,8 @@ typedef enum {
 } RFAutoFetchTableContainerStyle;
 
 @interface RFPullToFetchTableView : UITableView
+@property (assign, nonatomic) CGFloat distanceBetweenContentAndBottom;
+@property (assign, nonatomic) CGFloat distanceBetweenContentAndTop;
 
 @property (assign, nonatomic, getter = isHeaderFetchingEnabled) BOOL headerFetchingEnabled;
 @property (assign, nonatomic, getter = isFooterFetchingEnabled) BOOL footerFetchingEnabled;

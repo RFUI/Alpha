@@ -8,16 +8,47 @@
 
 @implementation RFTabBar
 
-- (void)awakeFromNib {
-    [super awakeFromNib];
-    
-    self.items = [NSMutableArray array];
-    
-    _douto(self.prototypeItems)
-    _douto(self.items)
+#pragma mark - init
+- (id)init {
+    self = [super init];
+    if (self) {
+        dispatch_async(dispatch_get_current_queue(), ^{
+            [self onInit];
+        });
+    }
+    return self;
+}
+- (id)initWithFrame:(CGRect)frame {
+    self = [super initWithFrame:frame];
+    if (self) {
+        dispatch_async(dispatch_get_current_queue(), ^{
+            [self onInit];
+        });
+    }
+    return self;
+}
+- (id)initWithCoder:(NSCoder *)aDecoder {
+    self = [super initWithCoder:aDecoder];
+    if (self) {
+        dispatch_async(dispatch_get_current_queue(), ^{
+            [self onInit];
+        });
+    }
+    return self;
 }
 
-- (void)reloadTabItem {    
+- (void)onInit {
+    self.items = [NSMutableArray array];
+    [self reloadTabItem];
+}
+
+#pragma mark -
+- (void)reloadTabItem {
+    if (self.staticMode) {
+        [self loadStaticItem];
+        return;
+    }
+    
     if (!self.dataSource) return;
     
     NSInteger count = 0;
@@ -52,6 +83,8 @@
 
 - (void)layoutSubviews {
     [super layoutSubviews];
+
+    if (self.staticMode && self.keepLayoutForStaticMode) return;
     
     BOOL usingCustomSize = [self.dataSource respondsToSelector:@selector(RFTabBar:itemWidthForIndex:)];
     NSInteger index = 0;
@@ -67,6 +100,7 @@
         }
         
         item.x = ctXPosition;
+        item.y = 0;
         ctXPosition += item.width;
         item.height = tabHeight;
         
@@ -119,6 +153,43 @@
         [self selectItemAtIndex:indexToBeSelected];
     }
 }
+
+#pragma mark - Using Static Items
+- (void)setStaticMode:(BOOL)staticMode {
+    if (_staticMode != staticMode) {
+        [self willChangeValueForKey:@keypath(self, staticMode)];
+        _staticMode = staticMode;
+        if (staticMode) {
+            [self reloadTabItem];
+        }
+        [self didChangeValueForKey:@keypath(self, staticMode)];
+    }
+}
+
+- (void)setKeepLayoutForStaticMode:(BOOL)keepLayoutForStaticMode {
+    if (_keepLayoutForStaticMode != keepLayoutForStaticMode) {
+        [self willChangeValueForKey:@keypath(self, keepLayoutForStaticMode)];
+        _keepLayoutForStaticMode = keepLayoutForStaticMode;
+        [self setNeedsLayout];
+        [self didChangeValueForKey:@keypath(self, keepLayoutForStaticMode)];
+    }
+}
+
+- (void)loadStaticItem {
+    [self.items removeAllObjects];
+    
+    for (RFTabBarItem *item in self.subviews) {
+        if ([item isKindOfClass:[RFTabBarItem class]]) {
+            [self.items addObject:item];
+            if ([item actionsForTarget:self forControlEvent:UIControlEventTouchUpInside].count == 0) {
+                [item addTarget:self action:@selector(onTabBarItemTapped:) forControlEvents:UIControlEventTouchUpInside];
+            }
+        }
+    }
+    
+    [self setNeedsLayout];
+}
+
 
 @end
 

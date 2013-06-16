@@ -33,7 +33,7 @@
 @property(nonatomic, assign) RFTabBarItem *selectedItem;
 
 - (void)selectItemAtIndex:(NSInteger)index;
-- (NSInteger)indexForSelectedItem:(RFTabBarItem *)item;
+- (NSInteger)indexForSelectedItem;
 
 #pragma mark - Using Static Items
 // Like you can define a static UITableView in storyboard, RFTabBar support something like that too. If set to `YES`, all RFTabBarItem added to this view will be its item.

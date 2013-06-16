@@ -60,9 +60,7 @@
     NSMutableArray *items = [NSMutableArray arrayWithCapacity:count];
     for (NSInteger i = 0; i < count; i++) {
         RFTabBarItem *item = [self.dataSource RFTabBar:self itemForIndex:i];
-        if ([item actionsForTarget:self forControlEvent:UIControlEventTouchUpInside].count == 0) {
-            [item addTarget:self action:@selector(onTabBarItemTapped:) forControlEvents:UIControlEventTouchUpInside];
-        }
+        [self setupItemAction:item];
         [items addObject:item];
     }
     
@@ -121,7 +119,7 @@
     return [self.items indexOfObject:item];
 }
 
-- (NSInteger)indexForSelectedItem:(RFTabBarItem *)item {
+- (NSInteger)indexForSelectedItem {
     return [self.items indexOfObject:self.selectedItem];
 }
 
@@ -181,15 +179,21 @@
     for (RFTabBarItem *item in self.subviews) {
         if ([item isKindOfClass:[RFTabBarItem class]]) {
             [self.items addObject:item];
-            if ([item actionsForTarget:self forControlEvent:UIControlEventTouchUpInside].count == 0) {
-                [item addTarget:self action:@selector(onTabBarItemTapped:) forControlEvents:UIControlEventTouchUpInside];
-            }
+            [self setupItemAction:item];
         }
     }
     
     [self setNeedsLayout];
 }
 
+- (void)setupItemAction:(RFTabBarItem *)item {
+    for (id obj in [item actionsForTarget:self forControlEvent:UIControlEventTouchUpInside]) {
+        if ([obj isEqualToString:NSStringFromSelector(@selector(onTabBarItemTapped:))]) {
+            return;
+        }
+    }
+    [item addTarget:self action:@selector(onTabBarItemTapped:) forControlEvents:UIControlEventTouchUpInside];
+}
 
 @end
 

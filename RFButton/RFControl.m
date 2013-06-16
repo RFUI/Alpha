@@ -54,6 +54,9 @@
         if ([view isKindOfClass:[UIControl class]]) {
             view.selected = selected;
         }
+        else if ([view isKindOfClass:[UILabel class]] || [view isKindOfClass:[UIImageView class]]) {
+            view.highlighted = (self.isSelected)? YES : self.highlighted;
+        }
     }
 }
 
@@ -65,7 +68,7 @@
             view.highlighted = highlighted;
         }
         else if ([view isKindOfClass:[UILabel class]] || [view isKindOfClass:[UIImageView class]]) {
-            view.highlighted = highlighted;
+            view.highlighted = (self.isSelected)? YES : highlighted;
         }
     }
 }

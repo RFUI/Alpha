@@ -4,7 +4,7 @@
 #import "RFReusing.h"
 
 @interface RFTabBarItem : RFButton
-<RFStoryboardReusing>
+<RFReusing>
 
 @property (copy, nonatomic) NSString *reuseIdentifier;
 

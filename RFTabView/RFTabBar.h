@@ -13,10 +13,12 @@
 
 #import "RFUI.h"
 #import "RFTabBarItem.h"
+#import "RFInitializing.h"
 
 @protocol RFTabBarDelegate, RFTabBarDataSource;
 
 @interface RFTabBar : UIView
+<RFInitializing>
 @property (weak, nonatomic) IBOutlet id<RFTabBarDelegate> delegate;
 @property (weak, nonatomic) IBOutlet id<RFTabBarDataSource> dataSource;
 

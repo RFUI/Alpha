@@ -1,7 +1,7 @@
 // Alpha
 
 #import "RFButton.h"
-#import "RFStoryboardReusing.h"
+#import "RFReusing.h"
 
 @interface RFTabBarItem : RFButton
 <RFStoryboardReusing>

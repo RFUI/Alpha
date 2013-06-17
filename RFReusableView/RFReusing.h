@@ -4,7 +4,7 @@
 
 @protocol RFReusing <NSObject>
 @required
-- (NSString *)reuseIdentifier;
-- (instancetype)reusingCopy;
+@property (copy, readonly, nonatomic) NSString *reuseIdentifier;
+
 - (void)prepareForReuse;
 @end

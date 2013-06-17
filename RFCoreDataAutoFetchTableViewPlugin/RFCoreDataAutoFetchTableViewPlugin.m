@@ -25,8 +25,8 @@ static void *const RFCoreDataAutoFetchTableViewPluginKVOContext = (void *)&RFCor
 }
 
 #pragma mark -
-- (void)setup {
-    [super setup];
+- (void)afterInit {
+    [super afterInit];
     
     [self registObservers];
     [self setupFetchController];

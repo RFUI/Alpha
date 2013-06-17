@@ -17,12 +17,17 @@ static void *const RFCheckBoxKVOContext = (void *)&RFCheckBoxKVOContext;
 }
 
 - (void)onInit {
+    [super onInit];
+    
     [self addTarget:self action:@selector(_onTouchUpInside) forControlEvents:UIControlEventTouchUpInside];
     _needsUpdateCheckboxImageView = NO;
-    dispatch_async(dispatch_get_current_queue(), ^{
-        [self addObserver:self forKeyPath:@keypath(self, needsUpdateCheckboxImageView) options:NSKeyValueObservingOptionNew context:RFCheckBoxKVOContext];
-        self.needsUpdateCheckboxImageView = YES;
-    });
+}
+
+- (void)afterInit {
+    [super afterInit];
+    
+    [self addObserver:self forKeyPath:@keypath(self, needsUpdateCheckboxImageView) options:NSKeyValueObservingOptionNew context:RFCheckBoxKVOContext];
+    self.needsUpdateCheckboxImageView = YES;
 }
 
 - (void)dealloc {

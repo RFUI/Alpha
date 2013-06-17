@@ -8,6 +8,8 @@
 @implementation RFButton
 
 - (void)onInit {
+    [super onInit];
+    
     [self addTarget:self action:@selector(onTouchUpInside) forControlEvents:UIControlEventTouchUpInside];
 }
 

@@ -12,10 +12,9 @@
  */
 
 #import <UIKit/UIKit.h>
+#import "RFInitializing.h"
 
 @interface RFControl : UIControl
-
-// For overwrite, default do nothing.
-- (void)onInit;
+<RFInitializing>
 
 @end

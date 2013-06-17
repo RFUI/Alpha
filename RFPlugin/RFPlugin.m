@@ -6,9 +6,8 @@
 - (id)init {
     self = [super init];
     if (self) {
-        dispatch_async(dispatch_get_current_queue(), ^{
-            [self setup];
-        });
+        [self onInit];
+        [self performSelector:@selector(afterInit) withObject:self afterDelay:0];
     }
     return self;
 }
@@ -17,14 +16,17 @@
     self = [super init];
     if (self) {
         self.master = master;
-        dispatch_async(dispatch_get_current_queue(), ^{
-            [self setup];
-        });
+        [self onInit];
+        [self performSelector:@selector(afterInit) withObject:self afterDelay:0];
     }
     return self;
 }
 
-- (void)setup {
+- (void)onInit {
+    // Nothing
+}
+
+- (void)afterInit {
 #if DEBUG
     @weakify(self);
     dispatch_after_seconds(2.0, ^{

@@ -11,19 +11,18 @@
  */
 
 #import "RFRuntime.h"
+#import "RFInitializing.h"
 
 @protocol RFPluginSupported;
 
 @interface RFPlugin : NSObject
+<RFInitializing>
 @property (RF_WEAK, nonatomic) IBOutlet id<RFPluginSupported> master;
 
 - (id)initWithMaster:(id<RFPluginSupported>)master;
-- (void)setup;
 
 @end
 
 @protocol RFPluginSupported <NSObject>
-
-
-
+// Nothing
 @end

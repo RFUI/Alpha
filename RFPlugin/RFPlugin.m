@@ -5,7 +5,7 @@
 
 - (id)init {
     self = [super init];
-    if (self) {        
+    if (self) {
         dispatch_async(dispatch_get_current_queue(), ^{
             [self setup];
         });
@@ -13,8 +13,15 @@
     return self;
 }
 
-- (void)awakeFromNib {
-    [super awakeFromNib];
+- (id)initWithMaster:(id<RFPluginSupported>)master {
+    self = [super init];
+    if (self) {
+        self.master = master;
+        dispatch_async(dispatch_get_current_queue(), ^{
+            [self setup];
+        });
+    }
+    return self;
 }
 
 - (void)setup {

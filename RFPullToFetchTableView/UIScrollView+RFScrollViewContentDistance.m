@@ -15,7 +15,7 @@
 }
 
 - (CGFloat)distanceBetweenContentAndTop {
-    return -self.contentOffset.x;
+    return -self.contentOffset.y;
 }
 
 - (CGFloat)distanceBetweenContentAndBottom {

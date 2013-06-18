@@ -8,7 +8,7 @@
     The MIT License (MIT)
     http://www.opensource.org/licenses/mit-license.php
  
-    Theory Test
+    TEST
  */
 
 #import "RFRuntime.h"
@@ -40,10 +40,6 @@ typedef enum {
 
 //@property (assign, nonatomic) CGFloat *headerVisibleHight;
 //@property (assign, nonatomic) CGFloat *footerVisibleHight;
-
-// TODO: readonly
-@property (assign, nonatomic) BOOL headerVisible;
-@property (assign, nonatomic) BOOL footerVisible;
 
 - (void)setHeaderContainerVisible:(BOOL)isVisible animated:(BOOL)animated;
 - (void)setFooterContainerVisible:(BOOL)isVisible animated:(BOOL)animated;

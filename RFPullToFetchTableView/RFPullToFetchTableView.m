@@ -47,14 +47,11 @@ static void *const RFPullToFetchTableViewKVOContext = (void *)&RFPullToFetchTabl
 }
 
 - (void)afterInit {
-    
     for (id gr in self.gestureRecognizers) {
         if ([gr isKindOfClass:[UIPanGestureRecognizer class]]) {
             self.buildInPanGestureRecognizer = gr;
         }
     }
-    douto(self.gestureRecognizers)
-    douto(self.buildInPanGestureRecognizer);
     
     [self.buildInPanGestureRecognizer addObserver:self forKeyPath:@keypath(self.buildInPanGestureRecognizer, state) options:NSKeyValueObservingOptionNew context:RFPullToFetchTableViewKVOContext];
 }
@@ -116,9 +113,7 @@ static void *const RFPullToFetchTableViewKVOContext = (void *)&RFPullToFetchTabl
     }
     
     if (object == self.buildInPanGestureRecognizer && [keyPath isEqualToString:@keypathClassInstance(UIPanGestureRecognizer, state)]) {
-        if (self.buildInPanGestureRecognizer.state == UIGestureRecognizerStateEnded || self.buildInPanGestureRecognizer.state == UIGestureRecognizerStateCancelled) {
-            [self onTouchReleased];
-        }
+        [self onBuildInPanGestureRecognizerStateChanged];
         return;
     }
     
@@ -126,48 +121,63 @@ static void *const RFPullToFetchTableViewKVOContext = (void *)&RFPullToFetchTabl
 }
 
 #pragma mark - Handel content distance change
-- (void)onTouchReleased {
-    doutwork()
-    if (self.headerFetchingEnabled && !self.isFetching && self.distanceBetweenContentAndTop > self.headerContainer.height) {
-        [self onHeaderEventTriggered];
-        return;
-    }
+
+- (void)onBuildInPanGestureRecognizerStateChanged {
+    static CGFloat startOffset;
     
-    if (self.footerFetchingEnabled && !self.isFetching && self.distanceBetweenContentAndBottom > self.footerContainer.height) {
-        [self onFooterEventTriggered];
-        return;
+    switch (self.buildInPanGestureRecognizer.state) {
+            
+        case UIGestureRecognizerStateBegan:
+            startOffset = self.contentOffset.y;
+            break;
+            
+        case UIGestureRecognizerStateEnded:
+        case UIGestureRecognizerStateCancelled:
+            if (self.contentOffset.y < startOffset) {
+                _douts(@"Drag down");
+                if (self.headerFetchingEnabled && !self.isFetching && self.distanceBetweenContentAndTop > self.headerContainer.height) {
+                    [self onHeaderEventTriggered];
+                }
+            }
+            else {
+                _douts(@"Drag up");
+                if (self.footerFetchingEnabled && !self.isFetching && self.distanceBetweenContentAndBottom > self.footerContainer.height) {
+                    [self onFooterEventTriggered];
+                }
+            }
+            break;
+            
+        case UIGestureRecognizerStatePossible:
+        default:
+            break;
     }
 }
 
 - (void)onDistanceBetweenContentAndTopChanged {
     _dout_float(self.distanceBetweenContentAndTop);
 
-    self.headerVisible = (self.distanceBetweenContentAndTop >= 0);
+    self.headerContainer.hidden = (self.distanceBetweenContentAndTop < 0);
 }
 
 - (void)onDistanceBetweenContentAndBottomChanged {
     _dout_float(self.distanceBetweenContentAndBottom);
-    dout_bool(self.tracking)
-    self.footerVisible = (self.distanceBetweenContentAndBottom >= 0);
+    self.footerContainer.hidden = (self.distanceBetweenContentAndBottom < 0);
 }
 
 - (void)onHeaderEventTriggered {
+    doutwork()
     if (self.headerProccessBlock) {
         self.headerProccessBlock();
+        self.headerProcessing = YES;
     }
-    self.headerProcessing = YES;
 }
 
 - (void)onFooterEventTriggered {
-    if (self.footerStyle == RFAutoFetchTableContainerStyleStatic) {
-        [self setFooterContainerVisible:YES animated:YES];
-    }
-    
+    doutwork()    
     if (self.footerProccessBlock) {
         self.footerProccessBlock();
+        self.footerProcessing = YES;
     }
-    
-    self.footerProcessing = YES;
 }
 
 - (void)headerProccessFinshed {
@@ -189,7 +199,7 @@ static void *const RFPullToFetchTableViewKVOContext = (void *)&RFPullToFetchTabl
 - (void)layoutSubviews {
     [super layoutSubviews];
     
-    if (self.footerVisible) {        
+    if (self.footerContainer.hidden == NO) {
         switch (self.footerStyle) {
             case RFAutoFetchTableContainerStyleFloatFixed:
                 self.footerContainer.bottomMargin = 0;
@@ -213,13 +223,13 @@ static void *const RFPullToFetchTableViewKVOContext = (void *)&RFPullToFetchTabl
 
 - (void)setHeaderContainerVisible:(BOOL)isVisible animated:(BOOL)animated {
     // TODO: layout
-    self.headerVisible = isVisible;
+    self.headerContainer.hidden = !isVisible;
     
 //    [self setNeedsLayout];
 }
 
 - (void)setFooterContainerVisible:(BOOL)isVisible animated:(BOOL)animated {
-    self.footerVisible = isVisible;
+    self.footerContainer.hidden = !isVisible;
 //    
 //    if (self.footerStyle == RFAutoFetchTableContainerStyleStatic) {
 //        [self setContentBottomInset:(isVisible? self.footerContainer.bounds.size.height : 0) animated:animated];

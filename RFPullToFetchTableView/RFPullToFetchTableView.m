@@ -1,9 +1,14 @@
 
 #import "RFPullToFetchTableView.h"
+#import "UIView+RFAnimate.h"
 
 static void *const RFPullToFetchTableViewKVOContext = (void *)&RFPullToFetchTableViewKVOContext;
 
 @interface RFPullToFetchTableView ()
+@property (readwrite, nonatomic) BOOL headerProcessing;
+@property (readwrite, nonatomic) BOOL footerProcessing;
+
+@property (weak, nonatomic) UIPanGestureRecognizer *buildInPanGestureRecognizer;
 @end
 
 @implementation RFPullToFetchTableView
@@ -36,24 +41,60 @@ static void *const RFPullToFetchTableViewKVOContext = (void *)&RFPullToFetchTabl
 
 - (void)onInit {
     self.footerStyle = RFAutoFetchTableContainerStyleStatic;
+    
+    self.headerFetchingEnabled = YES;
+    self.footerFetchingEnabled = YES;
 }
 
 - (void)afterInit {
-    [self setupObserversForScrollChange];
+    
+    for (id gr in self.gestureRecognizers) {
+        if ([gr isKindOfClass:[UIPanGestureRecognizer class]]) {
+            self.buildInPanGestureRecognizer = gr;
+        }
+    }
+    douto(self.gestureRecognizers)
+    douto(self.buildInPanGestureRecognizer);
+    
+    [self.buildInPanGestureRecognizer addObserver:self forKeyPath:@keypath(self.buildInPanGestureRecognizer, state) options:NSKeyValueObservingOptionNew context:RFPullToFetchTableViewKVOContext];
 }
 
 - (void)dealloc {
-    [self uninstallObserversForScrollChange];
+    [self.buildInPanGestureRecognizer removeObserver:self forKeyPath:@keypath(self.buildInPanGestureRecognizer, state) context:RFPullToFetchTableViewKVOContext];
+    self.headerFetchingEnabled = NO;
+    self.footerFetchingEnabled = NO;
 }
 
-- (void)setupObserversForScrollChange {
-    [self addObserver:self forKeyPath:@keypath(self, distanceBetweenContentAndTop) options:NSKeyValueObservingOptionNew context:RFPullToFetchTableViewKVOContext];
-    [self addObserver:self forKeyPath:@keypath(self, distanceBetweenContentAndBottom) options:NSKeyValueObservingOptionNew context:RFPullToFetchTableViewKVOContext];
+#pragma mark - KVO
+// TODO: 结束时需要额外清理
+- (void)setHeaderFetchingEnabled:(BOOL)headerFetchingEnabled {
+    if (_headerFetchingEnabled != headerFetchingEnabled) {
+        [self willChangeValueForKey:@keypath(self, headerFetchingEnabled)];
+        _headerFetchingEnabled = headerFetchingEnabled;
+        
+        if (headerFetchingEnabled) {
+            [self addObserver:self forKeyPath:@keypath(self, distanceBetweenContentAndTop) options:NSKeyValueObservingOptionNew context:RFPullToFetchTableViewKVOContext];
+        }
+        else {
+            [self removeObserver:self forKeyPath:@keypath(self, distanceBetweenContentAndBottom) context:RFPullToFetchTableViewKVOContext];
+        }
+        [self didChangeValueForKey:@keypath(self, headerFetchingEnabled)];
+    }
 }
 
-- (void)uninstallObserversForScrollChange {
-    [self removeObserver:self forKeyPath:@keypath(self, distanceBetweenContentAndBottom) context:RFPullToFetchTableViewKVOContext];
-    [self removeObserver:self forKeyPath:@keypath(self, distanceBetweenContentAndTop) context:RFPullToFetchTableViewKVOContext];
+- (void)setFooterFetchingEnabled:(BOOL)footerFetchingEnabled {
+    if (_footerFetchingEnabled != footerFetchingEnabled) {
+        [self willChangeValueForKey:@keypath(self, footerFetchingEnabled)];
+        _footerFetchingEnabled = footerFetchingEnabled;
+        
+        if (footerFetchingEnabled) {
+            [self addObserver:self forKeyPath:@keypath(self, distanceBetweenContentAndBottom) options:NSKeyValueObservingOptionNew context:RFPullToFetchTableViewKVOContext];
+        }
+        else {
+            [self removeObserver:self forKeyPath:@keypath(self, distanceBetweenContentAndTop) context:RFPullToFetchTableViewKVOContext];
+        }
+        [self didChangeValueForKey:@keypath(self, footerFetchingEnabled)];
+    }
 }
 
 - (void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary *)change context:(void *)context {
@@ -62,50 +103,62 @@ static void *const RFPullToFetchTableViewKVOContext = (void *)&RFPullToFetchTabl
         return;
     }
     
-    if (object == self && [keyPath isEqualToString:@keypath(self, distanceBetweenContentAndTop)]) {
-        [self onDistanceBetweenContentAndTopChanged];
-        return;
+    if (object == self) {        
+        if ([keyPath isEqualToString:@keypath(self, distanceBetweenContentAndTop)]) {
+            [self onDistanceBetweenContentAndTopChanged];
+            return;
+        }
+        
+        if ([keyPath isEqualToString:@keypath(self, distanceBetweenContentAndBottom)]) {
+            [self onDistanceBetweenContentAndBottomChanged];
+            return;
+        }
     }
     
-    if (object == self && [keyPath isEqualToString:@keypath(self, distanceBetweenContentAndBottom)]) {
-        [self onDistanceBetweenContentAndBottomChanged];
+    if (object == self.buildInPanGestureRecognizer && [keyPath isEqualToString:@keypathClassInstance(UIPanGestureRecognizer, state)]) {
+        if (self.buildInPanGestureRecognizer.state == UIGestureRecognizerStateEnded || self.buildInPanGestureRecognizer.state == UIGestureRecognizerStateCancelled) {
+            [self onTouchReleased];
+        }
         return;
     }
     
     [super observeValueForKeyPath:keyPath ofObject:object change:change context:context];
 }
 
-- (void)layoutSubviews {
-    [super layoutSubviews];
-    
-    if (self.distanceBetweenContentAndBottom > self.footerContainer.frame.size.height && self.footerStyle != RFAutoFetchTableContainerStyleStatic) {
-        
+#pragma mark - Handel content distance change
+- (void)onTouchReleased {
+    doutwork()
+    if (self.headerFetchingEnabled && !self.isFetching && self.distanceBetweenContentAndTop > self.headerContainer.height) {
+        [self onHeaderEventTriggered];
+        return;
     }
-    else {
-        [self.footerContainer moveToX:RFMathNotChange Y:self.contentSize.height];
+    
+    if (self.footerFetchingEnabled && !self.isFetching && self.distanceBetweenContentAndBottom > self.footerContainer.height) {
+        [self onFooterEventTriggered];
+        return;
     }
 }
 
 - (void)onDistanceBetweenContentAndTopChanged {
-    if (!self.isHeaderFetchingEnabled) return;
-    
-    if (self.isDecelerating && self.headerContainer.frame.size.height && !self.headerProcessing) {
-        [self onHeaderEventTriggered];
-    }
+    _dout_float(self.distanceBetweenContentAndTop);
+
+    self.headerVisible = (self.distanceBetweenContentAndTop >= 0);
 }
 
 - (void)onDistanceBetweenContentAndBottomChanged {
     _dout_float(self.distanceBetweenContentAndBottom);
-    if (!self.isFooterFetchingEnabled) return;
-    
-    if (self.isDecelerating && self.distanceBetweenContentAndBottom > self.footerContainer.frame.size.height && !self.footerProcessing) {
-        [self onFooterEventTriggered];
+    dout_bool(self.tracking)
+    self.footerVisible = (self.distanceBetweenContentAndBottom >= 0);
+}
+
+- (void)onHeaderEventTriggered {
+    if (self.headerProccessBlock) {
+        self.headerProccessBlock();
     }
+    self.headerProcessing = YES;
 }
 
 - (void)onFooterEventTriggered {
-    self.footerProcessing = YES;
-    
     if (self.footerStyle == RFAutoFetchTableContainerStyleStatic) {
         [self setFooterContainerVisible:YES animated:YES];
     }
@@ -113,22 +166,66 @@ static void *const RFPullToFetchTableViewKVOContext = (void *)&RFPullToFetchTabl
     if (self.footerProccessBlock) {
         self.footerProccessBlock();
     }
+    
+    self.footerProcessing = YES;
 }
 
-- (void)onFooterProccessFinshed {
+- (void)headerProccessFinshed {
+    if (!self.headerProcessing) return;
+    
+    self.headerProcessing = NO;
+    [self setHeaderContainerVisible:NO animated:YES];
+}
+
+- (void)footerProccessFinshed {
+    if (!self.footerProcessing) return;
+
     self.footerProcessing = NO;
     [self setFooterContainerVisible:NO animated:YES];
 }
 
-- (void)onHeaderEventTriggered {
-    self.headerProcessing = YES;
-    doutwork()
+
+#pragma mark - Layout
+- (void)layoutSubviews {
+    [super layoutSubviews];
+    
+    if (self.footerVisible) {        
+        switch (self.footerStyle) {
+            case RFAutoFetchTableContainerStyleFloatFixed:
+                self.footerContainer.bottomMargin = 0;
+                break;
+                
+            case RFAutoFetchTableContainerStyleStatic:
+                self.footerContainer.y = self.contentSize.height;
+                break;
+                
+            case RFAutoFetchTableContainerStyleFloat:
+                if (self.footerContainer.bottomMargin > 0) {
+                    self.footerContainer.bottomMargin = 0;
+                }
+                break;
+                
+            default:
+                break;
+        }
+    }
+}
+
+- (void)setHeaderContainerVisible:(BOOL)isVisible animated:(BOOL)animated {
+    // TODO: layout
+    self.headerVisible = isVisible;
+    
+//    [self setNeedsLayout];
 }
 
 - (void)setFooterContainerVisible:(BOOL)isVisible animated:(BOOL)animated {
-    if (self.footerStyle == RFAutoFetchTableContainerStyleStatic) {
-        [self setContentBottomInset:(isVisible? self.footerContainer.bounds.size.height : 0) animated:animated];
-    }
+    self.footerVisible = isVisible;
+//    
+//    if (self.footerStyle == RFAutoFetchTableContainerStyleStatic) {
+//        [self setContentBottomInset:(isVisible? self.footerContainer.bounds.size.height : 0) animated:animated];
+//    }
+//    
+//    [self setNeedsLayout];
 }
 
 #pragma mark - Tool
@@ -145,5 +242,16 @@ static void *const RFPullToFetchTableViewKVOContext = (void *)&RFPullToFetchTabl
         self.contentInset = UIEdgeInsetsMake(top, edge.left, edge.bottom, edge.right);
     } completion:nil];
 }
+
+#pragma mark - Other Status
+- (BOOL)isFetching {
+    return (self.headerProcessing || self.footerProcessing);
+}
+
++ (NSSet *)keyPathsForValuesAffectingFetching {
+    return [NSSet setWithObjects:@keypathClassInstance(RFPullToFetchTableView, headerProcessing), @keypathClassInstance(RFPullToFetchTableView, footerProcessing), nil];
+}
+
+
 
 @end

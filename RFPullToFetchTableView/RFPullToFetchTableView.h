@@ -12,6 +12,8 @@
  */
 
 #import "RFRuntime.h"
+#import "RFInitializing.h"
+#import "UIScrollView+RFScrollViewContentDistance.h"
 
 // 未实现
 typedef enum {
@@ -22,8 +24,7 @@ typedef enum {
 } RFAutoFetchTableContainerStyle;
 
 @interface RFPullToFetchTableView : UITableView
-@property (assign, nonatomic) CGFloat distanceBetweenContentAndBottom;
-@property (assign, nonatomic) CGFloat distanceBetweenContentAndTop;
+<RFInitializing>
 
 @property (assign, nonatomic, getter = isHeaderFetchingEnabled) BOOL headerFetchingEnabled;
 @property (assign, nonatomic, getter = isFooterFetchingEnabled) BOOL footerFetchingEnabled;
@@ -52,6 +53,5 @@ typedef enum {
 
 @protocol RFAutoFetchTableDelegate <NSObject>
 
-
-
 @end
+

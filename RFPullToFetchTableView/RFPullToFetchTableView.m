@@ -160,7 +160,7 @@ static void *const RFPullToFetchTableViewKVOContext = (void *)&RFPullToFetchTabl
 }
 
 - (void)onDistanceBetweenContentAndTopChanged {
-    dout_float(self.distanceBetweenContentAndTop);
+    _dout_float(self.distanceBetweenContentAndTop);
 
     BOOL isVisible = (self.distanceBetweenContentAndTop >= 0 && !self.footerProcessing);
     self.headerContainer.hidden = !isVisible;
@@ -191,7 +191,7 @@ static void *const RFPullToFetchTableViewKVOContext = (void *)&RFPullToFetchTabl
 }
 
 - (void)onHeaderEventTriggered {
-    doutwork()
+    _doutwork()
     if (self.headerProcessing) return;
     
     if (self.headerProccessBlock) {
@@ -203,7 +203,7 @@ static void *const RFPullToFetchTableViewKVOContext = (void *)&RFPullToFetchTabl
 }
 
 - (void)onFooterEventTriggered {
-    doutwork()
+    _doutwork()
     if (self.footerProcessing) return;
     
     if (self.footerProccessBlock) {

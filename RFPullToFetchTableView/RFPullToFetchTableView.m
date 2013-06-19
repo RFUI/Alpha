@@ -40,6 +40,7 @@ static void *const RFPullToFetchTableViewKVOContext = (void *)&RFPullToFetchTabl
 }
 
 - (void)onInit {
+    self.headerStyle = RFAutoFetchTableContainerStyleStatic;
     self.footerStyle = RFAutoFetchTableContainerStyleStatic;
     
     self.headerFetchingEnabled = YES;
@@ -63,17 +64,17 @@ static void *const RFPullToFetchTableViewKVOContext = (void *)&RFPullToFetchTabl
 }
 
 #pragma mark - KVO
-// TODO: 结束时需要额外清理
 - (void)setHeaderFetchingEnabled:(BOOL)headerFetchingEnabled {
     if (_headerFetchingEnabled != headerFetchingEnabled) {
         [self willChangeValueForKey:@keypath(self, headerFetchingEnabled)];
         _headerFetchingEnabled = headerFetchingEnabled;
         
         if (headerFetchingEnabled) {
-            [self addObserver:self forKeyPath:@keypath(self, distanceBetweenContentAndTop) options:NSKeyValueObservingOptionNew context:RFPullToFetchTableViewKVOContext];
+            [self addObserver:self forKeyPath:@keypath(self, distanceBetweenContentAndTop) options:NSKeyValueObservingOptionOld context:RFPullToFetchTableViewKVOContext];
         }
         else {
             [self removeObserver:self forKeyPath:@keypath(self, distanceBetweenContentAndBottom) context:RFPullToFetchTableViewKVOContext];
+            [self setHeaderContainerVisible:NO animated:NO];
         }
         [self didChangeValueForKey:@keypath(self, headerFetchingEnabled)];
     }
@@ -85,10 +86,11 @@ static void *const RFPullToFetchTableViewKVOContext = (void *)&RFPullToFetchTabl
         _footerFetchingEnabled = footerFetchingEnabled;
         
         if (footerFetchingEnabled) {
-            [self addObserver:self forKeyPath:@keypath(self, distanceBetweenContentAndBottom) options:NSKeyValueObservingOptionNew context:RFPullToFetchTableViewKVOContext];
+            [self addObserver:self forKeyPath:@keypath(self, distanceBetweenContentAndBottom) options:NSKeyValueObservingOptionOld context:RFPullToFetchTableViewKVOContext];
         }
         else {
             [self removeObserver:self forKeyPath:@keypath(self, distanceBetweenContentAndTop) context:RFPullToFetchTableViewKVOContext];
+            [self setFooterContainerVisible:NO animated:NO];
         }
         [self didChangeValueForKey:@keypath(self, footerFetchingEnabled)];
     }
@@ -102,12 +104,16 @@ static void *const RFPullToFetchTableViewKVOContext = (void *)&RFPullToFetchTabl
     
     if (object == self) {        
         if ([keyPath isEqualToString:@keypath(self, distanceBetweenContentAndTop)]) {
-            [self onDistanceBetweenContentAndTopChanged];
+            if ([change[NSKeyValueChangeOldKey] floatValue] != self.distanceBetweenContentAndTop) {
+                [self onDistanceBetweenContentAndTopChanged];
+            }
             return;
         }
         
         if ([keyPath isEqualToString:@keypath(self, distanceBetweenContentAndBottom)]) {
-            [self onDistanceBetweenContentAndBottomChanged];
+            if ([change[NSKeyValueChangeOldKey] floatValue] != self.distanceBetweenContentAndBottom) {
+                [self onDistanceBetweenContentAndBottomChanged];
+            }
             return;
         }
     }
@@ -154,30 +160,58 @@ static void *const RFPullToFetchTableViewKVOContext = (void *)&RFPullToFetchTabl
 }
 
 - (void)onDistanceBetweenContentAndTopChanged {
-    _dout_float(self.distanceBetweenContentAndTop);
+    dout_float(self.distanceBetweenContentAndTop);
 
-    self.headerContainer.hidden = (self.distanceBetweenContentAndTop < 0);
+    BOOL isVisible = (self.distanceBetweenContentAndTop >= 0 && !self.footerProcessing);
+    self.headerContainer.hidden = !isVisible;
+    
+    if (self.headerVisibleChangeBlock) {
+        CGFloat dst = self.distanceBetweenContentAndTop;
+        self.headerVisibleChangeBlock(isVisible, dst, (dst >= self.headerContainer.height));
+    }
 }
 
 - (void)onDistanceBetweenContentAndBottomChanged {
     _dout_float(self.distanceBetweenContentAndBottom);
-    self.footerContainer.hidden = (self.distanceBetweenContentAndBottom < 0);
+    
+    BOOL isVisible = (self.distanceBetweenContentAndBottom > 0 && !self.headerProcessing);
+    // 解决内容过少总是显示 footer 的问题
+    if (!self.headerContainer.hidden && !self.footerProcessing) {
+        isVisible = NO;
+    }
+//    if (!(self.isDragging || self.isDecelerating) || self.footerProcessing) {
+//        isVisible = NO;
+//    }
+    self.footerContainer.hidden = !isVisible;
+    
+    if (self.footerVisibleChangeBlock) {
+        CGFloat dst = self.distanceBetweenContentAndBottom;
+        self.footerVisibleChangeBlock(isVisible, dst, (dst >= self.footerContainer.height));
+    }
 }
 
 - (void)onHeaderEventTriggered {
     doutwork()
+    if (self.headerProcessing) return;
+    
     if (self.headerProccessBlock) {
         self.headerProccessBlock();
         self.headerProcessing = YES;
     }
+    
+    [self setHeaderContainerVisible:YES animated:YES];
 }
 
 - (void)onFooterEventTriggered {
-    doutwork()    
+    doutwork()
+    if (self.footerProcessing) return;
+    
     if (self.footerProccessBlock) {
         self.footerProccessBlock();
         self.footerProcessing = YES;
     }
+    
+    [self setFooterContainerVisible:YES animated:YES];
 }
 
 - (void)headerProccessFinshed {
@@ -198,8 +232,30 @@ static void *const RFPullToFetchTableViewKVOContext = (void *)&RFPullToFetchTabl
 #pragma mark - Layout
 - (void)layoutSubviews {
     [super layoutSubviews];
+
+//    [UIView beginAnimations:@"RFGridViewLayoutAnimation" context:nil];
+//    [UIView setAnimationDuration:0.1];
     
-    if (self.footerContainer.hidden == NO) {
+    if (self.headerContainer && !self.headerContainer.hidden) {
+        switch (self.headerStyle) {
+            case RFAutoFetchTableContainerStyleStatic:
+                self.headerContainer.y = -self.headerContainer.height;
+                break;
+            case RFAutoFetchTableContainerStyleFloat:
+                
+                break;
+                
+            case RFAutoFetchTableContainerStyleFloatFixed:
+                self.headerContainer.x = 0;
+                break;
+                
+            case RFAutoFetchTableContainerStyleNone:
+                self.headerContainer.hidden = YES;
+                break;
+        }
+    }
+    
+    if (self.footerContainer && !self.footerContainer.hidden) {
         switch (self.footerStyle) {
             case RFAutoFetchTableContainerStyleFloatFixed:
                 self.footerContainer.bottomMargin = 0;
@@ -215,42 +271,51 @@ static void *const RFPullToFetchTableViewKVOContext = (void *)&RFPullToFetchTabl
                 }
                 break;
                 
-            default:
+            case RFAutoFetchTableContainerStyleNone:
+                self.footerContainer.hidden = YES;
                 break;
         }
     }
+    
+//    [UIView commitAnimations];
 }
 
 - (void)setHeaderContainerVisible:(BOOL)isVisible animated:(BOOL)animated {
-    // TODO: layout
-    self.headerContainer.hidden = !isVisible;
-    
-//    [self setNeedsLayout];
+    if (isVisible) {
+        self.headerContainer.hidden = NO;
+    }
+    [UIView animateWithDuration:.2f delay:0 options:UIViewAnimationOptionAllowUserInteraction animated:animated beforeAnimations:nil animations:^{
+        switch (self.headerStyle) {
+            case RFAutoFetchTableContainerStyleStatic: {
+                UIEdgeInsets edge = self.contentInset;
+                edge.top = (isVisible? self.headerContainer.height : 0);
+                self.contentInset = edge;
+                break;
+            }
+        }
+    } completion:^(BOOL finished) {
+        self.headerContainer.hidden = !isVisible;
+        [self onDistanceBetweenContentAndTopChanged];   // fix after finish fetching header not show. ugly
+    }];
 }
 
 - (void)setFooterContainerVisible:(BOOL)isVisible animated:(BOOL)animated {
-    self.footerContainer.hidden = !isVisible;
-//    
-//    if (self.footerStyle == RFAutoFetchTableContainerStyleStatic) {
-//        [self setContentBottomInset:(isVisible? self.footerContainer.bounds.size.height : 0) animated:animated];
-//    }
-//    
-//    [self setNeedsLayout];
-}
-
-#pragma mark - Tool
-- (void)setContentBottomInset:(CGFloat)bottom animated:(BOOL)animated {
-    [UIView animateWithDuration:.2f delay:0 options:UIViewAnimationOptionAllowUserInteraction | UIViewAnimationOptionBeginFromCurrentState animated:animated beforeAnimations:nil animations:^{
-        UIEdgeInsets edge = self.contentInset;
-        self.contentInset = UIEdgeInsetsMake(edge.top, edge.left, bottom, edge.right);
-    } completion:nil];
-}
-
-- (void)setContentTopInset:(CGFloat)top animated:(BOOL)animated {
-    [UIView animateWithDuration:.2f delay:0 options:UIViewAnimationOptionAllowUserInteraction | UIViewAnimationOptionBeginFromCurrentState animated:animated beforeAnimations:nil animations:^{
-        UIEdgeInsets edge = self.contentInset;
-        self.contentInset = UIEdgeInsetsMake(top, edge.left, edge.bottom, edge.right);
-    } completion:nil];
+    if (isVisible) {
+        self.footerContainer.hidden = NO;
+    }
+    [UIView animateWithDuration:.2f delay:0 options:UIViewAnimationOptionAllowUserInteraction animated:animated beforeAnimations:nil animations:^{
+        switch (self.footerStyle) {
+            case RFAutoFetchTableContainerStyleStatic: {
+                UIEdgeInsets edge = self.contentInset;
+                edge.bottom = (isVisible? self.footerContainer.height : 0);
+                self.contentInset = edge;
+                break;
+            }
+        }
+    } completion:^(BOOL finished) {
+        self.footerContainer.hidden = !isVisible;
+        [self onDistanceBetweenContentAndTopChanged];   // fix after finish fetching header not show. ugly
+    }];
 }
 
 #pragma mark - Other Status

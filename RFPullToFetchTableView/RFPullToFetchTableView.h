@@ -41,8 +41,18 @@ typedef enum {
 //@property (assign, nonatomic) CGFloat *headerVisibleHight;
 //@property (assign, nonatomic) CGFloat *footerVisibleHight;
 
+
+
 - (void)setHeaderContainerVisible:(BOOL)isVisible animated:(BOOL)animated;
 - (void)setFooterContainerVisible:(BOOL)isVisible animated:(BOOL)animated;
+
+
+
+@property (copy, nonatomic) void (^headerVisibleChangeBlock)(BOOL isVisible, CGFloat visibleHeight, BOOL isCompleteVisible);
+- (void)setHeaderVisibleChangeBlock:(void (^)(BOOL isVisible, CGFloat visibleHeight, BOOL isCompleteVisible))headerVisibleChangeBlock;
+
+@property (copy, nonatomic) void (^footerVisibleChangeBlock)(BOOL isVisible, CGFloat visibleHeight, BOOL isCompleteVisible);
+- (void)setFooterVisibleChangeBlock:(void (^)(BOOL isVisible, CGFloat visibleHeight, BOOL isCompleteVisible))footerVisibleChangeBlock;
 
 #pragma mark - Event
 @property (readonly, getter = isFetching, nonatomic) BOOL fetching;
@@ -56,6 +66,9 @@ typedef enum {
 // Call them method to notice proccess is finished.
 - (void)footerProccessFinshed;
 - (void)headerProccessFinshed;
+
+- (void)onHeaderEventTriggered;
+- (void)onFooterEventTriggered;
 
 @end
 

@@ -94,7 +94,7 @@ static void *const RFImageCropperViewKVOContext = (void *)&RFImageCropperViewKVO
         sv.autoresizingMask = UIViewAutoresizingFlexibleMargin;
         sv.delegate = self;
         [self addSubview:sv];
-        sv.backgroundColor = [UIColor yellowColor];
+        sv.backgroundColor = [UIColor clearColor];
         
         sv.showsHorizontalScrollIndicator = NO;
         sv.showsVerticalScrollIndicator = NO;
@@ -187,7 +187,7 @@ static void *const RFImageCropperViewKVOContext = (void *)&RFImageCropperViewKVO
 }
 - (void)onInit {
     // Default vaule
-    self.maskColor = [UIColor colorWithRGBHex:0x000000 alpha:0.7];
+    self.maskColor = [UIColor colorWithRGBHex:0x000000 alpha:0.5];
     self.overlayColor = [UIColor clearColor];
     self.borderColor = [UIColor colorWithRGBHex:0x005555 alpha:1];
     

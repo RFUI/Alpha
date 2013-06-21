@@ -100,11 +100,12 @@ static void *const RFRefreshButtonKVOContext = (void *)&RFRefreshButtonKVOContex
 }
 
 - (void)evaluateEnableStatus {
+    id value = [self.observeTarget valueForKeyPath:self.observeKeypath];
     if (self.evaluateBlock) {
-        self.enabled = !self.evaluateBlock([self.observeTarget valueForKeyPath:self.observeKeypath]);
+        self.enabled = !self.evaluateBlock(value);
     }
     else {
-        self.enabled = ![[self.observeTarget valueForKeyPath:self.observeKeypath] boolValue];
+        self.enabled = ![value boolValue];
     }
 }
 

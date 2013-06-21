@@ -7,6 +7,11 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		D5D23C491774306400B547BE /* JRSwizzle Readme.md in Resources */ = {isa = PBXBuildFile; fileRef = D5D23C411774306400B547BE /* JRSwizzle Readme.md */; };
+		D5D23C4A1774306400B547BE /* JRSwizzle.m in Sources */ = {isa = PBXBuildFile; fileRef = D5D23C431774306400B547BE /* JRSwizzle.m */; };
+		D5D23C4B1774306400B547BE /* LICENSE.md in Resources */ = {isa = PBXBuildFile; fileRef = D5D23C441774306400B547BE /* LICENSE.md */; };
+		D5D23C4C1774306400B547BE /* NSObject+RACKVOWrapper.m in Sources */ = {isa = PBXBuildFile; fileRef = D5D23C461774306400B547BE /* NSObject+RACKVOWrapper.m */; };
+		D5D23C4D1774306400B547BE /* RACSwizzling.m in Sources */ = {isa = PBXBuildFile; fileRef = D5D23C481774306400B547BE /* RACSwizzling.m */; };
 		D5D582F517709929000A4005 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D5D582F417709929000A4005 /* UIKit.framework */; };
 		D5D582F717709929000A4005 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D5D582F617709929000A4005 /* Foundation.framework */; };
 		D5D582F917709929000A4005 /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D5D582F817709929000A4005 /* CoreGraphics.framework */; };
@@ -76,6 +81,14 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		D5D23C411774306400B547BE /* JRSwizzle Readme.md */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = "JRSwizzle Readme.md"; sourceTree = "<group>"; };
+		D5D23C421774306400B547BE /* JRSwizzle.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = JRSwizzle.h; sourceTree = "<group>"; };
+		D5D23C431774306400B547BE /* JRSwizzle.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = JRSwizzle.m; sourceTree = "<group>"; };
+		D5D23C441774306400B547BE /* LICENSE.md */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = LICENSE.md; sourceTree = "<group>"; };
+		D5D23C451774306400B547BE /* NSObject+RACKVOWrapper.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSObject+RACKVOWrapper.h"; sourceTree = "<group>"; };
+		D5D23C461774306400B547BE /* NSObject+RACKVOWrapper.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSObject+RACKVOWrapper.m"; sourceTree = "<group>"; };
+		D5D23C471774306400B547BE /* RACSwizzling.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RACSwizzling.h; sourceTree = "<group>"; };
+		D5D23C481774306400B547BE /* RACSwizzling.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RACSwizzling.m; sourceTree = "<group>"; };
 		D5D582F117709929000A4005 /* RFPullToFetchTableView.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = RFPullToFetchTableView.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		D5D582F417709929000A4005 /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
 		D5D582F617709929000A4005 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
@@ -209,6 +222,21 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		D5D23C401774306400B547BE /* ReactiveCocoaMini */ = {
+			isa = PBXGroup;
+			children = (
+				D5D23C411774306400B547BE /* JRSwizzle Readme.md */,
+				D5D23C421774306400B547BE /* JRSwizzle.h */,
+				D5D23C431774306400B547BE /* JRSwizzle.m */,
+				D5D23C441774306400B547BE /* LICENSE.md */,
+				D5D23C451774306400B547BE /* NSObject+RACKVOWrapper.h */,
+				D5D23C461774306400B547BE /* NSObject+RACKVOWrapper.m */,
+				D5D23C471774306400B547BE /* RACSwizzling.h */,
+				D5D23C481774306400B547BE /* RACSwizzling.m */,
+			);
+			path = ReactiveCocoaMini;
+			sourceTree = "<group>";
+		};
 		D5D582E817709929000A4005 = {
 			isa = PBXGroup;
 			children = (
@@ -310,6 +338,7 @@
 				D5D5836B1770994C000A4005 /* dout.h */,
 				D5D5836C1770994C000A4005 /* dout.m */,
 				D5D583711770994C000A4005 /* extobjc */,
+				D5D23C401774306400B547BE /* ReactiveCocoaMini */,
 				D5D5837F1770994C000A4005 /* RFARC.h */,
 				D5D583801770994C000A4005 /* RFDispatch.h */,
 				D5D583811770994C000A4005 /* RFDispatch.m */,
@@ -545,6 +574,8 @@
 				D5D5841A177099BB000A4005 /* SidePanel-off.png in Resources */,
 				D5D5841B177099BB000A4005 /* SidePanel-on.active.png in Resources */,
 				D5D5841C177099BB000A4005 /* SidePanel-on.png in Resources */,
+				D5D23C491774306400B547BE /* JRSwizzle Readme.md in Resources */,
+				D5D23C4B1774306400B547BE /* LICENSE.md in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -616,6 +647,9 @@
 				D5D58416177099BB000A4005 /* RFSidePanel.m in Sources */,
 				D5D5844D1770A233000A4005 /* ConfigViewController.m in Sources */,
 				D5D5846F1770B277000A4005 /* RFGridView.m in Sources */,
+				D5D23C4A1774306400B547BE /* JRSwizzle.m in Sources */,
+				D5D23C4C1774306400B547BE /* NSObject+RACKVOWrapper.m in Sources */,
+				D5D23C4D1774306400B547BE /* RACSwizzling.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -798,6 +832,7 @@
 				D5D5832B1770992A000A4005 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		D5D5832C1770992A000A4005 /* Build configuration list for PBXNativeTarget "RFPullToFetchTableViewTests" */ = {
 			isa = XCConfigurationList;
@@ -806,6 +841,7 @@
 				D5D5832E1770992A000A4005 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};

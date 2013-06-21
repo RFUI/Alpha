@@ -36,7 +36,7 @@ RFUIInterfaceOrientationSupportAll
     [super viewDidAppear:animated];
     
     dispatch_after_seconds(1, ^{
-        [self.tableView onHeaderEventTriggered];
+        [self.tableView triggerHeaderProccess];
     });
 }
 
@@ -62,12 +62,12 @@ RFUIInterfaceOrientationSupportAll
     [self.tableView addSubview:self.headerView];
     
     @weakify(self);
-    [self.tableView setHeaderVisibleChangeBlock:^(BOOL isVisible, CGFloat visibleHeight, BOOL isCompleteVisible) {
+    [self.tableView setHeaderVisibleChangeBlock:^(BOOL isVisible, CGFloat visibleHeight, BOOL isCompleteVisible, BOOL isProccessing) {
         dout(@"header visible = %@", @(isVisible))
         @strongify(self);
         if (self.reachEnd) return;
         
-        if (self.tableView.headerProcessing) {
+        if (isProccessing) {
             self.headerView.text = @"Refreshing...";
             return;
         }
@@ -89,13 +89,13 @@ RFUIInterfaceOrientationSupportAll
     self.tableView.footerContainer = self.footerView;
     [self.tableView addSubview:self.footerView];
     
-    [self.tableView setFooterVisibleChangeBlock:^(BOOL isVisible, CGFloat visibleHeight, BOOL isCompleteVisible) {
+    [self.tableView setFooterVisibleChangeBlock:^(BOOL isVisible, CGFloat visibleHeight, BOOL isCompleteVisible, BOOL isProccessing) {
         dout(@"footer visible = %@", @(isVisible))
 
         @strongify(self);
         if (self.reachEnd) return;
         
-        if (self.tableView.footerProcessing) {
+        if (isProccessing) {
             self.footerView.text = @"Loading...";
             return;
         }

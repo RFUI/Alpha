@@ -9,6 +9,7 @@ static void *const RFPullToFetchTableViewKVOContext = (void *)&RFPullToFetchTabl
 @property (readwrite, nonatomic) BOOL footerProcessing;
 
 @property (weak, nonatomic) UIPanGestureRecognizer *buildInPanGestureRecognizer;
+@property (strong, nonatomic) NSIndexPath *lastVisibleRowBeforeTriggeIndexPath;
 @end
 
 @implementation RFPullToFetchTableView
@@ -45,6 +46,8 @@ static void *const RFPullToFetchTableViewKVOContext = (void *)&RFPullToFetchTabl
     
     self.headerFetchingEnabled = YES;
     self.footerFetchingEnabled = YES;
+    self.shouldScrollToTopWhenHeaderEventTrigged = YES;
+    self.shouldScrollToLastVisibleRowBeforeTriggeAfterFooterProccessFinished = YES;
 }
 
 - (void)afterInit {
@@ -142,13 +145,13 @@ static void *const RFPullToFetchTableViewKVOContext = (void *)&RFPullToFetchTabl
             if (self.contentOffset.y < startOffset) {
                 _douts(@"Drag down");
                 if (self.headerFetchingEnabled && !self.isFetching && self.distanceBetweenContentAndTop > self.headerContainer.height) {
-                    [self onHeaderEventTriggered];
+                    [self triggerHeaderProccess];
                 }
             }
             else {
                 _douts(@"Drag up");
                 if (self.footerFetchingEnabled && !self.isFetching && self.distanceBetweenContentAndBottom > self.footerContainer.height) {
-                    [self onFooterEventTriggered];
+                    [self triggerFooterProccess];
                 }
             }
             break;
@@ -167,7 +170,7 @@ static void *const RFPullToFetchTableViewKVOContext = (void *)&RFPullToFetchTabl
     
     if (self.headerVisibleChangeBlock) {
         CGFloat dst = self.distanceBetweenContentAndTop;
-        self.headerVisibleChangeBlock(isVisible, dst, (dst >= self.headerContainer.height));
+        self.headerVisibleChangeBlock(isVisible, dst, (dst >= self.headerContainer.height), self.isHeaderProcessing);
     }
 }
 
@@ -186,11 +189,11 @@ static void *const RFPullToFetchTableViewKVOContext = (void *)&RFPullToFetchTabl
     
     if (self.footerVisibleChangeBlock) {
         CGFloat dst = self.distanceBetweenContentAndBottom;
-        self.footerVisibleChangeBlock(isVisible, dst, (dst >= self.footerContainer.height));
+        self.footerVisibleChangeBlock(isVisible, dst, (dst >= self.footerContainer.height), self.isFooterProcessing);
     }
 }
 
-- (void)onHeaderEventTriggered {
+- (void)triggerHeaderProccess {
     _doutwork()
     if (self.headerProcessing) return;
     
@@ -200,9 +203,14 @@ static void *const RFPullToFetchTableViewKVOContext = (void *)&RFPullToFetchTabl
     }
     
     [self setHeaderContainerVisible:YES animated:YES];
+    if (self.shouldScrollToTopWhenHeaderEventTrigged) {
+        CGPoint conentOffset = self.contentOffset;
+        conentOffset.y = -self.headerContainer.height;
+        [self setContentOffset:conentOffset animated:YES];
+    }
 }
 
-- (void)onFooterEventTriggered {
+- (void)triggerFooterProccess {
     _doutwork()
     if (self.footerProcessing) return;
     
@@ -212,6 +220,9 @@ static void *const RFPullToFetchTableViewKVOContext = (void *)&RFPullToFetchTabl
     }
     
     [self setFooterContainerVisible:YES animated:YES];
+    if (self.shouldScrollToLastVisibleRowBeforeTriggeAfterFooterProccessFinished) {
+        self.lastVisibleRowBeforeTriggeIndexPath = [[self indexPathsForVisibleRows] lastObject];
+    }
 }
 
 - (void)headerProccessFinshed {
@@ -226,6 +237,9 @@ static void *const RFPullToFetchTableViewKVOContext = (void *)&RFPullToFetchTabl
 
     self.footerProcessing = NO;
     [self setFooterContainerVisible:NO animated:YES];
+    if (self.shouldScrollToLastVisibleRowBeforeTriggeAfterFooterProccessFinished && self.lastVisibleRowBeforeTriggeIndexPath) {
+        [self scrollToRowAtIndexPath:self.lastVisibleRowBeforeTriggeIndexPath atScrollPosition:UITableViewScrollPositionTop animated:YES];
+    }
 }
 
 
@@ -292,6 +306,10 @@ static void *const RFPullToFetchTableViewKVOContext = (void *)&RFPullToFetchTabl
                 self.contentInset = edge;
                 break;
             }
+            case RFAutoFetchTableContainerStyleFloatFixed:
+            case RFAutoFetchTableContainerStyleFloat:
+            case RFAutoFetchTableContainerStyleNone:
+                break;
         }
     } completion:^(BOOL finished) {
         self.headerContainer.hidden = !isVisible;
@@ -311,6 +329,10 @@ static void *const RFPullToFetchTableViewKVOContext = (void *)&RFPullToFetchTabl
                 self.contentInset = edge;
                 break;
             }
+            case RFAutoFetchTableContainerStyleFloatFixed:
+            case RFAutoFetchTableContainerStyleFloat:
+            case RFAutoFetchTableContainerStyleNone:
+                break;
         }
     } completion:^(BOOL finished) {
         self.footerContainer.hidden = !isVisible;

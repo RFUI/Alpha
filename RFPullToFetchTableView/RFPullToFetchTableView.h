@@ -8,14 +8,14 @@
     The MIT License (MIT)
     http://www.opensource.org/licenses/mit-license.php
  
-    TEST
+    Alpha
  */
 
 #import "RFRuntime.h"
 #import "RFInitializing.h"
 #import "UIScrollView+RFScrollViewContentDistance.h"
 
-// 未实现
+// Only RFAutoFetchTableContainerStyleStatic implemented at this time.
 typedef enum {
     RFAutoFetchTableContainerStyleNone = 0,
 	RFAutoFetchTableContainerStyleStatic = 1,
@@ -38,27 +38,20 @@ typedef enum {
 @property (assign, nonatomic) RFAutoFetchTableContainerStyle headerStyle;
 @property (assign, nonatomic) RFAutoFetchTableContainerStyle footerStyle;
 
-//@property (assign, nonatomic) CGFloat *headerVisibleHight;
-//@property (assign, nonatomic) CGFloat *footerVisibleHight;
-
-
-
 - (void)setHeaderContainerVisible:(BOOL)isVisible animated:(BOOL)animated;
 - (void)setFooterContainerVisible:(BOOL)isVisible animated:(BOOL)animated;
 
+@property (copy, nonatomic) void (^headerVisibleChangeBlock)(BOOL isVisible, CGFloat visibleHeight, BOOL isCompleteVisible, BOOL isProccessing);
+- (void)setHeaderVisibleChangeBlock:(void (^)(BOOL isVisible, CGFloat visibleHeight, BOOL isCompleteVisible, BOOL isProccessing))headerVisibleChangeBlock;
 
-
-@property (copy, nonatomic) void (^headerVisibleChangeBlock)(BOOL isVisible, CGFloat visibleHeight, BOOL isCompleteVisible);
-- (void)setHeaderVisibleChangeBlock:(void (^)(BOOL isVisible, CGFloat visibleHeight, BOOL isCompleteVisible))headerVisibleChangeBlock;
-
-@property (copy, nonatomic) void (^footerVisibleChangeBlock)(BOOL isVisible, CGFloat visibleHeight, BOOL isCompleteVisible);
-- (void)setFooterVisibleChangeBlock:(void (^)(BOOL isVisible, CGFloat visibleHeight, BOOL isCompleteVisible))footerVisibleChangeBlock;
+@property (copy, nonatomic) void (^footerVisibleChangeBlock)(BOOL isVisible, CGFloat visibleHeight, BOOL isCompleteVisible, BOOL isProccessing);
+- (void)setFooterVisibleChangeBlock:(void (^)(BOOL isVisible, CGFloat visibleHeight, BOOL isCompleteVisible, BOOL isProccessing))footerVisibleChangeBlock;
 
 #pragma mark - Event
 @property (readonly, getter = isFetching, nonatomic) BOOL fetching;
 
-@property (readonly, nonatomic) BOOL headerProcessing;
-@property (readonly, nonatomic) BOOL footerProcessing;
+@property (readonly, getter = isHeaderProcessing, nonatomic) BOOL headerProcessing;
+@property (readonly, getter = isFooterProcessing, nonatomic) BOOL footerProcessing;
 
 @property (copy, nonatomic) void (^headerProccessBlock)(void);
 @property (copy, nonatomic) void (^footerProccessBlock)(void);
@@ -67,12 +60,17 @@ typedef enum {
 - (void)footerProccessFinshed;
 - (void)headerProccessFinshed;
 
-- (void)onHeaderEventTriggered;
-- (void)onFooterEventTriggered;
+// For manually trigger.
+- (void)triggerHeaderProccess;
+- (void)triggerFooterProccess;
+
+// Default `YES`
+@property (assign, nonatomic) BOOL shouldScrollToTopWhenHeaderEventTrigged;
+
+// Default `YES`, not work rightnow.
+@property (assign, nonatomic) BOOL shouldScrollToLastVisibleRowBeforeTriggeAfterFooterProccessFinished;
+
+// Default `NO`
+//@property (assign, nonatomic) BOOL shouldScrollToBottomWhenFooterEventTrigged;
 
 @end
-
-@protocol RFAutoFetchTableDelegate <NSObject>
-
-@end
-

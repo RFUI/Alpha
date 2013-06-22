@@ -76,7 +76,7 @@ static void *const RFPullToFetchTableViewKVOContext = (void *)&RFPullToFetchTabl
             [self addObserver:self forKeyPath:@keypath(self, distanceBetweenContentAndTop) options:NSKeyValueObservingOptionOld context:RFPullToFetchTableViewKVOContext];
         }
         else {
-            [self removeObserver:self forKeyPath:@keypath(self, distanceBetweenContentAndBottom) context:RFPullToFetchTableViewKVOContext];
+            [self removeObserver:self forKeyPath:@keypath(self, distanceBetweenContentAndTop) context:RFPullToFetchTableViewKVOContext];
             [self setHeaderContainerVisible:NO animated:NO];
         }
         [self didChangeValueForKey:@keypath(self, headerFetchingEnabled)];
@@ -92,7 +92,7 @@ static void *const RFPullToFetchTableViewKVOContext = (void *)&RFPullToFetchTabl
             [self addObserver:self forKeyPath:@keypath(self, distanceBetweenContentAndBottom) options:NSKeyValueObservingOptionOld context:RFPullToFetchTableViewKVOContext];
         }
         else {
-            [self removeObserver:self forKeyPath:@keypath(self, distanceBetweenContentAndTop) context:RFPullToFetchTableViewKVOContext];
+            [self removeObserver:self forKeyPath:@keypath(self, distanceBetweenContentAndBottom) context:RFPullToFetchTableViewKVOContext];
             [self setFooterContainerVisible:NO animated:NO];
         }
         [self didChangeValueForKey:@keypath(self, footerFetchingEnabled)];

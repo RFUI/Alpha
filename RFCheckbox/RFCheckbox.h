@@ -15,7 +15,7 @@
 
 // Add target for UIControlEventValueChanged to get notice when state changed.
 
-@interface RFCheckBox : RFControl
+@interface RFCheckbox : RFControl
 @property (weak, nonatomic) IBOutlet UILabel *textLabel;
 @property (weak, nonatomic) IBOutlet UIImageView *checkBoxImageView;
 

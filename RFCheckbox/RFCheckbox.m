@@ -1,14 +1,14 @@
 
-#import "RFCheckBox.h"
+#import "RFCheckbox.h"
 
 CGFloat RFCheckBoxNoImageDisableAlpha = 0.5002;
 static void *const RFCheckBoxKVOContext = (void *)&RFCheckBoxKVOContext;
 
-@interface RFCheckBox ()
+@interface RFCheckbox ()
 @property (assign, nonatomic) BOOL needsUpdateCheckboxImageView;
 @end
 
-@implementation RFCheckBox
+@implementation RFCheckbox
 
 - (NSString *)description {
     NSString *orginalDescription = [super description];
@@ -54,7 +54,7 @@ static void *const RFCheckBoxKVOContext = (void *)&RFCheckBoxKVOContext;
 }
 
 + (NSSet *)keyPathsForValuesAffectingNeedsUpdateCheckboxImageView {
-    RFCheckBox *this;
+    RFCheckbox *this;
     return [NSSet setWithObjects:@keypath(this, on), @keypath(this, enabled), @keypath(this, onImage), @keypath(this, onHighlightedImage), @keypath(this, onDisabledImage), @keypath(this, offImage), @keypath(this, offHighlightedImage), @keypath(this, offDisabledImage), nil];
 }
 

@@ -1,6 +1,8 @@
 
 #import "RFAudioPlayer.h"
 
+static void *const RFAudioPlayerKVOContext = (void *)&RFAudioPlayerKVOContext;
+
 @interface RFAudioPlayer ()
 @property (readwrite, strong, nonatomic) AVPlayer *player;
 @property (assign, nonatomic) dispatch_queue_t dispatchQueue;
@@ -17,7 +19,6 @@
     static dispatch_once_t oncePredicate;
     dispatch_once(&oncePredicate, ^{
         sharedInstance = [[self alloc] init];
-        
     });
 	return sharedInstance;
 }
@@ -30,7 +31,19 @@
     return self;
 }
 
-- (void)playURL:(NSURL *)url ready:(void (^)(RFAudioPlayer *player, NSTimeInterval duration))callback {
+- (void)dealloc {
+    
+}
+
+
+#define _RFAudioPlayer_CreatCallBack(IsReady)\
+dispatch_async(dispatch_get_main_queue(), ^{\
+    if (callback) {\
+        callback(IsReady);\
+    }\
+})
+
+- (void)playURL:(NSURL *)url ready:(void (^)(BOOL creat))callback {
     if ([url isEqual:self.currentPlayItemURL]) {
         [self play];
         return;
@@ -44,6 +57,7 @@
     dispatch_async(self.dispatchQueue, ^{
         if (![url isEqual:self.toBeCreatPlayerURL]) {
             _dout(@"Skip, URL changed when task in queue.")
+            _RFAudioPlayer_CreatCallBack(NO);
             return;
         }
         
@@ -52,6 +66,7 @@
         
         if (![url isEqual:self.toBeCreatPlayerURL]) {
             _douto(@"URL changed when creating, abandon this player");
+            _RFAudioPlayer_CreatCallBack(NO);
         }
         else {
             _dout(@"Player created success: %@", url);
@@ -59,12 +74,12 @@
             self.currentPlayItemURL = self.toBeCreatPlayerURL;
             self.toBeCreatPlayerURL = nil;
             
-            if (callback) {
-                callback(self, self.duration);
-            }
+            _RFAudioPlayer_CreatCallBack(YES);
             [self play];
         }
     });
+    
+
 }
 
 - (NSTimeInterval)currentTime {
@@ -157,7 +172,7 @@
 }
 
 + (NSSet *)keyPathsForValuesAffectingPlaying {
-    return [NSSet setWithObject:@keypathClassInstance(RFAudioPlayer, player.rate)];
+    return [NSSet setWithObjects:@keypathClassInstance(RFAudioPlayer, player), @keypathClassInstance(RFAudioPlayer, player.rate), nil];
 }
 
 + (NSSet *)keyPathsForValuesAffectingDuration {

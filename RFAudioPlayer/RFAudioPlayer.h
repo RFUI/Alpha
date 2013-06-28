@@ -16,11 +16,10 @@
  
  @param url An URL that identifies an audiovisual resource. RFAudioPlayer works equally well with local and remote media files.
  
- @param callback A block called when the receiver just before play the media. This block may never be executed. May be nil.
+ @param callback A block called when the receiver just before play the media or this url is skiped. May be nil.
 
  */
-- (void)playURL:(NSURL *)url ready:(void (^)(RFAudioPlayer *player, NSTimeInterval duration))callback;
-
+- (void)playURL:(NSURL *)url ready:(void (^)(BOOL creat))callback;
 
 #pragma mark - Player stautes
 @property (readonly, nonatomic) AVPlayer *player;

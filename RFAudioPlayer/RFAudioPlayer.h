@@ -16,8 +16,7 @@
  
  @param url An URL that identifies an audiovisual resource. RFAudioPlayer works equally well with local and remote media files.
  
- @param callback A block called when the receiver just before play the media or this url is skiped. May be nil.
-
+ @param callback A block called on main queue when the receiver just before play the media or this url is skiped. May be nil.
  */
 - (void)playURL:(NSURL *)url ready:(void (^)(BOOL creat))callback;
 

@@ -78,12 +78,12 @@ dispatch_async(dispatch_get_main_queue(), ^{\
             [self play];
         }
     });
-    
-
 }
+#undef _RFAudioPlayer_CreatCallBack
 
 - (NSTimeInterval)currentTime {
     if (self.player) {
+        // This value may be negative. CMTimeGetSeconds() is the same.
         return [RFAudioPlayer timeIntervalFromCMTime:self.player.currentTime];
     }
     else {
@@ -131,7 +131,7 @@ dispatch_async(dispatch_get_main_queue(), ^{\
     }
     if (self.playing) return YES;
     
-    dout(@"Playing: %@", self.currentPlayItemURL);
+    _dout(@"Playing: %@", self.currentPlayItemURL);
     
     AVAudioSession *s = [AVAudioSession sharedInstance];
     if ([s.category isEqualToString:AVAudioSessionCategoryRecord]) {
@@ -141,7 +141,7 @@ dispatch_async(dispatch_get_main_queue(), ^{\
     }
     
     if (self.duration > 0 && self.currentTime == self.duration) {
-        dout_info(@"Restart play at beginning.")
+        _dout_info(@"Restart play at beginning.")
         self.currentTime = 0;
     }
     
@@ -157,18 +157,21 @@ dispatch_async(dispatch_get_main_queue(), ^{\
 }
 
 - (BOOL)stop {
-    if (!self.player) return NO;
-    
-    [self.player pause];
+    [self pause];
     self.currentTime = 0;
     return YES;
 }
 
+// Implement these method so we don´t have to import CoreMedia framework to use CMTimeMakeWithSeconds() and CMTimeGetSeconds().
 + (NSTimeInterval)timeIntervalFromCMTime:(CMTime)time {
     if (time.flags == kCMTimeFlags_Valid) {
         return (float)time.value/time.timescale;
     }
     return -1;
+}
+
++ (CMTime)CMTimeFromTimeInterval:(NSTimeInterval)timeInterval timeScale:(CMTimeScale)timeScale {
+    return (CMTime){timeInterval*timeScale, timeScale, kCMTimeFlags_Valid, 0};
 }
 
 + (NSSet *)keyPathsForValuesAffectingPlaying {

@@ -3,7 +3,7 @@
 
 @implementation NSManagedObject (RFCoreDataSyncPurge)
 
-+ (void)syncPurgeManagedObjectContext:(NSManagedObjectContext *)context entityName:(NSString *)entityName {
++ (void)syncPurgeManagedObjectContext:(NSManagedObjectContext *)context {
     NSManagedObject<RFCoreDataSyncPurging> *this;
     if ([self countWithPredicate:[NSPredicate predicateWithFormat:@"%K = YES", @keypath(this, syncFlag)] inContext:context] == 0) return;
     

@@ -14,7 +14,7 @@
 #import "RFCoreData.h"
 
 @interface NSManagedObject (RFCoreDataSyncPurge)
-+ (void)syncPurgeManagedObjectContext:(NSManagedObjectContext *)context entityName:(NSString *)entityName;
++ (void)syncPurgeManagedObjectContext:(NSManagedObjectContext *)context;
 @end
 
 @protocol RFCoreDataSyncPurging <NSObject>

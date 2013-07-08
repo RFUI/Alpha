@@ -196,32 +196,38 @@ static void *const RFPullToFetchTableViewKVOContext = (void *)&RFPullToFetchTabl
 - (void)triggerHeaderProccess {
     _doutwork()
     if (self.headerProcessing) return;
+    self.headerProcessing = YES;
     
     if (self.headerProccessBlock) {
         self.headerProccessBlock();
-        self.headerProcessing = YES;
     }
     
-    [self setHeaderContainerVisible:YES animated:YES];
-    if (self.shouldScrollToTopWhenHeaderEventTrigged) {
-        CGPoint conentOffset = self.contentOffset;
-        conentOffset.y = -self.headerContainer.height;
-        [self setContentOffset:conentOffset animated:YES];
+    // The proccess may finished immediately after process block executed.
+    if (self.headerProcessing) {
+        [self setHeaderContainerVisible:YES animated:YES];
+        if (self.shouldScrollToTopWhenHeaderEventTrigged) {
+            CGPoint conentOffset = self.contentOffset;
+            conentOffset.y = -self.headerContainer.height;
+            [self setContentOffset:conentOffset animated:YES];
+        }
     }
 }
 
 - (void)triggerFooterProccess {
     _doutwork()
     if (self.footerProcessing) return;
+    self.footerProcessing = YES;
     
     if (self.footerProccessBlock) {
         self.footerProccessBlock();
-        self.footerProcessing = YES;
     }
     
-    [self setFooterContainerVisible:YES animated:YES];
-    if (self.shouldScrollToLastVisibleRowBeforeTriggeAfterFooterProccessFinished) {
-        self.lastVisibleRowBeforeTriggeIndexPath = [[self indexPathsForVisibleRows] lastObject];
+    // The proccess may finished immediately after process block executed.
+    if (self.footerProcessing) {
+        [self setFooterContainerVisible:YES animated:YES];
+        if (self.shouldScrollToLastVisibleRowBeforeTriggeAfterFooterProccessFinished) {
+            self.lastVisibleRowBeforeTriggeIndexPath = [[self indexPathsForVisibleRows] lastObject];
+        }
     }
 }
 

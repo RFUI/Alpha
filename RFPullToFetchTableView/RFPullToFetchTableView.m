@@ -150,7 +150,7 @@ static void *const RFPullToFetchTableViewKVOContext = (void *)&RFPullToFetchTabl
             }
             else {
                 _douts(@"Drag up");
-                if (self.footerFetchingEnabled && !self.isFetching && self.distanceBetweenContentAndBottom > self.footerContainer.height) {
+                if (self.footerFetchingEnabled && !self.footerReachEnd && !self.isFetching && self.distanceBetweenContentAndBottom > self.footerContainer.height) {
                     [self triggerFooterProccess];
                 }
             }
@@ -179,7 +179,7 @@ static void *const RFPullToFetchTableViewKVOContext = (void *)&RFPullToFetchTabl
     
     BOOL isVisible = (self.distanceBetweenContentAndBottom > 0 && !self.headerProcessing);
     // 解决内容过少总是显示 footer 的问题
-    if (!self.headerContainer.hidden && !self.footerProcessing) {
+    if (!self.headerContainer.hidden && !self.footerProcessing && !self.footerReachEnd) {
         isVisible = NO;
     }
 //    if (!(self.isDragging || self.isDecelerating) || self.footerProcessing) {
@@ -189,7 +189,7 @@ static void *const RFPullToFetchTableViewKVOContext = (void *)&RFPullToFetchTabl
     
     if (self.footerVisibleChangeBlock) {
         CGFloat dst = self.distanceBetweenContentAndBottom;
-        self.footerVisibleChangeBlock(isVisible, dst, (dst >= self.footerContainer.height), self.isFooterProcessing);
+        self.footerVisibleChangeBlock(isVisible, dst, (dst >= self.footerContainer.height), self.isFooterProcessing, self.footerReachEnd);
     }
 }
 
@@ -197,6 +197,7 @@ static void *const RFPullToFetchTableViewKVOContext = (void *)&RFPullToFetchTabl
     _doutwork()
     if (self.headerProcessing) return;
     self.headerProcessing = YES;
+    self.footerReachEnd = NO;
     
     if (self.headerProccessBlock) {
         self.headerProccessBlock();
@@ -304,7 +305,7 @@ static void *const RFPullToFetchTableViewKVOContext = (void *)&RFPullToFetchTabl
     if (isVisible) {
         self.headerContainer.hidden = NO;
     }
-    [UIView animateWithDuration:.2f delay:0 options:UIViewAnimationOptionAllowUserInteraction animated:animated beforeAnimations:nil animations:^{
+    [UIView animateWithDuration:.2f delay:0 options:UIViewAnimationOptionAllowUserInteraction | UIViewAnimationOptionBeginFromCurrentState animated:animated beforeAnimations:nil animations:^{
         switch (self.headerStyle) {
             case RFAutoFetchTableContainerStyleStatic: {
                 UIEdgeInsets edge = self.contentInset;
@@ -327,7 +328,7 @@ static void *const RFPullToFetchTableViewKVOContext = (void *)&RFPullToFetchTabl
     if (isVisible) {
         self.footerContainer.hidden = NO;
     }
-    [UIView animateWithDuration:.2f delay:0 options:UIViewAnimationOptionAllowUserInteraction animated:animated beforeAnimations:nil animations:^{
+    [UIView animateWithDuration:.2f delay:0 options:UIViewAnimationOptionAllowUserInteraction | UIViewAnimationOptionBeginFromCurrentState animated:animated beforeAnimations:nil animations:^{
         switch (self.footerStyle) {
             case RFAutoFetchTableContainerStyleStatic: {
                 UIEdgeInsets edge = self.contentInset;
@@ -347,6 +348,7 @@ static void *const RFPullToFetchTableViewKVOContext = (void *)&RFPullToFetchTabl
 }
 
 #pragma mark - Other Status
+
 - (BOOL)isFetching {
     return (self.headerProcessing || self.footerProcessing);
 }

@@ -9,7 +9,8 @@
 #import "ViewController.h"
 #import "ConfigViewController.h"
 
-NSTimeInterval DebugFetchDelay = 4;
+NSTimeInterval DebugFetchDelay = 1;
+int DebugMaxItemCount = 20;
 
 @interface ViewController ()
 // We don not use reall data.
@@ -65,8 +66,7 @@ RFUIInterfaceOrientationSupportAll
     [self.tableView setHeaderVisibleChangeBlock:^(BOOL isVisible, CGFloat visibleHeight, BOOL isCompleteVisible, BOOL isProccessing) {
         dout(@"header visible = %@", @(isVisible))
         @strongify(self);
-        if (self.reachEnd) return;
-        
+
         if (isProccessing) {
             self.headerView.text = @"Refreshing...";
             return;
@@ -89,11 +89,14 @@ RFUIInterfaceOrientationSupportAll
     self.tableView.footerContainer = self.footerView;
     [self.tableView addSubview:self.footerView];
     
-    [self.tableView setFooterVisibleChangeBlock:^(BOOL isVisible, CGFloat visibleHeight, BOOL isCompleteVisible, BOOL isProccessing) {
+    [self.tableView setFooterVisibleChangeBlock:^(BOOL isVisible, CGFloat visibleHeight, BOOL isCompleteVisible, BOOL isProccessing, BOOL reachEnd) {
         dout(@"footer visible = %@", @(isVisible))
 
         @strongify(self);
-        if (self.reachEnd) return;
+        if (reachEnd) {
+            self.footerView.text = @"No more";
+            return;
+        }
         
         if (isProccessing) {
             self.footerView.text = @"Loading...";
@@ -131,6 +134,11 @@ RFUIInterfaceOrientationSupportAll
 
 #pragma mark - TableView data
 - (void)setCellCount:(int)cellCount {
+    if (DebugMaxItemCount && cellCount > DebugMaxItemCount) {
+        self.tableView.footerReachEnd = YES;
+        cellCount = DebugMaxItemCount;
+    }
+    
     if (_cellCount != cellCount) {
         int orgCount = _cellCount;
         dout_int(_cellCount)

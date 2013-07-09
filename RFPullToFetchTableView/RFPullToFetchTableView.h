@@ -44,8 +44,8 @@ typedef enum {
 @property (copy, nonatomic) void (^headerVisibleChangeBlock)(BOOL isVisible, CGFloat visibleHeight, BOOL isCompleteVisible, BOOL isProccessing);
 - (void)setHeaderVisibleChangeBlock:(void (^)(BOOL isVisible, CGFloat visibleHeight, BOOL isCompleteVisible, BOOL isProccessing))headerVisibleChangeBlock;
 
-@property (copy, nonatomic) void (^footerVisibleChangeBlock)(BOOL isVisible, CGFloat visibleHeight, BOOL isCompleteVisible, BOOL isProccessing);
-- (void)setFooterVisibleChangeBlock:(void (^)(BOOL isVisible, CGFloat visibleHeight, BOOL isCompleteVisible, BOOL isProccessing))footerVisibleChangeBlock;
+@property(copy, nonatomic) void (^footerVisibleChangeBlock)(BOOL isVisible, CGFloat visibleHeight, BOOL isCompleteVisible, BOOL isProccessing, BOOL reachEnd);
+- (void)setFooterVisibleChangeBlock:(void (^)(BOOL isVisible, CGFloat visibleHeight, BOOL isCompleteVisible, BOOL isProccessing, BOOL reachEnd))footerVisibleChangeBlock;
 
 #pragma mark - Event
 @property (readonly, getter = isFetching, nonatomic) BOOL fetching;
@@ -63,6 +63,9 @@ typedef enum {
 // For manually trigger.
 - (void)triggerHeaderProccess;
 - (void)triggerFooterProccess;
+
+// If set `YES`, footer proccess will not be proccessed and `footerContainer` will be visiable. Usually for noticing user there are no more data. Header proccess will reset this property.
+@property(assign, nonatomic) BOOL footerReachEnd;
 
 // Default `YES`
 @property (assign, nonatomic) BOOL shouldScrollToTopWhenHeaderEventTrigged;

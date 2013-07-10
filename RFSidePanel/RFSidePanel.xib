@@ -88,7 +88,6 @@
 						<string key="NSFrame">{{320, 324}, {40, 100}}</string>
 						<reference key="NSSuperview" ref="766721923"/>
 						<reference key="NSWindow"/>
-						<reference key="NSNextKeyView"/>
 						<string key="NSReuseIdentifierKey">_NS:225</string>
 						<bool key="IBUIOpaque">NO</bool>
 						<string key="targetRuntimeIdentifier">IBIPadFramework</string>
@@ -110,11 +109,11 @@
 						</object>
 						<object class="NSCustomResource" key="IBUIHighlightedImage">
 							<string key="NSClassName">NSImage</string>
-							<string key="NSResourceName">SidePanel-on.active.png</string>
+							<string key="NSResourceName">SidePanel-off.active.png</string>
 						</object>
 						<object class="NSCustomResource" key="IBUINormalImage">
 							<string key="NSClassName">NSImage</string>
-							<string key="NSResourceName">SidePanel-on.png</string>
+							<string key="NSResourceName">SidePanel-off.png</string>
 						</object>
 						<object class="IBUIFontDescription" key="IBUIFontDescription" id="901273800">
 							<int key="type">2</int>
@@ -150,11 +149,11 @@
 						<reference key="IBUINormalTitleShadowColor" ref="19696548"/>
 						<object class="NSCustomResource" key="IBUIHighlightedImage">
 							<string key="NSClassName">NSImage</string>
-							<string key="NSResourceName">SidePanel-off.active.png</string>
+							<string key="NSResourceName">SidePanel-on.active.png</string>
 						</object>
 						<object class="NSCustomResource" key="IBUINormalImage">
 							<string key="NSClassName">NSImage</string>
-							<string key="NSResourceName">SidePanel-off.png</string>
+							<string key="NSResourceName">SidePanel-on.png</string>
 						</object>
 						<reference key="IBUIFontDescription" ref="901273800"/>
 						<reference key="IBUIFont" ref="951243466"/>
@@ -360,7 +359,7 @@
 				<string key="4.IBPluginDependency">com.apple.InterfaceBuilder.IBCocoaTouchPlugin</string>
 				<string key="41.IBPluginDependency">com.apple.InterfaceBuilder.IBCocoaTouchPlugin</string>
 				<real value="2" key="41.IBUIButtonInspectorSelectedEdgeInsetMetadataKey"/>
-				<real value="0.0" key="41.IBUIButtonInspectorSelectedStateConfigurationMetadataKey"/>
+				<real value="1" key="41.IBUIButtonInspectorSelectedStateConfigurationMetadataKey"/>
 				<string key="5.IBPluginDependency">com.apple.InterfaceBuilder.IBCocoaTouchPlugin</string>
 			</dictionary>
 			<dictionary class="NSMutableDictionary" key="unlocalizedProperties"/>

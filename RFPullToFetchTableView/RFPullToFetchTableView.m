@@ -105,7 +105,7 @@ static void *const RFPullToFetchTableViewKVOContext = (void *)&RFPullToFetchTabl
         return;
     }
     
-    if (object == self) {        
+    if (object == self) {
         if ([keyPath isEqualToString:@keypath(self, distanceBetweenContentAndTop)]) {
             if ([change[NSKeyValueChangeOldKey] floatValue] != self.distanceBetweenContentAndTop) {
                 [self onDistanceBetweenContentAndTopChanged];

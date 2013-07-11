@@ -1,13 +1,11 @@
 
 #import "RFScrollViewPageControl.h"
-#import "RFPerformance.h"
 
 @interface RFScrollViewPageControl ()
 @property(assign, nonatomic) BOOL needUpdatePage;
 @end
 
 @implementation RFScrollViewPageControl
-RFAlloctionLog
 
 #pragma mark - RFInitializing
 - (id)init {
@@ -79,6 +77,5 @@ RFAlloctionLog
         @keypath(this, supportHalfPage),
     nil];
 }
-
 
 @end

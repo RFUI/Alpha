@@ -6,5 +6,10 @@
 @required
 @property (copy, readonly, nonatomic) NSString *reuseIdentifier;
 
-- (void)prepareForReuse;
+@optional
+- (void)willReused;
+- (void)didResued;
+
+- (void)willRecycled;
+- (void)didRecycled;
 @end

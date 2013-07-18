@@ -18,7 +18,6 @@ NSTimeInterval const RFNoticeViewDefaultDisplayTimeInterval = 1.f;
 @end
 
 @implementation RFNoticeView
-#define RFDebugLevel 5
 
 - (id)init {
     self = [super init];

@@ -1,5 +1,6 @@
 
 #import "RFPlugin.h"
+#import "dout.h"
 
 @implementation RFPlugin
 

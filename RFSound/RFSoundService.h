@@ -11,6 +11,7 @@
     Beta
  */
 
+#import "RFRuntime.h"
 #import <AudioToolbox/AudioToolbox.h>
 #import <MediaPlayer/MediaPlayer.h>
 

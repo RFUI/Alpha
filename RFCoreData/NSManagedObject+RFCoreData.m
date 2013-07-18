@@ -1,5 +1,6 @@
 
 #import "NSManagedObject+RFCoreData.h"
+#import "dout.h"
 
 @implementation NSManagedObject (RFCoreData)
 

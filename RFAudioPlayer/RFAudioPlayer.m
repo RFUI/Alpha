@@ -1,5 +1,6 @@
 
 #import "RFAudioPlayer.h"
+#import "dout.h"
 
 static void *const RFAudioPlayerKVOContext = (void *)&RFAudioPlayerKVOContext;
 

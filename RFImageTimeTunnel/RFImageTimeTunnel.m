@@ -131,15 +131,15 @@
 		vNext.alpha = fAlpha;
 	}
 	
-	DOUT_START
-	t1.text = [NSString stringWithFormat:@"v = %f", fSlider];
-	t2.text = [NSString stringWithFormat:@"iShould = %d", ixShould];
-	t7.text = [NSString stringWithFormat:@"ixCurrent = %d", ixCurrent];
-//	t6.text = [NSString stringWithFormat:@"nx = %d", ixNext];
-	t3.text = [NSString stringWithFormat:@"v1 = %f", vImage1.alpha];
-	t4.text = [NSString stringWithFormat:@"v2 = %f", vImage2.alpha];
-	t5.text = [NSString stringWithFormat:@"v3 = %f", vImage3.alpha];
-	DOUT_END
+    if (RFDEBUG) {
+        t1.text = [NSString stringWithFormat:@"v = %f", fSlider];
+        t2.text = [NSString stringWithFormat:@"iShould = %d", ixShould];
+        t7.text = [NSString stringWithFormat:@"ixCurrent = %d", ixCurrent];
+        //	t6.text = [NSString stringWithFormat:@"nx = %d", ixNext];
+        t3.text = [NSString stringWithFormat:@"v1 = %f", vImage1.alpha];
+        t4.text = [NSString stringWithFormat:@"v2 = %f", vImage2.alpha];
+        t5.text = [NSString stringWithFormat:@"v3 = %f", vImage3.alpha];        
+    }
 }
 
 - (void)touchesBegan:(NSSet *)touches withEvent:(UIEvent *)event {

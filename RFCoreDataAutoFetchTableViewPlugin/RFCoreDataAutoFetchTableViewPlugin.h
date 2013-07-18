@@ -20,6 +20,7 @@
  
  */
 
+#import "RFUI.h"
 #import "RFPlugin.h"
 #import <CoreData/CoreData.h>
 

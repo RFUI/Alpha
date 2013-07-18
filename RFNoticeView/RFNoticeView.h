@@ -11,7 +11,7 @@
     Theory Test
  */
 
-#import "RFRuntime.h"
+#import "RFUI.h"
 
 @interface RFNoticeView : UIView
 @property (RF_WEAK, nonatomic) IBOutlet UILabel *textLabel;

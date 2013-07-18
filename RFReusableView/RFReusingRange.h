@@ -7,7 +7,7 @@
  
  */
 
-#import <Foundation/Foundation.h>
+#import "RFRuntime.h"
 
 @protocol RFReusingRangeDelegate;
 

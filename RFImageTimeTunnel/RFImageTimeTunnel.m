@@ -69,15 +69,12 @@
 	switch ((inImageView+3)%3) {
 		case 0:
 			return vImage1;
-			break;
 			
 		case 1:
 			return vImage2;
-			break;
 			
 		case 2:
 			return vImage3;
-			break;
 	}
 	return nil;
 }

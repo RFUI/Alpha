@@ -91,8 +91,10 @@ RFInitializingRootForUIView
 - (UIImage *)cropedImage {
     CGFloat scale = self.scrollView.zoomScale;
     CGPoint imageOffset = self.scrollView.contentOffset;
-    CGPoint imageOffsetAfterScale = CGPointMake(imageOffset.x*scale, imageOffset.y*scale);
-    return [[self.sourceImage imageWithScale:scale] imageWithCropRect:(CGRect){imageOffsetAfterScale, self.cropSize}];
+    
+    UIImage *downSizeImage = [self.sourceImage imageWithScale:scale];
+    UIImage *cropedImage = [downSizeImage imageWithCropRect:(CGRect){imageOffset, self.cropSize}];
+    return cropedImage;
 }
 
 - (void)layoutSubviews {

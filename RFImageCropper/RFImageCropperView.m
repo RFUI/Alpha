@@ -24,27 +24,57 @@ static void *const RFImageCropperViewKVOContext = (void *)&RFImageCropperViewKVO
 @dynamic minimumZoomScale, maximumZoomScale;
 
 #pragma mark - init
-RFInitializingRootForUIView
-
+- (id)init {
+    self = [super init];
+    if (self) {
+        [self onInit];
+    }
+    return self;
+}
+- (id)initWithFrame:(CGRect)frame {
+    self = [super initWithFrame:frame];
+    if (self) {
+        [self onInit];
+    }
+    return self;
+}
+- (id)initWithCoder:(NSCoder *)aDecoder {
+    self = [super initWithCoder:aDecoder];
+    if (self) {
+        [self onInit];
+    }
+    return self;
+}
 - (void)onInit {
     self.cropSize = CGSizeMake(100, 100);
     self.clipsToBounds = YES;
-    
-    [self rac_addObserver:self forKeyPath:@keypath(self, sourceImage) options:NSKeyValueObservingOptionNew queue:nil block:^(RFImageCropperView *observer, NSDictionary *change) {
-        [observer onSourceImageChanged];
-    }];
-    
-    [self rac_addObserver:self forKeyPath:@keypath(self, cropSize) options:NSKeyValueObservingOptionNew queue:nil block:^(RFImageCropperView *observer, NSDictionary *change) {
-        observer.frameView.cropSize = observer.cropSize;
-        [observer.frameView setNeedsDisplay];
-        [observer setNeedsLayout];
-    }];
-    
+    [self addObserver:self forKeyPath:@keypath(self, sourceImage) options:NSKeyValueObservingOptionNew context:RFImageCropperViewKVOContext];
+    [self addObserver:self forKeyPath:@keypath(self, cropSize) options:NSKeyValueObservingOptionNew context:RFImageCropperViewKVOContext];
     [self.frameView bringAboveView:self.scrollView];
 }
 
-- (void)afterInit {
-    // Nothing
+- (void)dealloc {
+    [self removeObserver:self forKeyPath:@keypath(self, sourceImage) context:RFImageCropperViewKVOContext];
+    [self removeObserver:self forKeyPath:@keypath(self, cropSize) context:RFImageCropperViewKVOContext];
+}
+
+- (void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary *)change context:(void *)context {
+    if (context != RFImageCropperViewKVOContext) {
+        [super observeValueForKeyPath:keyPath ofObject:object change:change context:context];
+        return;
+    }
+
+    if (object == self && [keyPath isEqualToString:@keypath(self, sourceImage)]) {
+        [self onSourceImageChanged];
+    }
+    else if (object == self && [keyPath isEqualToString:@keypath(self, cropSize)]) {
+        self.frameView.cropSize = self.cropSize;
+        [self.frameView setNeedsDisplay];
+        [self setNeedsLayout];
+    }
+    else {
+        [super observeValueForKeyPath:keyPath ofObject:object change:change context:context];
+    }
 }
 
 - (RFImageCropperFrameView *)frameView {
@@ -91,10 +121,8 @@ RFInitializingRootForUIView
 - (UIImage *)cropedImage {
     CGFloat scale = self.scrollView.zoomScale;
     CGPoint imageOffset = self.scrollView.contentOffset;
-    
-    UIImage *downSizeImage = [self.sourceImage imageWithScale:scale];
-    UIImage *cropedImage = [downSizeImage imageWithCropRect:(CGRect){imageOffset, self.cropSize}];
-    return cropedImage;
+    CGPoint imageOffsetAfterScale = CGPointMake(imageOffset.x*scale, imageOffset.y*scale);
+    return [[self.sourceImage imageWithScale:scale] imageWithCropRect:(CGRect){imageOffsetAfterScale, self.cropSize}];
 }
 
 - (void)layoutSubviews {
@@ -135,8 +163,28 @@ RFInitializingRootForUIView
 @end
 
 @implementation RFImageCropperFrameView
-RFInitializingRootForUIView
 
+- (id)init {
+    self = [super init];
+    if (self) {
+        [self onInit];
+    }
+    return self;
+}
+- (id)initWithFrame:(CGRect)frame {
+    self = [super initWithFrame:frame];
+    if (self) {
+        [self onInit];
+    }
+    return self;
+}
+- (id)initWithCoder:(NSCoder *)aDecoder {
+    self = [super initWithCoder:aDecoder];
+    if (self) {
+        [self onInit];
+    }
+    return self;
+}
 - (void)onInit {
     // Default vaule
     self.maskColor = [UIColor colorWithRGBHex:0x000000 alpha:0.5];
@@ -146,10 +194,6 @@ RFInitializingRootForUIView
     self.opaque = NO;
     self.contentMode = UIViewContentModeRedraw;
     self.userInteractionEnabled = NO;
-}
-
-- (void)afterInit {
-    // Nothing
 }
 
 - (void)drawRect:(CGRect)rect {

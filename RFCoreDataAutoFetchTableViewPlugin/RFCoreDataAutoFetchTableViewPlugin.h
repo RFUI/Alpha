@@ -58,9 +58,12 @@
 
 // 
 - (NSManagedObject *)fetchedObjectAtIndexPath:(NSIndexPath *)indexPath;
+
+@property (nonatomic, assign) BOOL shouldShowNoneDataTips;
 @end
 
 @interface UITableView (RFCoreDataAutoFetchTableViewPlugin)
 @property (RF_STRONG, nonatomic) RFCoreDataAutoFetchTableViewPlugin *coreDataAutoFetchTableViewPlugin;
 @end
+
 

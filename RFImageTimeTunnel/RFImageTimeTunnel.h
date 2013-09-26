@@ -11,6 +11,13 @@ enum RFImageTimeTunnelGestureMode {
 };
 
 @interface RFImageTimeTunnel : UIViewController {
+	
+	IBOutlet UIImageView * vImage1;
+	IBOutlet UIImageView * vImage2;
+	IBOutlet UIImageView * vImage3;
+	
+	IBOutlet UISlider * tunnelSlider;
+	
 	NSUInteger ixCurrent;
 	NSUInteger imageCount;
 
@@ -29,14 +36,15 @@ enum RFImageTimeTunnelGestureMode {
 	CGPoint tcStart;
 	CGPoint tcLast;
 }
-@property(nonatomic, strong) NSArray * imageArray;
+@property (nonatomic, strong) NSArray * imageArray;
 
-@property(nonatomic, weak) IBOutlet UIImageView * vImage1;
-@property(nonatomic, weak) IBOutlet UIImageView * vImage2;
-@property(nonatomic, weak) IBOutlet UIImageView * vImage3;
-@property(nonatomic, weak) IBOutlet UISlider * tunnelSlider;
-@property(nonatomic, assign) BOOL isAlphaTransformEnable;
+@property (nonatomic, strong) UIImageView * vImage1;
+@property (nonatomic, strong) UIImageView * vImage2;
+@property (nonatomic, strong) UIImageView * vImage3;
+@property (nonatomic, strong) UISlider * tunnelSlider;
+@property (nonatomic, assign) BOOL isAlphaTransformEnable;
 
+- (id)init;
 - (void)setImagesWithUIImageArray:(NSArray *)UIImageArray;
 - (IBAction)onSliderValueChange:(UISlider *)sender;
 @end

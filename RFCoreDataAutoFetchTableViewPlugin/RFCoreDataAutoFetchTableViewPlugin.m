@@ -124,12 +124,24 @@ static void *const RFCoreDataAutoFetchTableViewPluginKVOContext = (void *)&RFCor
     }
     
     id <NSFetchedResultsSectionInfo> sectionInfo = [self.fetchController sections][section];
-    return [sectionInfo numberOfObjects] + extraCount;
+    
+    NSInteger itemsCount = [sectionInfo numberOfObjects] + extraCount;
+    if (itemsCount == 0 && self.shouldShowNoneDataTips) {
+        return 1;
+    }
+    
+    return itemsCount;
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
     RFAssert(self.master, @"RFCoreDataAutoFetchTableViewPlugin must have a master.");
-    UITableViewCell *cell = [self.master RFCoreDataAutoFetchTableViewPlugin:self cellForRowAtIndexPath:indexPath managedObject:[self fetchedObjectAtIndexPath:indexPath]];
+    UITableViewCell *cell;
+    if (self.fetchController.fetchedObjects.count == 0 && self.shouldShowNoneDataTips) {
+        cell = [self.master RFCoreDataAutoFetchTableViewPlugin:self cellForRowAtIndexPath:indexPath managedObject:nil];
+    } else {
+        
+        cell = [self.master RFCoreDataAutoFetchTableViewPlugin:self cellForRowAtIndexPath:indexPath managedObject:[self fetchedObjectAtIndexPath:indexPath]];
+    }
     RFAssert(cell, @"Master must return a cell.");
     return cell;
 }
@@ -281,3 +293,4 @@ static char RFCoreDataAutoFetchTableViewPluginCateogryProperty;
 }
 
 @end
+

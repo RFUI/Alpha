@@ -17,7 +17,7 @@
 }
 
 - (id)initWithPath:(NSString *)path {
-    if ((self = [super initWithPath:path])) {
+    if (self = [super initWithPath:path]) {
     }
     return self;
 }

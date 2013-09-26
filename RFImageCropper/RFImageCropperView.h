@@ -11,12 +11,11 @@
  */
 
 #import "RFUI.h"
-#import "RFInitializing.h"
 
 @class RFImageCropperFrameView;
 
-@interface RFImageCropperView : UIView <RFInitializing>
-@property (strong, nonatomic) RFImageCropperFrameView *frameView;
+@interface RFImageCropperView : UIView
+@property (weak, nonatomic) RFImageCropperFrameView *frameView;
 
 @property (strong, nonatomic) UIImage *sourceImage;
 
@@ -28,7 +27,7 @@
 
 @end
 
-@interface RFImageCropperFrameView : UIView <RFInitializing>
+@interface RFImageCropperFrameView : UIView
 @property (strong, nonatomic) UIColor *borderColor;
 @property (strong, nonatomic) UIColor *overlayColor;
 @property (strong, nonatomic) UIColor *maskColor;

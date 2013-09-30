@@ -19,7 +19,7 @@
 <RFInitializing>
 @property (RF_WEAK, nonatomic) IBOutlet id<RFPluginSupported> master;
 
-- (id)initWithMaster:(id<RFPluginSupported>)master;
+- (instancetype)initWithMaster:(id<RFPluginSupported>)master;
 
 @end
 

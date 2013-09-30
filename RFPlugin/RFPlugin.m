@@ -4,7 +4,7 @@
 
 @implementation RFPlugin
 
-- (id)init {
+- (instancetype)init {
     self = [super init];
     if (self) {
         [self onInit];
@@ -13,7 +13,7 @@
     return self;
 }
 
-- (id)initWithMaster:(id<RFPluginSupported>)master {
+- (instancetype)initWithMaster:(id<RFPluginSupported>)master {
     self = [super init];
     if (self) {
         self.master = master;

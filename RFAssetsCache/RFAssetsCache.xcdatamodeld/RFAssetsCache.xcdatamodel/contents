@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<model userDefinedModelVersionIdentifier="" type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="3401" systemVersion="13A598" minimumToolsVersion="Xcode 4.3" macOSVersion="Automatic" iOSVersion="Automatic">
+    <entity name="RFAssetsCacheData" representedClassName="RFAssetsCacheData" syncable="YES">
+        <attribute name="data" transient="YES" attributeType="Binary" syncable="YES"/>
+        <relationship name="info" optional="YES" maxCount="1" deletionRule="Deny" destinationEntity="RFAssetsCacheRecord" inverseName="rowData" inverseEntity="RFAssetsCacheRecord" syncable="YES"/>
+    </entity>
+    <entity name="RFAssetsCacheRecord" representedClassName="RFAssetsCacheRecord" syncable="YES">
+        <attribute name="age" optional="YES" attributeType="Date" syncable="YES"/>
+        <attribute name="briefData" optional="YES" attributeType="Binary" syncable="YES"/>
+        <attribute name="etag" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="indexHash" attributeType="Integer 64" defaultValueString="0" indexed="YES" syncable="YES"/>
+        <attribute name="uri" attributeType="String" syncable="YES"/>
+        <relationship name="rowData" maxCount="1" deletionRule="Cascade" destinationEntity="RFAssetsCacheData" inverseName="info" inverseEntity="RFAssetsCacheData" syncable="YES"/>
+        <compoundIndexes>
+            <compoundIndex>
+                <index value="indexHash"/>
+            </compoundIndex>
+        </compoundIndexes>
+    </entity>
+    <elements>
+        <element name="RFAssetsCacheData" positionX="0" positionY="0" width="0" height="0"/>
+        <element name="RFAssetsCacheRecord" positionX="0" positionY="0" width="0" height="0"/>
+    </elements>
+</model>

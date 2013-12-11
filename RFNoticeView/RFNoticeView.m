@@ -1,8 +1,8 @@
 
 #import "RFNoticeView.h"
 
-NSTimeInterval const RFNoticeViewMinimumDisplayTimeInterval = 0.1f;
-NSTimeInterval const RFNoticeViewDefaultDisplayTimeInterval = 1.f;
+NSTimeInterval RFNoticeViewMinimumDisplayTimeInterval = 0.1f;
+NSTimeInterval RFNoticeViewDefaultDisplayTimeInterval = 1.f;
 
 
 @interface RFNoticeViewItem : NSObject
@@ -11,39 +11,37 @@ NSTimeInterval const RFNoticeViewDefaultDisplayTimeInterval = 1.f;
 @end
 
 @interface RFNoticeView ()
-@property (RF_STRONG, atomic) NSMutableArray *items;
+@property (strong, atomic) NSMutableArray *items;
 @property (assign, atomic, getter = isDisplaying) BOOL displaying;
-@property (RF_WEAK, nonatomic) RFNoticeViewItem *currentItem;
-@property (RF_STRONG, nonatomic) NSDate *currentItemDisplayTime;
+@property (weak, nonatomic) RFNoticeViewItem *currentItem;
+@property (strong, nonatomic) NSDate *currentItemDisplayTime;
 @end
 
 @implementation RFNoticeView
-
-- (id)init {
-    self = [super init];
-    if (self) {
-        [self onInit];
-    }
-    return self;
-}
-- (id)initWithFrame:(CGRect)frame {
-    self = [super initWithFrame:frame];
-    if (self) {
-        [self onInit];
-    }
-    return self;
-}
-- (id)initWithCoder:(NSCoder *)aDecoder {
-    self = [super initWithCoder:aDecoder];
-    if (self) {
-        [self onInit];
-    }
-    return self;
-}
+RFInitializingRootForUIView
 
 - (void)onInit {
     self.items = [NSMutableArray arrayWithCapacity:20];
     [self addObserver:self forKeyPath:@keypath(self, items) options:NSKeyValueObservingOptionNew context:NULL];
+    
+    [self rac_addObserver:self forKeyPath:@keypath(self, items) options:NSKeyValueObservingOptionNew queue:nil block:^(RFNoticeView *observer, NSDictionary *change) {
+        switch ([change[NSKeyValueChangeKindKey] integerValue]) {
+            case NSKeyValueChangeInsertion:
+                [observer onMessageAdded];
+                break;
+                
+            case NSKeyValueChangeRemoval:
+                [observer onMessageRemoved];
+                break;
+                
+            default:
+                break;
+        }
+    }];
+}
+
+- (void)afterInit {
+    // nothing
 }
 
 - (void)noticeWithMessage:(NSString *)message displayTimeInterval:(NSTimeInterval)timeInterval {
@@ -64,26 +62,6 @@ NSTimeInterval const RFNoticeViewDefaultDisplayTimeInterval = 1.f;
     }
     _dout_float(tureTimeInterval)
     return tureTimeInterval;
-}
-
-- (void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary *)change context:(void *)context {
-    if (object == self && [keyPath isEqualToString:@keypath(self, items)]) {
-        switch ([change[NSKeyValueChangeKindKey] integerValue]) {
-            case NSKeyValueChangeInsertion:
-                [self onMessageAdded];
-                break;
-                
-            case NSKeyValueChangeRemoval:
-                [self onMessageRemoved];
-                break;
-                
-            default:
-                break;
-        }
-    }
-    else {
-        [super observeValueForKeyPath:keyPath ofObject:object change:change context:context];
-    }
 }
 
 - (void)onMessageAdded {

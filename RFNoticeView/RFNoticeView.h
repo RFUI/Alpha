@@ -12,14 +12,15 @@
  */
 
 #import "RFUI.h"
+#import "RFInitializing.h"
 
-@interface RFNoticeView : UIView
-@property (RF_WEAK, nonatomic) IBOutlet UILabel *textLabel;
+@interface RFNoticeView : UIView <RFInitializing>
+@property (weak, nonatomic) IBOutlet UILabel *textLabel;
 
-- (void)setHidden:(BOOL)hidden animated:(BOOL)animated;
+//- (void)setHidden:(BOOL)hidden animated:(BOOL)animated;
 - (void)noticeWithMessage:(NSString *)message displayTimeInterval:(NSTimeInterval)timeInterval;
 
 @end
 
-extern NSTimeInterval const RFNoticeViewMinimumDisplayTimeInterval;
-extern NSTimeInterval const RFNoticeViewDefaultDisplayTimeInterval;
+extern NSTimeInterval RFNoticeViewMinimumDisplayTimeInterval;
+extern NSTimeInterval RFNoticeViewDefaultDisplayTimeInterval;

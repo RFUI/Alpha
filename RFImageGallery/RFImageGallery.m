@@ -26,7 +26,7 @@
 
 #pragma mark -
 - (RFImageGallery *)initWithFrame:(CGRect)frame {
-    if (self = [super initWithFrame:frame]) {
+    if ((self = [super initWithFrame:frame])) {
         [self setup];
     }
     return self;
@@ -47,11 +47,13 @@
         [self addObserver:self forKeyPath:@"contentOffset" options:NSKeyValueObservingOptionNew context:NULL];
         [self addObserver:self forKeyPath:@"frame" options:NSKeyValueObservingOptionNew context:NULL];
         [self addObserver:self forKeyPath:@"index" options:NSKeyValueObservingOptionNew context:NULL];
+        @weakify(self);
         static dispatch_once_t onceToken;
         dispatch_once(&onceToken, ^{
+            @strongify(self);
             _douts(@"dispatch_once");
             _dout_rect(self.frame)
-            _cellWidthCached = self.frame.size.width;
+            self.cellWidthCached = self.frame.size.width;
             
             if (self.scrollContainer == nil) {
                 self.scrollContainer = [[RFImageGalleryScrollContainer alloc] initWithMaster:self];

@@ -6,7 +6,7 @@ static void *const RFAudioPlayerKVOContext = (void *)&RFAudioPlayerKVOContext;
 
 @interface RFAudioPlayer ()
 @property (readwrite, strong, nonatomic) AVPlayer *player;
-@property (assign, nonatomic) dispatch_queue_t dispatchQueue;
+@property (strong, nonatomic) dispatch_queue_t dispatchQueue;
 @property (copy, nonatomic) NSURL *toBeCreatPlayerURL;
 @property (readwrite, copy, nonatomic) NSURL *currentPlayItemURL;
 @end

@@ -23,7 +23,7 @@
 }
 
 - (id)initWithFrame:(CGRect)frame style:(UITableViewStyle)style {
-    if (self = [super initWithFrame:frame style:style]) {
+    if ((self = [super initWithFrame:frame style:style])) {
         [self registObservers];
         [self setupFetchController];
     }
@@ -134,7 +134,7 @@
 			break;
 			
 		case NSFetchedResultsChangeMove:
-            [table moveRowAtIndexPath:[NSArray arrayWithObject:indexPath] toIndexPath:[NSArray arrayWithObject:newIndexPath]];
+            [table moveRowAtIndexPath:indexPath toIndexPath:newIndexPath];
 			break;
 	}
 }

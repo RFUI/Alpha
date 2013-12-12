@@ -123,7 +123,7 @@
 			break;
 			
 		case NSFetchedResultsChangeMove:
-            [table moveRowAtIndexPath:[NSArray arrayWithObject:indexPath] toIndexPath:[NSArray arrayWithObject:newIndexPath]];
+            [table moveRowAtIndexPath:indexPath toIndexPath:newIndexPath];
 			break;
 	}
 }

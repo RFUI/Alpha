@@ -23,7 +23,7 @@
 //- (void)setViewControllers:(NSArray *)viewControllers animated:(BOOL)animated
 
 
-- (void)pushViewController:(UIViewController *)viewController animated:(BOOL)animated;
+- (void)pushViewController:(UIViewController<RFSlideNavigationControllerDelegate> *)viewController animated:(BOOL)animated;
 - (UIViewController *)popViewControllerAnimated:(BOOL)animated;
 - (NSArray *)popAllViewControllersAnimated:(BOOL)animated;
 //- (NSArray *)popToViewController:(UIViewController *)viewController animated:(BOOL)animated

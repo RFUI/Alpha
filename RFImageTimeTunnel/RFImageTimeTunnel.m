@@ -1,9 +1,10 @@
 #import "RFImageTimeTunnel.h"
 
+@interface RFImageTimeTunnel ()
+
+@end
+
 @implementation RFImageTimeTunnel
-@synthesize vImage1, vImage2, vImage3, tunnelSlider;
-//@synthesize tunnelSlider;
-@synthesize imageArray, isAlphaTransformEnable;
 
 - (id)init {
     self = [super initWithNibName:@"RFImageTimeTunnel" bundle:nil];
@@ -14,22 +15,14 @@
     return self;
 }
 
-- (void)didReceiveMemoryWarning {
-    [super didReceiveMemoryWarning];
-    
-    // Release any cached data, images, etc that aren't in use.
-}
-
-- (void)viewDidLoad
-{
+- (void)viewDidLoad {
     [super viewDidLoad];
 
 	[self onSliderValueChange:nil];
 
 }
 
-- (void)viewDidUnload
-{
+- (void)viewDidUnload {
     [super viewDidUnload];
 	
 	self.vImage2 = nil;
@@ -52,15 +45,15 @@
 	isImageSet = YES;
 	
 	ixCurrent = 0;
-	tunnelSlider.value = 0;
-	[vImage2 bringToFront];
-	[vImage1 bringToFront];
+	self.tunnelSlider.value = 0;
+	[self.vImage2 bringToFront];
+	[self.vImage1 bringToFront];
 	
 	if (imageCount > 0) {
-		vImage1.image = [self.imageArray objectAtIndex:0];
+		self.vImage1.image = [self.imageArray objectAtIndex:0];
 	}
 	if (imageCount > 1) {
-		vImage2.image = [self.imageArray objectAtIndex:1];
+		self.vImage2.image = [self.imageArray objectAtIndex:1];
 	}
 }
 
@@ -68,19 +61,19 @@
 	// 防止负值
 	switch ((inImageView+3)%3) {
 		case 0:
-			return vImage1;
+			return self.vImage1;
 			
 		case 1:
-			return vImage2;
+			return self.vImage2;
 			
 		case 2:
-			return vImage3;
+			return self.vImage3;
 	}
 	return nil;
 }
 
 - (void)changeImage:(UIImageView *)vImage to:(int)ixImageArray {
-	if (ixImageArray < 0 || ixImageArray >= imageArray.count) {
+	if (ixImageArray < 0 || ixImageArray >= self.imageArray.count) {
 		vImage.image = nil;
 		return;
 	}
@@ -95,7 +88,7 @@
 	if (!isImageSet) return;
 	
 	float fBlockLength = 100.f / (imageCount - 1);
-	float fSlider	= tunnelSlider.value;
+	float fSlider	= self.tunnelSlider.value;
 	int   ixShould	= (int)(fSlider / fBlockLength);
 	
 	UIImageView *vPrev, *vCt, *vNext;
@@ -133,9 +126,9 @@
         t2.text = [NSString stringWithFormat:@"iShould = %d", ixShould];
         t7.text = [NSString stringWithFormat:@"ixCurrent = %d", ixCurrent];
         //	t6.text = [NSString stringWithFormat:@"nx = %d", ixNext];
-        t3.text = [NSString stringWithFormat:@"v1 = %f", vImage1.alpha];
-        t4.text = [NSString stringWithFormat:@"v2 = %f", vImage2.alpha];
-        t5.text = [NSString stringWithFormat:@"v3 = %f", vImage3.alpha];        
+        t3.text = [NSString stringWithFormat:@"v1 = %f", self.vImage1.alpha];
+        t4.text = [NSString stringWithFormat:@"v2 = %f", self.vImage2.alpha];
+        t5.text = [NSString stringWithFormat:@"v3 = %f", self.vImage3.alpha];
     }
 }
 
@@ -151,10 +144,10 @@
     if ([[event touchesForView:self.view] count] == 1) {
 		tcLast = [[touches anyObject] locationInView:self.view];
 		if (gestureMode == RFImageTimeTunnelGestureModePosition) {
-			tunnelSlider.value = tcLast.x/self.view.bounds.size.width*tunnelSlider.maximumValue;
+			self.tunnelSlider.value = tcLast.x/self.view.bounds.size.width*self.tunnelSlider.maximumValue;
 		}
 		else {
-			tunnelSlider.value += (tcLast.x - tcStart.x)/self.view.bounds.size.width * 1.5;
+			self.tunnelSlider.value += (tcLast.x - tcStart.x)/self.view.bounds.size.width * 1.5;
 		}
 		[self onSliderValueChange:nil];
     }

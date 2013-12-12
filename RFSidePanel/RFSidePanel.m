@@ -2,9 +2,8 @@
 
 static const CGFloat RFSidePanelToggleAnimateDurationDefault = 0.5;
 
-@interface RFSidePanel () {
-    CGFloat toggleAnimateDuration;
-}
+@interface RFSidePanel ()
+@property (assign, nonatomic) CGFloat toggleAnimateDuration;
 @property (readwrite, nonatomic) BOOL isShow;
 
 @end
@@ -32,13 +31,13 @@ RFUIInterfaceOrientationSupportAll
 - (void)viewDidLoad {
     [super viewDidLoad];
     
-    _isShow = (self.view.frame.origin.x < 0)? NO : YES;
+    self.isShow = (self.view.frame.origin.x < 0)? NO : YES;
 
     if (self.rootViewController) {
         [self.containerView addSubview:self.rootViewController.view resizeOption:RFViewResizeOptionFill];
     }
     
-    toggleAnimateDuration = RFSidePanelToggleAnimateDurationDefault;
+    self.toggleAnimateDuration = RFSidePanelToggleAnimateDurationDefault;
 }
 
 - (void)viewDidAppear:(BOOL)animated {
@@ -61,14 +60,14 @@ RFUIInterfaceOrientationSupportAll
         self.separatorButtonON.highlighted = YES;
         [self.separatorButtonON bringAboveView:self.separatorButtonOFF];
 		
-		[UIView animateWithDuration:toggleAnimateDuration delay:0 options:UIViewAnimationCurveEaseOut|UIViewAnimationOptionBeginFromCurrentState animations:^{
+		[UIView animateWithDuration:self.toggleAnimateDuration delay:0 options:UIViewAnimationOptionCurveEaseInOut|UIViewAnimationOptionBeginFromCurrentState animations:^{
 			[self.view moveToX:0 Y:RFMathNotChange];
 		} completion:^(BOOL finished) {
             self.separatorButtonON.highlighted = NO;
             self.separatorButtonON.hidden = YES;
             // Avoid two button was hidden at the same time, for a long animat duration.
             self.separatorButtonOFF.hidden = NO;
-            toggleAnimateDuration = RFSidePanelToggleAnimateDurationDefault;
+            self.toggleAnimateDuration = RFSidePanelToggleAnimateDurationDefault;
             if ([self.delegate respondsToSelector:@selector(sidePanelDidShow:)]) {
                 [self.delegate sidePanelDidShow:self];
             }
@@ -94,13 +93,13 @@ RFUIInterfaceOrientationSupportAll
         self.separatorButtonOFF.highlighted = YES;
         [self.separatorButtonOFF bringAboveView:self.separatorButtonON];
         
-		[UIView animateWithDuration:toggleAnimateDuration delay:0 options:UIViewAnimationCurveEaseOut|UIViewAnimationOptionBeginFromCurrentState animations:^{
+		[UIView animateWithDuration:self.toggleAnimateDuration delay:0 options:UIViewAnimationOptionCurveEaseInOut|UIViewAnimationOptionBeginFromCurrentState animations:^{
 			[self.view moveToX:-self.containerView.bounds.size.width Y:RFMathNotChange];
 		} completion:^(BOOL finished) {
 			self.separatorButtonOFF.highlighted = NO;
             self.separatorButtonOFF.hidden = YES;
             self.separatorButtonON.hidden = NO;
-            toggleAnimateDuration = RFSidePanelToggleAnimateDurationDefault;
+            self.toggleAnimateDuration = RFSidePanelToggleAnimateDurationDefault;
             if ([self.delegate respondsToSelector:@selector(sidePanelDidHidden:)]) {
                 [self.delegate sidePanelDidHidden:self];
             }
@@ -166,7 +165,7 @@ RFUIInterfaceOrientationSupportAll
             _dout_float(v);
             if (ABS(x+v*0.1) > wBounds*0.5) {
                 if (v != 0) {
-                    toggleAnimateDuration = MIN(ABS(wBounds/v)*3, RFSidePanelToggleAnimateDurationDefault*1.2);
+                    self.toggleAnimateDuration = MIN(ABS(wBounds/v)*3, RFSidePanelToggleAnimateDurationDefault*1.2);
                     _dout_float(toggleAnimateDuration)
                 }
                 

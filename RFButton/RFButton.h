@@ -23,6 +23,6 @@
 @property (copy, nonatomic) void (^unselecteEffectBlock)(RFButton *sender);
 
 
-@property (weak, nonatomic, readonly) UIButton *agentButton  DEPRECATED_ATTRIBUTE;
+@property (weak, nonatomic) IBOutlet UIButton *agentButton;
 @property (copy, nonatomic, setter = setTappedBlock:) void (^tappedBlock)(RFButton *) DEPRECATED_ATTRIBUTE;
 @end

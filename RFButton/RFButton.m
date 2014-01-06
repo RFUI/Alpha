@@ -49,7 +49,7 @@
 
 - (void)onTouchUpInside {
     if (self.agentButton && !self.agentButton.userInteractionEnabled) {
-        [self.agentButton sendActionsForControlEvents:UIControlEventTouchDragInside];
+        [self.agentButton sendActionsForControlEvents:UIControlEventTouchUpInside];
     }
 
 #pragma clang diagnostic push

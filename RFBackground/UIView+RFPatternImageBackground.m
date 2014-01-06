@@ -13,10 +13,8 @@ static char UIViewBackgroundColorPatternImageNameCateogryProperty;
 
 - (void)setBackgroundColorPatternImageName:(NSString *)backgroundColorPatternImageName {
     if (![self.backgroundColorPatternImageName isEqualToString:backgroundColorPatternImageName]) {
-        [self willChangeValueForKey:@keypath(self, backgroundColorPatternImageName)];
         self.backgroundColor = [UIColor colorWithPatternImage:[UIImage imageNamed:backgroundColorPatternImageName]];
         objc_setAssociatedObject(self, &UIViewBackgroundColorPatternImageNameCateogryProperty, backgroundColorPatternImageName, OBJC_ASSOCIATION_COPY);
-        [self didChangeValueForKey:@keypath(self, backgroundColorPatternImageName)];
     }
 }
 

@@ -25,8 +25,6 @@
 }
 
 - (void)setActiveRange:(NSRange)activeRange {
-    [self willChangeValueForKey:@keypath(self, activeRange)];
-    
     BOOL isIntersecting = (NSIntersectionRange(_activeRange, activeRange).length);
     if (isIntersecting) {
         NSUInteger oldLast = _activeRange.location + _activeRange.length - 1;
@@ -64,7 +62,6 @@
     }
     
     _activeRange = activeRange;
-    [self didChangeValueForKey:@keypath(self, activeRange)];
 }
 
 @end

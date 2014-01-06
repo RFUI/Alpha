@@ -130,21 +130,17 @@ RFInitializingRootForUIView
 #pragma mark - Using Static Items
 - (void)setStaticMode:(BOOL)staticMode {
     if (_staticMode != staticMode) {
-        [self willChangeValueForKey:@keypath(self, staticMode)];
         _staticMode = staticMode;
         if (staticMode) {
             [self reloadTabItem];
         }
-        [self didChangeValueForKey:@keypath(self, staticMode)];
     }
 }
 
 - (void)setKeepLayoutForStaticMode:(BOOL)keepLayoutForStaticMode {
     if (_keepLayoutForStaticMode != keepLayoutForStaticMode) {
-        [self willChangeValueForKey:@keypath(self, keepLayoutForStaticMode)];
         _keepLayoutForStaticMode = keepLayoutForStaticMode;
         [self setNeedsLayout];
-        [self didChangeValueForKey:@keypath(self, keepLayoutForStaticMode)];
     }
 }
 

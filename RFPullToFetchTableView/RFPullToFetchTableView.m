@@ -69,7 +69,6 @@ static void *const RFPullToFetchTableViewKVOContext = (void *)&RFPullToFetchTabl
 #pragma mark - KVO
 - (void)setHeaderFetchingEnabled:(BOOL)headerFetchingEnabled {
     if (_headerFetchingEnabled != headerFetchingEnabled) {
-        [self willChangeValueForKey:@keypath(self, headerFetchingEnabled)];
         _headerFetchingEnabled = headerFetchingEnabled;
         
         if (headerFetchingEnabled) {
@@ -79,13 +78,11 @@ static void *const RFPullToFetchTableViewKVOContext = (void *)&RFPullToFetchTabl
             [self removeObserver:self forKeyPath:@keypath(self, distanceBetweenContentAndTop) context:RFPullToFetchTableViewKVOContext];
             [self setHeaderContainerVisible:NO animated:NO];
         }
-        [self didChangeValueForKey:@keypath(self, headerFetchingEnabled)];
     }
 }
 
 - (void)setFooterFetchingEnabled:(BOOL)footerFetchingEnabled {
     if (_footerFetchingEnabled != footerFetchingEnabled) {
-        [self willChangeValueForKey:@keypath(self, footerFetchingEnabled)];
         _footerFetchingEnabled = footerFetchingEnabled;
         
         if (footerFetchingEnabled) {
@@ -95,7 +92,6 @@ static void *const RFPullToFetchTableViewKVOContext = (void *)&RFPullToFetchTabl
             [self removeObserver:self forKeyPath:@keypath(self, distanceBetweenContentAndBottom) context:RFPullToFetchTableViewKVOContext];
             [self setFooterContainerVisible:NO animated:NO];
         }
-        [self didChangeValueForKey:@keypath(self, footerFetchingEnabled)];
     }
 }
 

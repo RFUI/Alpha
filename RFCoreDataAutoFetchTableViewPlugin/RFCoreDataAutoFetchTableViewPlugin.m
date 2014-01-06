@@ -11,12 +11,10 @@ static void *const RFCoreDataAutoFetchTableViewPluginKVOContext = (void *)&RFCor
 
 - (void)setTableView:(UITableView *)tableView {
     if (_tableView != tableView) {
-        [self willChangeValueForKey:@keypath(self, tableView)];
         tableView.coreDataAutoFetchTableViewPlugin = self;
         tableView.dataSource = self;
         _tableView = tableView;
         self.fetchController.delegate = (_tableView)?self : nil;
-        [self didChangeValueForKey:@keypath(self, tableView)];
     }
 }
 
@@ -274,9 +272,7 @@ static char RFCoreDataAutoFetchTableViewPluginCateogryProperty;
 
 - (void)setCoreDataAutoFetchTableViewPlugin:(RFCoreDataAutoFetchTableViewPlugin *)coreDataAutoFetchTableViewPlugin {
     if (self.coreDataAutoFetchTableViewPlugin != coreDataAutoFetchTableViewPlugin) {
-        [self willChangeValueForKey:@keypath(self, coreDataAutoFetchTableViewPlugin)];
         objc_setAssociatedObject(self, &RFCoreDataAutoFetchTableViewPluginCateogryProperty, coreDataAutoFetchTableViewPlugin, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
-        [self didChangeValueForKey:@keypath(self, coreDataAutoFetchTableViewPlugin)];
     }
 }
 

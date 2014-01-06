@@ -2,18 +2,26 @@
     UIView (RFPatternImageBackground)
     RFUI
 
-    Copyright (c) 2013 BB9z
+    Copyright (c) 2013-2014 BB9z
     https://github.com/RFUI/Alpha
 
     The MIT License (MIT)
     http://www.opensource.org/licenses/mit-license.php
 
-    TEST
+    BETA
  */
 
 #import "RFUI.h"
 
+/**
+ @category UIView (RFPatternImageBackground)
+
+ This category help you fill a view’s background using a pattern image.
+ */
 @interface UIView (RFPatternImageBackground)
-@property (copy, nonatomic) NSString *backgroundColorPatternImageName;
+
+/** The name of the pattern image file. Set this property will change the background color of the view using the specified pattern image.
+ */
+@property (copy, nonatomic) NSString *backgroundColorPatternImageName UI_APPEARANCE_SELECTOR;
 
 @end

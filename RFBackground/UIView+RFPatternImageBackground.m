@@ -5,7 +5,6 @@
 static char UIViewBackgroundColorPatternImageNameCateogryProperty;
 
 @implementation UIView (RFPatternImageBackground)
-@dynamic backgroundColorPatternImageName;
 
 - (NSString *)backgroundColorPatternImageName {
     return objc_getAssociatedObject(self, &UIViewBackgroundColorPatternImageNameCateogryProperty);

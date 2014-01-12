@@ -1,5 +1,5 @@
 /*!
-    UIButton (RFResizableBackgroundImage)
+    UIButton (RFApperanceResizableBackgroundImage)
     RFUI
 
     Copyright (c) 2014 BB9z
@@ -14,7 +14,7 @@
 #import "RFUI.h"
 
 /**
- @category UIButton (RFResizableBackgroundImage)
+ @category UIButton (RFApperanceResizableBackgroundImage)
 
  This category help you making button’s background image resizable if you need support iOS 6 devices.
 
@@ -34,7 +34,7 @@
 
  @endcode
  */
-@interface UIButton (RFResizableBackgroundImage)
+@interface UIButton (RFApperanceResizableBackgroundImage)
 
 /** Background image resizing cap insets.
  

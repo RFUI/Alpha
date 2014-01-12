@@ -8,7 +8,7 @@ static char UIButtonBackgroundImageResizingCapInsetsCateogryProperty;
 static char UIButtonBackgroundImageResizingCapInsets2xCateogryProperty;
 static char UIButtonBackgroundImageStretchResizingModeCateogryProperty;
 
-@implementation UIButton (RFResizableBackgroundImage)
+@implementation UIButton (RFApperanceResizableBackgroundImage)
 
 - (UIEdgeInsets)backgroundImageResizingCapInsets {
     return [objc_getAssociatedObject(self, &UIButtonBackgroundImageResizingCapInsetsCateogryProperty) UIEdgeInsetsValue];

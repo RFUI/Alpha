@@ -34,8 +34,10 @@ RFInitializingRootForUIView
     UIBezierPath* bezierPath = [UIBezierPath bezierPath];
     [bezierPath moveToPoint:startPoint];
     [bezierPath addLineToPoint:endPoint];
-    CGFloat dashPattern[] = {self.dashLinePatternValue1, self.dashLinePatternValue2};
-    [bezierPath setLineDash:dashPattern count:2 phase:0];
+    if (self.dashLinePatternValue1 || self.dashLinePatternValue2) {
+        CGFloat dashPattern[] = {self.dashLinePatternValue1, self.dashLinePatternValue2};
+        [bezierPath setLineDash:dashPattern count:2 phase:0];
+    }
     bezierPath.lineWidth = (isDrawingVertically)? width : height;
     [self.color setStroke];
     [bezierPath stroke];

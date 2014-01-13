@@ -30,13 +30,15 @@
 - (instancetype)init {
     self = [super init];
     if (self) {
-        self.operationQueue = [[NSOperationQueue alloc] init];
-        [self.operationQueue setName:@"com.github.RFUI.RFAssetsCacheQueue"];
-        [self.operationQueue setMaxConcurrentOperationCount:1];
+        NSOperationQueue *oq = [[NSOperationQueue alloc] init];
+        [oq setName:@"com.github.RFUI.RFAssetsCacheQueue"];
+        [oq setMaxConcurrentOperationCount:1];
         
-        [self.operationQueue addOperationWithBlock:^{
+        [oq addOperationWithBlock:^{
             [self setupContext];
         }];
+
+        self.operationQueue = oq;
     }
     return self;
 }
@@ -44,18 +46,18 @@
 - (void)setupContext {
     NSURL *modelURL = [[NSBundle mainBundle] URLForResource:@"RFAssetsCache" withExtension:@"mom" subdirectory:@"RFAssetsCache.momd"];
     RFAssert(modelURL, nil);
-    NSManagedObjectModel *managedObjectModel = [[NSManagedObjectModel alloc] initWithContentsOfURL:modelURL];
-    NSPersistentStoreCoordinator *persistentStoreCoordinator = [[NSPersistentStoreCoordinator alloc] initWithManagedObjectModel:managedObjectModel];
+    NSManagedObjectModel *model = [[NSManagedObjectModel alloc] initWithContentsOfURL:modelURL];
+    NSPersistentStoreCoordinator *psc = [[NSPersistentStoreCoordinator alloc] initWithManagedObjectModel:model];
     NSError __autoreleasing *e = nil;
-    if (![persistentStoreCoordinator addPersistentStoreWithType:NSSQLiteStoreType configuration:nil URL:modelURL options:@{
+    if (![psc addPersistentStoreWithType:NSSQLiteStoreType configuration:nil URL:modelURL options:@{
           NSMigratePersistentStoresAutomaticallyOption : @YES,
           NSInferMappingModelAutomaticallyOption : @YES } error:&e]) {
         if (e) dout_error(@"%@", e);
         [[NSFileManager defaultManager] removeItemAtURL:modelURL error:nil];
-        [persistentStoreCoordinator addPersistentStoreWithType:NSSQLiteStoreType configuration:nil URL:modelURL options:nil error:nil];
+        [psc addPersistentStoreWithType:NSSQLiteStoreType configuration:nil URL:modelURL options:nil error:nil];
     };
     self.context = [[NSManagedObjectContext alloc] init];
-    [self.context setPersistentStoreCoordinator:persistentStoreCoordinator];
+    [self.context setPersistentStoreCoordinator:psc];
     douto(self.context)
 }
 

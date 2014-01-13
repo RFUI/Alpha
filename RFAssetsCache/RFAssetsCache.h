@@ -2,9 +2,15 @@
 
 #import "RFKit.h"
 
+/**
+
+ 
+ */
 typedef NS_ENUM(short, RFAssetsCacheStatus) {
     RFAssetsCacheStatusNotAvailable = 0,
-    RFAssetsCacheStatusOK
+    RFAssetsCacheStatusOK,
+
+    RFAssetsCacheStatusNew
 };
 
 @protocol RFAssetsCacheRecord;

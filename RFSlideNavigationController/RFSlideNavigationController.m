@@ -39,7 +39,7 @@
 
 #pragma mark -
 - (NSString *)description {
-    return [NSString stringWithFormat:@"<%@:%p viewControllers:%d %f>", NSStringFromClass([self class]), self, self.viewControllers.count, self.stackViewsWidthSum];
+    return [NSString stringWithFormat:@"<%@:%p viewControllers:%lu %f>", NSStringFromClass([self class]), self, self.viewControllers.count, self.stackViewsWidthSum];
 }
 
 - (id)init {

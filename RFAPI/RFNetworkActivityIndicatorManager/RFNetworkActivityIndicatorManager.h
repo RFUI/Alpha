@@ -42,6 +42,11 @@ typedef NS_ENUM(NSInteger, RFNetworkActivityIndicatorMessagePriority) {
  @param identifier nil 会取消所有显示，如果 show 时的 identifier 未传，应使用 @""
  */
 - (void)hideWithIdentifier:(NSString *)identifier;
+/** 隐藏一组
+ 
+ @param groupIdentifier nil 会取消所有显示，如果 show 时的 identifier 未传，应使用 @""
+ */
+- (void)hideWithGroupIdentifier:(NSString *)groupIdentifier;
 - (void)hideDisplayingMessage;
 - (void)hideMessage:(RFNetworkActivityIndicatorMessage *)message;
 
@@ -60,6 +65,7 @@ typedef NS_ENUM(NSInteger, RFNetworkActivityIndicatorMessagePriority) {
 
 @interface RFNetworkActivityIndicatorMessage : NSObject
 @property (copy, nonatomic) NSString *identifier;
+@property (copy, nonatomic) NSString *groupIdentifier;
 @property (copy, nonatomic) NSString *title;
 @property (copy, nonatomic) NSString *message;
 @property (assign, nonatomic) RFNetworkActivityIndicatorStatus status;

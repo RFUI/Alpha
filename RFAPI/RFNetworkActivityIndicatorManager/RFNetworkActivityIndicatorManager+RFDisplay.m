@@ -18,11 +18,12 @@
     dout_error(@"Error: %@ (%d), URL:%@", error.domain, error.code, error.userInfo[NSURLErrorFailingURLErrorKey]);
 #endif
 
-    [self showWithTitle:title?: @"不能完成请求" message:message status:RFNetworkActivityIndicatorStatusFail modal:NO priority:RFNetworkActivityIndicatorMessagePriorityQueue autoHideAfterTimeInterval:0 identifier:nil userInfo:nil];
+    [self showWithTitle:title?: @"不能完成请求" message:message status:RFNetworkActivityIndicatorStatusFail modal:NO priority:RFNetworkActivityIndicatorMessagePriorityQueue autoHideAfterTimeInterval:0 identifier:nil groupIdentifier:nil userInfo:nil];
 }
 
-- (void)showWithTitle:(NSString *)title message:(NSString *)message status:(RFNetworkActivityIndicatorStatus)status modal:(BOOL)modal priority:(RFNetworkActivityIndicatorMessagePriority)priority autoHideAfterTimeInterval:(NSTimeInterval)timeInterval identifier:(NSString *)identifier userInfo:(NSDictionary *)userInfo {
+- (void)showWithTitle:(NSString *)title message:(NSString *)message status:(RFNetworkActivityIndicatorStatus)status modal:(BOOL)modal priority:(RFNetworkActivityIndicatorMessagePriority)priority autoHideAfterTimeInterval:(NSTimeInterval)timeInterval identifier:(NSString *)identifier groupIdentifier:(NSString *)groupIdentifier userInfo:(NSDictionary *)userInfo {
     RFNetworkActivityIndicatorMessage *obj = [[RFNetworkActivityIndicatorMessage alloc] initWithIdentifier:identifier?: @"" title:title message:message status:status];
+    obj.groupIdentifier = groupIdentifier? : @"";
     obj.modal = modal;
     obj.userInfo = userInfo;
     obj.displayTimeInterval = timeInterval;

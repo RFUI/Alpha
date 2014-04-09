@@ -23,7 +23,7 @@ RFInitializingRootForNSObject
 - (void)hideWithIdentifier:(NSString *)identifier {
     if (!identifier) {
         [self.messageQueue removeAllObjects];
-        [self hideMessage:self.displayingMessage];
+        [self hideDisplayingMessage];
     }
 
     RFNetworkActivityIndicatorMessage *toRemove = [RFNetworkActivityIndicatorMessage new];
@@ -31,7 +31,20 @@ RFInitializingRootForNSObject
     [self.messageQueue removeObject:toRemove];
 
     if ([self.displayingMessage.identifier isEqualToString:identifier]) {
-        [self hideMessage:self.displayingMessage];
+        [self hideDisplayingMessage];
+    }
+}
+
+- (void)hideWithGroupIdentifier:(NSString *)identifier {
+    if (!identifier) {
+        [self.messageQueue removeAllObjects];
+        [self hideDisplayingMessage];
+    }
+
+    [self.messageQueue filterUsingPredicate:[NSPredicate predicateWithFormat:@"%K != %@", @keypathClassInstance(RFNetworkActivityIndicatorMessage, groupIdentifier), identifier]];
+
+    if ([self.displayingMessage.groupIdentifier isEqualToString:identifier]) {
+        [self hideDisplayingMessage];
     }
 }
 

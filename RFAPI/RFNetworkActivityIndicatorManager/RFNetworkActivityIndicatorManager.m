@@ -2,61 +2,138 @@
 #import "RFNetworkActivityIndicatorManager.h"
 
 @interface RFNetworkActivityIndicatorManager ()
-@property (strong, nonatomic) NSMutableDictionary *messages;
-@property (copy, nonatomic) NSString *displayingIdentifier;
+@property (strong, nonatomic) NSMutableArray *messageQueue;
+@property (weak, nonatomic) RFNetworkActivityIndicatorMessage *displayingMessage;
 @end
 
 @implementation RFNetworkActivityIndicatorManager
+RFInitializingRootForNSObject
 
 - (void)onInit {
-    self.messages = [NSMutableDictionary dictionary];
+    self.messageQueue = [NSMutableArray array];
 }
 
 - (void)afterInit {
 }
 
-- (void)alertError:(NSError *)error title:(NSString *)title {
-    NSMutableString *message = [NSMutableString string];
-    if (error.localizedDescription) {
-        [message appendFormat:@"%@\n", error.localizedDescription];
-    }
-    if (error.localizedFailureReason) {
-        [message appendFormat:@"%@\n", error.localizedFailureReason];
-    }
-    if (error.localizedRecoverySuggestion) {
-        [message appendFormat:@"%@\n", error.localizedRecoverySuggestion];
-    }
-#if RFDEBUG
-    dout_error(@"Error: %@ (%d), URL:%@", error.domain, error.code, error.userInfo[NSURLErrorFailingURLErrorKey]);
-#endif
-
-    [self showWithTitle:title?: @"不能完成请求" message:message status:RFNetworkActivityIndicatorStatusFail modal:NO autoHideAfterTimeInterval:0 identifier:nil userinfo:nil];
-}
-
-
-- (void)showWithTitle:(NSString *)title message:(NSString *)message status:(RFNetworkActivityIndicatorStatus)status modal:(BOOL)modal autoHideAfterTimeInterval:(NSTimeInterval)timeInterval identifier:(NSString *)identifier userinfo:(NSDictionary *)userinfo {
-
-}
-
-- (void)showProgress:(float)progress title:(NSString *)title message:(NSString *)message status:(RFNetworkActivityIndicatorStatus)status modal:(BOOL)modal identifier:(NSString *)identifier userinfo:(NSDictionary *)userinfo {
+- (NSString *)description {
+    return [NSString stringWithFormat:@"<%@: %p; displayingMessage = %@; messageQueue = %@>", self.class, self, self.displayingMessage, self.messageQueue];
 }
 
 - (void)hideWithIdentifier:(NSString *)identifier {
+    if (!identifier) {
+        [self.messageQueue removeAllObjects];
+        [self hideMessage:self.displayingMessage];
+    }
 
+    RFNetworkActivityIndicatorMessage *toRemove = [RFNetworkActivityIndicatorMessage new];
+    toRemove.identifier = identifier;
+    [self.messageQueue removeObject:toRemove];
+
+    if ([self.displayingMessage.identifier isEqualToString:identifier]) {
+        [self hideMessage:self.displayingMessage];
+    }
 }
 
-#pragma mark - For overwrite
+#pragma mark - Queue Manage
 - (void)showMessage:(RFNetworkActivityIndicatorMessage *)message {
+    NSParameterAssert(message);
+    if (message.priority >= RFNetworkActivityIndicatorMessagePriorityReset) {
+        [self.messageQueue removeAllObjects];
+        // Continue
+    }
 
+    if (message.priority >= RFNetworkActivityIndicatorMessagePriorityHigh) {
+        [self replaceMessage:self.displayingMessage withNewMessage:message animated:YES];
+        return;
+    }
+
+    // Needs update queue, just add or replace
+    NSUInteger ix = [self.messageQueue indexOfObject:message];
+    if (ix != NSNotFound) {
+        RFNetworkActivityIndicatorMessage *messageInQueue = [self.messageQueue objectAtIndex:ix];
+        if (message.priority >= messageInQueue.priority) {
+            // Readd it
+            [self.messageQueue removeObject:message];
+            [self.messageQueue addObject:message];
+        }
+        // Else ignore new message.
+    }
+    else {
+        [self.messageQueue addObject:message];
+    }
+
+    // If not displaying any, display it
+    if (!self.displayingMessage) {
+        [self replaceMessage:self.displayingMessage withNewMessage:message animated:YES];
+    }
+    _douto(self)
 }
 
 - (void)hideMessage:(RFNetworkActivityIndicatorMessage *)message {
+    [self.messageQueue removeObject:message];
 
+    if ([self.displayingMessage isEqual:message]) {
+        [self replaceMessage:message withNewMessage:[self popNextMessageToDisplay] animated:YES];
+    }
 }
 
+- (RFNetworkActivityIndicatorMessage *)popNextMessageToDisplay {
+    RFNetworkActivityIndicatorMessagePriority ctPriority = NSIntegerMin;
+    RFNetworkActivityIndicatorMessage *message;
+    for (RFNetworkActivityIndicatorMessage *obj in self.messageQueue) {
+        if (obj.priority > ctPriority) {
+            ctPriority = obj.priority;
+            message = obj;
+        }
+    }
+    if (message) {
+        [self.messageQueue removeObject:message];
+    }
+    return message;
+}
+
+#pragma mark - For overwrite
+- (void)replaceMessage:(RFNetworkActivityIndicatorMessage *)displayingMessage withNewMessage:(RFNetworkActivityIndicatorMessage *)message animated:(BOOL)animated {
+    _douto(displayingMessage)
+    _douto(message)
+    if (displayingMessage == message) return;
+    self.displayingMessage = message;
+}
 
 @end
 
 @implementation RFNetworkActivityIndicatorMessage
+
+- (NSString *)description {
+    return [NSString stringWithFormat:@"<%@: %p; title = %@; message = %@; identifier = %@; priority = %d>", self.class, self, self.title, self.message, self.identifier, self.priority];
+}
+
+- (id)init {
+    self = [super init];
+    if (self) {
+    }
+    return self;
+}
+
+- (instancetype)initWithIdentifier:(NSString *)identifier title:(NSString *)title message:(NSString *)message status:(RFNetworkActivityIndicatorStatus)status {
+    self = [self init];
+    if (self) {
+        _identifier = identifier;
+        _title = title;
+        _message = message;
+        _status = status;
+    }
+    return self;
+}
+
+- (BOOL)isEqual:(id)object {
+    if (![object isKindOfClass:[RFNetworkActivityIndicatorMessage class]]) return NO;
+    return self.hash == [object hash];
+}
+
+- (NSUInteger)hash {
+    return [self.identifier hash];
+}
 
 @end

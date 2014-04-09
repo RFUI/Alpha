@@ -25,6 +25,8 @@ typedef NS_ENUM(NSInteger, RFNetworkActivityIndicatorMessagePriority) {
     RFNetworkActivityIndicatorMessagePriorityReset = 1000
 };
 
+@class RFNetworkActivityIndicatorMessage;
+
 /**
  网络请求加载状态管理器
  
@@ -35,27 +37,24 @@ typedef NS_ENUM(NSInteger, RFNetworkActivityIndicatorMessagePriority) {
     RFInitializing
 >
 
-/** 显示状态信息
- 
- @param modal 是否以模态显示该信息，即显示时是否响应用户交互
- @param priority 状态优先级，会控制队列行为，
- @param timeInterval 0 不自动隐藏
- @param identifier 标示，新加入的显示请求会替换掉排队中的有着相同标示的请求。为 nil 会被转换为 @""。
- */
-- (void)showWithTitle:(NSString *)title message:(NSString *)message status:(RFNetworkActivityIndicatorStatus)status modal:(BOOL)modal priority:(RFNetworkActivityIndicatorMessagePriority)priority autoHideAfterTimeInterval:(NSTimeInterval)timeInterval identifier:(NSString *)identifier userinfo:(NSDictionary *)userinfo;
-
-/** 显示请求进度
- 
- @param progress 0～1，小于 0 表示进行中但无具体进度
- */
-- (void)showProgress:(float)progress title:(NSString *)title message:(NSString *)message status:(RFNetworkActivityIndicatorStatus)status modal:(BOOL)modal identifier:(NSString *)identifier userinfo:(NSDictionary *)userinfo;
 
 /**
  @param identifier nil 会取消所有显示，如果 show 时的 identifier 未传，应使用 @""
  */
 - (void)hideWithIdentifier:(NSString *)identifier;
 
-- (void)alertError:(NSError *)error title:(NSString *)title;
+- (void)showMessage:(RFNetworkActivityIndicatorMessage *)message;
+- (void)hideMessage:(RFNetworkActivityIndicatorMessage *)message;
+
+#pragma mark - Methods for overwrite.
+/** 
+ 
+ Must call super.
+ 
+ @param displayingMessage 目前显示的信息
+ @param message 将要显示的信息
+ */
+- (void)replaceMessage:(RFNetworkActivityIndicatorMessage *)displayingMessage withNewMessage:(RFNetworkActivityIndicatorMessage *)message animated:(BOOL)animated;
 
 @end
 
@@ -64,6 +63,14 @@ typedef NS_ENUM(NSInteger, RFNetworkActivityIndicatorMessagePriority) {
 @property (copy, nonatomic) NSString *identifier;
 @property (copy, nonatomic) NSString *title;
 @property (copy, nonatomic) NSString *message;
-@property (assign, nonatomic) BOOL modal;
+@property (assign, nonatomic) RFNetworkActivityIndicatorStatus status;
+
 @property (assign, nonatomic) RFNetworkActivityIndicatorMessagePriority priority;
+@property (assign, nonatomic) BOOL modal;
+@property (assign, nonatomic) float progress;
+@property (assign, nonatomic) NSTimeInterval displayTimeInterval;
+
+@property (strong, nonatomic) NSDictionary *userInfo;
+
+- (instancetype)initWithIdentifier:(NSString *)identifier title:(NSString *)title message:(NSString *)message status:(RFNetworkActivityIndicatorStatus)status;
 @end

@@ -1,7 +1,7 @@
 
 #import "RFAPI.h"
 #import "RFAssetsCache.h"
-#import "RFNetworkActivityIndicatorManager.h"
+#import "RFNetworkActivityIndicatorManager/RFNetworkActivityIndicatorManager+RFDisplay.h"
 
 @interface RFAPI ()
 @end

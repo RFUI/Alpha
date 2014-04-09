@@ -44,7 +44,7 @@ RFInitializingRootForNSObject
     }
 
     if (message.priority >= RFNetworkActivityIndicatorMessagePriorityHigh) {
-        [self replaceMessage:self.displayingMessage withNewMessage:message animated:YES];
+        [self replaceMessage:self.displayingMessage withNewMessage:message];
         return;
     }
 
@@ -65,7 +65,7 @@ RFInitializingRootForNSObject
 
     // If not displaying any, display it
     if (!self.displayingMessage) {
-        [self replaceMessage:self.displayingMessage withNewMessage:message animated:YES];
+        [self replaceMessage:self.displayingMessage withNewMessage:message];
     }
     _douto(self)
 }
@@ -74,7 +74,7 @@ RFInitializingRootForNSObject
     [self.messageQueue removeObject:message];
 
     if ([self.displayingMessage isEqual:message]) {
-        [self replaceMessage:message withNewMessage:[self popNextMessageToDisplay] animated:YES];
+        [self replaceMessage:message withNewMessage:[self popNextMessageToDisplay]];
     }
 }
 
@@ -93,8 +93,12 @@ RFInitializingRootForNSObject
     return message;
 }
 
+- (void)hideDisplayingMessage {
+    [self replaceMessage:self.displayingMessage withNewMessage:[self popNextMessageToDisplay]];
+}
+
 #pragma mark - For overwrite
-- (void)replaceMessage:(RFNetworkActivityIndicatorMessage *)displayingMessage withNewMessage:(RFNetworkActivityIndicatorMessage *)message animated:(BOOL)animated {
+- (void)replaceMessage:(RFNetworkActivityIndicatorMessage *)displayingMessage withNewMessage:(RFNetworkActivityIndicatorMessage *)message {
     _douto(displayingMessage)
     _douto(message)
     if (displayingMessage == message) return;

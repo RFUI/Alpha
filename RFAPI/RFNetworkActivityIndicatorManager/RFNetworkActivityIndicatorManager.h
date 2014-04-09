@@ -13,7 +13,6 @@ typedef NS_ENUM(short, RFNetworkActivityIndicatorStatus) {
 };
 
 /**  RFNetworkActivityIndicatorMessagePriority
- 
 
  @enum RFNetworkActivityIndicatorMessagePriorityQueue 排队显示
  @enum RFNetworkActivityIndicatorMessagePriorityHigh 不改变队列，立即显示
@@ -37,13 +36,13 @@ typedef NS_ENUM(NSInteger, RFNetworkActivityIndicatorMessagePriority) {
     RFInitializing
 >
 
+- (void)showMessage:(RFNetworkActivityIndicatorMessage *)message;
 
 /**
  @param identifier nil 会取消所有显示，如果 show 时的 identifier 未传，应使用 @""
  */
 - (void)hideWithIdentifier:(NSString *)identifier;
-
-- (void)showMessage:(RFNetworkActivityIndicatorMessage *)message;
+- (void)hideDisplayingMessage;
 - (void)hideMessage:(RFNetworkActivityIndicatorMessage *)message;
 
 #pragma mark - Methods for overwrite.
@@ -54,7 +53,7 @@ typedef NS_ENUM(NSInteger, RFNetworkActivityIndicatorMessagePriority) {
  @param displayingMessage 目前显示的信息
  @param message 将要显示的信息
  */
-- (void)replaceMessage:(RFNetworkActivityIndicatorMessage *)displayingMessage withNewMessage:(RFNetworkActivityIndicatorMessage *)message animated:(BOOL)animated;
+- (void)replaceMessage:(RFNetworkActivityIndicatorMessage *)displayingMessage withNewMessage:(RFNetworkActivityIndicatorMessage *)message;
 
 @end
 

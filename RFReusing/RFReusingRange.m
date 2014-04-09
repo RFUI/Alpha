@@ -50,13 +50,13 @@
         }
     }
     else {
-        int i = _activeRange.location;
-        for (int j = _activeRange.length; j > 0; j--) {
+        NSUInteger i = _activeRange.location;
+        for (NSInteger j = _activeRange.length; j > 0; j--) {
             [self.delegate RFReusingRange:self itemLeaveRangeAtIndex:(i+j-1)];
         }
         
         i = activeRange.location;
-        for (int j = activeRange.length; j > 0; j--) {
+        for (NSInteger j = activeRange.length; j > 0; j--) {
             [self.delegate RFReusingRange:self itemEnterRangeAtIndex:(i+j-1)];
         }
     }

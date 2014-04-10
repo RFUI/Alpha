@@ -33,7 +33,6 @@
 
     if (!message) {
         [SVProgressHUD dismiss];
-        douts(([NSString stringWithFormat:@"After replace : %@", self]))
         return;
     }
 
@@ -58,7 +57,6 @@
             [SVProgressHUD showWithStatus:stautsString maskType:maskType];
         }
     }
-    douts(([NSString stringWithFormat:@"After replace : %@", self]))
 }
 
 @end

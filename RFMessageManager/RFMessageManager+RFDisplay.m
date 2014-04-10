@@ -1,7 +1,7 @@
 
-#import "RFNetworkActivityIndicatorManager+RFDisplay.h"
+#import "RFMessageManager+RFDisplay.h"
 
-@implementation RFNetworkActivityIndicatorManager (RFDisplay)
+@implementation RFMessageManager (RFDisplay)
 
 - (void)alertError:(NSError *)error title:(NSString *)title {
     NSMutableString *message = [NSMutableString string];

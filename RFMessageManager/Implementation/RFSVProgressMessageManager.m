@@ -1,14 +1,14 @@
 
-#import "RFNetworkSVProgressHUDActivityIndicator.h"
+#import "RFSVProgressMessageManager.h"
 #import "SVProgressHUD.h"
 
-@interface RFNetworkSVProgressHUDActivityIndicator ()
+@interface RFSVProgressMessageManager ()
 @property (strong, nonatomic) id dismissObserver;
 
 - (RFNetworkActivityIndicatorMessage *)popNextMessageToDisplay;
 @end
 
-@implementation RFNetworkSVProgressHUDActivityIndicator
+@implementation RFSVProgressMessageManager
 
 - (void)afterInit {
     [super afterInit];

@@ -38,6 +38,8 @@ typedef NS_ENUM(NSInteger, RFNetworkActivityIndicatorMessagePriority) {
 
 - (void)showMessage:(RFNetworkActivityIndicatorMessage *)message;
 
+@property (strong, nonatomic) RFNetworkActivityIndicatorMessage *displayingMessage;
+
 /**
  @param identifier nil 会取消所有显示，如果 show 时的 identifier 未传，应使用 @""
  */
@@ -47,8 +49,6 @@ typedef NS_ENUM(NSInteger, RFNetworkActivityIndicatorMessagePriority) {
  @param groupIdentifier nil 会取消所有显示，如果 show 时的 identifier 未传，应使用 @""
  */
 - (void)hideWithGroupIdentifier:(NSString *)groupIdentifier;
-- (void)hideDisplayingMessage;
-- (void)hideMessage:(RFNetworkActivityIndicatorMessage *)message;
 
 #pragma mark - Methods for overwrite.
 /** 

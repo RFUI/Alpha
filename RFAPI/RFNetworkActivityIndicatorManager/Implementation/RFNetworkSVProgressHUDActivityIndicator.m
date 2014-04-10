@@ -4,6 +4,8 @@
 
 @interface RFNetworkSVProgressHUDActivityIndicator ()
 @property (strong, nonatomic) id dismissObserver;
+
+- (RFNetworkActivityIndicatorMessage *)popNextMessageToDisplay;
 @end
 
 @implementation RFNetworkSVProgressHUDActivityIndicator
@@ -14,13 +16,24 @@
     @weakify(self);
     self.dismissObserver = [[NSNotificationCenter defaultCenter] addObserverForName:SVProgressHUDWillDisappearNotification object:nil queue:nil usingBlock:^(NSNotification *note) {
         @strongify(self);
-        [self hideDisplayingMessage];
+        doutwork()
+        if (self.popNextMessageToDisplay && self.displayingMessage) {
+            RFAssert(self.displayingMessage.identifier, @"empty string");
+            [self hideWithIdentifier:self.displayingMessage.identifier];
+        }
     }];
 }
 
+- (void)dealloc {
+    self.dismissObserver = nil;
+}
+
 - (void)replaceMessage:(RFNetworkActivityIndicatorMessage *)displayingMessage withNewMessage:(RFNetworkActivityIndicatorMessage *)message {
+    [super replaceMessage:displayingMessage withNewMessage:message];
+
     if (!message) {
         [SVProgressHUD dismiss];
+        douts(([NSString stringWithFormat:@"After replace : %@", self]))
         return;
     }
 
@@ -45,6 +58,7 @@
             [SVProgressHUD showWithStatus:stautsString maskType:maskType];
         }
     }
+    douts(([NSString stringWithFormat:@"After replace : %@", self]))
 }
 
 @end

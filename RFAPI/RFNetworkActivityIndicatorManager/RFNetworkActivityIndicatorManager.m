@@ -3,7 +3,6 @@
 
 @interface RFNetworkActivityIndicatorManager ()
 @property (strong, nonatomic) NSMutableArray *messageQueue;
-@property (weak, nonatomic) RFNetworkActivityIndicatorMessage *displayingMessage;
 @end
 
 @implementation RFNetworkActivityIndicatorManager
@@ -20,37 +19,24 @@ RFInitializingRootForNSObject
     return [NSString stringWithFormat:@"<%@: %p; displayingMessage = %@; messageQueue = %@>", self.class, self, self.displayingMessage, self.messageQueue];
 }
 
-- (void)hideWithIdentifier:(NSString *)identifier {
-    if (!identifier) {
-        [self.messageQueue removeAllObjects];
-        [self hideDisplayingMessage];
-    }
-
-    RFNetworkActivityIndicatorMessage *toRemove = [RFNetworkActivityIndicatorMessage new];
-    toRemove.identifier = identifier;
-    [self.messageQueue removeObject:toRemove];
-
-    if ([self.displayingMessage.identifier isEqualToString:identifier]) {
-        [self hideDisplayingMessage];
-    }
-}
-
 - (void)hideWithGroupIdentifier:(NSString *)identifier {
     if (!identifier) {
         [self.messageQueue removeAllObjects];
-        [self hideDisplayingMessage];
+        [self hideWithIdentifier:self.displayingMessage.identifier];
     }
 
     [self.messageQueue filterUsingPredicate:[NSPredicate predicateWithFormat:@"%K != %@", @keypathClassInstance(RFNetworkActivityIndicatorMessage, groupIdentifier), identifier]];
 
     if ([self.displayingMessage.groupIdentifier isEqualToString:identifier]) {
-        [self hideDisplayingMessage];
+        [self hideWithIdentifier:self.displayingMessage.identifier];
     }
 }
 
 #pragma mark - Queue Manage
 - (void)showMessage:(RFNetworkActivityIndicatorMessage *)message {
     NSParameterAssert(message);
+    message.identifier = message.identifier.length? message.identifier : @"";
+
     if (message.priority >= RFNetworkActivityIndicatorMessagePriorityReset) {
         [self.messageQueue removeAllObjects];
         // Continue
@@ -83,11 +69,24 @@ RFInitializingRootForNSObject
     _douto(self)
 }
 
-- (void)hideMessage:(RFNetworkActivityIndicatorMessage *)message {
-    [self.messageQueue removeObject:message];
+- (void)hideWithIdentifier:(NSString *)identifier {
+    dout(([NSString stringWithFormat:@"hide with identifier: %@", identifier]))
 
-    if ([self.displayingMessage isEqual:message]) {
-        [self replaceMessage:message withNewMessage:[self popNextMessageToDisplay]];
+    if (!identifier) {
+        [self.messageQueue removeAllObjects];
+        [self replaceMessage:self.displayingMessage withNewMessage:[self popNextMessageToDisplay]];
+        return;
+    }
+
+    RFNetworkActivityIndicatorMessage *toRemove = [RFNetworkActivityIndicatorMessage new];
+    toRemove.identifier = identifier;
+    [self.messageQueue removeObject:toRemove];
+
+    douto(self.displayingMessage)
+    NSString *ctIdentifier = self.displayingMessage.identifier;
+    if ((ctIdentifier.length == 0 && identifier.length == 0)
+        || [ctIdentifier isEqualToString:identifier]) {
+        [self replaceMessage:self.displayingMessage withNewMessage:[self popNextMessageToDisplay]];
     }
 }
 
@@ -106,15 +105,11 @@ RFInitializingRootForNSObject
     return message;
 }
 
-- (void)hideDisplayingMessage {
-    [self replaceMessage:self.displayingMessage withNewMessage:[self popNextMessageToDisplay]];
-}
-
 #pragma mark - For overwrite
 - (void)replaceMessage:(RFNetworkActivityIndicatorMessage *)displayingMessage withNewMessage:(RFNetworkActivityIndicatorMessage *)message {
-    _douto(displayingMessage)
-    _douto(message)
+    douts(([NSString stringWithFormat:@"replaceMessage, ct = %@, new = %@",displayingMessage, message]))
     if (displayingMessage == message) return;
+    douts(([NSString stringWithFormat:@"set displaying with : %@", message]))
     self.displayingMessage = message;
 }
 

@@ -1,8 +1,8 @@
 // TEST
 
-#import "RFNetworkActivityIndicatorManager.h"
+#import "RFMessageManager.h"
 
-@interface RFNetworkActivityIndicatorManager (RFDisplay)
+@interface RFMessageManager (RFDisplay)
 
 /** 显示状态信息
 

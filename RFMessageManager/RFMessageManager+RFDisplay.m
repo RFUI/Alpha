@@ -1,7 +1,7 @@
 
-#import "RFNetworkActivityIndicatorManager+RFDisplay.h"
+#import "RFMessageManager+RFDisplay.h"
 
-@implementation RFNetworkActivityIndicatorManager (RFDisplay)
+@implementation RFMessageManager (RFDisplay)
 
 - (void)alertError:(NSError *)error title:(NSString *)title {
     NSMutableString *message = [NSMutableString string];
@@ -18,7 +18,7 @@
     dout_error(@"Error: %@ (%d), URL:%@", error.domain, error.code, error.userInfo[NSURLErrorFailingURLErrorKey]);
 #endif
 
-    [self showWithTitle:title?: @"不能完成请求" message:message status:RFNetworkActivityIndicatorStatusFail modal:NO priority:RFNetworkActivityIndicatorMessagePriorityQueue autoHideAfterTimeInterval:0 identifier:nil groupIdentifier:nil userInfo:nil];
+    [self showWithTitle:title?: @"不能完成请求" message:message status:RFNetworkActivityIndicatorStatusFail modal:NO priority:RFNetworkActivityIndicatorMessagePriorityHigh autoHideAfterTimeInterval:0 identifier:nil groupIdentifier:nil userInfo:nil];
 }
 
 - (void)showWithTitle:(NSString *)title message:(NSString *)message status:(RFNetworkActivityIndicatorStatus)status modal:(BOOL)modal priority:(RFNetworkActivityIndicatorMessagePriority)priority autoHideAfterTimeInterval:(NSTimeInterval)timeInterval identifier:(NSString *)identifier groupIdentifier:(NSString *)groupIdentifier userInfo:(NSDictionary *)userInfo {

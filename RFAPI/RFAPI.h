@@ -2,11 +2,11 @@
 
 #import "AFHTTPRequestOperationManager.h"
 
-@class RFNetworkActivityIndicatorManager;
+@class RFMessageManager;
 
 @interface RFAPI : AFHTTPRequestOperationManager
 
-@property (strong, nonatomic) RFNetworkActivityIndicatorManager *networkActivityIndicatorManager;
+@property (strong, nonatomic) RFMessageManager *networkActivityIndicatorManager;
 
 /** 显示错误的统一方法
 

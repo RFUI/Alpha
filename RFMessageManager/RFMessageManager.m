@@ -1,11 +1,11 @@
 
-#import "RFNetworkActivityIndicatorManager.h"
+#import "RFMessageManager.h"
 
-@interface RFNetworkActivityIndicatorManager ()
+@interface RFMessageManager ()
 @property (strong, nonatomic) NSMutableArray *messageQueue;
 @end
 
-@implementation RFNetworkActivityIndicatorManager
+@implementation RFMessageManager
 RFInitializingRootForNSObject
 
 - (void)onInit {

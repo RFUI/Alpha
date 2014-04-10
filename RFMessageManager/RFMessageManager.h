@@ -32,7 +32,7 @@ typedef NS_ENUM(NSInteger, RFNetworkActivityIndicatorMessagePriority) {
  具体表现需要重写本类
  引入 identifier 的意图是支持多个状态的管理，配对的方式来管理消隐。目前设计只能同时显示一个
  */
-@interface RFNetworkActivityIndicatorManager : NSObject <
+@interface RFMessageManager : NSObject <
     RFInitializing
 >
 

@@ -1,8 +1,8 @@
 
-#import "RFNetworkUIAlertViewActivityIndicator.h"
+#import "RFAlertViewMessageManager.h"
 #import "UIAlertView+RFKit.h"
 
-@implementation RFNetworkUIAlertViewActivityIndicator
+@implementation RFAlertViewMessageManager
 
 - (void)replaceMessage:(RFNetworkActivityIndicatorMessage *)displayingMessage withNewMessage:(RFNetworkActivityIndicatorMessage *)message {
     [super replaceMessage:displayingMessage withNewMessage:message];
@@ -14,7 +14,7 @@
 }
 
 - (void)alertView:(UIAlertView *)alertView didDismissWithButtonIndex:(NSInteger)buttonIndex {
-    [self hideDisplayingMessage];
+    [self hideWithIdentifier:self.displayingMessage.identifier];
 }
 
 @end

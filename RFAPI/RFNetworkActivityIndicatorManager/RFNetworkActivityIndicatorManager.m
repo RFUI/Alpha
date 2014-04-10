@@ -23,19 +23,19 @@ RFInitializingRootForNSObject
     if (!identifier) {
         [self.messageQueue removeAllObjects];
         [self hideWithIdentifier:self.displayingMessage.identifier];
+        return;
     }
 
     [self.messageQueue filterUsingPredicate:[NSPredicate predicateWithFormat:@"%K != %@", @keypathClassInstance(RFNetworkActivityIndicatorMessage, groupIdentifier), identifier]];
 
-    if ([self.displayingMessage.groupIdentifier isEqualToString:identifier]) {
+    if ([identifier isEqualToString:self.displayingMessage.groupIdentifier]) {
         [self hideWithIdentifier:self.displayingMessage.identifier];
     }
 }
 
 #pragma mark - Queue Manage
 - (void)showMessage:(RFNetworkActivityIndicatorMessage *)message {
-    NSParameterAssert(message);
-    message.identifier = message.identifier.length? message.identifier : @"";
+    NSParameterAssert(message.identifier);
 
     if (message.priority >= RFNetworkActivityIndicatorMessagePriorityReset) {
         [self.messageQueue removeAllObjects];
@@ -70,7 +70,7 @@ RFInitializingRootForNSObject
 }
 
 - (void)hideWithIdentifier:(NSString *)identifier {
-    dout(([NSString stringWithFormat:@"hide with identifier: %@", identifier]))
+    _dout([NSString stringWithFormat:@"hide with identifier: %@", identifier])
 
     if (!identifier) {
         [self.messageQueue removeAllObjects];
@@ -82,10 +82,8 @@ RFInitializingRootForNSObject
     toRemove.identifier = identifier;
     [self.messageQueue removeObject:toRemove];
 
-    douto(self.displayingMessage)
-    NSString *ctIdentifier = self.displayingMessage.identifier;
-    if ((ctIdentifier.length == 0 && identifier.length == 0)
-        || [ctIdentifier isEqualToString:identifier]) {
+    _douto(self.displayingMessage)
+    if ([identifier isEqualToString:self.displayingMessage.identifier]) {
         [self replaceMessage:self.displayingMessage withNewMessage:[self popNextMessageToDisplay]];
     }
 }
@@ -107,9 +105,9 @@ RFInitializingRootForNSObject
 
 #pragma mark - For overwrite
 - (void)replaceMessage:(RFNetworkActivityIndicatorMessage *)displayingMessage withNewMessage:(RFNetworkActivityIndicatorMessage *)message {
-    douts(([NSString stringWithFormat:@"replaceMessage, ct = %@, new = %@",displayingMessage, message]))
+    _douts(([NSString stringWithFormat:@"replaceMessage, ct = %@, new = %@",displayingMessage, message]))
     if (displayingMessage == message) return;
-    douts(([NSString stringWithFormat:@"set displaying with : %@", message]))
+    _douts(([NSString stringWithFormat:@"set displaying with : %@", message]))
     self.displayingMessage = message;
 }
 
@@ -124,6 +122,7 @@ RFInitializingRootForNSObject
 - (id)init {
     self = [super init];
     if (self) {
+        _identifier = @"";
     }
     return self;
 }

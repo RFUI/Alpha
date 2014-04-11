@@ -1,6 +1,5 @@
 
 #import "RFAPIDefine.h"
-#import "RFAPIDefineConfigFileKeys.h"
 
 @implementation RFAPIDefine
 
@@ -10,6 +9,7 @@
     RFAPIDefine *clone = [(RFAPIDefine *)[self.class allocWithZone:zone] init];
 
     clone.name = self.name;
+    clone.baseURL = self.baseURL;
     clone.path = self.path;
     clone.method = self.method;
     clone.HTTPRequestHeaders = self.HTTPRequestHeaders;
@@ -24,10 +24,6 @@
 
     return clone;
 }
-
-@end
-
-@implementation RFAPIDefaultDefine
 
 - (void)setBaseURL:(NSURL *)baseURL {
     if (_baseURL != baseURL) {

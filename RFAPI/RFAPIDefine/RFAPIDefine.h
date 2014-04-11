@@ -4,6 +4,7 @@
 
 @interface RFAPIDefine : NSObject <NSCopying>
 @property (copy, nonatomic) NSString *name;
+@property (copy, nonatomic) NSURL *baseURL;
 @property (copy, nonatomic) NSString *path;
 
 /// HTTP Method
@@ -44,9 +45,4 @@ typedef NS_ENUM(short, RFAPIDefineOfflinePolicy) {
 @property (copy, nonatomic) NSString *responseSerializerName;
 
 @property (copy, nonatomic) NSDictionary *userInfo;
-@end
-
-
-@interface RFAPIDefaultDefine : RFAPIDefine
-@property (copy, nonatomic) NSURL *baseURL;
 @end

@@ -1,5 +1,6 @@
 
 #import "RFMessageManager.h"
+#import "dout.h"
 
 @interface RFMessageManager ()
 @property (strong, nonatomic) NSMutableArray *messageQueue;

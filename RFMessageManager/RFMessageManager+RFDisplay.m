@@ -1,5 +1,6 @@
 
 #import "RFMessageManager+RFDisplay.h"
+#import "dout.h"
 
 @implementation RFMessageManager (RFDisplay)
 

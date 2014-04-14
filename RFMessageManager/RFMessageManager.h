@@ -1,6 +1,6 @@
 // Test
 
-#import <Foundation/Foundation.h>
+#import "RFRuntime.h"
 #import "RFInitializing.h"
 
 typedef NS_ENUM(short, RFNetworkActivityIndicatorStatus) {

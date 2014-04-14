@@ -1,6 +1,7 @@
 
 #import "RFSVProgressMessageManager.h"
 #import "SVProgressHUD.h"
+#import "dout.h"
 
 @interface RFSVProgressMessageManager ()
 @property (strong, nonatomic) id dismissObserver;

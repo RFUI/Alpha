@@ -1,5 +1,6 @@
 
 #import "RFDelegateChain.h"
+#import "dout.h"
 
 @implementation RFDelegateChain
 

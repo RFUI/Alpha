@@ -1,6 +1,5 @@
 
 #import "RFDelegateChain.h"
-#import "dout.h"
 
 @implementation RFDelegateChain
 
@@ -9,7 +8,6 @@
 }
 
 - (BOOL)respondsToSelector:(SEL)aSelector {
-    doutwork()
     if ([super respondsToSelector:aSelector]) {
         return YES;
     }
@@ -22,7 +20,6 @@
 }
 
 - (NSMethodSignature *)methodSignatureForSelector:(SEL)aSelector {
-    doutwork()
     NSMethodSignature* signature = [super methodSignatureForSelector:aSelector];
 
     if (!signature) {
@@ -36,7 +33,6 @@
 }
 
 - (void)forwardInvocation:(NSInvocation *)anInvocation {
-    doutwork()
     __strong id delegate = self.delegate;
     if ([delegate respondsToSelector:anInvocation.selector]) {
         [anInvocation invokeWithTarget:delegate];
@@ -44,7 +40,6 @@
 }
 
 - (id)forwardingTargetForSelector:(SEL)aSelector {
-    doutwork()
     __strong id delegate = self.delegate;
     id target = [super forwardingTargetForSelector:aSelector];
     if (target != delegate) {

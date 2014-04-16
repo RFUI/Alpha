@@ -10,8 +10,10 @@
     Alpha
  */
 
-#import "RFRuntime.h"
+#import "RFUI.h"
 
-@interface RFDelegateChain : NSObject
+@interface RFDelegateChain : NSObject <
+    RFInitializing
+>
 @property (weak, nonatomic) IBOutlet id delegate;
 @end

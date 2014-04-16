@@ -27,11 +27,17 @@
 
 - (void)tableView:(UITableView *)tableView configureCell:(id)cell forIndexPath:(NSIndexPath *)indexPath;
 
+@optional
+// Suggested for better performance. Otherwise, each cell will be created twice.
+- (NSString *)tableView:(UITableView *)tableView cellReuseIdentifierForRowAtIndexPath:(NSIndexPath *)indexPath;
+
 @end
 
 @interface RFTableViewCellHeightDelegate : RFDelegateChain <
     UITableViewDelegate
 >
 @property (weak, nonatomic) IBOutlet id<RFTableViewCellHeightDelegate> delegate;
+@property (assign, nonatomic) UIEdgeInsets cellLayoutEdgeInsets;
 
+- (void)resetOffscreenCellsCache;
 @end

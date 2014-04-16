@@ -1,6 +1,7 @@
 
 #import "RFTableViewCellHeightDelegate.h"
 #import "dout.h"
+#import "UIView+RFAnimate.h"
 
 @interface RFTableViewCellHeightDelegate ()
 @property (strong, nonatomic) NSMutableDictionary *offscreenCells;
@@ -70,13 +71,12 @@
 
         UIEdgeInsets inset = self.cellLayoutEdgeInsets;
 
-        CGRect frame = cell.frame;
-        frame.size.width = cell.contentView.bounds.size.width - inset.left - inset.right;
-        cell.contentView.frame = frame;
-
+        cell.width = tableView.width;
+        CGFloat contentWidth = cell.contentView.width - inset.left - inset.right;
+        cell.contentView.width = contentWidth;
         [cell layoutIfNeeded];
 
-        CGSize size = [cell.contentView systemLayoutSizeFittingSize:UILayoutFittingCompressedSize];
+        CGSize size = [cell.contentView systemLayoutSizeFittingSize:CGSizeMake(contentWidth, 0)];
         _dout_size(size)
         CGFloat height = size.height;
         

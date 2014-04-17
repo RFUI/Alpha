@@ -31,7 +31,7 @@ typedef NS_ENUM(short, RFAPIDefineCachePolicy) {
     RFAPICachePolicyNoCache = 5         /// 无缓存，总是请求新数据
 };
 
-@property (assign, nonatomic) RFAPIDefineCachePolicy *cachePolicy;
+@property (assign, nonatomic) RFAPIDefineCachePolicy cachePolicy;
 @property (assign, nonatomic) NSTimeInterval expire;
 
 typedef NS_ENUM(short, RFAPIDefineOfflinePolicy) {
@@ -39,7 +39,7 @@ typedef NS_ENUM(short, RFAPIDefineOfflinePolicy) {
     RFAPOfflinePolicyLoadCache = 1      /// 返回缓存数据
 };
 
-@property (assign, nonatomic) RFAPIDefineOfflinePolicy *offlinePolicy;
+@property (assign, nonatomic) RFAPIDefineOfflinePolicy offlinePolicy;
 
 #pragma mark - Response
 

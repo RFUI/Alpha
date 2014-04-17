@@ -3,6 +3,10 @@
 
 @implementation RFAPIDefine
 
+- (NSString *)description {
+    return [NSString stringWithFormat:@"<%@: %p, name = %@, path = %@>", self.class, self, self.name, self.path];
+}
+
 #pragma mark - NSCopying
 
 - (id)copyWithZone:(NSZone *)zone {
@@ -40,6 +44,19 @@
         }
 
         _baseURL = baseURL;
+    }
+}
+
+- (void)setMethod:(NSString *)method {
+    if (!method) {
+        _method = nil;
+        return;
+    }
+
+    RFAssert(method.length, @"Method can not be empty string.");
+
+    if (_method != method) {
+        _method = [method uppercaseString];
     }
 }
 

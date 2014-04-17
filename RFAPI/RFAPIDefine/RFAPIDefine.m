@@ -9,17 +9,24 @@
     RFAPIDefine *clone = [(RFAPIDefine *)[self.class allocWithZone:zone] init];
 
     clone.name = self.name;
+
     clone.baseURL = self.baseURL;
     clone.path = self.path;
     clone.method = self.method;
     clone.HTTPRequestHeaders = self.HTTPRequestHeaders;
+
     clone.defaultParameters = self.defaultParameters;
     clone.needsAuthorization = self.needsAuthorization;
-    clone.serializerName = self.serializerName;
+    clone.requestSerializerClass = self.requestSerializerClass;
+
     clone.cachePolicy = self.cachePolicy;
     clone.expire = self.expire;
     clone.offlinePolicy = self.offlinePolicy;
-    clone.responseSerializerName = self.responseSerializerName;
+
+    clone.responseSerializerClass = self.responseSerializerClass;
+    clone.responseList = self.responseList;
+    clone.responseClass = self.responseClass;
+
     clone.userInfo = self.userInfo;
 
     return clone;

@@ -47,14 +47,22 @@
 
 // 如果传一个特殊请求，直接创建一个 AFHTTPRequestOperation 并加进来也许更合适
 
-// No implementation
-- (void)requestWithName:(NSString *)APIName
-             parameters:(NSDictionary *)parameters
-            controlInfo:(RFAPIControl *)controlInfo
-            controlFlag:(int *)flag
-                success:(void (^)(AFHTTPRequestOperation *operation, id responseObject))success
-                failure:(void (^)(AFHTTPRequestOperation *operation, NSError *error))failure
-             completion:(void (^)(AFHTTPRequestOperation *operation))completion;
+/**
+ @param APIName 接口名
+ @param parameters 请求的参数
+ @param controlInfo No implementation
+ @param controlFlag No implementation
+ @param success
+ @param failure
+ @param completion
+ */
+- (AFHTTPRequestOperation *)requestWithName:(NSString *)APIName
+     parameters:(NSDictionary *)parameters
+    controlInfo:(RFAPIControl *)controlInfo
+    controlFlag:(int *)flag
+        success:(void (^)(AFHTTPRequestOperation *operation, id responseObject))success
+        failure:(void (^)(AFHTTPRequestOperation *operation, NSError *error))failure
+     completion:(void (^)(AFHTTPRequestOperation *operation))completion;
 
 @property (strong, nonatomic) AFHTTPRequestSerializer<AFURLRequestSerialization> *requestSerializer;
 
@@ -88,7 +96,7 @@
  */
 
 /**
- For overwrite, default do nothing.
+ For subclass overwrite, default do nothing.
  */
 - (NSMutableURLRequest *)customSerializedRequest:(NSMutableURLRequest *)request withDefine:(RFAPIDefine *)define;
 
@@ -153,11 +161,13 @@ extern NSString *const RFAPIErrorDomain;
 extern NSString *const RFAPIMessageControlKey;
 extern NSString *const RFAPIIdentifierControlKey;
 extern NSString *const RFAPIGroupIdentifierControlKey;
+extern NSString *const RFAPIRequestCustomizationControlKey;
 
 @interface RFAPIControl : NSObject
 @property (strong, nonatomic) RFNetworkActivityIndicatorMessage *message;
 @property (strong, nonatomic) NSString *identifier;
 @property (strong, nonatomic) NSString *groupIdentifier;
+@property (copy, nonatomic) NSMutableURLRequest * (^requestCustomization)(NSMutableURLRequest *request);
 @end
 
 @interface RFHTTPRequestFormData : NSObject

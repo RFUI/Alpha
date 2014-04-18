@@ -60,15 +60,6 @@ RFInitializingRootForNSObject
 
 #pragma mark - Request
 
-- (void)requestWithName:(NSString *)APIName parameters:(NSDictionary *)parameters uploadResources:(NSArray *)uploadResources headers:(NSDictionary *)headers success:(void (^)(AFHTTPRequestOperation *, id))success failure:(void (^)(AFHTTPRequestOperation *, NSError *))failure completion:(void (^)(AFHTTPRequestOperation *))completion {
-    RFAPIDefine *define = [self defineForName:APIName];
-    if (!define) {
-
-
-        return;
-    }
-}
-
 - (AFHTTPRequestSerializer<AFURLRequestSerialization> *)requestSerializer {
     if (!_requestSerializer) {
         _requestSerializer = [AFHTTPRequestSerializer serializer];
@@ -76,13 +67,100 @@ RFInitializingRootForNSObject
     return _requestSerializer;
 }
 
-- (NSMutableURLRequest *)URLRequestWithDefine:(RFAPIDefine *)define parameters:(NSDictionary *)parameters uploadResources:(NSArray *)uploadResources {
+#define __RFAPIMakeRequestError(CONDITION)\
+    if (CONDITION) {\
+        if (error) {\
+            *error = e;\
+        }\
+        return nil;\
+    }
+
+#define __RFAPICompletionCallback(BLOCK, ...)\
+    if (BLOCK) {\
+        if (DebugAPIDelayFetchCallbackReturnSecond) {\
+            dispatch_after_seconds(DebugAPIDelayFetchCallbackReturnSecond, ^{\
+                BLOCK(__VA_ARGS__);\
+            });\
+        }\
+        else {\
+            BLOCK(__VA_ARGS__);\
+        }\
+    }
+
+- (AFHTTPRequestOperation *)requestWithName:(NSString *)APIName parameters:(NSDictionary *)parameters controlInfo:(RFAPIControl *)controlInfo controlFlag:(int *)flag success:(void (^)(AFHTTPRequestOperation *, id))success failure:(void (^)(AFHTTPRequestOperation *, NSError *))failure completion:(void (^)(AFHTTPRequestOperation *))completion {
+    NSParameterAssert(APIName);
+    RFAPIDefine *define = [self defineForName:APIName];
+    RFAssert(define, @"Can not find an API with name: %@.", APIName);
+    if (!define) return nil;
+
+    NSError __autoreleasing *e = nil;
+    NSMutableURLRequest *request = [self URLRequestWithDefine:define parameters:parameters controlInfo:controlInfo error:&e];
+    if (!request) {
+#if RFDEBUG
+        dout_error(@"无法创建请求: %@", e);
+#endif
+        NSError *error = [NSError errorWithDomain:NSURLErrorDomain code:NSURLErrorCancelled userInfo:@{
+            NSLocalizedDescriptionKey : @"内部错误，无法创建请求",
+            NSLocalizedFailureReasonErrorKey : @"很可能是应用 bug",
+            NSLocalizedRecoverySuggestionErrorKey : @"请再试一次，如果依旧请尝试重启应用。给您带来不便，敬请谅解"
+        }];
+
+        __RFAPICompletionCallback(failure, nil, error);
+        __RFAPICompletionCallback(completion, nil);
+    }
+
+    AFHTTPRequestOperation *operation = [[AFHTTPRequestOperation alloc] initWithRequest:request];
+    operation.responseSerializer = [self.defineManager responseSerializerForDefine:define];
+
+    Class expectClass = define.responseClass;
+    [operation setCompletionBlockWithSuccess:^(AFHTTPRequestOperation *op, id responseObject) {
+        switch (define.responseExpectType) {
+            case RFAPIDefineResponseExpectSuccess:
+                break;
+
+            case RFAPIDefineResponseExpectObject:
+                break;
+
+            case RFAPIDefineResponseExpectObjects:
+                break;
+
+            case RFAPIDefineResponseExpectDefault:
+            default:
+                break;
+        }
+        __RFAPICompletionCallback(success, op, responseObject);
+        __RFAPICompletionCallback(completion, op);
+    } failure:^(AFHTTPRequestOperation *op, NSError *error) {
+        __RFAPICompletionCallback(failure, op, error);
+        __RFAPICompletionCallback(completion, op);
+    }];
+
+    [self addOperation:operation];
+    return operation;
+}
+
+- (NSMutableURLRequest *)URLRequestWithDefine:(RFAPIDefine *)define parameters:(NSDictionary *)parameters controlInfo:(RFAPIControl *)controlInfo error:(NSError *__autoreleasing *)error {
     NSParameterAssert(define);
 
-    AFHTTPRequestSerializer *s = [self.defineManager requestSerializerForDefine:define];
     NSError __autoreleasing *e = nil;
-    if (e) dout_error(@"%@", e);
-    return [s requestWithMethod:define.method URLString:define.path parameters:parameters error:&e];
+    NSURL *url = [self.defineManager requestURLForDefine:define error:&e];
+    __RFAPIMakeRequestError(!url);
+
+    // TODO: Cache policy
+    NSURLRequestCachePolicy cachePolicy = (self.reachabilityManager.reachable)? NSURLRequestUseProtocolCachePolicy : NSURLRequestReturnCacheDataElseLoad;
+    NSMutableURLRequest *r = [[NSMutableURLRequest alloc] initWithURL:url cachePolicy:cachePolicy timeoutInterval:10];
+    [r setHTTPMethod:define.method];
+
+    AFHTTPRequestSerializer *s = [self.defineManager requestSerializerForDefine:define];
+
+    r = [[s requestBySerializingRequest:r withParameters:parameters error:&e] mutableCopy];
+    __RFAPIMakeRequestError(!r);
+
+    [define.HTTPRequestHeaders enumerateKeysAndObjectsUsingBlock:^(id field, id value, BOOL *__unused stop) {
+        [r setValue:value forHTTPHeaderField:field];
+    }];
+
+    return r;
 }
 
 - (NSMutableURLRequest *)customSerializedRequest:(NSMutableURLRequest *)request withDefine:(RFAPIDefine *)define {
@@ -193,106 +271,14 @@ RFInitializingRootForNSObject
     } failure:failure completion:completion];
 }
 
-#define __APICompletionCallback(BLOCK, OPERATION, OBJECT)\
-    if (BLOCK) {\
-        if (DebugAPIDelayFetchCallbackReturnSecond) {\
-            dispatch_after_seconds(DebugAPIDelayFetchCallbackReturnSecond, ^{\
-                BLOCK(OPERATION, OBJECT);\
-            });\
-        }\
-        else {\
-            BLOCK(OPERATION, OBJECT);\
-        }\
-    }
-
-- (AFHTTPRequestOperation *)requestWithMethod:(NSString *)method URLString:(NSString *)URLString parameters:(NSDictionary *)parameters headers:(NSDictionary *)headers success:(void (^)(AFHTTPRequestOperation *operation, id responseObject))success failure:(void (^)(AFHTTPRequestOperation *operation, NSError *error))failure completion:(void (^)(AFHTTPRequestOperation *operation))completion {
-    RFAssert(success, @"你确定成功没回调？");
-    RFAssert(failure, @"写个接口错误不处理？");
-
-    NSError *e = nil;
-    NSMutableURLRequest *request = [self URLRequestWithMethod:method URLString:URLString parameters:parameters headers:headers error:&e];
-    if (e) {
-        __APICompletionCallback(failure, nil, e)
-        if (completion) {
-            completion(nil);
-        }
-        return nil;
-    }
-
-    AFHTTPRequestOperation *operation = [[AFHTTPRequestOperation alloc] initWithRequest:request];
-    operation.responseSerializer = self.responseSerializer;
-
-    [operation setCompletionBlockWithSuccess:^(AFHTTPRequestOperation *op, id responseObject) {
-        __APICompletionCallback(success, op, responseObject)
-        if (completion) {
-            completion(op);
-        }
-    } failure:^(AFHTTPRequestOperation *op, NSError *error) {
-        __APICompletionCallback(failure, op, error)
-        if (completion) {
-            completion(op);
-        }
-    }];
-
-    [self addOperation:operation];
-    return operation;
-}
-
-#undef __APICompletionCallback
-
-- (NSMutableURLRequest *)URLRequestWithMethod:(NSString *)method URLString:(NSString *)URLString parameters:(NSDictionary *)parameters headers:(NSDictionary *)headers error:(NSError *__autoreleasing *)error {
-    NSParameterAssert(method);
-    NSParameterAssert(URLString);
-
-    NSURL *url = [NSURL URLWithString:URLString relativeToURL:self.baseURL];
-    if (!url) {
-        if (error) {
-#if RFDEBUG
-            dout_error(@"无法拼接 URL: %@\n请检查代码是否正确", URLString);
-#endif
-            *error = [NSError errorWithDomain:NSURLErrorDomain code:NSURLErrorBadURL userInfo:@{
-                NSLocalizedDescriptionKey : @"内部错误，无法创建请求",
-                NSLocalizedFailureReasonErrorKey : @"很可能是应用bug",
-                NSLocalizedRecoverySuggestionErrorKey : @"请再试一次，如果依旧请尝试重启应用。给您带来不便，敬请谅解",
-                NSURLErrorFailingURLErrorKey : URLString
-            }];
-        }
-        return nil;
-    }
-    
-    NSURLRequestCachePolicy cachePolicy = (self.reachabilityManager.reachable)? NSURLRequestUseProtocolCachePolicy : NSURLRequestReturnCacheDataElseLoad;
-    NSMutableURLRequest *request = [[NSMutableURLRequest alloc] initWithURL:url cachePolicy:cachePolicy timeoutInterval:10];
-    [request setHTTPMethod:method];
-    
-    NSError __autoreleasing *e = nil;
-    request = [[self.requestSerializer requestBySerializingRequest:request withParameters:parameters error:&e] mutableCopy];
-    if (e) {
-        if (error) {
-#if RFDEBUG
-            dout_error(@"无法序列化参数\n请检查代码是否正确");
-#endif
-            *error = [NSError errorWithDomain:NSURLErrorDomain code:NSURLErrorCancelled userInfo:@{
-                NSLocalizedDescriptionKey : @"内部错误，无法创建请求",
-                NSLocalizedFailureReasonErrorKey : @"很可能是应用bug",
-                NSLocalizedRecoverySuggestionErrorKey : @"请再试一次，如果依旧请尝试重启应用。给您带来不便，敬请谅解",
-                NSURLErrorFailingURLErrorKey : URLString
-            }];
-        }
-        return nil;
-    }
-    
-    [headers enumerateKeysAndObjectsUsingBlock:^(id field, id value, BOOL *__unused stop) {
-        [request setValue:value forHTTPHeaderField:field];
-    }];
-    
-	return request;
-}
+#undef __RFAPICompletionCallback
 
 @end
 
-NSString *const RFAPIMessageControlKey = @"RFAPIControlInfoMessage";
-NSString *const RFAPIIdentifierControlKey = @"RFAPIControlInfoIdentifier";
-NSString *const RFAPIGroupIdentifierControlKey = @"RFAPIControlInfoGroupIdentifier";
+NSString *const RFAPIMessageControlKey = @"_RFAPIMessageControl";
+NSString *const RFAPIIdentifierControlKey = @"_RFAPIIdentifierControl";
+NSString *const RFAPIGroupIdentifierControlKey = @"_RFAPIGroupIdentifierControl";
+NSString *const RFAPIRequestCustomizationControlKey = @"_RFAPIRequestCustomizationControl";
 
 @implementation RFAPIControl
 

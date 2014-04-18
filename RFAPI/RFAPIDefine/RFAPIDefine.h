@@ -52,7 +52,6 @@ typedef NS_ENUM(short, RFAPIDefineResponseExpectType) {
     RFAPIDefineResponseExpectObjects = 3,
 };
 @property (assign, nonatomic) RFAPIDefineResponseExpectType responseExpectType;
-@property (assign, nonatomic) BOOL responseList;
 @property (strong, nonatomic) Class responseClass;
 
 @property (copy, nonatomic) NSDictionary *userInfo;

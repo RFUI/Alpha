@@ -88,6 +88,24 @@ RFInitializingRootForNSObject
 
 #pragma mark - RFAPI Support
 
+- (NSURL *)requestURLForDefine:(RFAPIDefine *)define error:(NSError *__autoreleasing *)error {
+    NSURL *url = [NSURL URLWithString:define.path relativeToURL:define.baseURL];
+    if (!url) {
+#if RFDEBUG
+        dout_error(@"无法拼接路径 %@ 到 %@\n请检查接口定义", define.path, define.baseURL);
+#endif
+        if (error) {
+            *error = [NSError errorWithDomain:NSURLErrorDomain code:NSURLErrorBadURL userInfo:@{
+                NSLocalizedDescriptionKey : @"内部错误，无法创建请求",
+                NSLocalizedFailureReasonErrorKey : @"很可能是应用 bug",
+                NSLocalizedRecoverySuggestionErrorKey : @"请再试一次，如果依旧请尝试重启应用。给您带来不便，敬请谅解"
+            }];
+        }
+        return nil;
+    }
+    return url;
+}
+
 - (id)requestSerializerForDefine:(RFAPIDefine *)define {
     if (define.requestSerializerClass) {
         return [define.requestSerializerClass serializer];
@@ -101,6 +119,7 @@ RFInitializingRootForNSObject
     }
     return self.master.responseSerializer;
 }
+
 
 @end
 
@@ -199,10 +218,6 @@ RFInitializingRootForNSObject
         }
 
         __RFAPIDefineConfigFileClassProperty(responseSerializerClass, RFAPIDefineResponseSerializerKey)
-
-        __RFAPIDefineConfigFileValue(RFAPIDefineResponseListKey) {
-            self.responseList = [value boolValue];
-        }
 
         __RFAPIDefineConfigFileClassProperty(responseClass, RFAPIDefineResponseClassKey)
         __RFAPIDefineConfigFileDictionaryProperty(userInfo, RFAPIDefineUserInfoKey)

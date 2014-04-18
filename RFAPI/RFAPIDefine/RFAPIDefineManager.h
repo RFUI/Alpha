@@ -17,6 +17,9 @@
 - (RFAPIDefine *)defineForName:(NSString *)defineName;
 
 #pragma mark - RFAPI Support
+
+- (NSURL *)requestURLForDefine:(RFAPIDefine *)define error:(NSError *__autoreleasing *)error;
+
 - (id)requestSerializerForDefine:(RFAPIDefine *)define;
 - (id)responseSerializerForDefine:(RFAPIDefine *)define;
 

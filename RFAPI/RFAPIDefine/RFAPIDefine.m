@@ -7,6 +7,32 @@
     return [NSString stringWithFormat:@"<%@: %p, name = %@, path = %@>", self.class, self, self.name, self.path];
 }
 
+- (NSString *)debugDescription {
+    return [NSString stringWithFormat:@"<%@: %p,\n"
+            "\t name = %@,\n"
+            "\t baseURL = %@,\n"
+            "\t path = %@,\n"
+            "\t method = %@,\n"
+            "\t HTTPRequestHeaders = %@,\n"
+            "\t defaultParameters = %@,\n"
+            "\t needsAuthorization = %@,\n"
+            "\t requestSerializerClass = %@,\n"
+            "\t cachePolicy = %d,\n"
+            "\t expire = %f,\n"
+            "\t offlinePolicy = %d,\n"
+            "\t responseSerializerClass = %@,\n"
+            "\t responseList = %@,\n"
+            "\t responseClass = %@,\n"
+            "\t userInfo = %@\n"
+            ">", self.class, self, self.name,
+            self.baseURL, self.path, self.method,
+            self.HTTPRequestHeaders, self.defaultParameters, @(self.needsAuthorization),
+            self.responseSerializerClass,
+            self.cachePolicy, self.expire, self.offlinePolicy,
+            self.responseSerializerClass, @(self.responseList), self.responseClass,
+            self.userInfo];
+}
+
 #pragma mark - NSCopying
 
 - (id)copyWithZone:(NSZone *)zone {

@@ -6,14 +6,17 @@
 #import "RFAPIDefineConfigFileKeys.h"
 
 @interface RFAPIDefineManager ()
-@property (strong, nonatomic) NSMutableDictionary *rules;
+@property (strong, nonatomic) NSMutableDictionary *rawRules;
+@property (strong, nonatomic) NSMutableDictionary *defineCache;
+@property (readwrite, strong, nonatomic) RFAPIDefine *defaultDefine;
 @end
 
 @implementation RFAPIDefineManager
 RFInitializingRootForNSObject
 
 - (void)onInit {
-    _rules = [[NSMutableDictionary alloc] initWithCapacity:50];
+    _rawRules = [[NSMutableDictionary alloc] initWithCapacity:50];
+    _defineCache = [[NSMutableDictionary alloc] initWithCapacity:50];
 }
 - (void)afterInit {
 }
@@ -26,24 +29,61 @@ RFInitializingRootForNSObject
     return self;
 }
 
+- (void)setNeedsUpdateDefaultDefine {
+    [self.defineCache removeAllObjects];
+}
+
 - (void)mergeWithRules:(NSDictionary *)rules {
-    _douto(rules)
+    [self.defineCache removeAllObjects];
+
+    // Check and add.
     [rules enumerateKeysAndObjectsUsingBlock:^(NSString *name, NSDictionary *rule, BOOL *stop) {
         RFAPIDefine *define = [[RFAPIDefine alloc] initWithRule:rule name:name];
         if (define) {
             if ([name isEqualToString:RFAPIDefineDefaultKey]) {
                 self.defaultDefine = define;
             }
-            else {
-                [self.rules setObject:define forKey:name];
-            }
+
+            [self.rawRules setObject:rule forKey:name];
+        }
+        else {
+            dout_warning(@"Bad rule(%@): %@", name, rule);
         }
     }];
-    _douto(self.rules)
+}
+
+- (NSDictionary *)mergedRuleForName:(NSString *)defineName {
+    NSDictionary *rule = self.rawRules[defineName];
+    if (!rule) {
+        dout_warning(@"Can not find a rule with name: %@", defineName);
+        return nil;
+    }
+
+    NSMutableDictionary *mergedRule = [NSMutableDictionary dictionaryWithDictionary:self.rawRules[RFAPIDefineDefaultKey]];
+    [mergedRule addEntriesFromDictionary:rule];
+    return mergedRule;
 }
 
 - (RFAPIDefine *)defineForName:(NSString *)defineName {
-    return [self.rules objectForKey:defineName];
+    NSParameterAssert(defineName.length);
+
+    RFAPIDefine *define = self.defineCache[defineName];
+    if (define) {
+        return define;
+    }
+
+    NSDictionary *rule = [self mergedRuleForName:defineName];
+    if (!rule) {
+        return nil;
+    }
+
+    define = [[RFAPIDefine alloc] initWithRule:rule name:defineName];
+    if (!define) {
+        return nil;
+    }
+
+    [self.defineCache setObject:define forKey:defineName];
+    return define;
 }
 
 #pragma mark - RFAPI Support
@@ -56,8 +96,8 @@ RFInitializingRootForNSObject
 }
 
 - (id)responseSerializerForDefine:(RFAPIDefine *)define {
-    if (define.responseClass) {
-        return [define.responseClass serializer];
+    if (define.responseSerializerClass) {
+        return [define.responseSerializerClass serializer];
     }
     return self.master.responseSerializer;
 }

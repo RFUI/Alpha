@@ -22,6 +22,8 @@
 
 - (void)setAPIDefineWithRules:(NSDictionary *)rules;
 
+- (RFAPIDefine *)defineForName:(NSString *)APIName;
+
 #pragma mark - Request
 
 @property (strong, nonatomic) AFHTTPRequestSerializer<AFURLRequestSerialization> *requestSerializer;

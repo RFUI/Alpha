@@ -7,7 +7,11 @@
 @interface RFAPIDefineManager : NSObject <RFInitializing>
 @property (weak, nonatomic) RFAPI *master;
 
-@property (strong, nonatomic) RFAPIDefine *defaultDefine;
+/**
+ This property could only set by `mergeWithRules:` with a `DEFAULT` rule. If you change it’s property, you must call `setNeedsUpdateDefaultDefine` to make these changes take effect.
+ */
+@property (readonly, nonatomic) RFAPIDefine *defaultDefine;
+- (void)setNeedsUpdateDefaultDefine;
 
 - (void)mergeWithRules:(NSDictionary *)rules;
 - (RFAPIDefine *)defineForName:(NSString *)defineName;

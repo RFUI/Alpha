@@ -47,6 +47,10 @@ RFInitializingRootForNSObject
     [self.defineManager mergeWithRules:rules];
 }
 
+- (RFAPIDefine *)defineForName:(NSString *)APIName {
+    return [self.defineManager defineForName:APIName];
+}
+
 #pragma mark - Request
 
 - (AFHTTPRequestSerializer<AFURLRequestSerialization> *)requestSerializer {

@@ -11,6 +11,7 @@
     return [NSString stringWithFormat:@"<%@: %p,\n"
             "\t name = %@,\n"
             "\t baseURL = %@,\n"
+            "\t pathPrefix = %@,\n"
             "\t path = %@,\n"
             "\t method = %@,\n"
             "\t HTTPRequestHeaders = %@,\n"
@@ -24,13 +25,14 @@
             "\t responseExpectType = %@,\n"
             "\t responseClass = %@,\n"
             "\t userInfo = %@\n"
+            "\t notes = %@\n"
             ">", self.class, self, self.name,
-            self.baseURL, self.path, self.method,
+            self.baseURL, self.pathPrefix, self.path, self.method,
             self.HTTPRequestHeaders, self.defaultParameters, @(self.needsAuthorization),
             self.responseSerializerClass,
             self.cachePolicy, self.expire, self.offlinePolicy,
             self.responseSerializerClass, @(self.responseExpectType), self.responseClass,
-            self.userInfo];
+            self.userInfo, self.notes];
 }
 
 #pragma mark - NSCopying
@@ -41,6 +43,7 @@
     clone.name = self.name;
 
     clone.baseURL = self.baseURL;
+    clone.pathPrefix = self.pathPrefix;
     clone.path = self.path;
     clone.method = self.method;
     clone.HTTPRequestHeaders = self.HTTPRequestHeaders;
@@ -58,6 +61,7 @@
     clone.responseClass = self.responseClass;
 
     clone.userInfo = self.userInfo;
+    clone.notes = self.notes;
 
     return clone;
 }

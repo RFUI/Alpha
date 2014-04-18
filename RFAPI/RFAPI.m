@@ -38,6 +38,7 @@ RFInitializingRootForNSObject
     self.reachabilityManager = [AFNetworkReachabilityManager sharedManager];
     self.maxConcurrentOperationCount = 5;
     self.defineManager = [[RFAPIDefineManager alloc] init];
+    self.defineManager.master = self;
 }
 
 - (void)afterInit {

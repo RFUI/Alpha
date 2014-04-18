@@ -8,6 +8,7 @@ NSString *const RFAPIDefineDefaultKey       = @"DEFAULT";
 
 NSString *const RFAPIDefineNameKey          = @"Name";
 NSString *const RFAPIDefineBaseKey          = @"Base";
+NSString *const RFAPIDefinePathPrefixKey    = @"Path Prefix";
 NSString *const RFAPIDefinePathKey          = @"Path";
 NSString *const RFAPIDefineMethodKey        = @"Method";
 NSString *const RFAPIDefineHeadersKey       = @"Headers";
@@ -25,3 +26,4 @@ NSString *const RFAPIDefineResponseTypeKey  = @"Response Type";
 NSString *const RFAPIDefineResponseClassKey = @"Response Class";
 
 NSString *const RFAPIDefineUserInfoKey      = @"User Info";
+NSString *const RFAPIDefineNotesKey         = @"Notes";

@@ -6,6 +6,7 @@
 @property (copy, nonatomic) NSString *name;
 
 @property (copy, nonatomic) NSURL *baseURL;
+@property (copy, nonatomic) NSString *pathPrefix;
 @property (copy, nonatomic) NSString *path;
 
 /// HTTP Method
@@ -46,13 +47,16 @@ typedef NS_ENUM(short, RFAPIDefineOfflinePolicy) {
 @property (strong, nonatomic) Class responseSerializerClass;
 
 typedef NS_ENUM(short, RFAPIDefineResponseExpectType) {
-    RFAPIDefineResponseExpectDefault = 0,       /// 不特殊处理
-    RFAPIDefineResponseExpectSuccess = 1,      /// 返回缓存数据
-    RFAPIDefineResponseExpectObject = 2,
+    RFAPIDefineResponseExpectDefault = 0,   /// 不特殊处理
+    RFAPIDefineResponseExpectSuccess = 1,
+    RFAPIDefineResponseExpectObject  = 2,
     RFAPIDefineResponseExpectObjects = 3,
 };
 @property (assign, nonatomic) RFAPIDefineResponseExpectType responseExpectType;
 @property (strong, nonatomic) Class responseClass;
 
 @property (copy, nonatomic) NSDictionary *userInfo;
+
+/// 备注
+@property (copy, nonatomic) NSString *notes;
 @end

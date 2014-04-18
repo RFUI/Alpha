@@ -89,7 +89,8 @@ RFInitializingRootForNSObject
 #pragma mark - RFAPI Support
 
 - (NSURL *)requestURLForDefine:(RFAPIDefine *)define error:(NSError *__autoreleasing *)error {
-    NSURL *url = [NSURL URLWithString:define.path relativeToURL:define.baseURL];
+    NSString *URLString = define.pathPrefix? [define.pathPrefix stringByAppendingString:define.path] : define.path;
+    NSURL *url = [NSURL URLWithString:URLString relativeToURL:define.baseURL];
     if (!url) {
 #if RFDEBUG
         dout_error(@"无法拼接路径 %@ 到 %@\n请检查接口定义", define.path, define.baseURL);
@@ -175,6 +176,7 @@ RFInitializingRootForNSObject
             }
         }
 
+        __RFAPIDefineConfigFileProperty(pathPrefix, RFAPIDefinePathPrefixKey)
         __RFAPIDefineConfigFileProperty(path, RFAPIDefinePathKey)
         __RFAPIDefineConfigFileProperty(method, RFAPIDefineMethodKey)
         __RFAPIDefineConfigFileDictionaryProperty(HTTPRequestHeaders, RFAPIDefineHeadersKey)
@@ -221,6 +223,7 @@ RFInitializingRootForNSObject
 
         __RFAPIDefineConfigFileClassProperty(responseClass, RFAPIDefineResponseClassKey)
         __RFAPIDefineConfigFileDictionaryProperty(userInfo, RFAPIDefineUserInfoKey)
+        __RFAPIDefineConfigFileProperty(notes, RFAPIDefineNotesKey)
 
 #undef __RFAPIDefineConfigFileValue
 #undef __RFAPIDefineConfigFileProperty

@@ -289,3 +289,25 @@ RFInitializingRootForNSObject
 }
 
 @end
+
+NSString *const RFAPIMessageControlKey = @"RFAPIControlInfoMessage";
+NSString *const RFAPIIdentifierControlKey = @"RFAPIControlInfoIdentifier";
+NSString *const RFAPIGroupIdentifierControlKey = @"RFAPIControlInfoGroupIdentifier";
+
+@implementation RFAPIControl
+
+- (id)initWithDictionary:(NSDictionary *)info {
+    self = [super init];
+    if (self) {
+        _message = info[RFAPIMessageControlKey];
+        _identifier = info[RFAPIIdentifierControlKey];
+        _groupIdentifier = info[RFAPIGroupIdentifierControlKey];
+    }
+    return self;
+}
+
+@end
+
+@implementation RFHTTPRequestFormData
+
+@end

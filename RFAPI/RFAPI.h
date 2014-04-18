@@ -14,7 +14,8 @@
 
  */
 
-@class RFMessageManager, AFHTTPRequestOperation;
+@class RFMessageManager, RFNetworkActivityIndicatorMessage, AFHTTPRequestOperation;
+@class RFAPIControl, RFHTTPRequestFormData;
 @protocol AFURLResponseSerialization;
 
 @interface RFAPI : NSOperationQueue <
@@ -48,11 +49,9 @@
 
 // No implementation
 - (void)requestWithName:(NSString *)APIName
-             identifier:(NSString *)identifier
-        groupIdentifier:(NSString *)groupIdentifier
              parameters:(NSDictionary *)parameters
-        uploadResources:(NSArray *)uploadResources
-                headers:(NSDictionary *)headers
+            controlInfo:(RFAPIControl *)controlInfo
+            controlFlag:(int *)flag
                 success:(void (^)(AFHTTPRequestOperation *operation, id responseObject))success
                 failure:(void (^)(AFHTTPRequestOperation *operation, NSError *error))failure
              completion:(void (^)(AFHTTPRequestOperation *operation))completion;
@@ -150,6 +149,16 @@
 @end
 
 extern NSString *const RFAPIErrorDomain;
+
+extern NSString *const RFAPIMessageControlKey;
+extern NSString *const RFAPIIdentifierControlKey;
+extern NSString *const RFAPIGroupIdentifierControlKey;
+
+@interface RFAPIControl : NSObject
+@property (strong, nonatomic) RFNetworkActivityIndicatorMessage *message;
+@property (strong, nonatomic) NSString *identifier;
+@property (strong, nonatomic) NSString *groupIdentifier;
+@end
 
 @interface RFHTTPRequestFormData : NSObject
 @end

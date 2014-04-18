@@ -21,6 +21,7 @@
             "\t expire = %f,\n"
             "\t offlinePolicy = %d,\n"
             "\t responseSerializerClass = %@,\n"
+            "\t responseExpectType = %@,\n"
             "\t responseList = %@,\n"
             "\t responseClass = %@,\n"
             "\t userInfo = %@\n"
@@ -29,7 +30,7 @@
             self.HTTPRequestHeaders, self.defaultParameters, @(self.needsAuthorization),
             self.responseSerializerClass,
             self.cachePolicy, self.expire, self.offlinePolicy,
-            self.responseSerializerClass, @(self.responseList), self.responseClass,
+            self.responseSerializerClass, @(self.responseExpectType), @(self.responseList), self.responseClass,
             self.userInfo];
 }
 
@@ -54,6 +55,7 @@
     clone.offlinePolicy = self.offlinePolicy;
 
     clone.responseSerializerClass = self.responseSerializerClass;
+    clone.responseExpectType = self.responseExpectType;
     clone.responseList = self.responseList;
     clone.responseClass = self.responseClass;
 

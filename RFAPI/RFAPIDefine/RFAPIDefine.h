@@ -44,6 +44,14 @@ typedef NS_ENUM(short, RFAPIDefineOfflinePolicy) {
 #pragma mark - Response
 
 @property (strong, nonatomic) Class responseSerializerClass;
+
+typedef NS_ENUM(short, RFAPIDefineResponseExpectType) {
+    RFAPIDefineResponseExpectDefault = 0,       /// 不特殊处理
+    RFAPIDefineResponseExpectSuccess = 1,      /// 返回缓存数据
+    RFAPIDefineResponseExpectObject = 2,
+    RFAPIDefineResponseExpectObjects = 3,
+};
+@property (assign, nonatomic) RFAPIDefineResponseExpectType responseExpectType;
 @property (assign, nonatomic) BOOL responseList;
 @property (strong, nonatomic) Class responseClass;
 

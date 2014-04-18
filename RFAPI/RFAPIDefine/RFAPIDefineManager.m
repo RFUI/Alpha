@@ -194,6 +194,10 @@ RFInitializingRootForNSObject
             }
         }
 
+        __RFAPIDefineConfigFileValue(RFAPIDefineResponseTypeKey) {
+            self.responseExpectType = [value intValue];
+        }
+
         __RFAPIDefineConfigFileClassProperty(responseSerializerClass, RFAPIDefineResponseSerializerKey)
 
         __RFAPIDefineConfigFileValue(RFAPIDefineResponseListKey) {

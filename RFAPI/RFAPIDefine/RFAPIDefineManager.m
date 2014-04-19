@@ -42,6 +42,7 @@ RFInitializingRootForNSObject
         if (define) {
             if ([name isEqualToString:RFAPIDefineDefaultKey]) {
                 self.defaultDefine = define;
+                [self setNeedsUpdateDefaultDefine];
             }
 
             [self.rawRules setObject:rule forKey:name];

@@ -30,6 +30,9 @@
 @property (readonly, nonatomic) AFNetworkReachabilityManager *reachabilityManager;
 
 #pragma mark - Define
+/// Update default define rule with config info.
+- (void)updateDefaultDefineWithRule:(NSDictionary *)rule;
+
 /// Load API deine config file.
 - (void)setAPIDefineWithRules:(NSDictionary *)rules;
 

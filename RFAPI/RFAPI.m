@@ -17,9 +17,11 @@ RFDefineConstString(RFAPIErrorDomain);
 #   define DebugAPIDelayFetchCallbackReturnSecond 0
 #endif
 
+extern NSString *const RFAPIDefineDefaultKey;
+
 @interface RFAPI ()
 @property (strong, nonatomic, readwrite) AFNetworkReachabilityManager *reachabilityManager;
-@property (strong, nonatomic) RFAPIDefineManager *defineManager;
+@property (strong, nonatomic, readwrite) RFAPIDefineManager *defineManager;
 @end
 
 @implementation RFAPI
@@ -50,6 +52,11 @@ RFInitializingRootForNSObject
 //}
 
 #pragma mark - Define
+
+- (void)updateDefaultDefineWithRule:(NSDictionary *)rule {
+    if (!rule) return;
+    [self.defineManager mergeWithRules:@{ RFAPIDefineDefaultKey : rule }];
+}
 
 - (void)setAPIDefineWithRules:(NSDictionary *)rules {
     [self.defineManager mergeWithRules:rules];

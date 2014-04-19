@@ -41,7 +41,9 @@
 
 #pragma mark - Request management
 
-// 目前只隐藏了信息，请求没有控制
+- (NSArray *)operationsWithIdentifier:(NSString *)identifier;
+- (NSArray *)operationsWithGroupIdentifier:(NSString *)identifier;
+
 - (void)cancelOperationWithIdentifier:(NSString *)identifier;
 - (void)cancelOperationsWithGroupIdentifier:(NSString *)identifier;
 

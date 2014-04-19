@@ -17,7 +17,7 @@ RFDefineConstString(RFAPIErrorDomain);
 #   define DebugAPIDelayFetchCallbackReturnSecond 0
 #endif
 
-extern NSString *const RFAPIDefineDefaultKey;
+RFDefineConstString(RFAPIOperationUIkControl);
 
 @interface RFAPI ()
 @property (strong, nonatomic, readwrite) AFNetworkReachabilityManager *reachabilityManager;
@@ -77,11 +77,25 @@ RFInitializingRootForNSObject
 #pragma mark - Request management
 
 - (void)cancelOperationWithIdentifier:(NSString *)identifier {
+    for (AFHTTPRequestOperation *op in [self operationsWithIdentifier:identifier]) {
+        [op cancel];
+    }
     [self.networkActivityIndicatorManager hideWithIdentifier:identifier];
 }
 
 - (void)cancelOperationsWithGroupIdentifier:(NSString *)identifier {
+    for (AFHTTPRequestOperation *op in [self operationsWithGroupIdentifier:identifier]) {
+        [op cancel];
+    }
     [self.networkActivityIndicatorManager hideWithGroupIdentifier:identifier];
+}
+
+- (NSArray *)operationsWithIdentifier:(NSString *)identifier {
+    return [self.operations filteredArrayUsingPredicate:[NSPredicate predicateWithFormat:@"%K.%K.%K == %@", @keypathClassInstance(AFHTTPRequestOperation, userInfo), RFAPIOperationUIkControl, @keypathClassInstance(RFAPIControl, identifier), identifier]];
+}
+
+- (NSArray *)operationsWithGroupIdentifier:(NSString *)identifier {
+    return [self.operations filteredArrayUsingPredicate:[NSPredicate predicateWithFormat:@"%K.%K.%K == %@", @keypathClassInstance(AFHTTPRequestOperation, userInfo), RFAPIOperationUIkControl, @keypathClassInstance(RFAPIControl, groupIdentifier), identifier]];
 }
 
 #pragma mark - Request
@@ -145,6 +159,9 @@ RFInitializingRootForNSObject
 
     AFHTTPRequestOperation *operation = [[AFHTTPRequestOperation alloc] initWithRequest:request];
     operation.responseSerializer = [self.defineManager responseSerializerForDefine:define];
+    if (controlInfo) {
+        operation.userInfo = @{ RFAPIOperationUIkControl : controlInfo };
+    }
 
     Class expectClass = define.responseClass;
     [operation setCompletionBlockWithSuccess:^(AFHTTPRequestOperation *op, id responseObject) {
@@ -226,6 +243,8 @@ RFInitializingRootForNSObject
     [define.HTTPRequestHeaders enumerateKeysAndObjectsUsingBlock:^(id field, id value, BOOL *__unused stop) {
         [r setValue:value forHTTPHeaderField:field];
     }];
+
+    r = [self customSerializedRequest:r withDefine:define];
 
     if (controlInfo.requestCustomization) {
         r = controlInfo.requestCustomization(r);

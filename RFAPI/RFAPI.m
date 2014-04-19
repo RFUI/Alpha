@@ -53,9 +53,17 @@ RFInitializingRootForNSObject
 
 #pragma mark - Define
 
-- (void)updateDefaultDefineWithRule:(NSDictionary *)rule {
+- (void)updateDefaultRule:(NSDictionary *)rule merge:(BOOL)isMerge {
     if (!rule) return;
-    [self.defineManager mergeWithRules:@{ RFAPIDefineDefaultKey : rule }];
+    RFAPIDefineManager *m = self.defineManager;
+
+    if (isMerge) {
+        [m.defaultRule addEntriesFromDictionary:rule];
+    }
+    else {
+        [m.defaultRule setDictionary:rule];
+    }
+    [m setNeedsUpdateDefaultRule];
 }
 
 - (void)setAPIDefineWithRules:(NSDictionary *)rules {

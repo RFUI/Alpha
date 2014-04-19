@@ -31,7 +31,7 @@
 
 #pragma mark - Define
 /// Update default define rule with config info.
-- (void)updateDefaultDefineWithRule:(NSDictionary *)rule;
+- (void)updateDefaultRule:(NSDictionary *)rule merge:(BOOL)isMerge;
 
 /// Load API deine config file.
 - (void)setAPIDefineWithRules:(NSDictionary *)rules;

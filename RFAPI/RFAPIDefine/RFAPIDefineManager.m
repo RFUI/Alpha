@@ -8,7 +8,7 @@
 @interface RFAPIDefineManager ()
 @property (strong, nonatomic) NSMutableDictionary *rawRules;
 @property (strong, nonatomic) NSMutableDictionary *defineCache;
-@property (readwrite, strong, nonatomic) RFAPIDefine *defaultDefine;
+@property (strong, nonatomic, readwrite) NSMutableDictionary *defaultRule;
 @end
 
 @implementation RFAPIDefineManager
@@ -17,6 +17,7 @@ RFInitializingRootForNSObject
 - (void)onInit {
     _rawRules = [[NSMutableDictionary alloc] initWithCapacity:50];
     _defineCache = [[NSMutableDictionary alloc] initWithCapacity:50];
+    _defaultRule = [[NSMutableDictionary alloc] initWithCapacity:20];
 }
 - (void)afterInit {
 }
@@ -29,7 +30,7 @@ RFInitializingRootForNSObject
     return self;
 }
 
-- (void)setNeedsUpdateDefaultDefine {
+- (void)setNeedsUpdateDefaultRule {
     [self.defineCache removeAllObjects];
 }
 
@@ -41,8 +42,8 @@ RFInitializingRootForNSObject
         RFAPIDefine *define = [[RFAPIDefine alloc] initWithRule:rule name:name];
         if (define) {
             if ([name isEqualToString:RFAPIDefineDefaultKey]) {
-                self.defaultDefine = define;
-                [self setNeedsUpdateDefaultDefine];
+                [self.defaultRule setDictionary:rule];
+                [self setNeedsUpdateDefaultRule];
             }
 
             [self.rawRules setObject:rule forKey:name];
@@ -60,7 +61,7 @@ RFInitializingRootForNSObject
         return nil;
     }
 
-    NSMutableDictionary *mergedRule = [NSMutableDictionary dictionaryWithDictionary:self.rawRules[RFAPIDefineDefaultKey]];
+    NSMutableDictionary *mergedRule = [self.defaultRule mutableCopy];
     [mergedRule addEntriesFromDictionary:rule];
     return mergedRule;
 }
@@ -124,6 +125,7 @@ RFInitializingRootForNSObject
 
 
 @end
+
 
 @implementation RFAPIDefine (RFConfigFile)
 

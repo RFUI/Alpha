@@ -8,12 +8,21 @@
 @property (weak, nonatomic) RFAPI *master;
 
 /**
- This property could only set by `mergeWithRules:` with a `DEFAULT` rule. If you change it’s property, you must call `setNeedsUpdateDefaultDefine` to make these changes take effect.
  */
-@property (readonly, nonatomic) RFAPIDefine *defaultDefine;
-- (void)setNeedsUpdateDefaultDefine;
+@property (readonly, nonatomic) NSMutableDictionary *defaultRule;
+
+/**
+ If you make any change in the default rule, you should call this method to make these changes take effect.
+ */
+- (void)setNeedsUpdateDefaultRule;
 
 - (void)mergeWithRules:(NSDictionary *)rules;
+
+/**
+ Returns the define object  with the specified name.
+ 
+ @return A define object with it’s name.
+ */
 - (RFAPIDefine *)defineForName:(NSString *)defineName;
 
 #pragma mark - RFAPI Support

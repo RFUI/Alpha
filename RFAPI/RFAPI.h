@@ -110,7 +110,7 @@ extern NSString *const RFAPIRequestCustomizationControlKey;
 // No implementation
 @property (assign, nonatomic) BOOL backgroundTask;
 
-// No implementation
+/// Customization URL request object
 @property (copy, nonatomic) NSMutableURLRequest * (^requestCustomization)(NSMutableURLRequest *request);
 @end
 

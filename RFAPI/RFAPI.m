@@ -214,6 +214,10 @@ RFInitializingRootForNSObject
         [r setValue:value forHTTPHeaderField:field];
     }];
 
+    if (controlInfo.requestCustomization) {
+        r = controlInfo.requestCustomization(r);
+    }
+
     return r;
 }
 #undef __RFAPIMakeRequestError

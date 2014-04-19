@@ -131,7 +131,7 @@ RFInitializingRootForNSObject
         __RFAPILogError(DEBUG_ERROR, DEBUG_ARG);\
         error = [NSError errorWithDomain:RFAPIErrorDomain code:0 userInfo:@{ NSLocalizedDescriptionKey: ERROR_DESCRIPTION, NSLocalizedFailureReasonErrorKey: ERROR_FAILUREREASON, NSLocalizedRecoverySuggestionErrorKey: ERROR_RECOVERYSUGGESTION }];\
         __RFAPICompletionCallback(failure, op, error);\
-        __RFAPICompletionCallback(completion, op);\
+        __RFAPICompletionCallback(operationCompletion, op);\
         return;\
     }
 
@@ -162,6 +162,19 @@ RFInitializingRootForNSObject
     if (controlInfo) {
         operation.userInfo = @{ RFAPIOperationUIkControl : controlInfo };
     }
+
+    if (flag) {
+        (*flag)++;
+    }
+    void (^operationCompletion)(id) = ^(AFHTTPRequestOperation *blockOp){
+        if (flag) {
+            (*flag)--;
+        }
+
+        if (completion) {
+            completion(blockOp);
+        }
+    };
 
     Class expectClass = define.responseClass;
     [operation setCompletionBlockWithSuccess:^(AFHTTPRequestOperation *op, id responseObject) {
@@ -197,10 +210,10 @@ RFInitializingRootForNSObject
         }
         douto(responseObject)
         __RFAPICompletionCallback(success, op, responseObject);
-        __RFAPICompletionCallback(completion, op);
+        __RFAPICompletionCallback(operationCompletion, op);
     } failure:^(AFHTTPRequestOperation *op, NSError *error) {
         __RFAPICompletionCallback(failure, op, error);
-        __RFAPICompletionCallback(completion, op);
+        __RFAPICompletionCallback(operationCompletion, op);
     }];
 
     [self addOperation:operation];

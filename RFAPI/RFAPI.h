@@ -55,7 +55,7 @@
  @param APIName     接口名
  @param parameters  请求的参数
  @param controlInfo No implementation
- @param controlFlag No implementation
+ @param controlFlag 请求标记，
  @param success     请求成功回调的 block，可为空
  @param failure     请求失败回调的 block，可为空
  @param completion  请求完成回掉的 block，必定会被调用（即使请求创建失败），会在 success 和 failure 回调后执行。被设计用来执行通用的清理。可为空

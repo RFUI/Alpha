@@ -3,20 +3,30 @@
 #import "RFRuntime.h"
 
 @interface RFAPIDefine : NSObject <NSCopying>
+/// Used to get a deine from a RFAPIDefineManager
 @property (copy, nonatomic) NSString *name;
 
+/// HTTP base URL
 @property (copy, nonatomic) NSURL *baseURL;
+
+///
 @property (copy, nonatomic) NSString *pathPrefix;
+
+///
 @property (copy, nonatomic) NSString *path;
 
 /// HTTP Method
 @property (copy, nonatomic) NSString *method;
 
+#pragma mark - Request
+
+// No implementation
 @property (copy, nonatomic) NSDictionary *HTTPRequestHeaders;
 
-#pragma mark - Parameters
+// No implementation
 @property (copy, nonatomic) NSDictionary *defaultParameters;
 
+// No implementation
 @property (assign, nonatomic) BOOL needsAuthorization;
 
 /// AFURLRequestSerialization class
@@ -31,15 +41,17 @@ typedef NS_ENUM(short, RFAPIDefineCachePolicy) {
     RFAPICachePolicyExpire = 3,         /// 一段时间内不再请求
     RFAPICachePolicyNoCache = 5         /// 无缓存，总是请求新数据
 };
-
+// No implementation
 @property (assign, nonatomic) RFAPIDefineCachePolicy cachePolicy;
+
+// No implementation
 @property (assign, nonatomic) NSTimeInterval expire;
 
 typedef NS_ENUM(short, RFAPIDefineOfflinePolicy) {
     RFAPOfflinePolicyDefault = 0,       /// 不特殊处理
     RFAPOfflinePolicyLoadCache = 1      /// 返回缓存数据
 };
-
+// No implementation
 @property (assign, nonatomic) RFAPIDefineOfflinePolicy offlinePolicy;
 
 #pragma mark - Response
@@ -48,15 +60,21 @@ typedef NS_ENUM(short, RFAPIDefineOfflinePolicy) {
 
 typedef NS_ENUM(short, RFAPIDefineResponseExpectType) {
     RFAPIDefineResponseExpectDefault = 0,   /// 不特殊处理
-    RFAPIDefineResponseExpectSuccess = 1,
+    RFAPIDefineResponseExpectSuccess = 1,   // No implementation
     RFAPIDefineResponseExpectObject  = 2,
-    RFAPIDefineResponseExpectObjects = 3,
+    RFAPIDefineResponseExpectObjects = 3,   /// Expect an array of objects
 };
+///
 @property (assign, nonatomic) RFAPIDefineResponseExpectType responseExpectType;
+
+/// Expect JSONModel class
 @property (strong, nonatomic) Class responseClass;
 
+#pragma mark - 
+
+/// User info
 @property (copy, nonatomic) NSDictionary *userInfo;
 
-/// 备注
+/// Comment
 @property (copy, nonatomic) NSString *notes;
 @end

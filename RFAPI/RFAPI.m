@@ -62,9 +62,11 @@ RFInitializingRootForNSObject
 #pragma mark - Request management
 
 - (void)cancelOperationWithIdentifier:(NSString *)identifier {
+    [self.networkActivityIndicatorManager hideWithIdentifier:identifier];
 }
 
 - (void)cancelOperationsWithGroupIdentifier:(NSString *)identifier {
+    [self.networkActivityIndicatorManager hideWithGroupIdentifier:identifier];
 }
 
 #pragma mark - Request

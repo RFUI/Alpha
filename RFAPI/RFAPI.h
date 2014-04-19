@@ -38,10 +38,8 @@
 
 #pragma mark - Request management
 
-// No implementation
+// 目前只隐藏了信息，请求没有控制
 - (void)cancelOperationWithIdentifier:(NSString *)identifier;
-
-// No implementation
 - (void)cancelOperationsWithGroupIdentifier:(NSString *)identifier;
 
 #pragma mark - Request
@@ -97,9 +95,19 @@ extern NSString *const RFAPIGroupIdentifierControlKey;
 extern NSString *const RFAPIRequestCustomizationControlKey;
 
 @interface RFAPIControl : NSObject
+// No implementation
 @property (strong, nonatomic) RFNetworkActivityIndicatorMessage *message;
+
+// No implementation
 @property (strong, nonatomic) NSString *identifier;
+
+// No implementation
 @property (strong, nonatomic) NSString *groupIdentifier;
+
+// No implementation
+@property (assign, nonatomic) BOOL backgroundTask;
+
+// No implementation
 @property (copy, nonatomic) NSMutableURLRequest * (^requestCustomization)(NSMutableURLRequest *request);
 @end
 

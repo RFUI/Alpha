@@ -148,7 +148,7 @@ RFInitializingRootForNSObject
     }
 
 #define __RFAPIDefineConfigFileDictionaryProperty(PROPERTY, KEY)\
-    __RFAPIDefineConfigFileValue(RFAPIDefineHeadersKey) {\
+    __RFAPIDefineConfigFileValue(KEY) {\
         if (![value isKindOfClass:[NSDictionary class]]) {\
             dout_error(@"%@ must be a dictionary.", KEY);\
             return nil;\
@@ -160,7 +160,7 @@ RFInitializingRootForNSObject
     __RFAPIDefineConfigFileValue(KEY) {\
         Class aClass = NSClassFromString(value);\
         if (aClass) {\
-            self.PROPERTY = value;\
+            self.PROPERTY = aClass;\
         }\
         else {\
             dout_warning(@"Can not get class from name: %@", value);\

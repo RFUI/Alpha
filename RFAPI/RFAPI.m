@@ -59,6 +59,14 @@ RFInitializingRootForNSObject
     return [self.defineManager defineForName:APIName];
 }
 
+#pragma mark - Request management
+
+- (void)cancelOperationWithIdentifier:(NSString *)identifier {
+}
+
+- (void)cancelOperationsWithGroupIdentifier:(NSString *)identifier {
+}
+
 #pragma mark - Request
 
 - (AFHTTPRequestSerializer<AFURLRequestSerialization> *)requestSerializer {
@@ -68,13 +76,6 @@ RFInitializingRootForNSObject
     return _requestSerializer;
 }
 
-#define __RFAPIMakeRequestError(CONDITION)\
-    if (CONDITION) {\
-        if (error) {\
-            *error = e;\
-        }\
-        return nil;\
-    }
 
 #define __RFAPICompletionCallback(BLOCK, ...)\
     if (BLOCK) {\
@@ -86,6 +87,21 @@ RFInitializingRootForNSObject
         else {\
             BLOCK(__VA_ARGS__);\
         }\
+    }
+
+#if RFDEBUG
+#   define __RFAPILogError(DEBUG_ERROR, ...) dout_error(DEBUG_ERROR, __VA_ARGS__);
+#else
+#   define __RFAPILogError(DEBUG_ERROR, ...)
+#endif
+
+#define __RFAPICompletionCallbackProccessError(CONDITION, DEBUG_ERROR, DEBUG_ARG, ERROR_DESCRIPTION, ERROR_FAILUREREASON, ERROR_RECOVERYSUGGESTION)\
+    if (CONDITION) {\
+        __RFAPILogError(DEBUG_ERROR, DEBUG_ARG);\
+        error = [NSError errorWithDomain:RFAPIErrorDomain code:0 userInfo:@{ NSLocalizedDescriptionKey: ERROR_DESCRIPTION, NSLocalizedFailureReasonErrorKey: ERROR_FAILUREREASON, NSLocalizedRecoverySuggestionErrorKey: ERROR_RECOVERYSUGGESTION }];\
+        __RFAPICompletionCallback(failure, op, error);\
+        __RFAPICompletionCallback(completion, op);\
+        return;\
     }
 
 - (AFHTTPRequestOperation *)requestWithName:(NSString *)APIName parameters:(NSDictionary *)parameters controlInfo:(RFAPIControl *)controlInfo controlFlag:(int *)flag success:(void (^)(AFHTTPRequestOperation *, id))success failure:(void (^)(AFHTTPRequestOperation *, NSError *))failure completion:(void (^)(AFHTTPRequestOperation *))completion {
@@ -115,20 +131,37 @@ RFInitializingRootForNSObject
 
     Class expectClass = define.responseClass;
     [operation setCompletionBlockWithSuccess:^(AFHTTPRequestOperation *op, id responseObject) {
+        NSError *error = nil;
         switch (define.responseExpectType) {
+            case RFAPIDefineResponseExpectObject: {
+                __RFAPICompletionCallbackProccessError(![responseObject isKindOfClass:[NSDictionary class]], @"期望的数据类型是字典，而实际是 %@\n请先确认一下代码，如果服务器没按要求返回请联系后台人员", [responseObject class], @"返回数据异常", @"可能服务器正在升级或者维护，也可能是应用bug", @"建议稍后重试，如果持续报告这个错误请检查应用是否有新版本");
+
+                NSError __autoreleasing *e = nil;
+                id JSONModelObject = [[expectClass alloc] initWithDictionary:responseObject error:&e];
+                __RFAPICompletionCallbackProccessError(!JSONModelObject, @"不能将返回内容转换为Model：%@\n请先确认一下代码，如果服务器没按要求返回请联系后台人员", e, @"返回数据异常", @"可能服务器正在升级或者维护，也可能是应用bug", @"建议稍后重试，如果持续报告这个错误请检查应用是否有新版本");
+                responseObject = JSONModelObject;
+                break;
+            }
+            case RFAPIDefineResponseExpectObjects: {
+                __RFAPICompletionCallbackProccessError(![responseObject isKindOfClass:[NSArray class]], @"期望的数据类型是数组，而实际是 %@\n", [responseObject class], @"返回数据异常", @"可能服务器正在升级或者维护，也可能是应用bug", @"建议稍后重试，如果持续报告这个错误请检查应用是否有新版本");
+
+                NSMutableArray *objects = [NSMutableArray arrayWithCapacity:[responseObject count]];
+                for (NSDictionary *info in responseObject) {
+                    id obj = [[expectClass alloc] initWithDictionary:info error:&error];
+                    __RFAPICompletionCallbackProccessError(!obj, @"不能将数组中的元素转换为Model %@\n请先确认一下代码，如果服务器没按要求返回请联系后台人员", error, @"返回数据异常", @"可能服务器正在升级或者维护，也可能是应用bug", @"建议稍后重试，如果持续报告这个错误请检查应用是否有新版本")
+                    else {
+                        [objects addObject:obj];
+                    }
+                }
+                responseObject = objects;
+                break;
+            }
             case RFAPIDefineResponseExpectSuccess:
-                break;
-
-            case RFAPIDefineResponseExpectObject:
-                break;
-
-            case RFAPIDefineResponseExpectObjects:
-                break;
-
             case RFAPIDefineResponseExpectDefault:
             default:
                 break;
         }
+        douto(responseObject)
         __RFAPICompletionCallback(success, op, responseObject);
         __RFAPICompletionCallback(completion, op);
     } failure:^(AFHTTPRequestOperation *op, NSError *error) {
@@ -139,6 +172,17 @@ RFInitializingRootForNSObject
     [self addOperation:operation];
     return operation;
 }
+#undef __RFAPICompletionCallback
+#undef __RFAPILogError
+#undef __RFAPICompletionCallbackProccessError
+
+#define __RFAPIMakeRequestError(CONDITION)\
+    if (CONDITION) {\
+        if (error) {\
+            *error = e;\
+        }\
+        return nil;\
+    }
 
 - (NSMutableURLRequest *)URLRequestWithDefine:(RFAPIDefine *)define parameters:(NSDictionary *)parameters controlInfo:(RFAPIControl *)controlInfo error:(NSError *__autoreleasing *)error {
     NSParameterAssert(define);
@@ -163,6 +207,7 @@ RFInitializingRootForNSObject
 
     return r;
 }
+#undef __RFAPIMakeRequestError
 
 - (NSMutableURLRequest *)customSerializedRequest:(NSMutableURLRequest *)request withDefine:(RFAPIDefine *)define {
     // Nothing
@@ -179,100 +224,6 @@ RFInitializingRootForNSObject
 - (void)alertError:(NSError *)error title:(NSString *)title {
     [self.networkActivityIndicatorManager alertError:error title:title];
 }
-
-#pragma mark - Old raw request
-
-- (AFHTTPRequestOperation *)requestWithMethod:(NSString *)method URLString:(NSString *)URLString parameters:(NSDictionary *)parameters headers:(NSDictionary *)headers expectArrayContainsClass:(Class)modelClass success:(void (^)(AFHTTPRequestOperation *operation, NSMutableArray *objects))success failure:(void (^)(AFHTTPRequestOperation *operation, NSError *error))failure completion:(void (^)(AFHTTPRequestOperation *operation))completion {
-    RFAssert([modelClass isSubclassOfClass:[JSONModel class]], @"modelClass 必须是 JSONModel");
-
-    return [self requestWithMethod:method URLString:URLString parameters:parameters headers:headers success:^(AFHTTPRequestOperation *operation, id responseObject) {
-        if (![responseObject isKindOfClass:[NSArray class]]) {
-            if (failure) {
-#if RFDEBUG
-                dout_error(@"期望的数据类型是数组，而实际是 %@\n", [responseObject class]);
-#endif
-                failure(operation, [NSError errorWithDomain:RFAPIErrorDomain code:0 userInfo:@{
-                    NSLocalizedDescriptionKey : @"返回数据异常",
-                    NSLocalizedFailureReasonErrorKey : @"可能服务器正在升级或者维护，也可能是应用bug",
-                    NSLocalizedRecoverySuggestionErrorKey : @"建议稍后重试，如果持续报告这个错误请检查应用是否有新版本",
-                    NSURLErrorFailingURLErrorKey : operation.request.URL
-                }]);
-            }
-            return;
-        }
-
-        NSError __autoreleasing *e = nil;
-        NSMutableArray *objects = [NSMutableArray arrayWithCapacity:[responseObject count]];
-        for (NSDictionary *info in responseObject) {
-            id obj = [[modelClass alloc] initWithDictionary:info error:&e];
-            if (obj) {
-                [objects addObject:obj];
-            }
-            else {
-                if (failure) {
-#if RFDEBUG
-                    dout_error(@"不能将数组中的元素转换为Model %@\n请先确认一下代码，如果服务器没按要求返回请联系后台人员", e);
-#endif
-                    failure(operation, [NSError errorWithDomain:RFAPIErrorDomain code:0 userInfo:@{
-                        NSLocalizedDescriptionKey : @"返回数据异常",
-                        NSLocalizedFailureReasonErrorKey : @"可能服务器正在升级或者维护，也可能是应用bug",
-                        NSLocalizedRecoverySuggestionErrorKey : @"建议稍后重试，如果持续报告这个错误请检查应用是否有新版本",
-                        NSURLErrorFailingURLErrorKey : operation.request.URL
-                    }]);
-                }
-                return;
-            }
-        }
-
-        if (success) {
-            success(operation, objects);
-        }
-    } failure:failure completion:completion];
-}
-
-- (AFHTTPRequestOperation *)requestWithMethod:(NSString *)method URLString:(NSString *)URLString parameters:(NSDictionary *)parameters headers:(NSDictionary *)headers expectObjectClass:(Class)modelClass success:(void (^)(AFHTTPRequestOperation *operation, id JSONModelObject))success failure:(void (^)(AFHTTPRequestOperation *operation, NSError *error))failure completion:(void (^)(AFHTTPRequestOperation *operation))completion {
-    RFAssert([modelClass isSubclassOfClass:[JSONModel class]], @"modelClass 必须是 JSONModel");
-
-    return [self requestWithMethod:method URLString:URLString parameters:parameters headers:headers success:^(AFHTTPRequestOperation *operation, id responseObject) {
-        if (![responseObject isKindOfClass:[NSDictionary class]]) {
-            if (failure) {
-#if RFDEBUG
-                dout_error(@"期望的数据类型是字典，而实际是 %@\n请先确认一下代码，如果服务器没按要求返回请联系后台人员", [responseObject class]);
-#endif
-                failure(operation, [NSError errorWithDomain:RFAPIErrorDomain code:0 userInfo:@{
-                    NSLocalizedDescriptionKey : @"返回数据异常",
-                    NSLocalizedFailureReasonErrorKey : @"可能服务器正在升级或者维护，也可能是应用bug",
-                    NSLocalizedRecoverySuggestionErrorKey : @"建议稍后重试，如果持续报告这个错误请检查应用是否有新版本",
-                    NSURLErrorFailingURLErrorKey : operation.request.URL
-                }]);
-            }
-            return;
-        }
-
-        NSError __autoreleasing *e = nil;
-        id JSONModelObject = [[modelClass alloc] initWithDictionary:responseObject error:&e];
-        if (!JSONModelObject) {
-            if (failure) {
-#if RFDEBUG
-                dout_error(@"不能将返回内容转换为Model：%@\n请先确认一下代码，如果服务器没按要求返回请联系后台人员", e);
-#endif
-                failure(operation, [NSError errorWithDomain:RFAPIErrorDomain code:0 userInfo:@{
-                    NSLocalizedDescriptionKey : @"返回数据异常",
-                    NSLocalizedFailureReasonErrorKey : @"可能服务器正在升级或者维护，也可能是应用bug",
-                    NSLocalizedRecoverySuggestionErrorKey : @"建议稍后重试，如果持续报告这个错误请检查应用是否有新版本",
-                    NSURLErrorFailingURLErrorKey : operation.request.URL
-                }]);
-            }
-            return;
-        }
-
-        if (success) {
-            success(operation, JSONModelObject);
-        }
-    } failure:failure completion:completion];
-}
-
-#undef __RFAPICompletionCallback
 
 @end
 

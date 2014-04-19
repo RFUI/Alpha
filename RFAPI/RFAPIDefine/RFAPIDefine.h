@@ -1,6 +1,7 @@
 // TEST
 
 #import "RFRuntime.h"
+#import "RFAPIDefineConfigFileKeys.h"
 
 @interface RFAPIDefine : NSObject <NSCopying>
 /// Used to get a deine from a RFAPIDefineManager

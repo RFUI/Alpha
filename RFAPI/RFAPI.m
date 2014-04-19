@@ -215,6 +215,11 @@ RFInitializingRootForNSObject
 
     AFHTTPRequestSerializer *s = [self.defineManager requestSerializerForDefine:define];
 
+    if (define.defaultParameters) {
+        NSDictionary *new = parameters;
+        parameters = [define.defaultParameters mutableCopy];
+        [(NSMutableDictionary *)parameters addEntriesFromDictionary:new];
+    }
     r = [[s requestBySerializingRequest:r withParameters:parameters error:&e] mutableCopy];
     __RFAPIMakeRequestError(!r);
 

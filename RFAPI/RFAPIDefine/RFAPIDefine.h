@@ -20,10 +20,10 @@
 
 #pragma mark - Request
 
-// No implementation
+/// HTTP headers to append
 @property (copy, nonatomic) NSDictionary *HTTPRequestHeaders;
 
-// No implementation
+/// Default HTTP request parameters
 @property (copy, nonatomic) NSDictionary *defaultParameters;
 
 // No implementation

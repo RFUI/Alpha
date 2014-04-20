@@ -12,31 +12,7 @@ static void *const RFRefreshButtonKVOContext = (void *)&RFRefreshButtonKVOContex
 @end
 
 @implementation RFRefreshButton
-
-- (id)init {
-    self = [super init];
-    if (self) {
-        [self onInit];
-        [self performSelector:@selector(afterInit) withObject:self afterDelay:0];
-    }
-    return self;
-}
-- (id)initWithFrame:(CGRect)frame {
-    self = [super initWithFrame:frame];
-    if (self) {
-        [self onInit];
-        [self performSelector:@selector(afterInit) withObject:self afterDelay:0];
-    }
-    return self;
-}
-- (id)initWithCoder:(NSCoder *)aDecoder {
-    self = [super initWithCoder:aDecoder];
-    if (self) {
-        [self onInit];
-        [self performSelector:@selector(afterInit) withObject:self afterDelay:0];
-    }
-    return self;
-}
+RFInitializingRootForUIView
 
 - (void)onInit {
 }
@@ -94,6 +70,7 @@ static void *const RFRefreshButtonKVOContext = (void *)&RFRefreshButtonKVOContex
     if (object == self.observeTarget && [keyPath isEqualToString:self.observeKeypath]) {
         [self evaluateEnableStatus];
         return;
+
     }
     
     [super observeValueForKeyPath:keyPath ofObject:object change:change context:context];
@@ -116,7 +93,7 @@ static void *const RFRefreshButtonKVOContext = (void *)&RFRefreshButtonKVOContex
     self.evaluateBlock = ifProccessingBlock;
 
     [self evaluateEnableStatus];
-    [self.observeTarget addObserver:self forKeyPath:self.observeKeypath options:NSKeyValueObservingOptionNew context:RFRefreshButtonKVOContext];
+    [self.observeTarget addObserver:self forKeyPath:self.observeKeypath options:NSKeyValueObservingOptionNew|NSKeyValueObservingOptionInitial context:RFRefreshButtonKVOContext];
     self.observing = YES;
 }
 

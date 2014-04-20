@@ -2,7 +2,7 @@
     RFPullToFetchTableView
     RFUI
 
-    Copyright (c) 2013 BB9z
+    Copyright (c) 2013-2014 BB9z
     https://github.com/RFUI/Alpha
 
     The MIT License (MIT)
@@ -12,7 +12,6 @@
  */
 
 #import "RFRuntime.h"
-#import "RFInitializing.h"
 #import "UIScrollView+RFScrollViewContentDistance.h"
 
 // Only RFAutoFetchTableContainerStyleStatic implemented at this time.
@@ -23,8 +22,9 @@ typedef enum {
 	RFAutoFetchTableContainerStyleFloatFixed = 5,
 } RFAutoFetchTableContainerStyle;
 
-@interface RFPullToFetchTableView : UITableView
-<RFInitializing>
+@interface RFPullToFetchTableView : UITableView <
+    RFInitializing
+>
 
 // Default YES.
 @property(assign, nonatomic, getter = isHeaderFetchingEnabled) BOOL headerFetchingEnabled;

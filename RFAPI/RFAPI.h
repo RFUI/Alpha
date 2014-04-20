@@ -73,11 +73,6 @@
 
 @property (strong, nonatomic) AFHTTPRequestSerializer<AFURLRequestSerialization> *requestSerializer;
 
-/**
- For subclass overwrite, default do nothing.
- */
-- (NSMutableURLRequest *)customSerializedRequest:(NSMutableURLRequest *)request withDefine:(RFAPIDefine *)define;
-
 #pragma mark - Response
 
 @property (strong, nonatomic) id<AFURLResponseSerialization> responseSerializer;
@@ -93,6 +88,18 @@
  */
 - (void)alertError:(NSError *)error title:(NSString *)title DEPRECATED_ATTRIBUTE;
 
+#pragma mark - Methods for overwrite
+/**
+ For subclass overwrite, default do nothing.
+ */
+- (NSMutableURLRequest *)customSerializedRequest:(NSMutableURLRequest *)request withDefine:(RFAPIDefine *)define;
+
+/**
+ 默认实现返回 YES
+
+ @return 返回 YES 将继续错误的处理继续交由请求的回调处理，NO 处理结束
+ */
+- (BOOL)generalHandlerForError:(NSError *)error withDefine:(RFAPIDefine *)define controlInfo:(RFAPIControl *)controlInfo requestOperation:(AFHTTPRequestOperation *)operation operationFailureCallback:(void (^)(AFHTTPRequestOperation *, NSError *))operationFailureCallback;
 @end
 
 extern NSString *const RFAPIErrorDomain;

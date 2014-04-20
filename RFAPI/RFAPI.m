@@ -134,7 +134,7 @@ RFInitializingRootForNSObject
     if (CONDITION) {\
         __RFAPILogError(DEBUG_ERROR, DEBUG_ARG);\
         error = [NSError errorWithDomain:RFAPIErrorDomain code:0 userInfo:@{ NSLocalizedDescriptionKey: ERROR_DESCRIPTION, NSLocalizedFailureReasonErrorKey: ERROR_FAILUREREASON, NSLocalizedRecoverySuggestionErrorKey: ERROR_RECOVERYSUGGESTION }];\
-        __RFAPICompletionCallback(failure, op, error);\
+        __RFAPICompletionCallback(operationFailure, op, error);\
         __RFAPICompletionCallback(operationCompletion, op);\
         return;\
     }
@@ -144,6 +144,18 @@ RFInitializingRootForNSObject
     RFAPIDefine *define = [self defineForName:APIName];
     RFAssert(define, @"Can not find an API with name: %@.", APIName);
     if (!define) return nil;
+
+    void (^operationFailure)(id, NSError*) = ^(AFHTTPRequestOperation *blockOp, NSError *blockError) {
+
+        if ([self generalHandlerForError:blockError withDefine:define controlInfo:controlInfo requestOperation:blockOp operationFailureCallback:failure]) {
+            if (failure) {
+                failure(blockOp, blockError);
+            }
+            else {
+                [self.networkActivityIndicatorManager alertError:blockError title:@"请求失败"];
+            }
+        };
+    };
 
     NSError __autoreleasing *e = nil;
     NSMutableURLRequest *request = [self URLRequestWithDefine:define parameters:parameters controlInfo:controlInfo error:&e];
@@ -157,7 +169,7 @@ RFInitializingRootForNSObject
             NSLocalizedRecoverySuggestionErrorKey : @"请再试一次，如果依旧请尝试重启应用。给您带来不便，敬请谅解"
         }];
 
-        __RFAPICompletionCallback(failure, nil, error);
+        __RFAPICompletionCallback(operationFailure, nil, error);
         __RFAPICompletionCallback(completion, nil);
     }
 
@@ -165,12 +177,6 @@ RFInitializingRootForNSObject
     operation.responseSerializer = [self.defineManager responseSerializerForDefine:define];
     if (controlInfo) {
         operation.userInfo = @{ RFAPIOperationUIkControl : controlInfo };
-    }
-
-    if (!failure) {
-        failure = ^(AFHTTPRequestOperation *blockOp, NSError *blockError){
-            [self.networkActivityIndicatorManager alertError:blockError title:@"请求失败"];
-        };
     }
 
     RFNetworkActivityIndicatorMessage *message = controlInfo.message;
@@ -231,7 +237,7 @@ RFInitializingRootForNSObject
         __RFAPICompletionCallback(success, op, responseObject);
         __RFAPICompletionCallback(operationCompletion, op);
     } failure:^(AFHTTPRequestOperation *op, NSError *error) {
-        __RFAPICompletionCallback(failure, op, error);
+        __RFAPICompletionCallback(operationFailure, op, error);
         __RFAPICompletionCallback(operationCompletion, op);
     }];
 
@@ -289,6 +295,10 @@ RFInitializingRootForNSObject
 - (NSMutableURLRequest *)customSerializedRequest:(NSMutableURLRequest *)request withDefine:(RFAPIDefine *)define {
     // Nothing
     return request;
+}
+
+- (BOOL)generalHandlerForError:(NSError *)error withDefine:(RFAPIDefine *)define controlInfo:(RFAPIControl *)controlInfo requestOperation:(AFHTTPRequestOperation *)operation operationFailureCallback:(void (^)(AFHTTPRequestOperation *, NSError *))operationFailureCallback {
+    return YES;
 }
 
 - (id<AFURLResponseSerialization>)responseSerializer {

@@ -60,8 +60,8 @@
  @param controlInfo No implementation
  @param controlFlag 请求标记，
  @param success     请求成功回调的 block，可为空
- @param failure     请求失败回调的 block，可为空
- @param completion  请求完成回掉的 block，必定会被调用（即使请求创建失败），会在 success 和 failure 回调后执行。被设计用来执行通用的清理。可为空
+ @param failure     请求失败回调的 block，可为空。为空时将用默认的方法显示错误信息
+ @param completion  请求完成回掉的 block，必定会被调用（即使请求创建失败），会在 success 和 failure 回调后执行。被设计用来执行通用的清理。可为空。
  */
 - (AFHTTPRequestOperation *)requestWithName:(NSString *)APIName
      parameters:(NSDictionary *)parameters
@@ -100,16 +100,19 @@ extern NSString *const RFAPIErrorDomain;
 extern NSString *const RFAPIMessageControlKey;
 extern NSString *const RFAPIIdentifierControlKey;
 extern NSString *const RFAPIGroupIdentifierControlKey;
+extern NSString *const RFAPIBackgroundTaskControlKey;
 extern NSString *const RFAPIRequestCustomizationControlKey;
 
 @interface RFAPIControl : NSObject
-// No implementation
+/** Activity message.
+ 请求开始前，自动进入消息显示队列。结束时自动从队列中清除。
+*/
 @property (strong, nonatomic) RFNetworkActivityIndicatorMessage *message;
 
-// No implementation
+/// Identifier for request.
 @property (strong, nonatomic) NSString *identifier;
 
-// No implementation
+/// Group identifier for request.
 @property (strong, nonatomic) NSString *groupIdentifier;
 
 // No implementation
@@ -117,6 +120,9 @@ extern NSString *const RFAPIRequestCustomizationControlKey;
 
 /// Customization URL request object
 @property (copy, nonatomic) NSMutableURLRequest * (^requestCustomization)(NSMutableURLRequest *request);
+
+- (id)initWithDictionary:(NSDictionary *)info;
+- (id)initWithIdentifier:(NSString *)identifier loadingMessage:(NSString *)message;
 @end
 
 /*

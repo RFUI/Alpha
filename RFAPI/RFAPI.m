@@ -167,6 +167,13 @@ RFInitializingRootForNSObject
         operation.userInfo = @{ RFAPIOperationUIkControl : controlInfo };
     }
 
+    if (!failure) {
+        failure = ^(AFHTTPRequestOperation *blockOp, NSError *blockError){
+            [self.networkActivityIndicatorManager alertError:blockError title:@"请求失败"];
+        };
+    }
+
+    RFNetworkActivityIndicatorMessage *message = controlInfo.message;
     if (flag) {
         (*flag)++;
     }
@@ -175,12 +182,20 @@ RFInitializingRootForNSObject
             (*flag)--;
         }
 
+        NSString *mid = message.identifier;
+        if (mid) {
+            [self.networkActivityIndicatorManager hideWithIdentifier:mid];
+        }
+
         if (completion) {
             completion(blockOp);
         }
     };
 
     Class expectClass = define.responseClass;
+    if (message) {
+        [self.networkActivityIndicatorManager showMessage:message];
+    }
     [operation setCompletionBlockWithSuccess:^(AFHTTPRequestOperation *op, id responseObject) {
         NSError *error = nil;
         switch (define.responseExpectType) {
@@ -292,6 +307,7 @@ RFInitializingRootForNSObject
 NSString *const RFAPIMessageControlKey = @"_RFAPIMessageControl";
 NSString *const RFAPIIdentifierControlKey = @"_RFAPIIdentifierControl";
 NSString *const RFAPIGroupIdentifierControlKey = @"_RFAPIGroupIdentifierControl";
+NSString *const RFAPIBackgroundTaskControlKey = @"_RFAPIBackgroundTaskControl";
 NSString *const RFAPIRequestCustomizationControlKey = @"_RFAPIRequestCustomizationControl";
 
 @implementation RFAPIControl
@@ -302,6 +318,17 @@ NSString *const RFAPIRequestCustomizationControlKey = @"_RFAPIRequestCustomizati
         _message = info[RFAPIMessageControlKey];
         _identifier = info[RFAPIIdentifierControlKey];
         _groupIdentifier = info[RFAPIGroupIdentifierControlKey];
+        _backgroundTask = [info[RFAPIBackgroundTaskControlKey] boolValue];
+        _requestCustomization = info[RFAPIRequestCustomizationControlKey];
+    }
+    return self;
+}
+
+- (id)initWithIdentifier:(NSString *)identifier loadingMessage:(NSString *)message {
+    self = [super init];
+    if (self) {
+        _identifier = identifier;
+        _message = [[RFNetworkActivityIndicatorMessage alloc] initWithIdentifier:identifier title:nil message:message status:RFNetworkActivityIndicatorStatusLoading];
     }
     return self;
 }

@@ -66,6 +66,10 @@ RFInitializingRootForNSObject
     [m setNeedsUpdateDefaultRule];
 }
 
+- (NSMutableDictionary *)defaultRule {
+    return [self.defineManager.defaultRule mutableCopy];
+}
+
 - (void)setAPIDefineWithRules:(NSDictionary *)rules {
     [self.defineManager mergeWithRules:rules];
 }

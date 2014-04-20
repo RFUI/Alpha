@@ -33,6 +33,9 @@
 /// Update default define rule with config info.
 - (void)updateDefaultRule:(NSDictionary *)rule merge:(BOOL)isMerge;
 
+/// Get default define rule.
+- (NSMutableDictionary *)defaultRule;
+
 /// Load API deine config file.
 - (void)setAPIDefineWithRules:(NSDictionary *)rules;
 

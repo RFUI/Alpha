@@ -55,6 +55,10 @@
 // 如果传一个特殊请求，直接创建一个 AFHTTPRequestOperation 并加进来也许更合适
 
 /**
+ Creat and send a HTTP request.
+
+ @discussion 当请求取消时，success 和 failure 都不会被调用，只有 completion 会被调用
+
  @param APIName     接口名
  @param parameters  请求的参数
  @param controlInfo No implementation

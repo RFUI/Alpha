@@ -5,14 +5,12 @@
 
 @interface RFSVProgressMessageManager ()
 @property (strong, nonatomic) id dismissObserver;
-
-- (RFNetworkActivityIndicatorMessage *)popNextMessageToDisplay;
 @end
 
 @implementation RFSVProgressMessageManager
 
 - (void)dealloc {
-    self.dismissObserver = nil;
+    [self deactiveAutoDismissObserver];
 }
 
 - (void)replaceMessage:(RFNetworkActivityIndicatorMessage *)displayingMessage withNewMessage:(RFNetworkActivityIndicatorMessage *)message {

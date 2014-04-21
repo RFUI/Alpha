@@ -24,6 +24,7 @@
 
 - (void)showWithTitle:(NSString *)title message:(NSString *)message status:(RFNetworkActivityIndicatorStatus)status modal:(BOOL)modal priority:(RFNetworkActivityIndicatorMessagePriority)priority autoHideAfterTimeInterval:(NSTimeInterval)timeInterval identifier:(NSString *)identifier groupIdentifier:(NSString *)groupIdentifier userInfo:(NSDictionary *)userInfo {
     RFNetworkActivityIndicatorMessage *obj = [[RFNetworkActivityIndicatorMessage alloc] initWithIdentifier:identifier?: @"" title:title message:message status:status];
+    obj.priority = priority;
     obj.groupIdentifier = groupIdentifier? : @"";
     obj.modal = modal;
     obj.userInfo = userInfo;

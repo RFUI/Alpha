@@ -21,6 +21,8 @@ RFInitializingRootForNSObject
 }
 
 - (void)hideWithGroupIdentifier:(NSString *)identifier {
+    _dout_info(@"Hide message with group identifier: %@", identifier)
+
     if (!identifier) {
         [self.messageQueue removeAllObjects];
         [self hideWithIdentifier:self.displayingMessage.identifier];
@@ -32,11 +34,20 @@ RFInitializingRootForNSObject
     if ([identifier isEqualToString:self.displayingMessage.groupIdentifier]) {
         [self hideWithIdentifier:self.displayingMessage.identifier];
     }
+
+    _dout_info(@"After hideWithGroupIdentifier self = %@", self)
 }
 
 #pragma mark - Queue Manage
 - (void)showMessage:(RFNetworkActivityIndicatorMessage *)message {
+    _dout_info(@"Show message: %@", message)
     NSParameterAssert(message.identifier);
+
+    // If not displaying any, display it
+    if (!self.displayingMessage) {
+        [self replaceMessage:self.displayingMessage withNewMessage:message];
+        return;
+    }
 
     if (message.priority >= RFNetworkActivityIndicatorMessagePriorityReset) {
         [self.messageQueue removeAllObjects];
@@ -62,16 +73,11 @@ RFInitializingRootForNSObject
     else {
         [self.messageQueue addObject:message];
     }
-
-    // If not displaying any, display it
-    if (!self.displayingMessage) {
-        [self replaceMessage:self.displayingMessage withNewMessage:message];
-    }
-    _douto(self)
+    _dout_info(@"After showMessage, self = %@", self);
 }
 
 - (void)hideWithIdentifier:(NSString *)identifier {
-    _dout([NSString stringWithFormat:@"hide with identifier: %@", identifier])
+    _dout_info(@"Hide message with identifier: %@", identifier)
 
     if (!identifier) {
         [self.messageQueue removeAllObjects];
@@ -83,10 +89,10 @@ RFInitializingRootForNSObject
     toRemove.identifier = identifier;
     [self.messageQueue removeObject:toRemove];
 
-    _douto(self.displayingMessage)
     if ([identifier isEqualToString:self.displayingMessage.identifier]) {
         [self replaceMessage:self.displayingMessage withNewMessage:[self popNextMessageToDisplay]];
     }
+    _dout_info(@"After hideWithIdentifier, self = %@", self);
 }
 
 - (RFNetworkActivityIndicatorMessage *)popNextMessageToDisplay {
@@ -106,9 +112,7 @@ RFInitializingRootForNSObject
 
 #pragma mark - For overwrite
 - (void)replaceMessage:(RFNetworkActivityIndicatorMessage *)displayingMessage withNewMessage:(RFNetworkActivityIndicatorMessage *)message {
-    _douts(([NSString stringWithFormat:@"replaceMessage, ct = %@, new = %@",displayingMessage, message]))
     if (displayingMessage == message) return;
-    _douts(([NSString stringWithFormat:@"set displaying with : %@", message]))
     self.displayingMessage = message;
 }
 

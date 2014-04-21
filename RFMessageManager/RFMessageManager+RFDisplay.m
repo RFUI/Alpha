@@ -33,11 +33,11 @@
     [self showMessage:obj];
 }
 
-- (void)showProgress:(float)progress title:(NSString *)title message:(NSString *)message status:(RFNetworkActivityIndicatorStatus)status modal:(BOOL)modal identifier:(NSString *)identifier userinfo:(NSDictionary *)userinfo {
+- (void)showProgress:(float)progress title:(NSString *)title message:(NSString *)message status:(RFNetworkActivityIndicatorStatus)status modal:(BOOL)modal identifier:(NSString *)identifier userInfo:(NSDictionary *)userInfo {
     RFNetworkActivityIndicatorMessage *obj = [[RFNetworkActivityIndicatorMessage alloc] initWithIdentifier:identifier?: @"" title:title message:message status:status];
     obj.modal = modal;
     obj.progress = progress;
-    obj.userInfo = userinfo;
+    obj.userInfo = userInfo;
     [self showMessage:obj];
 }
 

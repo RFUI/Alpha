@@ -12,11 +12,6 @@
 #import "AFNetworkActivityIndicatorManager.h"
 
 RFDefineConstString(RFAPIErrorDomain);
-
-#ifndef DebugAPIDelayFetchCallbackReturnSecond
-#   define DebugAPIDelayFetchCallbackReturnSecond 0
-#endif
-
 RFDefineConstString(RFAPIOperationUIkControl);
 
 @interface RFAPI ()
@@ -114,14 +109,7 @@ RFInitializingRootForNSObject
 
 #define __RFAPICompletionCallback(BLOCK, ...)\
     if (BLOCK) {\
-        if (DebugAPIDelayFetchCallbackReturnSecond) {\
-            dispatch_after_seconds(DebugAPIDelayFetchCallbackReturnSecond, ^{\
-                BLOCK(__VA_ARGS__);\
-            });\
-        }\
-        else {\
-            BLOCK(__VA_ARGS__);\
-        }\
+        BLOCK(__VA_ARGS__);\
     }
 
 #if RFDEBUG

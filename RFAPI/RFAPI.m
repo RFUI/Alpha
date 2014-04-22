@@ -136,7 +136,7 @@ RFInitializingRootForNSObject
         return;\
     }
 
-- (AFHTTPRequestOperation *)requestWithName:(NSString *)APIName parameters:(NSDictionary *)parameters controlInfo:(RFAPIControl *)controlInfo controlFlag:(int *)flag success:(void (^)(AFHTTPRequestOperation *, id))success failure:(void (^)(AFHTTPRequestOperation *, NSError *))failure completion:(void (^)(AFHTTPRequestOperation *))completion {
+- (AFHTTPRequestOperation *)requestWithName:(NSString *)APIName parameters:(NSDictionary *)parameters controlInfo:(RFAPIControl *)controlInfo success:(void (^)(AFHTTPRequestOperation *, id))success failure:(void (^)(AFHTTPRequestOperation *, NSError *))failure completion:(void (^)(AFHTTPRequestOperation *))completion {
     NSParameterAssert(APIName);
     RFAPIDefine *define = [self defineForName:APIName];
     RFAssert(define, @"Can not find an API with name: %@.", APIName);
@@ -182,14 +182,7 @@ RFInitializingRootForNSObject
     };
 
     RFNetworkActivityIndicatorMessage *message = controlInfo.message;
-    if (flag) {
-        (*flag)++;
-    }
     void (^operationCompletion)(id) = ^(AFHTTPRequestOperation *blockOp){
-        if (flag) {
-            (*flag)--;
-        }
-
         NSString *mid = message.identifier;
         if (mid) {
             [self.networkActivityIndicatorManager hideWithIdentifier:mid];

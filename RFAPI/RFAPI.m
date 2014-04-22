@@ -75,8 +75,16 @@ RFInitializingRootForNSObject
 
 #pragma mark - Request management
 
+#if RFDebugLevel > RFDebugLevelInfo
+- (void)addOperation:(NSOperation *)op {
+    dout_debug(@"Add HTTP request operation(%p) with info: %@", op, [op valueForKeyPath:@"userInfo.RFAPIOperationUIkControl"]);
+    [super addOperation:op];
+}
+#endif
+
 - (void)cancelOperationWithIdentifier:(NSString *)identifier {
     for (AFHTTPRequestOperation *op in [self operationsWithIdentifier:identifier]) {
+        dout_debug(@"Cancel HTTP request operation(%p) with identifier: %@", op, identifier);
         [op cancel];
     }
     [self.networkActivityIndicatorManager hideWithIdentifier:identifier];
@@ -84,6 +92,7 @@ RFInitializingRootForNSObject
 
 - (void)cancelOperationsWithGroupIdentifier:(NSString *)identifier {
     for (AFHTTPRequestOperation *op in [self operationsWithGroupIdentifier:identifier]) {
+        dout_debug(@"Cancel HTTP request operation(%p) with group identifier: %@", op, identifier);
         [op cancel];
     }
     [self.networkActivityIndicatorManager hideWithGroupIdentifier:identifier];
@@ -196,6 +205,8 @@ RFInitializingRootForNSObject
         [self.networkActivityIndicatorManager showMessage:message];
     }
     [operation setCompletionBlockWithSuccess:^(AFHTTPRequestOperation *op, id responseObject) {
+        dout_debug(@"HTTP request operation(%p) with info: %@ completed.", op, [op valueForKeyPath:@"userInfo.RFAPIOperationUIkControl"]);
+
         NSError *error = nil;
         switch (define.responseExpectType) {
             case RFAPIDefineResponseExpectObject: {
@@ -314,6 +325,10 @@ NSString *const RFAPIBackgroundTaskControlKey = @"_RFAPIBackgroundTaskControl";
 NSString *const RFAPIRequestCustomizationControlKey = @"_RFAPIRequestCustomizationControl";
 
 @implementation RFAPIControl
+
+- (NSString *)description {
+    return [NSString stringWithFormat:@"<%@: %p, identifier = %@, groupIdentifier = %@>", self.class, self, self.identifier, self.groupIdentifier];
+}
 
 - (id)initWithDictionary:(NSDictionary *)info {
     self = [super init];

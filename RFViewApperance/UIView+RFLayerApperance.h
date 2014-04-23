@@ -1,5 +1,5 @@
 /*!
-    UIView (RFApperanceLayerCornerRadius)
+    UIView (RFLayerApperance)
     RFUI
 
     Copyright (c) 2014 BB9z
@@ -13,6 +13,8 @@
 
 #import "RFUI.h"
 
-@interface UIView (RFApperanceLayerCornerRadius)
+@interface UIView (RFLayerApperance)
 @property CGFloat cornerRadius UI_APPEARANCE_SELECTOR;
+@property CGFloat borderWidth UI_APPEARANCE_SELECTOR;
+@property UIColor *borderColor UI_APPEARANCE_SELECTOR;
 @end

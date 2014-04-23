@@ -12,7 +12,7 @@
 #import "AFNetworkActivityIndicatorManager.h"
 
 RFDefineConstString(RFAPIErrorDomain);
-RFDefineConstString(RFAPIOperationUIkControl);
+static NSString *RFAPIOperationUIkControl = @"RFAPIOperationUIkControl";
 
 @interface RFAPI ()
 @property (strong, nonatomic, readwrite) AFNetworkReachabilityManager *reachabilityManager;

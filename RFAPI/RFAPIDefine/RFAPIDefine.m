@@ -1,5 +1,6 @@
 
 #import "RFAPIDefine.h"
+#import "dout.h"
 
 @implementation RFAPIDefine
 

@@ -7,6 +7,8 @@
 @property (strong, nonatomic) NSCache *offscreenCellCache;
 @property (strong, nonatomic) NSCache *cellHeightCache;
 @property (assign, atomic) BOOL requestNewCellLock;
+@property (weak, nonatomic) id lastTableView;
+@property (assign, nonatomic) CGFloat lastTableViewWidth;
 @end
 
 @implementation RFTableViewCellHeightDelegate
@@ -88,8 +90,20 @@
         return 0;
     }
 
+    // A simplified way to check whether the table view width changed.
+    if (self.lastTableView != tableView) {
+        self.lastTableView = tableView;
+        [self resetOffscreenCellsCache];
+    }
+
+    if (self.lastTableViewWidth != tableView.width) {
+        self.lastTableViewWidth = tableView.width;
+        [self resetCellHeightCache];
+    }
+
     NSNumber *heightCache = [self.cellHeightCache objectForKey:indexPath];
     if (heightCache) {
+        dout_debug(@"Return cached height: %@", heightCache);
         return [heightCache floatValue];
     }
 
@@ -103,12 +117,13 @@
         UIEdgeInsets inset = self.cellLayoutEdgeInsets;
 
         cell.width = tableView.width;
+        dout_debug(@"Calculate cell size for width: %f", cell.width);
         CGFloat contentWidth = cell.contentView.width - inset.left - inset.right;
         cell.contentView.width = contentWidth;
         [cell layoutIfNeeded];
 
         CGSize size = [cell.contentView systemLayoutSizeFittingSize:CGSizeMake(contentWidth, 0)];
-        _dout_size(size)
+        dout_debug(@"Cell size: %@", NSStringFromCGSize(size));
         CGFloat height = size.height;
         [self.cellHeightCache setObject:@(height) forKey:indexPath];
         return height + 1.f + inset.top + inset.bottom;

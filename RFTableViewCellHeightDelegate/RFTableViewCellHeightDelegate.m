@@ -112,7 +112,7 @@
         UITableViewCell *cell = [self tableView:tableView offscreenCellForRowAtIndexPath:indexPath];
         RFAssert(cell, @"Cannot get a cached cell or an new one.");
 
-        [self.delegate tableView:tableView configureCell:cell forIndexPath:indexPath];
+        [self.delegate tableView:tableView configureCell:cell forIndexPath:indexPath offscreenRendering:YES];
 
         UIEdgeInsets inset = self.cellLayoutEdgeInsets;
 

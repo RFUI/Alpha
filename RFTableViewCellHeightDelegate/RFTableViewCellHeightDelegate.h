@@ -25,7 +25,7 @@
 @protocol RFTableViewCellHeightDelegate <UITableViewDataSource>
 @required
 
-- (void)tableView:(UITableView *)tableView configureCell:(id)cell forIndexPath:(NSIndexPath *)indexPath ;
+- (void)tableView:(UITableView *)tableView configureCell:(id)cell forIndexPath:(NSIndexPath *)indexPath offscreenRendering:(BOOL)isOffscreenRendering;
 
 @optional
 // Suggested for better performance. Otherwise, each cell will be created twice.

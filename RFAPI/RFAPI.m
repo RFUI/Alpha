@@ -87,7 +87,6 @@ RFInitializingRootForNSObject
         dout_debug(@"Cancel HTTP request operation(%p) with identifier: %@", op, identifier);
         [op cancel];
     }
-    [self.networkActivityIndicatorManager hideWithIdentifier:identifier];
 }
 
 - (void)cancelOperationsWithGroupIdentifier:(NSString *)identifier {
@@ -95,7 +94,6 @@ RFInitializingRootForNSObject
         dout_debug(@"Cancel HTTP request operation(%p) with group identifier: %@", op, identifier);
         [op cancel];
     }
-    [self.networkActivityIndicatorManager hideWithGroupIdentifier:identifier];
 }
 
 - (NSArray *)operationsWithIdentifier:(NSString *)identifier {

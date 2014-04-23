@@ -25,7 +25,7 @@
 @protocol RFTableViewCellHeightDelegate <UITableViewDataSource>
 @required
 
-- (void)tableView:(UITableView *)tableView configureCell:(id)cell forIndexPath:(NSIndexPath *)indexPath;
+- (void)tableView:(UITableView *)tableView configureCell:(id)cell forIndexPath:(NSIndexPath *)indexPath ;
 
 @optional
 // Suggested for better performance. Otherwise, each cell will be created twice.
@@ -39,5 +39,10 @@
 @property (weak, nonatomic) IBOutlet id<RFTableViewCellHeightDelegate> delegate;
 @property (assign, nonatomic) UIEdgeInsets cellLayoutEdgeInsets;
 
+#pragma mark - Cache
 - (void)resetOffscreenCellsCache;
+
+- (void)resetCellHeightCache;
+- (void)invalidateCellHeightCacheAtIndexPath:(NSIndexPath *)indexPath;
+- (void)invalidateCellHeightCacheAtIndexPaths:(NSArray *)indexPaths;
 @end

@@ -4,7 +4,8 @@
 #import "UIView+RFAnimate.h"
 
 @interface RFTableViewCellHeightDelegate ()
-@property (strong, nonatomic) NSMutableDictionary *offscreenCells;
+@property (strong, nonatomic) NSCache *offscreenCellCache;
+@property (strong, nonatomic) NSCache *cellHeightCache;
 @property (assign, atomic) BOOL requestNewCellLock;
 @end
 
@@ -13,19 +14,44 @@
 #pragma mark - Cache management
 
 - (void)onInit {
+    [super onInit];
+
     _cellLayoutEdgeInsets = UIEdgeInsetsMake(0, 0, 0, 0);
-    _offscreenCells = [NSMutableDictionary dictionaryWithCapacity:5];
+    NSCache *occ = [[NSCache alloc] init];
+    occ.name = @"com.github.RFUI.RFTableViewCellHeightDelegate.offscreenCellCache";
+    _offscreenCellCache = occ;
+
+    NSCache *chc = [[NSCache alloc] init];
+    chc.name = @"com.github.RFUI.RFTableViewCellHeightDelegate.offscreenCellCache";
+    _cellHeightCache = chc;
 }
 
 - (void)setDelegate:(id<RFTableViewCellHeightDelegate>)delegate {
     if (self.delegate != delegate) {
         [self resetOffscreenCellsCache];
+        [self resetCellHeightCache];
     }
     [super setDelegate:delegate];
 }
 
+#pragma mark - Cache
+
 - (void)resetOffscreenCellsCache {
-    [self.offscreenCells removeAllObjects];
+    [self.offscreenCellCache removeAllObjects];
+}
+
+- (void)resetCellHeightCache {
+    [self.cellHeightCache removeAllObjects];
+}
+
+- (void)invalidateCellHeightCacheAtIndexPath:(NSIndexPath *)indexPath {
+    [self.cellHeightCache removeObjectForKey:indexPath];
+}
+
+- (void)invalidateCellHeightCacheAtIndexPaths:(NSArray *)indexPaths {
+    [indexPaths enumerateObjectsUsingBlock:^(NSIndexPath* obj, NSUInteger idx, BOOL *stop) {
+        [self.cellHeightCache removeObjectForKey:obj];
+    }];
 }
 
 #pragma mark -
@@ -36,7 +62,7 @@
     if (suportCache) {
         NSString *cellReuseIdentifier = [self.delegate tableView:tableView cellReuseIdentifierForRowAtIndexPath:indexPath];
         if (cellReuseIdentifier) {
-            cell = self.offscreenCells[cellReuseIdentifier];
+            cell = [self.offscreenCellCache objectForKey:cellReuseIdentifier];
         }
     }
 
@@ -45,7 +71,7 @@
         self.requestNewCellLock = YES;
         cell = [self.delegate tableView:tableView cellForRowAtIndexPath:indexPath];
         if (suportCache) {
-            [self.offscreenCells setObject:cell forKey:cell.reuseIdentifier];
+            [self.offscreenCellCache setObject:cell forKey:cell.reuseIdentifier];
         }
 
         // Hide cell created by `dequeueReusableCellWithIdentifier:forIndexPath:` method.
@@ -60,6 +86,11 @@
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath {
     if (self.requestNewCellLock) {
         return 0;
+    }
+
+    NSNumber *heightCache = [self.cellHeightCache objectForKey:indexPath];
+    if (heightCache) {
+        return [heightCache floatValue];
     }
 
     // Make duplicated cells deallocated faster.
@@ -79,7 +110,7 @@
         CGSize size = [cell.contentView systemLayoutSizeFittingSize:CGSizeMake(contentWidth, 0)];
         _dout_size(size)
         CGFloat height = size.height;
-        
+        [self.cellHeightCache setObject:@(height) forKey:indexPath];
         return height + 1.f + inset.top + inset.bottom;
     }
 }

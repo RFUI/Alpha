@@ -10,9 +10,6 @@
  TODO: 
  [ ] 文件上传
  [ ] 缓存实现
- [ ] 加载状态集成
- [ ] 队列标识控制
-
  */
 
 @class RFMessageManager, RFNetworkActivityIndicatorMessage, AFHTTPRequestOperation;
@@ -126,6 +123,9 @@ extern NSString *const RFAPIRequestCustomizationControlKey;
 
 // No implementation
 @property (assign, nonatomic) BOOL backgroundTask;
+
+// No implementation
+@property (assign, nonatomic) BOOL forceLoad;
 
 /// Customization URL request object
 @property (copy, nonatomic) NSMutableURLRequest * (^requestCustomization)(NSMutableURLRequest *request);

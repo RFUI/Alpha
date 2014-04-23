@@ -48,12 +48,15 @@
     RFAssert(modelURL, nil);
     NSManagedObjectModel *model = [[NSManagedObjectModel alloc] initWithContentsOfURL:modelURL];
     NSPersistentStoreCoordinator *psc = [[NSPersistentStoreCoordinator alloc] initWithManagedObjectModel:model];
+    NSURL *cacheDirectoryURL = [[[NSFileManager defaultManager] URLsForDirectory:NSCachesDirectory inDomains:NSUserDomainMask] firstObject];
+    NSURL *cacheURL = [cacheDirectoryURL URLByAppendingPathComponent:@"com.github.RFUI.RFAssetsCacheQueue"];
+    RFAssert(cacheURL, nil);
     NSError __autoreleasing *e = nil;
     if (![psc addPersistentStoreWithType:NSSQLiteStoreType configuration:nil URL:modelURL options:@{
           NSMigratePersistentStoresAutomaticallyOption : @YES,
           NSInferMappingModelAutomaticallyOption : @YES } error:&e]) {
         if (e) dout_error(@"%@", e);
-        [[NSFileManager defaultManager] removeItemAtURL:modelURL error:nil];
+        [[NSFileManager defaultManager] removeItemAtURL:cacheURL error:nil];
         [psc addPersistentStoreWithType:NSSQLiteStoreType configuration:nil URL:modelURL options:nil error:nil];
     };
     self.context = [[NSManagedObjectContext alloc] init];

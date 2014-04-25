@@ -258,8 +258,38 @@ RFInitializingRootForNSObject
     NSURL *url = [self.defineManager requestURLForDefine:define error:&e];
     __RFAPIMakeRequestError(!url);
 
-    // TODO: Cache policy
-    NSURLRequestCachePolicy cachePolicy = (self.reachabilityManager.reachable)? NSURLRequestUseProtocolCachePolicy : NSURLRequestReturnCacheDataElseLoad;
+    // TODO: Full cache policy implementation.
+    NSURLRequestCachePolicy cachePolicy = NSURLRequestUseProtocolCachePolicy;
+    if (self.reachabilityManager.reachable) {
+        switch (define.cachePolicy) {
+            case RFAPICachePolicyAlways:
+                cachePolicy = NSURLRequestReturnCacheDataDontLoad;
+                break;
+
+            case RFAPICachePolicyNoCache:
+                cachePolicy = NSURLRequestReloadIgnoringLocalCacheData;
+                break;
+
+            case RFAPICachePolicyExpire:
+                // TODO: similar, but not right
+                cachePolicy = NSURLRequestReturnCacheDataElseLoad;
+                break;
+                
+            default:
+                break;
+        }
+    }
+    else {
+        switch (define.offlinePolicy) {
+            case RFAPOfflinePolicyLoadCache:
+                cachePolicy = NSURLRequestReturnCacheDataElseLoad;
+                break;
+                
+            default:
+                break;
+        }
+    }
+
     NSMutableURLRequest *r = [[NSMutableURLRequest alloc] initWithURL:url cachePolicy:cachePolicy timeoutInterval:10];
     [r setHTTPMethod:define.method];
 

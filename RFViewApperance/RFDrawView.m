@@ -5,7 +5,6 @@
 RFInitializingRootForUIView
 
 - (void)onInit {
-    [super setBackgroundColor:[UIColor clearColor]];
     self.opaque = NO;
     self.userInteractionEnabled = NO;
 }
@@ -15,6 +14,10 @@ RFInitializingRootForUIView
 
 - (void)setBackgroundColor:(UIColor *)backgroundColor {
     self.color = backgroundColor;
+}
+
+- (UIColor *)backgroundColor {
+    return self.color;
 }
 
 @end

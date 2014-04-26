@@ -1,26 +1,7 @@
 
 #import "RFLine.h"
 
-@interface RFLine ()
-@end
-
 @implementation RFLine
-RFInitializingRootForUIView
-
-- (void)onInit {
-}
-
-- (void)awakeFromNib {
-    [super awakeFromNib];
-
-    if (!self.color) {
-        self.color = self.backgroundColor;
-        self.backgroundColor = [UIColor clearColor];
-    }
-}
-
-- (void)afterInit {
-}
 
 - (void)drawRect:(CGRect)rect {
     CGRect frame = self.bounds;

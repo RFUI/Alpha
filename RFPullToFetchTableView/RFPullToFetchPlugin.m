@@ -93,8 +93,9 @@
 
     self.dragging = NO;
     if (scrollView.contentOffset.y == self.draggingTrackPoint.y) return;
-    douto(self.headerContainer)
-    douto(self.footerContainer)
+    dout_debug(@"headerContainer = %@", self.headerContainer)
+    dout_debug(@"footerContainer = %@", self.footerContainer)
+    dout_debug(@"contentInset = %@", NSStringFromUIEdgeInsets(scrollView.contentInset))
 
     if (scrollView.contentOffset.y < self.draggingTrackPoint.y) {
         dout_debug(@"Drag down");
@@ -205,16 +206,16 @@
 }
 
 - (void)headerProccessFinshed {
-    doutwork()
     if (!self.headerProcessing) return;
+    doutwork()
 
     self.headerProcessing = NO;
     [self setHeaderContainerVisible:NO animated:YES];
 }
 
 - (void)footerProccessFinshed {
-    doutwork()
     if (!self.footerProcessing) return;
+    doutwork()
 
     self.footerProcessing = NO;
     [self setFooterContainerVisible:NO animated:YES];

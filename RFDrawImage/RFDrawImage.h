@@ -15,6 +15,8 @@
 
 @interface RFDrawImage : NSObject
 
++ (UIImage *)imageWithSizeColor:(CGSize)imageSize fillColor:(UIColor *)color;
+
 + (UIImage *)imageWithRoundingCorners:(UIEdgeInsets)cornerRadius
                                  size:(CGSize)imageSize
                             fillColor:(UIColor *)fillColor

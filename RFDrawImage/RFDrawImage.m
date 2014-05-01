@@ -3,6 +3,18 @@
 
 @implementation RFDrawImage
 
++ (UIImage *)imageWithSizeColor:(CGSize)imageSize fillColor:(UIColor *)color {
+    UIGraphicsBeginImageContextWithOptions(imageSize, NO, 0);
+    CGContextRef context = UIGraphicsGetCurrentContext();
+
+    [color set];
+    CGContextFillRect(context, CGRectMake(0, 0, imageSize.width, imageSize.height));
+
+    UIImage *image = UIGraphicsGetImageFromCurrentImageContext();
+    UIGraphicsEndImageContext();
+    return image;
+}
+
 + (UIImage *)imageWithRoundingCorners:(UIEdgeInsets)cornerRadius size:(CGSize)imageSize fillColor:(UIColor *)fillColor strokeColor:(UIColor *)strokeColor strokeWidth:(CGFloat)strokeWidth boxMargin:(UIEdgeInsets)margin resizableCapInsets:(UIEdgeInsets)resizableCapInsets scaleFactor:(CGFloat)scaleFactor {
 
     UIGraphicsBeginImageContextWithOptions(imageSize, NO, scaleFactor);

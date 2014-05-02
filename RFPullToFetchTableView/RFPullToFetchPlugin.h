@@ -10,6 +10,18 @@
 //	RFPullToFetchTableIndicatorLayoutTypeFixed = 5,
 //} RFPullToFetchTableIndicatorLayoutType;
 
+typedef NS_ENUM(short, RFPullToFetchIndicatorStatus) {
+    RFPullToFetchIndicatorStatusWaiting = 0,
+    RFPullToFetchIndicatorStatusDragging,
+    RFPullToFetchIndicatorStatusDecelerating,
+    RFPullToFetchIndicatorStatusProcessing,
+    RFPullToFetchIndicatorStatusFrozen
+};
+
+@class RFPullToFetchPlugin;
+
+typedef void (^RFPullToFetchIndicatorStatusChangeBlock)(RFPullToFetchPlugin *control, id indicatorView, RFPullToFetchIndicatorStatus status, CGFloat visibleHeight, UITableView *tableView);
+
 @interface RFPullToFetchPlugin : RFDelegateChain <
     UITableViewDelegate
 >
@@ -36,11 +48,11 @@
 //@property(assign, nonatomic) RFPullToFetchTableIndicatorLayoutType headerStyle;
 //@property(assign, nonatomic) RFPullToFetchTableIndicatorLayoutType footerStyle;
 
-@property(copy, nonatomic) void (^headerVisibleChangeBlock)(BOOL isVisible, CGFloat visibleHeight, BOOL isCompleteVisible, BOOL isProccessing);
-- (void)setHeaderVisibleChangeBlock:(void (^)(BOOL isVisible, CGFloat visibleHeight, BOOL isCompleteVisible, BOOL isProccessing))headerVisibleChangeBlock;
+@property(copy, nonatomic) RFPullToFetchIndicatorStatusChangeBlock headerStatusChangeBlock;
+- (void)setHeaderStatusChangeBlock:(void (^)(RFPullToFetchPlugin *control, id indicatorView, RFPullToFetchIndicatorStatus status, CGFloat visibleHeight, UITableView *tableView))headerStatusChangeBlock;
 
-@property(copy, nonatomic) void (^footerVisibleChangeBlock)(BOOL isVisible, CGFloat visibleHeight, BOOL isCompleteVisible, BOOL isProccessing, BOOL reachEnd);
-- (void)setFooterVisibleChangeBlock:(void (^)(BOOL isVisible, CGFloat visibleHeight, BOOL isCompleteVisible, BOOL isProccessing, BOOL reachEnd))footerVisibleChangeBlock;
+@property(copy, nonatomic) RFPullToFetchIndicatorStatusChangeBlock footerStatusChangeBlock;
+- (void)setFooterStatusChangeBlock:(void (^)(RFPullToFetchPlugin *control, id indicatorView, RFPullToFetchIndicatorStatus status, CGFloat visibleHeight, UITableView *tableView))footerStatusChangeBlock;
 
 - (void)setNeedsDisplayHeader;
 - (void)setNeedsDisplayFooter;

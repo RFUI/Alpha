@@ -63,8 +63,7 @@ typedef void (^RFPullToFetchIndicatorStatusChangeBlock)(RFPullToFetchPlugin *con
 @property(copy, nonatomic) void (^footerProcessBlock)(void);
 
 // Call them method to notice proccess is finished.
-- (void)footerProcessFinshed;
-- (void)headerProcessFinshed;
+- (void)markProcessFinshed;
 
 // For manually trigger.
 - (void)triggerHeaderProcess;

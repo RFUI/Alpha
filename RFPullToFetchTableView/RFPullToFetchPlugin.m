@@ -102,7 +102,7 @@ NSTimeInterval RFPullToFetchAnimateTimeInterval = .2;
 }
 
 - (RFPullToFetchIndicatorStatus)headerStatus {
-    if (self.footerProcessing) {
+    if (self.headerProcessing) {
         return RFPullToFetchIndicatorStatusProcessing;
     }
     if (self.tableView.dragging) {
@@ -134,6 +134,11 @@ NSTimeInterval RFPullToFetchAnimateTimeInterval = .2;
     if (self.headerProcessing) return;
     doutwork()
 
+    if (self.footerProcessing) {
+        self.footerProcessing = NO;
+        [self updateFooterDisplay:NO];
+    }
+
     self.headerProcessing = YES;
     self.footerReachEnd = NO;
     if (self.shouldHideFooterWhenHeaderProcessing) {
@@ -162,6 +167,11 @@ NSTimeInterval RFPullToFetchAnimateTimeInterval = .2;
     if (self.footerProcessing) return;
     doutwork()
 
+    if (self.headerProcessing) {
+        self.headerProcessing = NO;
+        [self updateHeaderDisplay:NO];
+    }
+
     self.footerProcessing = YES;
 
     if (self.shouldScrollToLastVisibleRowBeforeTriggeAfterFooterProccessFinished) {
@@ -174,6 +184,15 @@ NSTimeInterval RFPullToFetchAnimateTimeInterval = .2;
 
     if (self.footerProcessing) {
         [self updateFooterDisplay:YES];
+    }
+}
+
+- (void)markProcessFinshed {
+    if (self.headerProcessing) {
+        [self headerProcessFinshed];
+    }
+    else {
+        [self footerProcessFinshed];
     }
 }
 
@@ -214,9 +233,8 @@ NSTimeInterval RFPullToFetchAnimateTimeInterval = .2;
     CGFloat distance = self.tableView.distanceBetweenContentAndTop;
     dout_debug(@"Distance between content and top changed: %f", distance);
 
-    self.headerContainer.hidden = !(distance >= 0);
-    self.footerContainer.hidden = self.footerReachEnd? NO : !self.headerContainer.hidden;
-    dout_bool(self.headerContainer.hidden)
+    [self updateHeaderVisable];
+    [self updateFooterVisable];
 
     if (distance < -5 || self.headerContainer.hidden) return;
     [self updateHeaderIndicatorStatus];
@@ -229,18 +247,26 @@ NSTimeInterval RFPullToFetchAnimateTimeInterval = .2;
     [self updateFooterIndicatorStatus];
 }
 
+- (void)setNeedsDisplayHeader {
+    if (self.needsDisplayHeader) return;
+
+    self.needsDisplayHeader = YES;
+    dispatch_after_seconds(0, ^{
+        [self updateHeaderDisplay:NO];
+    });
+}
+- (void)setNeedsDisplayFooter {
+    if (self.needsDisplayFooter) return;
+
+    self.needsDisplayFooter = YES;
+    dispatch_after_seconds(0, ^{
+        [self updateFooterDisplay:NO];
+    });
+}
+
 - (void)updateHeaderDisplay:(BOOL)animated {
     dout_debug(@"Update header display%@", animated? @" animated!" : @".");
-    UIView *header = self.headerContainer;
-    CGFloat distance = self.tableView.distanceBetweenContentAndTop;
-
-    if ((self.shouldHideHeaderWhenFooterProcessing && self.footerProcessing)
-        || distance < 0) {
-        header.hidden = YES;
-    }
-    else {
-        header.hidden = NO;
-    }
+    [self updateHeaderVisable];
 
     if (self.animating) {
         animated = YES;
@@ -266,19 +292,7 @@ NSTimeInterval RFPullToFetchAnimateTimeInterval = .2;
 
 - (void)updateFooterDisplay:(BOOL)animated {
     dout_debug(@"Update footer display%@", animated? @" animated!" : @".");
-    UIView *footer = self.footerContainer;
-
-    if ((self.shouldHideFooterWhenHeaderProcessing && self.headerProcessing)
-        || (self.tableView.distanceBetweenContentAndTop >= 0 && !self.footerReachEnd)) {
-        footer.hidden = YES;
-    }
-    else {
-        footer.hidden = NO;
-    }
-
-    CGFloat distance = self.tableView.distanceBetweenContentAndBottom;
-
-    [self updateFooterLayout];
+    [self updateFooterVisable];
 
     if (self.animating) {
         animated = YES;
@@ -287,6 +301,7 @@ NSTimeInterval RFPullToFetchAnimateTimeInterval = .2;
         self.animating = YES;
     }
     [UIView animateWithDuration:RFPullToFetchAnimateTimeInterval delay:0 options:UIViewAnimationOptionBeginFromCurrentState animated:animated beforeAnimations:nil animations:^{
+        [self updateFooterLayout];
 
         UIEdgeInsets edge = self.tableView.contentInset;
         edge.bottom = (self.footerProcessing? self.footerContainer.height : 0);
@@ -301,23 +316,6 @@ NSTimeInterval RFPullToFetchAnimateTimeInterval = .2;
     self.needsDisplayFooter = NO;
 }
 
-- (void)setNeedsDisplayHeader {
-    if (self.needsDisplayHeader) return;
-
-    self.needsDisplayHeader = YES;
-    dispatch_after_seconds(0, ^{
-        [self updateHeaderDisplay:NO];
-    });
-}
-- (void)setNeedsDisplayFooter {
-    if (self.needsDisplayFooter) return;
-
-    self.needsDisplayFooter = YES;
-    dispatch_after_seconds(0, ^{
-        [self updateFooterDisplay:NO];
-    });
-}
-
 - (void)updateHeaderLayout {
     UIView *header = self.headerContainer;
     header.y = -header.height;
@@ -328,6 +326,47 @@ NSTimeInterval RFPullToFetchAnimateTimeInterval = .2;
     UIView *footer = self.footerContainer;
     footer.y = self.tableView.contentSize.height;
     _dout_debug(@"Update layout footer y = %f", footer.y);
+}
+
+- (void)updateHeaderVisable {
+    UIView *header = self.headerContainer;
+    CGFloat distance = self.tableView.distanceBetweenContentAndTop;
+
+    if (!self.headerFetchingEnabled) {
+        header.hidden = YES;
+    }
+    else if (self.headerProcessing) {
+        header.hidden = NO;
+    }
+    else if ((self.shouldHideHeaderWhenFooterProcessing && self.footerProcessing)
+        || distance < 0) {
+        header.hidden = YES;
+    }
+    else {
+        header.hidden = NO;
+    }
+    dout_bool(header.hidden)
+}
+
+- (void)updateFooterVisable {
+    UIView *footer = self.footerContainer;
+    CGFloat distance = self.tableView.distanceBetweenContentAndBottom;
+
+    if (!self.footerFetchingEnabled) {
+        footer.hidden = YES;
+    }
+    else if (self.footerProcessing) {
+        footer.hidden = NO;
+    }
+    else if ((self.shouldHideFooterWhenHeaderProcessing && self.headerProcessing)
+        || distance < 0
+        || (self.tableView.distanceBetweenContentAndTop >= 0 && !self.footerReachEnd)) {
+        footer.hidden = YES;
+    }
+    else {
+        footer.hidden = NO;
+    }
+    dout_bool(footer.hidden)
 }
 
 - (void)updateHeaderIndicatorStatus {

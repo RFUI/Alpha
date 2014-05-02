@@ -68,10 +68,10 @@
 // If set `YES`, footer proccess will not be proccessed and `footerContainer` will be visiable. Usually for noticing user there are no more data. Header proccess will reset this property.
 @property(assign, nonatomic) BOOL footerReachEnd;
 
-// Default `YES`
+// Default `NO`
 @property(assign, nonatomic) BOOL shouldScrollToTopWhenHeaderEventTrigged;
 
-// Default `YES`, not work rightnow.
+// Default `NO`, not work rightnow.
 @property(assign, nonatomic) BOOL shouldScrollToLastVisibleRowBeforeTriggeAfterFooterProccessFinished;
 
 // Default `NO`

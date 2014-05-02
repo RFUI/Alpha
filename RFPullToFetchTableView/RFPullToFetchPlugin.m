@@ -20,6 +20,9 @@ NSTimeInterval RFPullToFetchAnimateTimeInterval = 2;
 
 @property (assign, nonatomic) BOOL animating;
 @property (strong, nonatomic) id contentSizeChangedObserver;
+
+
+@property (assign, nonatomic) BOOL hasFetched;
 @end
 
 @implementation RFPullToFetchPlugin
@@ -32,12 +35,11 @@ NSTimeInterval RFPullToFetchAnimateTimeInterval = 2;
     self.footerFetchingEnabled = YES;
     self.shouldHideHeaderWhenFooterProcessing = YES;
     self.shouldHideFooterWhenHeaderProcessing = YES;
-    self.shouldScrollToTopWhenHeaderEventTrigged = YES;
-    self.shouldScrollToLastVisibleRowBeforeTriggeAfterFooterProccessFinished = YES;
 }
 
 - (void)afterInit {
     dout_debug(@"RFPullToFetchPlugin status: delegate = %@, tableView = %@, headerContainer = %@, footerContainer = %@", self.delegate, self.tableView, self.headerContainer, self.footerContainer);
+    [self setupViewHierarchy];
 }
 
 - (void)setTableView:(UITableView *)tableView {
@@ -51,10 +53,13 @@ NSTimeInterval RFPullToFetchAnimateTimeInterval = 2;
         }
         tableView.delegate = self;
 
+        self.hasFetched = NO;
+        self.footerContainer.hidden = YES;
+
         @weakify(self);
         self.contentSizeChangedObserver = [tableView rac_addObserver:self forKeyPath:@keypath(tableView, contentSize) options:NSKeyValueObservingOptionInitial|NSKeyValueObservingOptionNew queue:nil block:^(id observer, NSDictionary *change) {
             @strongify(self);
-            self.footerContainer.y = self.tableView.contentSize.height;
+            [self updateFooterLayout];
         }];
         _tableView = tableView;
     }
@@ -71,6 +76,27 @@ NSTimeInterval RFPullToFetchAnimateTimeInterval = 2;
     if (_footerFetchingEnabled != footerFetchingEnabled) {
         _footerFetchingEnabled = footerFetchingEnabled;
         [self setNeedsDisplayFooter];
+    }
+}
+
+- (void)setupViewHierarchy {
+    if (!self.tableView) return;
+
+    UITableView *table = self.tableView;
+    UIView *header = self.headerContainer;
+    UIView *footer = self.footerContainer;
+    if (header && header.superview != table) {
+        header.width = table.width;
+        header.x = 0;
+        [table insertSubview:header atIndex:0];
+        [self updateHeaderLayout];
+    }
+
+    if (footer && footer.superview != table) {
+        footer.width = table.width;
+        footer.x = 0;
+        [table insertSubview:footer atIndex:0];
+        [self updateFooterLayout];
     }
 }
 
@@ -154,8 +180,6 @@ NSTimeInterval RFPullToFetchAnimateTimeInterval = 2;
 }
 
 - (void)onDistanceBetweenContentAndBottomChanged {
-    [self updateFooterLayout];
-
     CGFloat distance = self.tableView.distanceBetweenContentAndBottom;
     dout_debug(@"Distance between content and bottom: %f", distance);
     if (distance < -5 || self.footerContainer.hidden) return;
@@ -184,7 +208,7 @@ NSTimeInterval RFPullToFetchAnimateTimeInterval = 2;
         self.animating = YES;
     }
     [UIView animateWithDuration:RFPullToFetchAnimateTimeInterval delay:0 options:UIViewAnimationOptionBeginFromCurrentState animated:animated beforeAnimations:nil animations:^{
-        header.y = -header.height;
+        [self updateHeaderLayout];
 
         UIEdgeInsets edge = self.tableView.contentInset;
         edge.top = (self.headerProcessing? self.headerContainer.height : 0);
@@ -200,13 +224,6 @@ NSTimeInterval RFPullToFetchAnimateTimeInterval = 2;
     }
 
     self.needsDisplayHeader = NO;
-}
-
-- (void)updateFooterLayout {
-    UIView *footer = self.footerContainer;
-    footer.y = self.tableView.contentSize.height;
-
-    dout_debug(@"Update footer y = %f", self.footerContainer.y);
 }
 
 - (void)updateFooterDisplay:(BOOL)animated {
@@ -265,6 +282,18 @@ NSTimeInterval RFPullToFetchAnimateTimeInterval = 2;
     });
 }
 
+- (void)updateHeaderLayout {
+    UIView *header = self.headerContainer;
+    header.y = -header.height;
+    dout_debug(@"Update header y = %f", header.y);
+}
+
+- (void)updateFooterLayout {
+    UIView *footer = self.footerContainer;
+    footer.y = self.tableView.contentSize.height;
+    dout_debug(@"Update footer y = %f", footer.y);
+}
+
 #pragma mark - Other Status
 
 - (void)setFooterReachEnd:(BOOL)footerReachEnd {
@@ -291,6 +320,7 @@ NSTimeInterval RFPullToFetchAnimateTimeInterval = 2;
     }
 
     [self onDistanceBetweenContentAndTopChanged];
+    [self onDistanceBetweenContentAndBottomChanged];
 }
 
 - (void)scrollViewWillBeginDragging:(UIScrollView *)scrollView {
@@ -307,18 +337,15 @@ NSTimeInterval RFPullToFetchAnimateTimeInterval = 2;
         [self.delegate scrollViewDidEndDragging:scrollView willDecelerate:decelerate];
     }
     dout_debug(@"TableView did end dragging. %@", decelerate? @"Will decelerate" : @"No decelerate");
-    self.footerContainer.hidden = NO;
-    [self updateFooterLayout];
-    return;
-
-    if (scrollView.contentOffset.y == self.draggingTrackPoint.y) return;
-    dout_debug(@"headerContainer = %@", self.headerContainer)
-    dout_debug(@"footerContainer = %@", self.footerContainer)
-    dout_debug(@"contentInset = %@", NSStringFromUIEdgeInsets(scrollView.contentInset))
 
     [self updateHeaderDisplay:decelerate];
     [self updateFooterDisplay:decelerate];
 
+    dout_debug(@"headerContainer = %@", self.headerContainer)
+    dout_debug(@"footerContainer = %@", self.footerContainer)
+    dout_debug(@"contentInset = %@", NSStringFromUIEdgeInsets(scrollView.contentInset))
+
+    if (scrollView.contentOffset.y == self.draggingTrackPoint.y) return;
     if (scrollView.contentOffset.y < self.draggingTrackPoint.y) {
         dout_debug(@"Drag down");
         if (!self.headerFetchingEnabled) return;

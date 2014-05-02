@@ -3,12 +3,12 @@
 #import "RFDelegateChain.h"
 
 // Only RFPullToFetchTableIndicatorLayoutTypeStatic implemented at this time.
-typedef enum {
-    RFPullToFetchTableIndicatorLayoutTypeNone = 0,
-	RFPullToFetchTableIndicatorLayoutTypeStatic = 1,
-	RFPullToFetchTableIndicatorLayoutTypeFloat = 4,
-	RFPullToFetchTableIndicatorLayoutTypeFixed = 5,
-} RFPullToFetchTableIndicatorLayoutType;
+//typedef enum {
+//    RFPullToFetchTableIndicatorLayoutTypeNone = 0,
+//	RFPullToFetchTableIndicatorLayoutTypeStatic = 1,
+//	RFPullToFetchTableIndicatorLayoutTypeFloat = 4,
+//	RFPullToFetchTableIndicatorLayoutTypeFixed = 5,
+//} RFPullToFetchTableIndicatorLayoutType;
 
 @interface RFPullToFetchPlugin : RFDelegateChain <
     UITableViewDelegate
@@ -33,8 +33,8 @@ typedef enum {
 @property(weak, nonatomic) UIView *headerContainer;
 @property(weak, nonatomic) UIView *footerContainer;
 
-@property(assign, nonatomic) RFPullToFetchTableIndicatorLayoutType headerStyle;
-@property(assign, nonatomic) RFPullToFetchTableIndicatorLayoutType footerStyle;
+//@property(assign, nonatomic) RFPullToFetchTableIndicatorLayoutType headerStyle;
+//@property(assign, nonatomic) RFPullToFetchTableIndicatorLayoutType footerStyle;
 
 @property(copy, nonatomic) void (^headerVisibleChangeBlock)(BOOL isVisible, CGFloat visibleHeight, BOOL isCompleteVisible, BOOL isProccessing);
 - (void)setHeaderVisibleChangeBlock:(void (^)(BOOL isVisible, CGFloat visibleHeight, BOOL isCompleteVisible, BOOL isProccessing))headerVisibleChangeBlock;

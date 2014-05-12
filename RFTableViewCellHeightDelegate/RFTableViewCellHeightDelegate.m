@@ -65,6 +65,7 @@
         NSString *cellReuseIdentifier = [self.delegate tableView:tableView cellReuseIdentifierForRowAtIndexPath:indexPath];
         if (cellReuseIdentifier) {
             cell = [self.offscreenCellCache objectForKey:cellReuseIdentifier];
+            [cell prepareForReuse];
         }
     }
 

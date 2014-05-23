@@ -105,9 +105,7 @@ RFInitializingRootForNSObject
     NSError __autoreleasing *e = nil;
     NSMutableURLRequest *request = [self URLRequestWithDefine:define parameters:parameters controlInfo:controlInfo error:&e];
     if (!request) {
-#if RFDEBUG
-        dout_error(@"无法创建请求: %@", e);
-#endif
+        __RFAPILogError(@"无法创建请求: %@", e);
         NSError *error = [NSError errorWithDomain:NSURLErrorDomain code:NSURLErrorCancelled userInfo:@{
             NSLocalizedDescriptionKey : @"内部错误，无法创建请求",
             NSLocalizedFailureReasonErrorKey : @"很可能是应用 bug",
@@ -116,6 +114,7 @@ RFInitializingRootForNSObject
 
         __RFAPICompletionCallback(failure, nil, error);
         __RFAPICompletionCallback(completion, nil);
+        return nil;
     }
 
     AFHTTPRequestOperation *operation = [[AFHTTPRequestOperation alloc] initWithRequest:request];

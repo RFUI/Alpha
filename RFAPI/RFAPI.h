@@ -21,8 +21,6 @@
 
 + (instancetype)sharedInstance;
 
-@property (copy, nonatomic) NSURL *baseURL DEPRECATED_ATTRIBUTE;
-
 @property (readonly, nonatomic) AFNetworkReachabilityManager *reachabilityManager;
 
 #pragma mark - Define
@@ -112,7 +110,7 @@ extern NSString *const RFAPIRequestCustomizationControlKey;
 // No implementation
 @property (assign, nonatomic) BOOL backgroundTask;
 
-// No implementation
+/// Ignore cache policy
 @property (assign, nonatomic) BOOL forceLoad;
 
 /// Customization URL request object

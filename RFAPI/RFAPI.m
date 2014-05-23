@@ -220,38 +220,7 @@ RFInitializingRootForNSObject
     NSURL *url = [self.defineManager requestURLForDefine:define error:&e];
     __RFAPIMakeRequestError(!url);
 
-    // TODO: Full cache policy implementation.
-    NSURLRequestCachePolicy cachePolicy = NSURLRequestUseProtocolCachePolicy;
-    if (self.reachabilityManager.reachable) {
-        switch (define.cachePolicy) {
-            case RFAPICachePolicyAlways:
-                cachePolicy = NSURLRequestReturnCacheDataDontLoad;
-                break;
-
-            case RFAPICachePolicyNoCache:
-                cachePolicy = NSURLRequestReloadIgnoringLocalCacheData;
-                break;
-
-            case RFAPICachePolicyExpire:
-                // TODO: similar, but not right
-                cachePolicy = NSURLRequestReturnCacheDataElseLoad;
-                break;
-                
-            default:
-                break;
-        }
-    }
-    else {
-        switch (define.offlinePolicy) {
-            case RFAPOfflinePolicyLoadCache:
-                cachePolicy = NSURLRequestReturnCacheDataElseLoad;
-                break;
-                
-            default:
-                break;
-        }
-    }
-
+    NSURLRequestCachePolicy cachePolicy = [self cachePolicyWithDefine:define controlInfo:controlInfo];
     NSMutableURLRequest *r = [[NSMutableURLRequest alloc] initWithURL:url cachePolicy:cachePolicy timeoutInterval:10];
     [r setHTTPMethod:define.method];
 
@@ -278,6 +247,40 @@ RFInitializingRootForNSObject
     return r;
 }
 #undef __RFAPIMakeRequestError
+
+// TODO: Full cache policy implementation.
+- (NSURLRequestCachePolicy)cachePolicyWithDefine:(RFAPIDefine *)define controlInfo:(RFAPIControl *)controlInfo {
+    if (controlInfo.forceLoad) {
+        return NSURLRequestReloadIgnoringLocalCacheData;
+    }
+
+    if (self.reachabilityManager.reachable) {
+        switch (define.cachePolicy) {
+            case RFAPICachePolicyAlways:
+                return NSURLRequestReturnCacheDataDontLoad;
+
+            case RFAPICachePolicyNoCache:
+                return NSURLRequestReloadIgnoringLocalCacheData;
+
+            case RFAPICachePolicyExpire:
+                // TODO: similar, but not right
+                return NSURLRequestReturnCacheDataElseLoad;
+
+            default:
+                break;
+        }
+    }
+    else {
+        switch (define.offlinePolicy) {
+            case RFAPOfflinePolicyLoadCache:
+                return NSURLRequestReturnCacheDataElseLoad;
+
+            default:
+                break;
+        }
+    }
+    return NSURLRequestUseProtocolCachePolicy;
+}
 
 - (NSMutableURLRequest *)customSerializedRequest:(NSMutableURLRequest *)request withDefine:(RFAPIDefine *)define {
     // Nothing

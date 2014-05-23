@@ -1,3 +1,4 @@
+#import "RFAPIDefineConfigFileKeys.h"
 
 NSString *const RFAPIDefineDefaultKey       = @"DEFAULT";
 

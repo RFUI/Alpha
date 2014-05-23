@@ -27,7 +27,7 @@ RFInitializingRootForNSObject
     [self.defineCache removeAllObjects];
 }
 
-- (void)mergeWithRules:(NSDictionary *)rules {
+- (void)setDefinesWithRulesInfo:(NSDictionary *)rules {
     [self.defineCache removeAllObjects];
 
     // Check and add.

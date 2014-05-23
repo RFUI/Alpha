@@ -10,6 +10,7 @@
 @property (weak, nonatomic) RFAPI *master;
 
 /**
+ You cannot get default rule with RFAPIDefineDefaultKey.
  */
 @property (readonly, nonatomic) NSMutableDictionary *defaultRule;
 
@@ -18,11 +19,13 @@
  */
 - (void)setNeedsUpdateDefaultRule;
 
-- (void)mergeWithRules:(NSDictionary *)rules;
+- (void)setDefinesWithRulesInfo:(NSDictionary *)rulesDictionary;
 
 /**
- Returns the define object  with the specified name.
+ Returns the define object with the specified name.
  
+ You cannot get default rule with this method.
+
  @return A define object with it’s name.
  */
 - (RFAPIDefine *)defineForName:(NSString *)defineName;

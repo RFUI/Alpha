@@ -1,5 +1,15 @@
-// TEST
+/*!
+    RFAPIDefine
+    RFAPI
 
+    Copyright (c) 2014 BB9z
+    https://github.com/RFUI/Alpha
+
+    The MIT License (MIT)
+    http://www.opensource.org/licenses/mit-license.php
+
+    Alpha
+ */
 #import "RFRuntime.h"
 #import "RFAPIDefineConfigFileKeys.h"
 
@@ -42,7 +52,6 @@ typedef NS_ENUM(short, RFAPIDefineCachePolicy) {
     RFAPICachePolicyExpire = 3,         /// 一段时间内不再请求
     RFAPICachePolicyNoCache = 5         /// 无缓存，总是请求新数据
 };
-// No implementation
 @property (assign, nonatomic) RFAPIDefineCachePolicy cachePolicy;
 
 // No implementation
@@ -52,7 +61,6 @@ typedef NS_ENUM(short, RFAPIDefineOfflinePolicy) {
     RFAPOfflinePolicyDefault = 0,       /// 不特殊处理
     RFAPOfflinePolicyLoadCache = 1      /// 返回缓存数据
 };
-// No implementation
 @property (assign, nonatomic) RFAPIDefineOfflinePolicy offlinePolicy;
 
 #pragma mark - Response

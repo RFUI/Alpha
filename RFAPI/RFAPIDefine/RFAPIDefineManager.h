@@ -30,6 +30,14 @@
  */
 - (RFAPIDefine *)defineForName:(NSString *)defineName;
 
+#pragma mark - Access raw rule values
+// You cannot modify default rule with these methods.
+
+- (id)valueForRule:(NSString *)key defineName:(NSString *)defineName;
+
+- (void)setValue:(id)value forRule:(NSString *)key defineName:(NSString *)defineName;
+- (void)removeRule:(NSString *)key withDefineName:(NSString *)defineName;
+
 #pragma mark - RFAPI Support
 
 @property (strong, nonatomic) id<AFURLRequestSerialization> defaultRequestSerializer;

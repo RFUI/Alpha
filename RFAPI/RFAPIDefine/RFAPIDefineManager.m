@@ -80,6 +80,22 @@ RFInitializingRootForNSObject
     return define;
 }
 
+#pragma mark - Access raw rule values
+
+- (id)valueForRule:(NSString *)key defineName:(NSString *)defineName {
+    return self.rawRules[defineName][key];
+}
+
+- (void)setValue:(id)value forRule:(NSString *)key defineName:(NSString *)defineName {
+    [self.rawRules[defineName] setObject:value forKey:key];
+}
+
+- (void)removeRule:(NSString *)key withDefineName:(NSString *)defineName {
+    NSMutableDictionary *dict = [self.rawRules[defineName] mutableCopy];
+    [dict removeObjectForKey:key];
+    self.rawRules[defineName] = dict;
+}
+
 #pragma mark - RFAPI Support
 
 - (NSURL *)requestURLForDefine:(RFAPIDefine *)define error:(NSError *__autoreleasing *)error {

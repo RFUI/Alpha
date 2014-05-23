@@ -6,18 +6,21 @@
 #import "RFAPIDefineConfigFileKeys.h"
 
 @interface RFAPIDefineManager ()
-@property (strong, nonatomic) NSMutableDictionary *rawRules;
-@property (strong, nonatomic) NSMutableDictionary *defineCache;
+@property (strong, nonatomic) NSCache *defineCache;
+
 @property (strong, nonatomic, readwrite) NSMutableDictionary *defaultRule;
+@property (strong, nonatomic) NSMutableDictionary *rawRules;
 @end
 
 @implementation RFAPIDefineManager
 RFInitializingRootForNSObject
 
 - (void)onInit {
-    _rawRules = [[NSMutableDictionary alloc] initWithCapacity:50];
-    _defineCache = [[NSMutableDictionary alloc] initWithCapacity:50];
+    _defineCache = [[NSCache alloc] init];
+    _defineCache.name = @"RFAPIDefineCache";
+
     _defaultRule = [[NSMutableDictionary alloc] initWithCapacity:20];
+    _rawRules = [[NSMutableDictionary alloc] initWithCapacity:50];
 }
 - (void)afterInit {
 }
@@ -69,7 +72,7 @@ RFInitializingRootForNSObject
 - (RFAPIDefine *)defineForName:(NSString *)defineName {
     NSParameterAssert(defineName.length);
 
-    RFAPIDefine *define = self.defineCache[defineName];
+    RFAPIDefine *define = [self.defineCache objectForKey:defineName];
     if (define) {
         return define;
     }

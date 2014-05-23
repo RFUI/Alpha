@@ -10,8 +10,7 @@
 
     BETA
  */
-
-#import <Foundation/Foundation.h>
+#import "RFUI.h"
 
 @interface RFDrawImage : NSObject
 

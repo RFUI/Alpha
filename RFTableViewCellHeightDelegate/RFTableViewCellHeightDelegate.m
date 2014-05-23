@@ -30,19 +30,19 @@
 
 - (void)setDelegate:(id<RFTableViewCellHeightDelegate>)delegate {
     if (self.delegate != delegate) {
-        [self resetOffscreenCellsCache];
-        [self resetCellHeightCache];
+        [self invalidateOffscreenCellCache];
+        [self invalidateCellHeightCache];
     }
     [super setDelegate:delegate];
 }
 
 #pragma mark - Cache
 
-- (void)resetOffscreenCellsCache {
+- (void)invalidateOffscreenCellCache {
     [self.offscreenCellCache removeAllObjects];
 }
 
-- (void)resetCellHeightCache {
+- (void)invalidateCellHeightCache {
     [self.cellHeightCache removeAllObjects];
 }
 
@@ -94,12 +94,12 @@
     // A simplified way to check whether the table view width changed.
     if (self.lastTableView != tableView) {
         self.lastTableView = tableView;
-        [self resetOffscreenCellsCache];
+        [self invalidateOffscreenCellCache];
     }
 
     if (self.lastTableViewWidth != tableView.width) {
         self.lastTableViewWidth = tableView.width;
-        [self resetCellHeightCache];
+        [self invalidateCellHeightCache];
     }
 
     NSNumber *heightCache = [self.cellHeightCache objectForKey:indexPath];

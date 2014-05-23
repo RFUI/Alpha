@@ -40,9 +40,9 @@
 @property (assign, nonatomic) UIEdgeInsets cellLayoutEdgeInsets;
 
 #pragma mark - Cache
-- (void)resetOffscreenCellsCache;
+- (void)invalidateOffscreenCellCache;
 
-- (void)resetCellHeightCache;
+- (void)invalidateCellHeightCache;
 - (void)invalidateCellHeightCacheAtIndexPath:(NSIndexPath *)indexPath;
 - (void)invalidateCellHeightCacheAtIndexPaths:(NSArray *)indexPaths;
 @end

@@ -25,14 +25,6 @@ RFInitializingRootForNSObject
 - (void)afterInit {
 }
 
-- (id)initWithRules:(NSDictionary *)rules {
-    self = [self init];
-    if (self) {
-        [self mergeWithRules:rules];
-    }
-    return self;
-}
-
 - (void)setNeedsUpdateDefaultRule {
     [self.defineCache removeAllObjects];
 }
@@ -46,7 +38,6 @@ RFInitializingRootForNSObject
         if (define) {
             if ([name isEqualToString:RFAPIDefineDefaultKey]) {
                 [self.defaultRule setDictionary:rule];
-                [self setNeedsUpdateDefaultRule];
             }
 
             [self.rawRules setObject:rule forKey:name];

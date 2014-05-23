@@ -4,10 +4,7 @@
 #import "RFMessageManager+RFDisplay.h"
 #import "RFAPIDefineManager.h"
 
-#import "AFURLResponseSerialization.h"
-#import "AFURLRequestSerialization.h"
 #import "AFHTTPRequestOperation.h"
-
 #import "AFNetworkReachabilityManager.h"
 #import "AFNetworkActivityIndicatorManager.h"
 
@@ -78,14 +75,6 @@ RFInitializingRootForNSObject
 }
 
 #pragma mark - Request
-
-- (AFHTTPRequestSerializer<AFURLRequestSerialization> *)requestSerializer {
-    if (!_requestSerializer) {
-        _requestSerializer = [AFHTTPRequestSerializer serializer];
-    }
-    return _requestSerializer;
-}
-
 
 #define __RFAPICompletionCallback(BLOCK, ...)\
     if (BLOCK) {\
@@ -297,13 +286,6 @@ RFInitializingRootForNSObject
 
 - (BOOL)generalHandlerForError:(NSError *)error withDefine:(RFAPIDefine *)define controlInfo:(RFAPIControl *)controlInfo requestOperation:(AFHTTPRequestOperation *)operation operationFailureCallback:(void (^)(AFHTTPRequestOperation *, NSError *))operationFailureCallback {
     return YES;
-}
-
-- (id<AFURLResponseSerialization>)responseSerializer {
-    if (!_responseSerializer) {
-        _responseSerializer = [AFJSONResponseSerializer serializer];
-    }
-    return _responseSerializer;
 }
 
 - (void)alertError:(NSError *)error title:(NSString *)title {

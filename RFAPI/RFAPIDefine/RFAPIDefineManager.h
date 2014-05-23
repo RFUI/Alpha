@@ -1,6 +1,8 @@
 
 #import "RFAPIDefine.h"
 #import "RFInitializing.h"
+#import "AFURLRequestSerialization.h"
+#import "AFURLResponseSerialization.h"
 
 @class RFAPI;
 
@@ -26,6 +28,10 @@
 - (RFAPIDefine *)defineForName:(NSString *)defineName;
 
 #pragma mark - RFAPI Support
+
+@property (strong, nonatomic) id<AFURLRequestSerialization> defaultRequestSerializer;
+
+@property (strong, nonatomic) id<AFURLResponseSerialization> defaultResponseSerializer;
 
 - (NSURL *)requestURLForDefine:(RFAPIDefine *)define error:(NSError *__autoreleasing *)error;
 

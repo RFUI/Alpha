@@ -4,7 +4,6 @@
 #import "RFAPIDefine.h"
 #import "RFAPIDefineManager.h"
 #import "AFNetworkReachabilityManager.h"
-#import "AFURLRequestSerialization.h"
 #import "JSONModel.h"
 
 /**
@@ -15,7 +14,6 @@
 
 @class RFMessageManager, RFNetworkActivityIndicatorMessage, AFHTTPRequestOperation;
 @class RFAPIControl, RFHTTPRequestFormData;
-@protocol AFURLResponseSerialization;
 
 @interface RFAPI : NSOperationQueue <
     RFInitializing
@@ -62,11 +60,9 @@
         failure:(void (^)(AFHTTPRequestOperation *operation, NSError *error))failure
      completion:(void (^)(AFHTTPRequestOperation *operation))completion;
 
-@property (strong, nonatomic) AFHTTPRequestSerializer<AFURLRequestSerialization> *requestSerializer;
 
 #pragma mark - Response
 
-@property (strong, nonatomic) id<AFURLResponseSerialization> responseSerializer;
 
 #pragma mark - Activity Indicator
 

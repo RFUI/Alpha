@@ -1,8 +1,6 @@
 
 #import "RFAPIDefineManager.h"
 #import "RFAPI.h"
-#import "AFURLRequestSerialization.h"
-#import "AFURLResponseSerialization.h"
 #import "RFAPIDefineConfigFileKeys.h"
 
 @interface RFAPIDefineManager ()
@@ -107,16 +105,29 @@ RFInitializingRootForNSObject
     if (define.requestSerializerClass) {
         return [define.requestSerializerClass serializer];
     }
-    return self.master.requestSerializer;
+    return self.defaultRequestSerializer;
 }
 
 - (id)responseSerializerForDefine:(RFAPIDefine *)define {
     if (define.responseSerializerClass) {
         return [define.responseSerializerClass serializer];
     }
-    return self.master.responseSerializer;
+    return self.defaultResponseSerializer;
 }
 
+- (id<AFURLRequestSerialization>)defaultRequestSerializer {
+    if (!_defaultRequestSerializer) {
+        _defaultRequestSerializer = [AFHTTPRequestSerializer serializer];
+    }
+    return _defaultRequestSerializer;
+}
+
+- (id<AFURLResponseSerialization>)defaultResponseSerializer {
+    if (!_defaultResponseSerializer) {
+        _defaultResponseSerializer = [AFJSONResponseSerializer serializer];
+    }
+    return _defaultResponseSerializer;
+}
 
 @end
 

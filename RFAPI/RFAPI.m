@@ -46,33 +46,6 @@ RFInitializingRootForNSObject
 //    return [NSString stringWithFormat:@"<%@: %p, baseURL: %@, operationQueue: %@>", self.class, self, [self.baseURL absoluteString], self.operationQueue];
 //}
 
-#pragma mark - Define
-
-- (void)updateDefaultRule:(NSDictionary *)rule merge:(BOOL)isMerge {
-    if (!rule) return;
-    RFAPIDefineManager *m = self.defineManager;
-
-    if (isMerge) {
-        [m.defaultRule addEntriesFromDictionary:rule];
-    }
-    else {
-        [m.defaultRule setDictionary:rule];
-    }
-    [m setNeedsUpdateDefaultRule];
-}
-
-- (NSMutableDictionary *)defaultRule {
-    return [self.defineManager.defaultRule mutableCopy];
-}
-
-- (void)setAPIDefineWithRules:(NSDictionary *)rules {
-    [self.defineManager mergeWithRules:rules];
-}
-
-- (RFAPIDefine *)defineForName:(NSString *)APIName {
-    return [self.defineManager defineForName:APIName];
-}
-
 #pragma mark - Request management
 
 #if RFDebugLevel > RFDebugLevelInfo
@@ -136,7 +109,7 @@ RFInitializingRootForNSObject
 
 - (AFHTTPRequestOperation *)requestWithName:(NSString *)APIName parameters:(NSDictionary *)parameters controlInfo:(RFAPIControl *)controlInfo success:(void (^)(AFHTTPRequestOperation *, id))success failure:(void (^)(AFHTTPRequestOperation *, NSError *))failure completion:(void (^)(AFHTTPRequestOperation *))completion {
     NSParameterAssert(APIName);
-    RFAPIDefine *define = [self defineForName:APIName];
+    RFAPIDefine *define = [self.defineManager defineForName:APIName];
     RFAssert(define, @"Can not find an API with name: %@.", APIName);
     if (!define) return nil;
 

@@ -9,7 +9,7 @@
 @property (strong, nonatomic) NSCache *defineCache;
 
 @property (strong, nonatomic, readwrite) NSMutableDictionary *defaultRule;
-@property (strong, nonatomic) NSMutableDictionary *rawRules;
+@property (strong, nonatomic, readwrite) NSMutableDictionary *rawRules;
 @end
 
 @implementation RFAPIDefineManager

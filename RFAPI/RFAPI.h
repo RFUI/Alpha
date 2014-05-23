@@ -2,6 +2,7 @@
 
 #import "RFUI.h"
 #import "RFAPIDefine.h"
+#import "RFAPIDefineManager.h"
 #import "AFNetworkReachabilityManager.h"
 #import "AFURLRequestSerialization.h"
 #import "JSONModel.h"
@@ -27,17 +28,8 @@
 @property (readonly, nonatomic) AFNetworkReachabilityManager *reachabilityManager;
 
 #pragma mark - Define
-/// Update default define rule with config info.
-- (void)updateDefaultRule:(NSDictionary *)rule merge:(BOOL)isMerge;
 
-/// Get default define rule.
-- (NSMutableDictionary *)defaultRule;
-
-/// Load API deine config file.
-- (void)setAPIDefineWithRules:(NSDictionary *)rules;
-
-/// Get an API define object with API name.
-- (RFAPIDefine *)defineForName:(NSString *)APIName;
+@property (readonly, nonatomic) RFAPIDefineManager *defineManager;
 
 #pragma mark - Request management
 

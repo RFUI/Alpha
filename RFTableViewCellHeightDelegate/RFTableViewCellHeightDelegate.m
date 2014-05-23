@@ -125,9 +125,9 @@
 
         CGSize size = [cell.contentView systemLayoutSizeFittingSize:CGSizeMake(contentWidth, 0)];
         dout_debug(@"Cell size: %@", NSStringFromCGSize(size));
-        CGFloat height = size.height;
+        CGFloat height = size.height + 1.f + inset.top + inset.bottom;
         [self.cellHeightCache setObject:@(height) forKey:indexPath];
-        return height + 1.f + inset.top + inset.bottom;
+        return height;
     }
 }
 

@@ -78,7 +78,7 @@
         }
 
         // Hide cell created by `dequeueReusableCellWithIdentifier:forIndexPath:` method.
-        cell.hidden = YES;
+        [cell removeFromSuperview];
         self.requestNewCellLock = NO;
     }
     return cell;

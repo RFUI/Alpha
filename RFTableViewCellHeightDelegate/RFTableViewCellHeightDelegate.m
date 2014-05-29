@@ -24,7 +24,7 @@
     _offscreenCellCache = occ;
 
     NSCache *chc = [[NSCache alloc] init];
-    chc.name = @"com.github.RFUI.RFTableViewCellHeightDelegate.offscreenCellCache";
+    chc.name = @"com.github.RFUI.RFTableViewCellHeightDelegate.cellHeightCache";
     _cellHeightCache = chc;
 }
 

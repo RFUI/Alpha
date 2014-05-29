@@ -7,17 +7,11 @@
     The MIT License (MIT)
     http://www.opensource.org/licenses/mit-license.php
 
-    Alpha
+    BETA
  */
 
 /**
- 
  This solution works, and may better than other solutions. But is not perfect, especially when a table view’s frame changed.
-
- Caution: 
- 
- Table view’s data source should not call `dequeueReusableCellWithIdentifier:forIndexPath:` in `tableView:cellForRowAtIndexPath:`. Instead, you can use `dequeueReusableCellWithIdentifier:`.
- `dequeueReusableCellWithIdentifier:forIndexPath:` will creat duplicated cells which can not be released until the table view deallocated.
  */
 
 #import "RFDelegateChain.h"

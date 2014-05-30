@@ -6,7 +6,7 @@
 #undef RFDebugLevel
 #define RFDebugLevel 2
 
-NSTimeInterval RFPullToFetchAnimateTimeInterval = .2;
+static NSTimeInterval RFPullToFetchAnimateTimeInterval = .2;
 
 @interface RFPullToFetchPlugin ()
 @property (readwrite, nonatomic) BOOL headerProcessing;
@@ -22,8 +22,8 @@ NSTimeInterval RFPullToFetchAnimateTimeInterval = .2;
 
 @property (assign, nonatomic) BOOL hasFetched;
 
-@property (assign, nonatomic) RFPullToFetchIndicatorStatus headerStatus;
-@property (assign, nonatomic) RFPullToFetchIndicatorStatus footerStatus;
+@property (readonly, nonatomic) RFPullToFetchIndicatorStatus headerStatus;
+@property (readonly, nonatomic) RFPullToFetchIndicatorStatus footerStatus;
 @end
 
 @implementation RFPullToFetchPlugin

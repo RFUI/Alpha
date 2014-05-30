@@ -1,5 +1,5 @@
 
-#import "RFPullToFetchPlugin.h"
+#import "RFTableViewPullToFetchPlugin.h"
 #import "UIScrollView+RFScrollViewContentDistance.h"
 #import "UIView+RFAnimate.h"
 
@@ -8,7 +8,7 @@
 
 static NSTimeInterval RFPullToFetchAnimateTimeInterval = .2;
 
-@interface RFPullToFetchPlugin ()
+@interface RFTableViewPullToFetchPlugin ()
 @property (readwrite, nonatomic) BOOL headerProcessing;
 @property (readwrite, nonatomic) BOOL footerProcessing;
 @property (assign, nonatomic) BOOL needsDisplayHeader;
@@ -26,7 +26,7 @@ static NSTimeInterval RFPullToFetchAnimateTimeInterval = .2;
 @property (readonly, nonatomic) RFPullToFetchIndicatorStatus footerStatus;
 @end
 
-@implementation RFPullToFetchPlugin
+@implementation RFTableViewPullToFetchPlugin
 
 - (void)onInit {
 //    self.headerStyle = RFPullToFetchTableIndicatorLayoutTypeStatic;
@@ -393,7 +393,7 @@ static NSTimeInterval RFPullToFetchAnimateTimeInterval = .2;
 }
 
 + (NSSet *)keyPathsForValuesAffectingFetching {
-    RFPullToFetchPlugin *this;
+    RFTableViewPullToFetchPlugin *this;
     return [NSSet setWithObjects:@keypath(this, headerProcessing), @keypath(this, footerProcessing), nil];
 }
 

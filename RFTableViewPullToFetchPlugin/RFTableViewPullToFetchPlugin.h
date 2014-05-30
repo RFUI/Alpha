@@ -18,11 +18,11 @@ typedef NS_ENUM(short, RFPullToFetchIndicatorStatus) {
     RFPullToFetchIndicatorStatusFrozen
 };
 
-@class RFPullToFetchPlugin;
+@class RFTableViewPullToFetchPlugin;
 
-typedef void (^RFPullToFetchIndicatorStatusChangeBlock)(RFPullToFetchPlugin *control, id indicatorView, RFPullToFetchIndicatorStatus status, CGFloat visibleHeight, UITableView *tableView);
+typedef void (^RFPullToFetchIndicatorStatusChangeBlock)(RFTableViewPullToFetchPlugin *control, id indicatorView, RFPullToFetchIndicatorStatus status, CGFloat visibleHeight, UITableView *tableView);
 
-@interface RFPullToFetchPlugin : RFDelegateChain <
+@interface RFTableViewPullToFetchPlugin : RFDelegateChain <
     UITableViewDelegate
 >
 
@@ -49,10 +49,10 @@ typedef void (^RFPullToFetchIndicatorStatusChangeBlock)(RFPullToFetchPlugin *con
 //@property(assign, nonatomic) RFPullToFetchTableIndicatorLayoutType footerStyle;
 
 @property(copy, nonatomic) RFPullToFetchIndicatorStatusChangeBlock headerStatusChangeBlock;
-- (void)setHeaderStatusChangeBlock:(void (^)(RFPullToFetchPlugin *control, id indicatorView, RFPullToFetchIndicatorStatus status, CGFloat visibleHeight, UITableView *tableView))headerStatusChangeBlock;
+- (void)setHeaderStatusChangeBlock:(void (^)(RFTableViewPullToFetchPlugin *control, id indicatorView, RFPullToFetchIndicatorStatus status, CGFloat visibleHeight, UITableView *tableView))headerStatusChangeBlock;
 
 @property(copy, nonatomic) RFPullToFetchIndicatorStatusChangeBlock footerStatusChangeBlock;
-- (void)setFooterStatusChangeBlock:(void (^)(RFPullToFetchPlugin *control, id indicatorView, RFPullToFetchIndicatorStatus status, CGFloat visibleHeight, UITableView *tableView))footerStatusChangeBlock;
+- (void)setFooterStatusChangeBlock:(void (^)(RFTableViewPullToFetchPlugin *control, id indicatorView, RFPullToFetchIndicatorStatus status, CGFloat visibleHeight, UITableView *tableView))footerStatusChangeBlock;
 
 - (void)setNeedsDisplayHeader;
 - (void)setNeedsDisplayFooter;

@@ -230,7 +230,7 @@ RFInitializingRootForNSObject
     NSMutableURLRequest *r = [[NSMutableURLRequest alloc] initWithURL:url cachePolicy:cachePolicy timeoutInterval:10];
     [r setHTTPMethod:define.method];
     AFHTTPRequestSerializer *s = [self.defineManager requestSerializerForDefine:define];
-    r = [[s requestBySerializingRequest:r withParameters:parameters error:&e] mutableCopy];
+    r = [[s requestBySerializingRequest:r withParameters:requestParameters error:&e] mutableCopy];
     __RFAPIMakeRequestError(!r);
 
     // Set header
@@ -285,6 +285,7 @@ RFInitializingRootForNSObject
     if (needsAuthorization) {
         [*requestParameters addEntriesFromDictionary:self.defineManager.authorizationParameters];
     }
+    [*requestParameters addEntriesFromDictionary:parameters];
 
     [*requestHeaders addEntriesFromDictionary:define.HTTPRequestHeaders];
     if (needsAuthorization) {

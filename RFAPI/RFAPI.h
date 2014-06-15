@@ -90,9 +90,9 @@
 - (void)preprocessingRequestParameters:(NSMutableDictionary **)requestParameters HTTPHeaders:(NSMutableDictionary **)requestHeaders withParameters:(NSDictionary *)parameters define:(RFAPIDefine *)define controlInfo:(RFAPIControl *)controlInfo;
 
 /**
- For subclass overwrite, default do nothing.
+ Default implementation execute RFAPIControl’s requestCustomization.
  */
-- (NSMutableURLRequest *)customSerializedRequest:(NSMutableURLRequest *)request withDefine:(RFAPIDefine *)define;
+- (NSMutableURLRequest *)finalizeSerializedRequest:(NSMutableURLRequest *)request withDefine:(RFAPIDefine *)define controlInfo:(RFAPIControl *)controlInfo;
 
 /**
  默认实现返回 YES

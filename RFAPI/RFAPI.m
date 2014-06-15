@@ -239,12 +239,7 @@ RFInitializingRootForNSObject
     }];
 
     // Finalization
-    r = [self customSerializedRequest:r withDefine:define];
-
-    if (controlInfo.requestCustomization) {
-        r = controlInfo.requestCustomization(r);
-    }
-
+    r = [self finalizeSerializedRequest:r withDefine:define controlInfo:controlInfo];
     return r;
 }
 #undef __RFAPIMakeRequestError
@@ -297,8 +292,10 @@ RFInitializingRootForNSObject
     }
 }
 
-- (NSMutableURLRequest *)customSerializedRequest:(NSMutableURLRequest *)request withDefine:(RFAPIDefine *)define {
-    // Nothing
+- (NSMutableURLRequest *)finalizeSerializedRequest:(NSMutableURLRequest *)request withDefine:(RFAPIDefine *)define controlInfo:(RFAPIControl *)controlInfo {
+    if (controlInfo.requestCustomization) {
+        request = controlInfo.requestCustomization(request);
+    }
     return request;
 }
 

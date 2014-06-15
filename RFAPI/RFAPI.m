@@ -215,39 +215,30 @@ RFInitializingRootForNSObject
 - (NSMutableURLRequest *)URLRequestWithDefine:(RFAPIDefine *)define parameters:(NSDictionary *)parameters controlInfo:(RFAPIControl *)controlInfo error:(NSError *__autoreleasing *)error {
     NSParameterAssert(define);
 
+    // Preprocessing arguments
+    NSMutableDictionary *requestParameters = [NSMutableDictionary new];
+    NSMutableDictionary *requestHeaders = [NSMutableDictionary new];
+    [self preprocessingRequestParameters:&requestParameters HTTPHeaders:&requestHeaders withParameters:(NSDictionary *)parameters define:define controlInfo:controlInfo];
+
+    // Creat URL
     NSError __autoreleasing *e = nil;
     NSURL *url = [self.defineManager requestURLForDefine:define error:&e];
     __RFAPIMakeRequestError(!url);
 
+    // Creat URLRequest
     NSURLRequestCachePolicy cachePolicy = [self cachePolicyWithDefine:define controlInfo:controlInfo];
     NSMutableURLRequest *r = [[NSMutableURLRequest alloc] initWithURL:url cachePolicy:cachePolicy timeoutInterval:10];
     [r setHTTPMethod:define.method];
-
     AFHTTPRequestSerializer *s = [self.defineManager requestSerializerForDefine:define];
-
-    if (define.defaultParameters) {
-        NSDictionary *new = parameters;
-        parameters = [define.defaultParameters mutableCopy];
-        [(NSMutableDictionary *)parameters addEntriesFromDictionary:new];
-    }
-
-    NSMutableDictionary *authorizationParameters = self.defineManager.authorizationParameters;
-    if (define.needsAuthorization && authorizationParameters.count) {
-        parameters = [parameters mutableCopy];
-        [(NSMutableDictionary *)parameters addEntriesFromDictionary:authorizationParameters];
-    }
     r = [[s requestBySerializingRequest:r withParameters:parameters error:&e] mutableCopy];
     __RFAPIMakeRequestError(!r);
 
-    [define.HTTPRequestHeaders enumerateKeysAndObjectsUsingBlock:^(id field, id value, BOOL *__unused stop) {
+    // Set header
+    [requestHeaders enumerateKeysAndObjectsUsingBlock:^(id field, id value, BOOL *__unused stop) {
         [r setValue:value forHTTPHeaderField:field];
     }];
-    if (define.needsAuthorization) {
-        [self.defineManager.authorizationHeader enumerateKeysAndObjectsUsingBlock:^(id field, id value, BOOL *__unused stop) {
-            [r setValue:value forHTTPHeaderField:field];
-        }];
-    }
 
+    // Finalization
     r = [self customSerializedRequest:r withDefine:define];
 
     if (controlInfo.requestCustomization) {
@@ -290,6 +281,20 @@ RFInitializingRootForNSObject
         }
     }
     return NSURLRequestUseProtocolCachePolicy;
+}
+
+- (void)preprocessingRequestParameters:(NSMutableDictionary **)requestParameters HTTPHeaders:(NSMutableDictionary **)requestHeaders withParameters:(NSDictionary *)parameters define:(RFAPIDefine *)define controlInfo:(RFAPIControl *)controlInfo {
+    BOOL needsAuthorization = define.needsAuthorization;
+
+    [*requestParameters addEntriesFromDictionary:define.defaultParameters];
+    if (needsAuthorization) {
+        [*requestParameters addEntriesFromDictionary:self.defineManager.authorizationParameters];
+    }
+
+    [*requestHeaders addEntriesFromDictionary:define.HTTPRequestHeaders];
+    if (needsAuthorization) {
+        [*requestHeaders addEntriesFromDictionary:self.defineManager.authorizationHeader];
+    }
 }
 
 - (NSMutableURLRequest *)customSerializedRequest:(NSMutableURLRequest *)request withDefine:(RFAPIDefine *)define {

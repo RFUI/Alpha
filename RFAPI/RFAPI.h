@@ -83,6 +83,12 @@
 - (void)alertError:(NSError *)error title:(NSString *)title DEPRECATED_ATTRIBUTE;
 
 #pragma mark - Methods for overwrite
+
+/**
+ Default implementation first add parameters from APIDefine then add parameters from define manager.
+ */
+- (void)preprocessingRequestParameters:(NSMutableDictionary **)requestParameters HTTPHeaders:(NSMutableDictionary **)requestHeaders withParameters:(NSDictionary *)parameters define:(RFAPIDefine *)define controlInfo:(RFAPIControl *)controlInfo;
+
 /**
  For subclass overwrite, default do nothing.
  */

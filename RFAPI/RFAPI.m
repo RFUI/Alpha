@@ -230,12 +230,23 @@ RFInitializingRootForNSObject
         parameters = [define.defaultParameters mutableCopy];
         [(NSMutableDictionary *)parameters addEntriesFromDictionary:new];
     }
+
+    NSMutableDictionary *authorizationParameters = self.defineManager.authorizationParameters;
+    if (define.needsAuthorization && authorizationParameters.count) {
+        parameters = [parameters mutableCopy];
+        [(NSMutableDictionary *)parameters addEntriesFromDictionary:authorizationParameters];
+    }
     r = [[s requestBySerializingRequest:r withParameters:parameters error:&e] mutableCopy];
     __RFAPIMakeRequestError(!r);
 
     [define.HTTPRequestHeaders enumerateKeysAndObjectsUsingBlock:^(id field, id value, BOOL *__unused stop) {
         [r setValue:value forHTTPHeaderField:field];
     }];
+    if (define.needsAuthorization) {
+        [self.defineManager.authorizationHeader enumerateKeysAndObjectsUsingBlock:^(id field, id value, BOOL *__unused stop) {
+            [r setValue:value forHTTPHeaderField:field];
+        }];
+    }
 
     r = [self customSerializedRequest:r withDefine:define];
 

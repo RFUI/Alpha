@@ -37,7 +37,7 @@
 /// Default HTTP request parameters
 @property (copy, nonatomic) NSDictionary *defaultParameters;
 
-// No implementation
+/// If send authorization HTTP header or parameters
 @property (assign, nonatomic) BOOL needsAuthorization;
 
 /// AFURLRequestSerialization class

@@ -49,6 +49,12 @@
 - (void)setValue:(id)value forRule:(NSString *)key defineName:(NSString *)defineName;
 - (void)removeRule:(NSString *)key withDefineName:(NSString *)defineName;
 
+#pragma mark - Authorization values
+
+@property (readonly, nonatomic) NSMutableDictionary *authorizationHeader;
+@property (readonly, nonatomic) NSMutableDictionary *authorizationParameters;
+
+
 #pragma mark - RFAPI Support
 
 @property (strong, nonatomic) id<AFURLRequestSerialization> defaultRequestSerializer;

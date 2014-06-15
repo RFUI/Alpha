@@ -8,6 +8,10 @@
 
 @property (strong, nonatomic, readwrite) NSMutableDictionary *defaultRule;
 @property (strong, nonatomic, readwrite) NSMutableDictionary *rawRules;
+
+@property (strong, nonatomic, readwrite) NSMutableDictionary *authorizationHeader;
+@property (strong, nonatomic, readwrite) NSMutableDictionary *authorizationParameters;
+
 @end
 
 @implementation RFAPIDefineManager
@@ -19,6 +23,8 @@ RFInitializingRootForNSObject
 
     _defaultRule = [[NSMutableDictionary alloc] initWithCapacity:20];
     _rawRules = [[NSMutableDictionary alloc] initWithCapacity:50];
+    _authorizationHeader = [[NSMutableDictionary alloc] initWithCapacity:3];
+    _authorizationParameters = [[NSMutableDictionary alloc] initWithCapacity:3];
 }
 - (void)afterInit {
 }

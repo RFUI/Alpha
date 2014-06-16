@@ -22,10 +22,6 @@
         return;
     }
 
-    if ([SVProgressHUD isVisible]) {
-        [SVProgressHUD dismiss];
-    }
-
     NSString *stautsString = message.title? [NSString stringWithFormat:@"%@: %@", message.title, message.message] : message.message;
 
     SVProgressHUDMaskType maskType = message.modal? SVProgressHUDMaskTypeGradient : SVProgressHUDMaskTypeNone;

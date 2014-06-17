@@ -42,8 +42,8 @@ typedef void (^RFPullToFetchIndicatorStatusChangeBlock)(RFTableViewPullToFetchPl
 
 #pragma mark - Layout
 
-@property(weak, nonatomic) UIView *headerContainer;
-@property(weak, nonatomic) UIView *footerContainer;
+@property(strong, nonatomic) UIView *headerContainer;
+@property(strong, nonatomic) UIView *footerContainer;
 
 //@property(assign, nonatomic) RFPullToFetchTableIndicatorLayoutType headerStyle;
 //@property(assign, nonatomic) RFPullToFetchTableIndicatorLayoutType footerStyle;

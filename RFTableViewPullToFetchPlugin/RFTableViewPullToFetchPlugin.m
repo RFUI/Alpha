@@ -132,7 +132,7 @@ static NSTimeInterval RFPullToFetchAnimateTimeInterval = .2;
 
 - (void)triggerHeaderProcess {
     if (self.headerProcessing) return;
-    doutwork()
+    _doutwork()
 
     if (self.footerProcessing) {
         self.footerProcessing = NO;
@@ -165,7 +165,7 @@ static NSTimeInterval RFPullToFetchAnimateTimeInterval = .2;
 
 - (void)triggerFooterProcess {
     if (self.footerProcessing) return;
-    doutwork()
+    _doutwork()
 
     if (self.headerProcessing) {
         self.headerProcessing = NO;
@@ -198,7 +198,7 @@ static NSTimeInterval RFPullToFetchAnimateTimeInterval = .2;
 
 - (void)headerProcessFinshed {
     if (!self.headerProcessing) return;
-    doutwork()
+    _doutwork()
     if (self.shouldHideFooterWhenHeaderProcessing) {
         self.footerContainer.hidden = NO;
     }
@@ -216,7 +216,7 @@ static NSTimeInterval RFPullToFetchAnimateTimeInterval = .2;
 
 - (void)footerProcessFinshed {
     if (!self.footerProcessing) return;
-    doutwork()
+    _doutwork()
 
     if (self.shouldScrollToLastVisibleRowBeforeTriggeAfterFooterProccessFinished && self.lastVisibleRowBeforeTriggeIndexPath) {
         [self.tableView scrollToRowAtIndexPath:self.lastVisibleRowBeforeTriggeIndexPath atScrollPosition:UITableViewScrollPositionTop animated:YES];
@@ -345,7 +345,7 @@ static NSTimeInterval RFPullToFetchAnimateTimeInterval = .2;
     else {
         header.hidden = NO;
     }
-    dout_bool(header.hidden)
+    _dout_bool(header.hidden)
 }
 
 - (void)updateFooterVisable {
@@ -366,7 +366,7 @@ static NSTimeInterval RFPullToFetchAnimateTimeInterval = .2;
     else {
         footer.hidden = NO;
     }
-    dout_bool(footer.hidden)
+    _dout_bool(footer.hidden)
 }
 
 - (void)updateHeaderIndicatorStatus {

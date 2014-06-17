@@ -2,7 +2,7 @@
 #import "RFScrollViewPageControl.h"
 
 @interface RFScrollViewPageControl ()
-@property(assign, nonatomic) BOOL needUpdatePage;
+@property (strong, nonatomic) id observer;
 @end
 
 @implementation RFScrollViewPageControl
@@ -13,12 +13,22 @@ RFInitializingRootForUIView
 }
 
 - (void)afterInit {
-    @weakify(self);
-    [self rac_addObserver:self forKeyPath:@keypath(self, needUpdatePage) options:NSKeyValueObservingOptionNew|NSKeyValueObservingOptionInitial queue:nil block:^(id observer, NSDictionary *change) {
-        @strongify(self);
+    // nothing
+}
 
-        [self setNeedsUpdatePage];
-    }];
+- (void)setScrollView:(UIScrollView *)scrollView {
+    if (_scrollView != scrollView) {
+        if (_scrollView) {
+            [_scrollView rac_removeObserverWithIdentifier:self.observer];
+        }
+
+        if (scrollView) {
+            self.observer = [scrollView rac_addObserver:self forKeyPath:@keypath(scrollView, contentOffset) options:NSKeyValueObservingOptionNew|NSKeyValueObservingOptionInitial queue:nil block:^(RFScrollViewPageControl *observer, NSDictionary *change) {
+                [observer setNeedsUpdatePage];
+            }];
+        }
+        _scrollView = scrollView;
+    }
 }
 
 - (void)setNeedsUpdatePage {
@@ -38,17 +48,6 @@ RFInitializingRootForUIView
         self.currentPage = 0;
     }
     _dout_float(self.scrollView.contentOffset.x / pageWidth)
-}
-
-+ (NSSet *)keyPathsForValuesAffectingNeedUpdatePage {
-    RFScrollViewPageControl *this;
-    return [NSSet setWithObjects:
-        @keypath(this, scrollView),
-        @keypath(this, scrollView.bounds),
-        @keypath(this, scrollView.contentOffset),
-        @keypath(this, scrollView.contentSize),
-        @keypath(this, supportHalfPage),
-    nil];
 }
 
 @end

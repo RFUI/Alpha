@@ -2,7 +2,7 @@
     RFScrollViewPageControl
     RFUI
 
-    Copyright (c) 2013 BB9z
+    Copyright (c) 2013-2014 BB9z
     https://github.com/RFUI/Alpha
 
     The MIT License (MIT)
@@ -14,13 +14,21 @@
 #import "RFUI.h"
 #import "RFInitializing.h"
 
-@interface RFScrollViewPageControl : UIPageControl
-<RFInitializing>
+/**
+ Usage: Just set scrollView property, no more step.
+ */
+@interface RFScrollViewPageControl : UIPageControl <
+    RFInitializing
+>
 
 @property(weak, nonatomic) IBOutlet UIScrollView *scrollView;
 
 @property(assign, nonatomic) BOOL supportHalfPage;
 
-// Generally, you don’t needs call this method manually.
+/**
+ Call this method force update pageControl status.
+ 
+ Generally, you don’t needs call this method manually.
+ */
 - (void)setNeedsUpdatePage;
 @end

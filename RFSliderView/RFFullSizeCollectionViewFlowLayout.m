@@ -18,13 +18,13 @@
 
 - (void)prepareLayout {
     [super prepareLayout];
-
     self.itemSize = self.collectionView.bounds.size;
 }
 
 - (BOOL)shouldInvalidateLayoutForBoundsChange:(CGRect)newBounds {
     CGSize oldSize = self.collectionView.bounds.size;
     if (!CGSizeEqualToSize(oldSize, newBounds.size)) {
+        self.itemSize = newBounds.size;
         return YES;
     }
     return NO;

@@ -49,7 +49,7 @@ static NSTimeInterval RFPullToFetchAnimateTimeInterval = .2;
             _tableView.delegate = self.delegate;
         }
 
-        if (tableView.delegate) {
+        if (tableView.delegate && tableView.delegate != self) {
             self.delegate = tableView.delegate;
         }
         tableView.delegate = self;

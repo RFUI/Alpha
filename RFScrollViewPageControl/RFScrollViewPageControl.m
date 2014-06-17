@@ -36,11 +36,11 @@ RFInitializingRootForUIView
     if (pageWidth) {
         if (self.supportHalfPage) {
             self.numberOfPages = ceil(self.scrollView.contentSize.width / pageWidth);
-            self.currentPage = ceil(self.scrollView.contentOffset.x / pageWidth);
+            self.currentPage = ceil(self.scrollView.contentOffset.x / pageWidth- 0.5);
         }
         else {
             self.numberOfPages = self.scrollView.contentSize.width / pageWidth;
-            self.currentPage = self.scrollView.contentOffset.x / pageWidth;
+            self.currentPage = self.scrollView.contentOffset.x / pageWidth + 0.5;
         }
     }
     else {

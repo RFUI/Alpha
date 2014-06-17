@@ -14,13 +14,11 @@ RFInitializingRootForUIView
 
 - (void)afterInit {
     @weakify(self);
-    [self rac_addObserver:self forKeyPath:@keypath(self, needUpdatePage) options:NSKeyValueObservingOptionNew queue:nil block:^(id observer, NSDictionary *change) {
+    [self rac_addObserver:self forKeyPath:@keypath(self, needUpdatePage) options:NSKeyValueObservingOptionNew|NSKeyValueObservingOptionInitial queue:nil block:^(id observer, NSDictionary *change) {
         @strongify(self);
 
         [self setNeedsUpdatePage];
     }];
-    
-    [self setNeedsUpdatePage];
 }
 
 - (void)setNeedsUpdatePage {

@@ -106,6 +106,7 @@
     }
     if (self.needsCoverToRepeatingTimer) {
         [self scheduleInRunLoop:nil forMode:nil];
+        self.needsCoverToRepeatingTimer = NO;
     }
 }
 

@@ -105,8 +105,15 @@ RFInitializingRootForNSObject
 #pragma mark - RFAPI Support
 
 - (NSURL *)requestURLForDefine:(RFAPIDefine *)define error:(NSError *__autoreleasing *)error {
-    NSString *URLString = define.pathPrefix? [define.pathPrefix stringByAppendingString:define.path] : define.path;
-    NSURL *url = [NSURL URLWithString:URLString relativeToURL:define.baseURL];
+    NSString *path = define.path;
+    NSURL *url;
+    if ([path hasPrefix:@"http://"] || [path hasPrefix:@"https://"]) {
+        url = [NSURL URLWithString:path];
+    }
+    else {
+        NSString *URLString = define.pathPrefix? [define.pathPrefix stringByAppendingString:path] : path;
+        url = [NSURL URLWithString:URLString relativeToURL:define.baseURL];
+    }
     if (!url) {
 #if RFDEBUG
         dout_error(@"无法拼接路径 %@ 到 %@\n请检查接口定义", define.path, define.baseURL);

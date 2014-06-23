@@ -15,4 +15,5 @@
     RFInitializing
 >
 
+@property(nonatomic) NSInteger currentPage;
 @end

@@ -72,7 +72,7 @@
     // No cached cell, ask delegate for an new one.
     if (!cell) {
         self.requestNewCellLock = YES;
-        cell = [self.delegate tableView:tableView cellForRowAtIndexPath:indexPath];
+        cell = [tableView.dataSource tableView:tableView cellForRowAtIndexPath:indexPath];
         if (suportCache) {
             [self.offscreenCellCache setObject:cell forKey:cell.reuseIdentifier];
         }

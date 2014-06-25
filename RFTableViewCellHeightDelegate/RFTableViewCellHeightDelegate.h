@@ -16,7 +16,7 @@
 
 #import "RFDelegateChain.h"
 
-@protocol RFTableViewCellHeightDelegate <UITableViewDataSource>
+@protocol RFTableViewCellHeightDelegate <UITableViewDelegate>
 @required
 
 - (void)tableView:(UITableView *)tableView configureCell:(id)cell forIndexPath:(NSIndexPath *)indexPath offscreenRendering:(BOOL)isOffscreenRendering;

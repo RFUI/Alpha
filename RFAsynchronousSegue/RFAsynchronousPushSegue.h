@@ -1,5 +1,5 @@
 /*!
-    RFAsynchronousSegue
+    RFAsynchronousPushSegue
 
     Copyright (c) 2014 BB9z
     https://github.com/RFUI/Alpha
@@ -11,6 +11,6 @@
  */
 #import "RFAsynchronousSegue.h"
 
-@interface RFAsynchronousNavigationPushSegue : RFAsynchronousSegue
+@interface RFAsynchronousPushSegue : RFAsynchronousSegue
 
 @end

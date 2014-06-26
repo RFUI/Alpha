@@ -30,26 +30,12 @@ _RFAlloctionLog
 
 - (void)fire {
     _doutwork()
-    if ([self.sourceViewController respondsToSelector:@selector(RFSegueWillPerform:)]) {
-        [self.sourceViewController RFSegueWillPerform:self];
-    }
-    if ([self.destinationViewController respondsToSelector:@selector(RFSegueWillAppear:)]) {
-        [self.destinationViewController RFSegueWillAppear:self];
-    }
-
     if (self.performBlcok) {
         dout_debug(@"Perform Segue Blcok")
         self.performBlcok(self);
     }
     else {
         [self RFPerform];
-    }
-
-    if ([self.sourceViewController respondsToSelector:@selector(RFSegueDidPerform:)]) {
-        [self.sourceViewController RFSegueDidPerform:self];
-    }
-    if ([self.destinationViewController respondsToSelector:@selector(RFSegueDidAppear:)]) {
-        [self.destinationViewController RFSegueDidAppear:self];
     }
 
     self.selfRetain = nil;

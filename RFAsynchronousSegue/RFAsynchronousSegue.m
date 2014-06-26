@@ -24,13 +24,8 @@ _RFAlloctionLog
     }
 }
 
-
 - (void)RFPerform {
-    _doutwork()
-    if (self.performBlcok) {
-        dout_debug(@"Perform Segue Blcok")
-        self.performBlcok(self);
-    }
+    RFAssert(false, @"You should subclass RFAsynchronousSegue and override RFPerform.");
 }
 
 - (void)fire {
@@ -42,7 +37,13 @@ _RFAlloctionLog
         [self.destinationViewController RFSegueWillAppear:self];
     }
 
-    [self RFPerform];
+    if (self.performBlcok) {
+        dout_debug(@"Perform Segue Blcok")
+        self.performBlcok(self);
+    }
+    else {
+        [self RFPerform];
+    }
 
     if ([self.sourceViewController respondsToSelector:@selector(RFSegueDidPerform:)]) {
         [self.sourceViewController RFSegueDidPerform:self];

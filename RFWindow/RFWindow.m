@@ -1,117 +1,44 @@
 
 #import "RFWindow.h"
 
+@implementation RFWindowTouchForwardView
+@end
+
+@interface RFWindow ()
+@end
+
 @implementation RFWindow
+RFInitializingRootForUIView
 
-@synthesize orientationNormalizedFrame = _orientationNormalizedFrame;
-@synthesize alignment;
-
-
-- (void)setOrientationNormalizedFrame:(CGRect)orientationNormalizedFrame {
-    _dout(@"--------------------")
-    
-//    dout(@"mask: %x",self.autoresizingMask);
-//    if (self.autoresizingMask & UIViewAutoresizingFlexibleLeftMargin) {
-//        douts(@"on?")
-//    }
-    
-    CGSize screenSize = [[UIScreen mainScreen] bounds].size;
-    _orientationNormalizedFrame = orientationNormalizedFrame;
-    _dout_rect(_orientationNormalizedFrame)
-    
-    _dout(@"old frame: %@", NSStringFromCGRect(self.frame))
-    switch ([[UIApplication sharedApplication] statusBarOrientation]) {
-		case UIInterfaceOrientationPortrait:
-            self.frame = _orientationNormalizedFrame;
-			break;
-		case UIInterfaceOrientationPortraitUpsideDown:
-            
-            self.frame = CGRectMake(screenSize.width-_orientationNormalizedFrame.size.width-_orientationNormalizedFrame.origin.x,
-                                    screenSize.height-_orientationNormalizedFrame.size.height-_orientationNormalizedFrame.origin.y,
-                                    _orientationNormalizedFrame.size.width, _orientationNormalizedFrame.size.height);
-			break;
-		case UIInterfaceOrientationLandscapeLeft:
-            self.frame = CGRectMake(_orientationNormalizedFrame.origin.y,
-                                    screenSize.height-_orientationNormalizedFrame.size.width-_orientationNormalizedFrame.origin.x,
-                                    _orientationNormalizedFrame.size.height, _orientationNormalizedFrame.size.width);
-			break;
-		case UIInterfaceOrientationLandscapeRight:
-            self.frame = CGRectMake(screenSize.width-_orientationNormalizedFrame.size.height-_orientationNormalizedFrame.origin.y,
-                                    _orientationNormalizedFrame.origin.x,
-                                    _orientationNormalizedFrame.size.height, _orientationNormalizedFrame.size.width);
-			break;
-	}
-    _dout(@"new frame: %@", NSStringFromCGRect(self.frame))
+- (void)onInit {
+    self.frame = self.screen.bounds;
+    self.backgroundColor = [UIColor clearColor];
 }
 
-- (void)setup {
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(updateOrientation) name:UIApplicationDidChangeStatusBarOrientationNotification object:nil];
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(onStatusBarFrameChanged) name:UIApplicationDidChangeStatusBarFrameNotification object:nil];
+- (void)afterInit {
 }
 
-- (id)initWithFrame:(CGRect)frame {
-    self = [super initWithFrame:frame];
-    if (self) {
-        // Initialization code
-        self.backgroundColor = [UIColor clearColor];
-        self.orientationNormalizedFrame = self.frame;
-        [self setup];
+- (UIView *)hitTest:(CGPoint)point withEvent:(UIEvent *)event {
+    UIView *hitTestResult = [super hitTest:point withEvent:event];
+
+    if ([hitTestResult isKindOfClass:[RFWindowTouchForwardView class]]) {
+        return nil;
     }
-    return self;
+    return hitTestResult;
 }
 
-- (void)onStatusBarFrameChanged {
-//    CGRect statusBarFrame = [UIApplication sharedApplication].statusBarFrame;
-    _dout_rect(statusBarFrame)
-}
+@end
 
-- (void)updateOrientation {    
-	CGAffineTransform rotation;
-    
-    _dout(@"---- %@", NSStringFromCGRect(self.frame));
-    dout(@"---- rt%@", NSStringFromCGRect(self.rootViewController.view.frame));
-
-    _dout_rect([self convertRect:self.frame toWindow:self]);
-	
-	switch ([[UIApplication sharedApplication] statusBarOrientation]) {
-		case UIInterfaceOrientationPortrait:
-			douts(@"UIInterfaceOrientationPortrait")
-			rotation = CGAffineTransformMakeRotation(0);
-			break;
-		case UIInterfaceOrientationPortraitUpsideDown:
-			douts(@"UIInterfaceOrientationPortraitUpsideDown")       
-			rotation = CGAffineTransformMakeRotation(M_PI);
-			break;	
-		case UIInterfaceOrientationLandscapeLeft:
-			douts(@"UIInterfaceOrientationLandscapeLeft")
-			rotation = CGAffineTransformMakeRotation(-M_PI_2);
-			break;
-		case UIInterfaceOrientationLandscapeRight:
-			douts(@"UIInterfaceOrientationLandscapeRight")
-			rotation = CGAffineTransformMakeRotation(M_PI_2);
-			break;
-	}
-	self.transform = rotation;
-    self.orientationNormalizedFrame = self.orientationNormalizedFrame;
-
-    [self setNeedsDisplay];
-}
-
-- (void)layoutSubviews {
-    [super layoutSubviews];
-    
-    _doutwork()
-}
+@implementation UIWindow (RFWindowLevel)
 
 - (void)bringAboveWindow:(UIWindow *)window {
-    UIWindowLevel level = window.windowLevel;
-    self.windowLevel = ++level;
+    self.windowLevel = window.windowLevel;
 }
+
 - (void)sendBelowWindow:(UIWindow *)window {
     UIWindowLevel level = window.windowLevel;
     self.windowLevel = --level;
 }
 
 @end
-
 

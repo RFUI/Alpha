@@ -36,6 +36,8 @@
 #pragma mark - Cache
 - (void)invalidateOffscreenCellCache;
 
+@property (assign, nonatomic) BOOL cellHeightCacheEnabled;
+
 - (void)invalidateCellHeightCache;
 - (void)invalidateCellHeightCacheAtIndexPath:(NSIndexPath *)indexPath;
 - (void)invalidateCellHeightCacheAtIndexPaths:(NSArray *)indexPaths;

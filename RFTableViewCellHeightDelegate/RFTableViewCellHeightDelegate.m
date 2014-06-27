@@ -26,6 +26,7 @@
     NSCache *chc = [[NSCache alloc] init];
     chc.name = @"com.github.RFUI.RFTableViewCellHeightDelegate.cellHeightCache";
     _cellHeightCache = chc;
+    _cellHeightCacheEnabled = YES;
 }
 
 - (void)setDelegate:(id<RFTableViewCellHeightDelegate>)delegate {
@@ -102,10 +103,12 @@
         [self invalidateCellHeightCache];
     }
 
-    NSNumber *heightCache = [self.cellHeightCache objectForKey:indexPath];
-    if (heightCache) {
-        dout_debug(@"Return cached height: %@", heightCache);
-        return [heightCache floatValue];
+    if (self.cellHeightCacheEnabled) {
+        NSNumber *heightCache = [self.cellHeightCache objectForKey:indexPath];
+        if (heightCache) {
+            dout_debug(@"Return cached height: %@", heightCache);
+            return [heightCache floatValue];
+        }
     }
 
     // Make duplicated cells deallocated faster.
@@ -126,7 +129,9 @@
         CGSize size = [cell.contentView systemLayoutSizeFittingSize:CGSizeMake(contentWidth, 0)];
         dout_debug(@"Cell size: %@", NSStringFromCGSize(size));
         CGFloat height = size.height + 1.f + inset.top + inset.bottom;
-        [self.cellHeightCache setObject:@(height) forKey:indexPath];
+        if (self.cellHeightCacheEnabled) {
+            [self.cellHeightCache setObject:@(height) forKey:indexPath];
+        }
         return height;
     }
 }

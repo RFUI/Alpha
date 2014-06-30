@@ -37,19 +37,19 @@
     self.scheduled = YES;
     self.fireCounter = 0;
 
+    [self resume];
+}
+
+- (void)resume {
+    if (self.realTimer) return;
+
     NSTimer *tm = [NSTimer timerWithTimeInterval:self.timeInterval target:self selector:@selector(scheduledFire) userInfo:nil repeats:self.repeating];
     if ([tm respondsToSelector:@selector(setTolerance:)]) {
         tm.tolerance = self.tolerance;
     }
 
-    if (!runLoop) {
-        runLoop = [NSRunLoop mainRunLoop];
-    }
-
-    if (!mode) {
-        mode = NSDefaultRunLoopMode;
-    }
-
+    NSRunLoop *runLoop = self.runLoop?: [NSRunLoop mainRunLoop];
+    NSString *mode = self.runLoopMode?: NSDefaultRunLoopMode;
     [runLoop addTimer:tm forMode:mode];
     self.realTimer = tm;
 }
@@ -57,7 +57,6 @@
 - (void)invalidate {
     [self.realTimer invalidate];
     self.realTimer = nil;
-
     self.scheduled = NO;
 }
 
@@ -68,7 +67,7 @@
             self.realTimer = nil;
         }
         else {
-            [self scheduleInRunLoop:self.runLoop forMode:self.runLoopMode];
+            [self resume];
         }
         _suspended = suspended;
     }

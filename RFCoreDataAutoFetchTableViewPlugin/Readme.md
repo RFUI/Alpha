@@ -1,6 +1,6 @@
-RFCoreDataAutoFetchTableViewPlugin
+RFTableViewAutoFetchDataSource
 =====
-RFCoreDataAutoFetchTableViewPlugin（以下简称“插件”）简化了在 tableView 中显示 core data 数据的工作，只需 20 多行代码即可完成数据获取及更新显示的全部工作，如下例所示：
+RFTableViewAutoFetchDataSource（以下简称“插件”）简化了在 tableView 中显示 core data 数据的工作，只需 20 多行代码即可完成数据获取及更新显示的全部工作，如下例所示：
 
 ```
 - (void)viewDidLoad {
@@ -10,8 +10,7 @@ RFCoreDataAutoFetchTableViewPlugin（以下简称“插件”）简化了在 tab
         NSFetchRequest *fr = [[NSFetchRequest alloc] initWithEntityName:CDENChannel];
         fr.sortDescriptors = @[];
         
-        RFCoreDataAutoFetchTableViewPlugin *dp = [[RFCoreDataAutoFetchTableViewPlugin alloc] init];
-        dp.master = self;
+        RFTableViewAutoFetchDataSource *dp = [[RFTableViewAutoFetchDataSource alloc] init];
         dp.request = fr;
         dp.managedObjectContext = [DataStack sharedInstance].managedObjectContext;
         self.dataPlugin = dp;
@@ -20,7 +19,7 @@ RFCoreDataAutoFetchTableViewPlugin（以下简称“插件”）简化了在 tab
     self.dataPlugin.tableView = self.tableView;
 }
 
-- (UITableViewCell *)RFCoreDataAutoFetchTableViewPlugin:(RFCoreDataAutoFetchTableViewPlugin *)plugin cellForRowAtIndexPath:(NSIndexPath *)indexPath managedObject:(NSManagedObject *)managedObject {
+- (UITableViewCell *)RFTableViewAutoFetchDataSource:(RFTableViewAutoFetchDataSource *)plugin cellForRowAtIndexPath:(NSIndexPath *)indexPath managedObject:(NSManagedObject *)managedObject {
     ChannelListCell *cell = [plugin.tableView dequeueReusableCellWithClass:[ChannelListCell class]];
     cell.channel = (Channel *)managedObject;
     return cell;

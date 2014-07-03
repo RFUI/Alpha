@@ -1,17 +1,20 @@
 
-#import "RFCoreDataAutoFetchTableViewPlugin.h"
+#import "RFTableViewAutoFetchDataSource.h"
 
 static void *const RFCoreDataAutoFetchTableViewPluginKVOContext = (void *)&RFCoreDataAutoFetchTableViewPluginKVOContext;
 
-@interface RFCoreDataAutoFetchTableViewPlugin ()
+@interface RFTableViewAutoFetchDataSource ()
 @property (RF_STRONG, readwrite, nonatomic) NSFetchedResultsController *fetchController;
 @end
 
-@implementation RFCoreDataAutoFetchTableViewPlugin
+@implementation RFTableViewAutoFetchDataSource
 
 - (void)setTableView:(UITableView *)tableView {
     if (_tableView != tableView) {
         tableView.coreDataAutoFetchTableViewPlugin = self;
+        if (tableView.dataSource != self) {
+            self.delegate = (id)tableView.dataSource;
+        }
         tableView.dataSource = self;
         _tableView = tableView;
         self.fetchController.delegate = (_tableView)?self : nil;
@@ -19,7 +22,7 @@ static void *const RFCoreDataAutoFetchTableViewPluginKVOContext = (void *)&RFCor
 }
 
 - (NSString *)description {
-    return [NSString stringWithFormat:@"<%@: %p, fetchedResultsController = %@, master = %@, tableView = %p>", [self class], self, self.fetchController, self.master, self.tableView];
+    return [NSString stringWithFormat:@"<%@: %p, delegate = %@, fetchedResultsController = %@, tableView = %p>", self.class, self, self.delegate, self.fetchController, self.tableView];
 }
 
 #pragma mark -
@@ -105,8 +108,8 @@ static void *const RFCoreDataAutoFetchTableViewPluginKVOContext = (void *)&RFCor
 }
 
 - (NSUInteger)numberOfRowsBeforeFetchedRowsInSection:(NSInteger)section {
-    if ([self.master respondsToSelector:@selector(RFCoreDataAutoFetchTableViewPlugin:numberOfRowsBeforeFetchedRowsInSection:)]) {
-        return [self.master RFCoreDataAutoFetchTableViewPlugin:self numberOfRowsBeforeFetchedRowsInSection:section];
+    if ([self.delegate respondsToSelector:@selector(RFTableViewAutoFetchDataSource:numberOfRowsBeforeFetchedRowsInSection:)]) {
+        return [self.delegate RFTableViewAutoFetchDataSource:self numberOfRowsBeforeFetchedRowsInSection:section];
     }
     return 0;
 }
@@ -114,11 +117,11 @@ static void *const RFCoreDataAutoFetchTableViewPluginKVOContext = (void *)&RFCor
 #pragma mark - UITableViewDataSource
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
     NSInteger extraCount = 0;
-    if ([self.master respondsToSelector:@selector(RFCoreDataAutoFetchTableViewPlugin:numberOfRowsBeforeFetchedRowsInSection:)]) {
-        extraCount += [self.master RFCoreDataAutoFetchTableViewPlugin:self numberOfRowsBeforeFetchedRowsInSection:section];
+    if ([self.delegate respondsToSelector:@selector(RFTableViewAutoFetchDataSource:numberOfRowsBeforeFetchedRowsInSection:)]) {
+        extraCount += [self.delegate RFTableViewAutoFetchDataSource:self numberOfRowsBeforeFetchedRowsInSection:section];
     }
-    if ([self.master respondsToSelector:@selector(RFCoreDataAutoFetchTableViewPlugin:numberOfRowsAfterFetchedRowsInSection:)]) {
-        extraCount += [self.master RFCoreDataAutoFetchTableViewPlugin:self numberOfRowsAfterFetchedRowsInSection:section];
+    if ([self.delegate respondsToSelector:@selector(RFTableViewAutoFetchDataSource:numberOfRowsAfterFetchedRowsInSection:)]) {
+        extraCount += [self.delegate RFTableViewAutoFetchDataSource:self numberOfRowsAfterFetchedRowsInSection:section];
     }
     
     id <NSFetchedResultsSectionInfo> sectionInfo = [self.fetchController sections][section];
@@ -126,9 +129,7 @@ static void *const RFCoreDataAutoFetchTableViewPluginKVOContext = (void *)&RFCor
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
-    RFAssert(self.master, @"RFCoreDataAutoFetchTableViewPlugin must have a master.");
-    UITableViewCell *cell = [self.master RFCoreDataAutoFetchTableViewPlugin:self cellForRowAtIndexPath:indexPath managedObject:[self fetchedObjectAtIndexPath:indexPath]];
-    RFAssert(cell, @"Master must return a cell.");
+    UITableViewCell *cell = [self.delegate RFCoreDataAutoFetchTableViewPlugin:self cellForRowAtIndexPath:indexPath managedObject:[self fetchedObjectAtIndexPath:indexPath]];
     return cell;
 }
 
@@ -143,34 +144,6 @@ static void *const RFCoreDataAutoFetchTableViewPluginKVOContext = (void *)&RFCor
 }
 
 #pragma mark - Other fallback table view data source
-- (NSString *)tableView:(UITableView *)tableView titleForFooterInSection:(NSInteger)section {
-    if ([self.master respondsToSelector:@selector(tableView:titleForFooterInSection:)]) {
-        return [self.master tableView:tableView titleForFooterInSection:section];
-    }
-    return nil;
-}
-
-// Default changed to NO.
-- (BOOL)tableView:(UITableView *)tableView canEditRowAtIndexPath:(NSIndexPath *)indexPath {
-    if ([self.master respondsToSelector:@selector(tableView:canEditRowAtIndexPath:)]) {
-        return [self.master tableView:tableView canEditRowAtIndexPath:indexPath];
-    }
-    return NO;
-}
-
-- (BOOL)tableView:(UITableView *)tableView canMoveRowAtIndexPath:(NSIndexPath *)indexPath {
-    if ([self.master respondsToSelector:@selector(tableView:canMoveRowAtIndexPath:)]) {
-        return [self.master tableView:tableView canMoveRowAtIndexPath:indexPath];
-    }
-    return YES;
-}
-
-- (NSArray *)sectionIndexTitlesForTableView:(UITableView *)tableView {
-    if ([self.master respondsToSelector:@selector(sectionIndexTitlesForTableView:)]) {
-        return [self sectionIndexTitlesForTableView:tableView];
-    }
-    return nil;
-}
 
 - (NSInteger)tableView:(UITableView *)tableView sectionForSectionIndexTitle:(NSString *)title atIndex:(NSInteger)index {
     for (id <NSFetchedResultsSectionInfo> sectionInfo in [self.fetchController sections]) {
@@ -179,22 +152,10 @@ static void *const RFCoreDataAutoFetchTableViewPluginKVOContext = (void *)&RFCor
         }
     }
     
-    if ([self.master respondsToSelector:@selector(tableView:sectionForSectionIndexTitle:atIndex:)]) {
-        return [self.master tableView:tableView sectionForSectionIndexTitle:title atIndex:index];
+    if ([self.delegate respondsToSelector:@selector(tableView:sectionForSectionIndexTitle:atIndex:)]) {
+        return [self.delegate tableView:tableView sectionForSectionIndexTitle:title atIndex:index];
     }
     return NSNotFound;
-}
-
-- (void)tableView:(UITableView *)tableView commitEditingStyle:(UITableViewCellEditingStyle)editingStyle forRowAtIndexPath:(NSIndexPath *)indexPath {
-    if ([self.master respondsToSelector:@selector(tableView:commitEditingStyle:forRowAtIndexPath:)]) {
-        [self.master tableView:tableView commitEditingStyle:editingStyle forRowAtIndexPath:indexPath];
-    }
-}
-
-- (void)tableView:(UITableView *)tableView moveRowAtIndexPath:(NSIndexPath *)sourceIndexPath toIndexPath:(NSIndexPath *)destinationIndexPath {
-    if ([self.master respondsToSelector:@selector(tableView:moveRowAtIndexPath:toIndexPath:)]) {
-        [self.master tableView:tableView moveRowAtIndexPath:sourceIndexPath toIndexPath:destinationIndexPath];
-    }
 }
 
 #pragma mark - NSFetchedResultsControllerDelegate
@@ -266,11 +227,11 @@ static char RFCoreDataAutoFetchTableViewPluginCateogryProperty;
 @implementation UITableView (RFCoreDataAutoFetchTableViewPlugin)
 @dynamic coreDataAutoFetchTableViewPlugin;
 
-- (RFCoreDataAutoFetchTableViewPlugin *)coreDataAutoFetchTableViewPlugin {
+- (RFTableViewAutoFetchDataSource *)coreDataAutoFetchTableViewPlugin {
     return objc_getAssociatedObject(self, &RFCoreDataAutoFetchTableViewPluginCateogryProperty);
 }
 
-- (void)setCoreDataAutoFetchTableViewPlugin:(RFCoreDataAutoFetchTableViewPlugin *)coreDataAutoFetchTableViewPlugin {
+- (void)setCoreDataAutoFetchTableViewPlugin:(RFTableViewAutoFetchDataSource *)coreDataAutoFetchTableViewPlugin {
     if (self.coreDataAutoFetchTableViewPlugin != coreDataAutoFetchTableViewPlugin) {
         objc_setAssociatedObject(self, &RFCoreDataAutoFetchTableViewPluginCateogryProperty, coreDataAutoFetchTableViewPlugin, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
     }

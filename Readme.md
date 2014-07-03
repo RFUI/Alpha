@@ -10,7 +10,7 @@ Components List
 
 ### RFAPI
 
-状态：正常，核心组件
+状态：正常，核心组件，有改进计划
 
 ### RFAssetsCache
 
@@ -19,6 +19,10 @@ Components List
 ### RFAudioPlayer
 
 状态：待评估
+
+### RFAutoLayout
+
+状态：测试
 
 ### RFButton
 
@@ -31,14 +35,6 @@ Components List
 ### RFCoreData
 
 状态：正常，达到预期
-
-### RFCoreDataAutoFetchTableViewPlugin
-
-状态：良好
-
-Core Data 数据获取插件
-
-详见：[RFCoreDataAutoFetchTableViewPlugin/Readme.md](RFCoreDataAutoFetchTableViewPlugin/Readme.md)
 
 ### RFDelegateChain
 
@@ -94,7 +90,7 @@ Core Data 数据获取插件
 
 ### RFSliderView
 
-状态：停止维护
+状态：良好
 
 ### RFSound
 
@@ -107,6 +103,14 @@ Core Data 数据获取插件
 ### RFTabView
 
 状态：待评估
+
+### RFTableViewAutoFetchDataSource
+
+状态：良好
+
+Core Data 数据获取插件
+
+详见：[RFTableViewAutoFetchDataSource/Readme.md](RFTableViewAutoFetchDataSource/Readme.md)
 
 ### RFTableViewCellHeightDelegate
 
@@ -130,4 +134,4 @@ Core Data 数据获取插件
 
 ### RFWindow
 
-状态：待加强，旋转问题会在未来改进
+状态：良好，达到预期

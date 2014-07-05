@@ -11,6 +11,18 @@
 RFDefineConstString(RFAPIErrorDomain);
 static NSString *RFAPIOperationUIkControl = @"RFAPIOperationUIkControl";
 
+typedef NS_ENUM(short, RFHTTPRequestFormDataSourceType) {
+    RFHTTPRequestFormDataSourceTypeURL = 0,
+    RFHTTPRequestFormDataSourceTypeStream,
+    RFHTTPRequestFormDataSourceTypeData
+};
+
+@interface RFHTTPRequestFormData ()
+@property (assign, nonatomic) RFHTTPRequestFormDataSourceType type;
+
+- (void)buildFormData:(id<AFMultipartFormData>)formData error:(NSError * __autoreleasing *)error;
+@end
+
 @interface RFAPI ()
 @property (strong, nonatomic, readwrite) AFNetworkReachabilityManager *reachabilityManager;
 @property (strong, nonatomic, readwrite) RFAPIDefineManager *defineManager;
@@ -96,14 +108,14 @@ RFInitializingRootForNSObject
         return;\
     }
 
-- (AFHTTPRequestOperation *)requestWithName:(NSString *)APIName parameters:(NSDictionary *)parameters controlInfo:(RFAPIControl *)controlInfo success:(void (^)(AFHTTPRequestOperation *, id))success failure:(void (^)(AFHTTPRequestOperation *, NSError *))failure completion:(void (^)(AFHTTPRequestOperation *))completion {
+- (AFHTTPRequestOperation *)requestWithName:(NSString *)APIName parameters:(NSDictionary *)parameters formData:(NSArray *)arrayContainsFormDataObj controlInfo:(RFAPIControl *)controlInfo uploadProgress:(void (^)(NSUInteger, long long, long long))progress success:(void (^)(AFHTTPRequestOperation *, id))success failure:(void (^)(AFHTTPRequestOperation *, NSError *))failure completion:(void (^)(AFHTTPRequestOperation *))completion {
     NSParameterAssert(APIName);
     RFAPIDefine *define = [self.defineManager defineForName:APIName];
     RFAssert(define, @"Can not find an API with name: %@.", APIName);
     if (!define) return nil;
 
     NSError __autoreleasing *e = nil;
-    NSMutableURLRequest *request = [self URLRequestWithDefine:define parameters:parameters controlInfo:controlInfo error:&e];
+    NSMutableURLRequest *request = [self URLRequestWithDefine:define parameters:parameters formData:arrayContainsFormDataObj controlInfo:controlInfo error:&e];
     if (!request) {
         __RFAPILogError(@"无法创建请求: %@", e);
         NSError *error = [NSError errorWithDomain:NSURLErrorDomain code:NSURLErrorCancelled userInfo:@{
@@ -197,12 +209,22 @@ RFInitializingRootForNSObject
         __RFAPICompletionCallback(operationCompletion, op);
     }];
 
+    if (progress) {
+        [operation setUploadProgressBlock:progress];
+    }
+
     [self addOperation:operation];
     return operation;
 }
+
+
 #undef __RFAPICompletionCallback
 #undef __RFAPILogError
 #undef __RFAPICompletionCallbackProccessError
+
+- (AFHTTPRequestOperation *)requestWithName:(NSString *)APIName parameters:(NSDictionary *)parameters controlInfo:(RFAPIControl *)controlInfo success:(void (^)(AFHTTPRequestOperation *, id))success failure:(void (^)(AFHTTPRequestOperation *, NSError *))failure completion:(void (^)(AFHTTPRequestOperation *))completion {
+    return [self requestWithName:APIName parameters:parameters formData:nil controlInfo:controlInfo uploadProgress:nil success:success failure:failure completion:completion];
+}
 
 #define __RFAPIMakeRequestError(CONDITION)\
     if (CONDITION) {\
@@ -212,7 +234,7 @@ RFInitializingRootForNSObject
         return nil;\
     }
 
-- (NSMutableURLRequest *)URLRequestWithDefine:(RFAPIDefine *)define parameters:(NSDictionary *)parameters controlInfo:(RFAPIControl *)controlInfo error:(NSError *__autoreleasing *)error {
+- (NSMutableURLRequest *)URLRequestWithDefine:(RFAPIDefine *)define parameters:(NSDictionary *)parameters formData:(NSArray *)RFFormData controlInfo:(RFAPIControl *)controlInfo error:(NSError *__autoreleasing *)error {
     NSParameterAssert(define);
 
     // Preprocessing arguments
@@ -226,11 +248,23 @@ RFInitializingRootForNSObject
     __RFAPIMakeRequestError(!url);
 
     // Creat URLRequest
-    NSURLRequestCachePolicy cachePolicy = [self cachePolicyWithDefine:define controlInfo:controlInfo];
-    NSMutableURLRequest *r = [[NSMutableURLRequest alloc] initWithURL:url cachePolicy:cachePolicy timeoutInterval:10];
-    [r setHTTPMethod:define.method];
+    NSMutableURLRequest *r;
     AFHTTPRequestSerializer *s = [self.defineManager requestSerializerForDefine:define];
-    r = [[s requestBySerializingRequest:r withParameters:requestParameters error:&e] mutableCopy];
+    if (RFFormData.count) {
+        r = [s multipartFormRequestWithMethod:define.method URLString:[url absoluteString] parameters:requestParameters constructingBodyWithBlock:^(id<AFMultipartFormData> formData) {
+            for (RFHTTPRequestFormData *file in RFFormData) {
+                NSError __autoreleasing *f_e = nil;
+                [file buildFormData:formData error:&f_e];
+                if (f_e) dout_error(@"%@", f_e);
+            }
+        } error:&e];
+    }
+    else {
+        NSURLRequestCachePolicy cachePolicy = [self cachePolicyWithDefine:define controlInfo:controlInfo];
+        r = [[NSMutableURLRequest alloc] initWithURL:url cachePolicy:cachePolicy timeoutInterval:10];
+        [r setHTTPMethod:define.method];
+        r = [[s requestBySerializingRequest:r withParameters:requestParameters error:&e] mutableCopy];
+    }
     __RFAPIMakeRequestError(!r);
 
     // Set header
@@ -242,6 +276,7 @@ RFInitializingRootForNSObject
     r = [self finalizeSerializedRequest:r withDefine:define controlInfo:controlInfo];
     return r;
 }
+
 #undef __RFAPIMakeRequestError
 
 // TODO: Full cache policy implementation.
@@ -345,6 +380,26 @@ NSString *const RFAPIRequestCustomizationControlKey = @"_RFAPIRequestCustomizati
 
 @end
 
+
 @implementation RFHTTPRequestFormData
+
++ (instancetype)formDataWithFileURL:(NSURL *)fileURL name:(NSString *)name {
+    RFHTTPRequestFormData *this = [RFHTTPRequestFormData new];
+    this.fileURL = fileURL;
+    this.name = name;
+    this.type = RFHTTPRequestFormDataSourceTypeURL;
+    return this;
+}
+
+- (void)buildFormData:(id<AFMultipartFormData>)formData error:(NSError * __autoreleasing *)error {
+    switch (self.type) {
+        case RFHTTPRequestFormDataSourceTypeURL:
+            [formData appendPartWithFileURL:self.fileURL name:self.name error:error];
+            break;
+
+        default:
+            break;
+    }
+}
 
 @end

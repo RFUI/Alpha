@@ -16,8 +16,7 @@
 #import "JSONModel.h"
 
 /**
- TODO: 
- [ ] 文件上传
+ TODO:
  [ ] 缓存实现
  */
 
@@ -63,6 +62,20 @@
 - (AFHTTPRequestOperation *)requestWithName:(NSString *)APIName
      parameters:(NSDictionary *)parameters
     controlInfo:(RFAPIControl *)controlInfo
+        success:(void (^)(AFHTTPRequestOperation *operation, id responseObject))success
+        failure:(void (^)(AFHTTPRequestOperation *operation, NSError *error))failure
+     completion:(void (^)(AFHTTPRequestOperation *operation))completion;
+
+/**
+ 上传文件
+
+ @param arrayContainsFormDataObj 包含 RFHTTPRequestFormData 对象的数组
+ */
+- (AFHTTPRequestOperation *)requestWithName:(NSString *)APIName
+     parameters:(NSDictionary *)parameters
+       formData:(NSArray *)arrayContainsFormDataObj
+    controlInfo:(RFAPIControl *)controlInfo
+ uploadProgress:(void (^)(NSUInteger bytesWritten, long long totalBytesWritten, long long totalBytesExpectedToWrite))progress
         success:(void (^)(AFHTTPRequestOperation *operation, id responseObject))success
         failure:(void (^)(AFHTTPRequestOperation *operation, NSError *error))failure
      completion:(void (^)(AFHTTPRequestOperation *operation))completion;
@@ -135,30 +148,28 @@ extern NSString *const RFAPIRequestCustomizationControlKey;
 - (id)initWithIdentifier:(NSString *)identifier loadingMessage:(NSString *)message;
 @end
 
-/*
- @code
- [
- {
- Name:@"value name",
- Data:NSData
- },
- {
- Name:@"value 2",
- URL:NSURL for resource
- },
- {
- Name:@"Optional keys",
- Data:NSData,
- FileName:@"file name",
- MimeType:@"image/png",
- Length:123
- }
- ]
- @endcode
 
- Support three source: `Data`, `URL`, `Stream`
-
- @see AFMultipartFormData
- */
 @interface RFHTTPRequestFormData : NSObject
+/// The name to be associated with the specified data. This property must be set.
+@property (copy, nonatomic) NSString *name;
+
+// No implementation
+@property (copy, nonatomic) NSString *fileName;
+
+// No implementation
+@property (copy, nonatomic) NSString *mimeType;
+
+/// The URL corresponding to the form content
+@property (strong, nonatomic) NSURL *fileURL;
+
+// No implementation
+@property (strong, nonatomic) NSInputStream *inputStream;
+// No implementation
+@property (strong, nonatomic) NSData *data;
+
+/**
+ @param fileURL The URL corresponding to the file whose content will be appended to the form. This parameter must not be `nil`.
+ @param name The name to be associated with the specified data. This parameter must not be `nil`.
+ */
++ (instancetype)formDataWithFileURL:(NSURL *)fileURL name:(NSString *)name;
 @end

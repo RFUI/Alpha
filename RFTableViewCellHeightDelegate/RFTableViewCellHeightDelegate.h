@@ -33,6 +33,10 @@
 @property (weak, nonatomic) IBOutlet id<RFTableViewCellHeightDelegate> delegate;
 @property (assign, nonatomic) UIEdgeInsets cellLayoutEdgeInsets;
 
+#pragma mark -
+
+- (void)updateCellHeightOfCell:(UITableViewCell *)cell;
+
 #pragma mark - Cache
 - (void)invalidateOffscreenCellCache;
 
@@ -41,4 +45,5 @@
 - (void)invalidateCellHeightCache;
 - (void)invalidateCellHeightCacheAtIndexPath:(NSIndexPath *)indexPath;
 - (void)invalidateCellHeightCacheAtIndexPaths:(NSArray *)indexPaths;
+
 @end

@@ -37,6 +37,35 @@
     [super setDelegate:delegate];
 }
 
+#pragma mark - Update Height
+
+- (void)updateCellHeightOfCell:(UITableViewCell *)cell {
+    UIEdgeInsets inset = self.cellLayoutEdgeInsets;
+    UITableView *tableView = self.lastTableView;
+    NSIndexPath *indexPath = [self.lastTableView indexPathForCell:cell];
+    if (!indexPath) {
+        dout_warning(@"[RFTableViewCellHeightDelegate updateCellHeightOfCell:] can not find cell(%@) in table(%@)", cell, tableView);
+        return;
+    }
+
+    [tableView beginUpdates];
+
+    cell.width = tableView.width;
+    dout_debug(@"Calculate cell size for width: %f", cell.width);
+    CGFloat contentWidth = cell.contentView.width - inset.left - inset.right;
+    cell.contentView.width = contentWidth;
+    [cell layoutIfNeeded];
+
+    CGSize size = [cell.contentView systemLayoutSizeFittingSize:CGSizeMake(contentWidth, 0)];
+    dout_debug(@"Cell size: %@", NSStringFromCGSize(size));
+    CGFloat height = size.height + 1.f + inset.top + inset.bottom;
+    if (self.cellHeightCacheEnabled) {
+        [self.cellHeightCache setObject:@(height) forKey:indexPath];
+    }
+
+    [tableView endUpdates];
+}
+
 #pragma mark - Cache
 
 - (void)invalidateOffscreenCellCache {

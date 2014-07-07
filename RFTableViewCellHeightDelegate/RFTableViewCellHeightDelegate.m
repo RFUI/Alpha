@@ -9,6 +9,7 @@
 @property (assign, atomic) BOOL requestNewCellLock;
 @property (weak, nonatomic) id lastTableView;
 @property (assign, nonatomic) CGFloat lastTableViewWidth;
+@property (readwrite, strong, nonatomic) NSCache *canonicalCellHeight;
 @end
 
 @implementation RFTableViewCellHeightDelegate
@@ -27,6 +28,8 @@
     chc.name = @"com.github.RFUI.RFTableViewCellHeightDelegate.cellHeightCache";
     _cellHeightCache = chc;
     _cellHeightCacheEnabled = YES;
+
+    _canonicalCellHeight = [NSCache new];
 }
 
 - (void)setDelegate:(id<RFTableViewCellHeightDelegate>)delegate {
@@ -39,20 +42,48 @@
 
 #pragma mark - Update Height
 
-- (CGFloat)updateCellHeightOfCell:(UITableViewCell *)cell {
+- (void)updateCellHeightOfCell:(UITableViewCell *)cell {
     UITableView *tableView = self.lastTableView;
     NSIndexPath *indexPath = [tableView indexPathForCell:cell];
     if (!indexPath) {
         dout_warning(@"[RFTableViewCellHeightDelegate updateCellHeightOfCell:] can not find cell(%@) in table(%@)", cell, tableView);
-        return -1;
+        return;
     }
 
-//    CGPoint offset = tableView.contentOffset;
     CGFloat height = [self calculateCellHeightWithCell:cell tableView:tableView atIndexPath:indexPath];
+    if (self.cellHeightCacheEnabled) {
+        [self.cellHeightCache setObject:@(height) forKey:indexPath];
+    }
     [tableView reloadRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationNone];
-//    tableView.contentOffset = offset;
+}
 
-    return height; 
+- (CGFloat)calculateCellHeightWithCell:(UITableViewCell *)cell tableView:(UITableView *)tableView atIndexPath:(NSIndexPath *)indexPath {
+    UIEdgeInsets inset = self.cellLayoutEdgeInsets;
+
+    cell.width = tableView.width;
+    dout_debug(@"Calculate cell size for width: %f", cell.width);
+    CGFloat contentWidth = cell.contentView.width - inset.left - inset.right;
+    cell.contentView.width = contentWidth;
+    [cell layoutIfNeeded];
+
+    CGSize size = [cell.contentView systemLayoutSizeFittingSize:CGSizeMake(contentWidth, 0)];
+    dout_debug(@"Cell size: %@", NSStringFromCGSize(size));
+    CGFloat height = size.height + inset.top + inset.bottom + 1;
+    return height;
+}
+
+#pragma mark - Canonical Height
+
+- (void)setCanonicalHeight:(CGFloat)height atIndexPath:(NSIndexPath *)indexPath {
+    [self.canonicalCellHeight setObject:@(height) forKey:indexPath];
+}
+
+- (void)invalidateCanonicalCellHeight {
+    [self.canonicalCellHeight removeAllObjects];
+}
+
+- (void)invalidateCanonicalCellHeightAtIndexPath:(NSIndexPath *)indexPath {
+    [self.canonicalCellHeight removeObjectForKey:indexPath];
 }
 
 #pragma mark - Cache
@@ -106,6 +137,10 @@
 #pragma mark - Height
 
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath {
+    if ([self.canonicalCellHeight objectForKey:indexPath]) {
+        return [[self.canonicalCellHeight objectForKey:indexPath] floatValue];
+    }
+
     if (self.requestNewCellLock) {
         return 0;
     }
@@ -135,26 +170,12 @@
         RFAssert(cell, @"Cannot get a cached cell or an new one.");
 
         [self.delegate tableView:tableView configureCell:cell forIndexPath:indexPath offscreenRendering:YES];
-        return [self calculateCellHeightWithCell:cell tableView:tableView atIndexPath:indexPath];
+        CGFloat height = [self calculateCellHeightWithCell:cell tableView:tableView atIndexPath:indexPath];
+        if (self.cellHeightCacheEnabled) {
+            [self.cellHeightCache setObject:@(height) forKey:indexPath];
+        }
+        return height;
     }
-}
-
-- (CGFloat)calculateCellHeightWithCell:(UITableViewCell *)cell tableView:(UITableView *)tableView atIndexPath:(NSIndexPath *)indexPath {
-    UIEdgeInsets inset = self.cellLayoutEdgeInsets;
-
-    cell.width = tableView.width;
-    dout_debug(@"Calculate cell size for width: %f", cell.width);
-    CGFloat contentWidth = cell.contentView.width - inset.left - inset.right;
-    cell.contentView.width = contentWidth;
-    [cell layoutIfNeeded];
-
-    CGSize size = [cell.contentView systemLayoutSizeFittingSize:CGSizeMake(contentWidth, 0)];
-    dout_debug(@"Cell size: %@", NSStringFromCGSize(size));
-    CGFloat height = size.height + inset.top + inset.bottom + 1;
-    if (self.cellHeightCacheEnabled) {
-        [self.cellHeightCache setObject:@(height) forKey:indexPath];
-    }
-    return height;
 }
 
 - (CGFloat)tableView:(UITableView *)tableView estimatedHeightForRowAtIndexPath:(NSIndexPath *)indexPath {

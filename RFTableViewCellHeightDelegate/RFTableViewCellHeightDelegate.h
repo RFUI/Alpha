@@ -35,7 +35,19 @@
 
 #pragma mark -
 
-- (CGFloat)updateCellHeightOfCell:(UITableViewCell *)cell;
+
+
+- (CGFloat)calculateCellHeightWithCell:(UITableViewCell *)cell tableView:(UITableView *)tableView atIndexPath:(NSIndexPath *)indexPath;
+
+- (void)updateCellHeightOfCell:(UITableViewCell *)cell;
+
+#pragma mark - Canonical Height
+@property (readonly, nonatomic) NSCache *canonicalCellHeight;
+
+- (void)setCanonicalHeight:(CGFloat)height atIndexPath:(NSIndexPath *)indexPath;
+
+- (void)invalidateCanonicalCellHeight;
+- (void)invalidateCanonicalCellHeightAtIndexPath:(NSIndexPath *)indexPath;
 
 #pragma mark - Cache
 - (void)invalidateOffscreenCellCache;

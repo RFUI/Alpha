@@ -35,7 +35,7 @@
 
 #pragma mark -
 
-- (void)updateCellHeightOfCell:(UITableViewCell *)cell;
+- (CGFloat)updateCellHeightOfCell:(UITableViewCell *)cell;
 
 #pragma mark - Cache
 - (void)invalidateOffscreenCellCache;

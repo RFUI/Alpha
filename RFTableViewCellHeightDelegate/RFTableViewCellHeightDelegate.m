@@ -39,17 +39,20 @@
 
 #pragma mark - Update Height
 
-- (void)updateCellHeightOfCell:(UITableViewCell *)cell {
+- (CGFloat)updateCellHeightOfCell:(UITableViewCell *)cell {
     UITableView *tableView = self.lastTableView;
     NSIndexPath *indexPath = [tableView indexPathForCell:cell];
     if (!indexPath) {
         dout_warning(@"[RFTableViewCellHeightDelegate updateCellHeightOfCell:] can not find cell(%@) in table(%@)", cell, tableView);
-        return;
+        return -1;
     }
 
-    [tableView beginUpdates];
-    [self calculateCellHeightWithCell:cell tableView:tableView atIndexPath:indexPath];
-    [tableView endUpdates];
+//    CGPoint offset = tableView.contentOffset;
+    CGFloat height = [self calculateCellHeightWithCell:cell tableView:tableView atIndexPath:indexPath];
+    [tableView reloadRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationNone];
+//    tableView.contentOffset = offset;
+
+    return height; 
 }
 
 #pragma mark - Cache

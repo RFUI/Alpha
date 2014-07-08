@@ -1,6 +1,5 @@
 
 #import "RFAPI.h"
-#import "RFAssetsCache.h"
 #import "RFMessageManager+RFDisplay.h"
 #import "RFAPIDefineManager.h"
 

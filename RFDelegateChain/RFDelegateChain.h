@@ -7,9 +7,8 @@
     The MIT License (MIT)
     http://www.opensource.org/licenses/mit-license.php
 
-    Alpha
+    BETA
  */
-
 #import "RFUI.h"
 
 @interface RFDelegateChain : NSObject <

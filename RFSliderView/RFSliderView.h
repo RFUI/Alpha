@@ -17,3 +17,7 @@
 
 @property(nonatomic) NSInteger currentPage;
 @end
+
+@interface RFSliderViewSimpleImageCell : UICollectionViewCell
+@property (weak, nonatomic) IBOutlet UIImageView *imageView;
+@end

@@ -52,3 +52,6 @@ RFInitializingRootForUIView
 }
 
 @end
+
+@implementation RFSliderViewSimpleImageCell
+@end

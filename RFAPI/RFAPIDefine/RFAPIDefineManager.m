@@ -104,8 +104,26 @@ RFInitializingRootForNSObject
 
 #pragma mark - RFAPI Support
 
-- (NSURL *)requestURLForDefine:(RFAPIDefine *)define error:(NSError *__autoreleasing *)error {
-    NSString *path = define.path;
+- (NSURL *)requestURLForDefine:(RFAPIDefine *)define parameters:(NSMutableDictionary *)parameters error:(NSError *__autoreleasing *)error {
+    NSMutableString *path = [define.path mutableCopy];
+
+    // Replace {PARAMETER} in path
+    NSRegularExpression *regex = [[NSRegularExpression alloc] initWithPattern:@"\\{\\w+\\}" options:NSRegularExpressionAnchorsMatchLines error:error];
+    NSArray *matches = [regex matchesInString:path options:0 range:NSMakeRange(0, path.length)];
+
+    for (NSTextCheckingResult *match in matches.reverseObjectEnumerator) {
+        NSRange keyRange = match.range;
+        keyRange.location++;
+        keyRange.length -= 2;
+        NSString *key = [path substringWithRange:keyRange];
+
+        id parameter = parameters[key];
+        if (parameter) {
+            [path replaceCharactersInRange:match.range withString:[parameter description]];
+            [parameters removeObjectForKey:key];
+        }
+    }
+
     NSURL *url;
     if ([path hasPrefix:@"http://"] || [path hasPrefix:@"https://"]) {
         url = [NSURL URLWithString:path];

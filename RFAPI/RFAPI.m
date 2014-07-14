@@ -243,7 +243,7 @@ RFInitializingRootForNSObject
 
     // Creat URL
     NSError __autoreleasing *e = nil;
-    NSURL *url = [self.defineManager requestURLForDefine:define error:&e];
+    NSURL *url = [self.defineManager requestURLForDefine:define parameters:requestParameters error:&e];
     __RFAPIMakeRequestError(!url);
 
     // Creat URLRequest

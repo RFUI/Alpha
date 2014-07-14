@@ -61,7 +61,7 @@
 
 @property (strong, nonatomic) id<AFURLResponseSerialization> defaultResponseSerializer;
 
-- (NSURL *)requestURLForDefine:(RFAPIDefine *)define error:(NSError *__autoreleasing *)error;
+- (NSURL *)requestURLForDefine:(RFAPIDefine *)define parameters:(NSMutableDictionary *)parameters error:(NSError *__autoreleasing *)error;
 
 - (id)requestSerializerForDefine:(RFAPIDefine *)define;
 - (id)responseSerializerForDefine:(RFAPIDefine *)define;

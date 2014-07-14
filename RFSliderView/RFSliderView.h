@@ -15,7 +15,23 @@
     RFInitializing
 >
 
+#pragma mark - Page
+
 @property(nonatomic) NSInteger currentPage;
+- (void)setCurrentPage:(NSInteger)currentPage animated:(BOOL)animated;
+
+#pragma mark - Auto Scroll
+
+/**
+ Default `NO`
+ */
+@property (assign, nonatomic) BOOL autoScrollEnable;
+@property (assign, nonatomic) NSTimeInterval autoScrollTimeInterval;
+
+/**
+ If `YES`, will scroll to first page if the reciver reach end. Otherwise stop auto scroll.
+ */
+@property (assign, nonatomic) BOOL autoScrollAllowReverse;
 @end
 
 @interface RFSliderViewSimpleImageCell : UICollectionViewCell

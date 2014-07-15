@@ -115,6 +115,16 @@
  */
 - (BOOL)generalHandlerForError:(NSError *)error withDefine:(RFAPIDefine *)define controlInfo:(RFAPIControl *)controlInfo requestOperation:(AFHTTPRequestOperation *)operation operationFailureCallback:(void (^)(AFHTTPRequestOperation *, NSError *))operationFailureCallback;
 
+/**
+ 判断响应是否是成功的结果
+ 
+ Default implementation just return YES.
+ 
+ @param responseObjectRef 可以用来修改返回值
+ @param error 可选的错误信息
+ */
+- (BOOL)isSuccessResponse:(id *)responseObjectRef error:(NSError *__autoreleasing *)error;
+
 #pragma mark - Credentials & Security
 
 /**

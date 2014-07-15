@@ -201,7 +201,14 @@ RFInitializingRootForNSObject
                 responseObject = objects;
                 break;
             }
-            case RFAPIDefineResponseExpectSuccess:
+            case RFAPIDefineResponseExpectSuccess: {
+                if (![self isSuccessResponse:&responseObject error:&error]) {
+                    __RFAPICompletionCallback(operationFailure, op, error);
+                    __RFAPICompletionCallback(operationCompletion, op);
+                    return;
+                }
+                break;
+            }
             case RFAPIDefineResponseExpectDefault:
             default:
                 break;
@@ -341,6 +348,10 @@ RFInitializingRootForNSObject
 }
 
 - (BOOL)generalHandlerForError:(NSError *)error withDefine:(RFAPIDefine *)define controlInfo:(RFAPIControl *)controlInfo requestOperation:(AFHTTPRequestOperation *)operation operationFailureCallback:(void (^)(AFHTTPRequestOperation *, NSError *))operationFailureCallback {
+    return YES;
+}
+
+- (BOOL)isSuccessResponse:(id *)responseObjectRef error:(NSError *__autoreleasing *)error {
     return YES;
 }
 

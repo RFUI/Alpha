@@ -44,6 +44,9 @@ RFInitializingRootForNSObject
     self.maxConcurrentOperationCount = 5;
     self.defineManager = [[RFAPIDefineManager alloc] init];
     self.defineManager.master = self;
+
+    self.securityPolicy = [AFSecurityPolicy defaultPolicy];
+    self.shouldUseCredentialStorage = YES;
 }
 
 - (void)afterInit {
@@ -130,6 +133,9 @@ RFInitializingRootForNSObject
 
     AFHTTPRequestOperation *operation = [[AFHTTPRequestOperation alloc] initWithRequest:request];
     operation.responseSerializer = [self.defineManager responseSerializerForDefine:define];
+    operation.shouldUseCredentialStorage = self.shouldUseCredentialStorage;
+    operation.credential = self.credential;
+    operation.securityPolicy = self.securityPolicy;
     if (controlInfo) {
         operation.userInfo = @{ RFAPIOperationUIkControl : controlInfo };
     }

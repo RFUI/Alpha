@@ -14,6 +14,7 @@
 #import "RFAPIDefineManager.h"
 #import "AFNetworkReachabilityManager.h"
 #import "JSONModel.h"
+#import "AFSecurityPolicy.h"
 
 /**
  TODO:
@@ -113,6 +114,28 @@
  @return 返回 YES 将继续错误的处理继续交由请求的回调处理，NO 处理结束
  */
 - (BOOL)generalHandlerForError:(NSError *)error withDefine:(RFAPIDefine *)define controlInfo:(RFAPIControl *)controlInfo requestOperation:(AFHTTPRequestOperation *)operation operationFailureCallback:(void (^)(AFHTTPRequestOperation *, NSError *))operationFailureCallback;
+
+#pragma mark - Credentials & Security
+
+/**
+ Whether request operations should consult the credential storage for authenticating the connection. `YES` by default.
+
+ @see AFURLConnectionOperation -shouldUseCredentialStorage
+ */
+@property (nonatomic, assign) BOOL shouldUseCredentialStorage;
+
+/**
+ The credential used by request operations for authentication challenges.
+
+ @see AFURLConnectionOperation -credential
+ */
+@property (nonatomic, strong) NSURLCredential *credential;
+
+/**
+ The security policy used by created request operations to evaluate server trust for secure connections. `RFAPI` uses the `defaultPolicy` unless otherwise specified.
+ */
+@property (nonatomic, strong) AFSecurityPolicy *securityPolicy;
+
 @end
 
 extern NSString *const RFAPIErrorDomain;

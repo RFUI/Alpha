@@ -407,10 +407,37 @@ NSString *const RFAPIRequestCustomizationControlKey = @"_RFAPIRequestCustomizati
     return this;
 }
 
++ (instancetype)formDataWithData:(NSData *)data name:(NSString *)name {
+    RFHTTPRequestFormData *this = [RFHTTPRequestFormData new];
+    this.data = data;
+    this.name = name;
+    this.type = RFHTTPRequestFormDataSourceTypeData;
+    return this;
+}
+
++ (instancetype)formDataWithData:(NSData *)data name:(NSString *)name fileName:(NSString *)fileName mimeType:(NSString *)mimeType {
+    RFHTTPRequestFormData *this = [RFHTTPRequestFormData new];
+    this.data = data;
+    this.name = name;
+    this.fileName = fileName;
+    this.mimeType = mimeType;
+    this.type = RFHTTPRequestFormDataSourceTypeData;
+    return this;
+}
+
 - (void)buildFormData:(id<AFMultipartFormData>)formData error:(NSError * __autoreleasing *)error {
     switch (self.type) {
         case RFHTTPRequestFormDataSourceTypeURL:
             [formData appendPartWithFileURL:self.fileURL name:self.name error:error];
+            break;
+
+        case RFHTTPRequestFormDataSourceTypeData:
+            if (self.fileName || self.mimeType) {
+                [formData appendPartWithFileData:self.data name:self.name fileName:self.fileName mimeType:self.mimeType];
+            }
+            else {
+                [formData appendPartWithFormData:self.data name:self.name];
+            }
             break;
 
         default:

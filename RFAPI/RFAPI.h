@@ -205,4 +205,8 @@ extern NSString *const RFAPIRequestCustomizationControlKey;
  @param name The name to be associated with the specified data. This parameter must not be `nil`.
  */
 + (instancetype)formDataWithFileURL:(NSURL *)fileURL name:(NSString *)name;
+
++ (instancetype)formDataWithData:(NSData *)data name:(NSString *)name;
++ (instancetype)formDataWithData:(NSData *)data name:(NSString *)name fileName:(NSString *)fileName mimeType:(NSString *)mimeType;
+
 @end

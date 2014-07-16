@@ -1,6 +1,6 @@
 
 #import "RFNavigationControllerTransitionDelegate.h"
-#import "RFReversibleAnimationTransitioning.h"
+#import "RFAnimationTransitioning.h"
 
 @interface RFNavigationControllerTransitionDelegate ()
 @end
@@ -29,7 +29,7 @@
     _douto(transitionClass)
 
     if (transitionClass) {
-        RFReversibleAnimationTransitioning *transitionInstance = [transitionClass new];
+        RFAnimationTransitioning *transitionInstance = [transitionClass new];
         if ([transitionInstance respondsToSelector:@selector(setReverse:)]) {
             [transitionInstance setReverse:(UINavigationControllerOperationPop == operation)];
         }

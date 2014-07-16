@@ -1,10 +1,10 @@
 
-#import "RFReversibleAnimationTransitioning.h"
+#import "RFAnimationTransitioning.h"
 
-@interface RFReversibleAnimationTransitioning ()
+@interface RFAnimationTransitioning ()
 @end
 
-@implementation RFReversibleAnimationTransitioning
+@implementation RFAnimationTransitioning
 RFInitializingRootForNSObject
 
 - (void)onInit {

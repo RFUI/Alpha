@@ -13,7 +13,7 @@
 #import "RFUI.h"
 #import "RFFeatureSupport.h"
 
-@interface RFReversibleAnimationTransitioning : NSObject <
+@interface RFAnimationTransitioning : NSObject <
     UIViewControllerAnimatedTransitioning,
     RFForSubclass,
     RFInitializing

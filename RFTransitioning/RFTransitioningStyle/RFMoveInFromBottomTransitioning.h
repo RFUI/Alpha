@@ -10,7 +10,7 @@
 
     TEST
  */
-#import "RFReversibleAnimationTransitioning.h"
+#import "RFAnimationTransitioning.h"
 
-@interface RFMoveInFromBottomTransitioning : RFReversibleAnimationTransitioning
+@interface RFMoveInFromBottomTransitioning : RFAnimationTransitioning
 @end

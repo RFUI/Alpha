@@ -11,3 +11,4 @@
     TEST
  */
 #import "RFMoveInFromBottomTransitioning.h"
+#import "RFMagicMoveTransitioning.h"

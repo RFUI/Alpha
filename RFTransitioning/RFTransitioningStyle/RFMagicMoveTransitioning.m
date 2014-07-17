@@ -5,7 +5,8 @@
 @interface RFMagicMoveTransitioningBinding : NSObject
 @property (strong, nonatomic) UIView *fromView;
 @property (strong, nonatomic) UIView *toView;
-@property (strong, nonatomic) UIView *snapshotView;
+@property (strong, nonatomic) UIView *fromViewSnapshot;
+@property (strong, nonatomic) UIView *toViewSnapshot;
 
 @property (assign, nonatomic) BOOL fromViewHidden;
 @property (assign, nonatomic) BOOL toViewHidden;
@@ -44,16 +45,25 @@
 
         RFMagicMoveTransitioningBinding *bind = [RFMagicMoveTransitioningBinding new];
         bind.fromView = vFrom;
-        bind.fromView.hidden = vFrom.hidden;
+        bind.fromViewHidden = vFrom.hidden;
+        vFrom.hidden = YES;
 
         bind.toView = vTo;
         bind.toViewHidden = vTo.hidden;
 
-        UIView *snap = [vFrom snapshotViewAfterScreenUpdates:NO];
-        snap.frame = [containerView convertRect:vFrom.frame fromView:vFrom.superview];
-        [containerView addSubview:snap];
+        // vTo has not been rendered, so we cannot snapshotting it.
+        // Rendered it as a image instead.
+        UIView *sTo = reverse? [vTo snapshotViewAfterScreenUpdates:NO] : [[UIImageView alloc] initWithImage:[vTo renderToImage]];
+        sTo.frame = [containerView convertRect:vFrom.frame fromView:vFrom.superview];
+        [containerView addSubview:sTo];
+        sTo.alpha = 0;
+        bind.toViewSnapshot = sTo;
 
-        bind.snapshotView = snap;
+        UIView *sFrom = [vFrom snapshotViewAfterScreenUpdates:NO];
+        sFrom.frame = [containerView convertRect:vFrom.frame fromView:vFrom.superview];
+        [containerView addSubview:sFrom];
+        sFrom.alpha = vTo.hidden? 0 : vTo.alpha;
+        bind.fromViewSnapshot = sFrom;
 
         vTo.hidden = YES;
         [bindings addObject:bind];
@@ -65,14 +75,19 @@
         // Move each snapshot to destination
         for (RFMagicMoveTransitioningBinding *bind in bindings) {
             UIView *vTo = bind.toView;
-            bind.snapshotView.alpha = bind.toViewHidden? 0 : vTo.alpha;
-            bind.snapshotView.frame = [containerView convertRect:vTo.frame fromView:vTo.superview];
+            bind.fromViewSnapshot.alpha = 0;
+            bind.toViewSnapshot.alpha = bind.toView.alpha;
+            bind.fromViewSnapshot.frame = [containerView convertRect:vTo.frame fromView:vTo.superview];
+            bind.toViewSnapshot.frame = bind.fromViewSnapshot.frame;
         }
     } completion:^(BOOL finished) {
+        // Restore status
         for (RFMagicMoveTransitioningBinding *bind in bindings) {
-            bind.toView.hidden = bind.toViewHidden;
             bind.fromView.hidden = bind.fromViewHidden;
-            [bind.snapshotView removeFromSuperview];
+            bind.toView.hidden = bind.toViewHidden;
+
+            [bind.fromViewSnapshot removeFromSuperview];
+            [bind.toViewSnapshot removeFromSuperview];
         }
 
         [transitionContext completeTransition:!transitionContext.transitionWasCancelled];

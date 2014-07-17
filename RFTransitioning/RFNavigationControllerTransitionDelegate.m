@@ -9,9 +9,6 @@
 
 - (id<UIViewControllerAnimatedTransitioning>)navigationController:(UINavigationController *)navigationController animationControllerForOperation:(UINavigationControllerOperation)operation fromViewController:(UIViewController *)fromVC toViewController:(UIViewController *)toVC {
 
-    _douto(fromVC)
-    _douto(toVC)
-
     BOOL usingToTransitionStyle = YES;
     if (self.preferSourceViewControllerTransitionStyle) {
         usingToTransitionStyle = !usingToTransitionStyle;
@@ -26,7 +23,6 @@
     }
 
     Class transitionClass = NSClassFromString(transitionClassName);
-    _douto(transitionClass)
 
     if (transitionClass) {
         RFAnimationTransitioning *transitionInstance = [transitionClass new];
@@ -38,8 +34,13 @@
     return nil;
 }
 
-//- (id<UIViewControllerInteractiveTransitioning>)navigationController:(UINavigationController *)navigationController interactionControllerForAnimationController:(id<UIViewControllerAnimatedTransitioning>)animationController {
-//
-//}
+- (id<UIViewControllerInteractiveTransitioning>)navigationController:(UINavigationController *)navigationController interactionControllerForAnimationController:(id<UIViewControllerAnimatedTransitioning>)animationController {
+    if ([animationController respondsToSelector:@selector(interactionControllerType)]) {
+        Class interactionControllerClass = NSClassFromString([(id)animationController interactionControllerType]);
+        doutwork()
+        return [interactionControllerClass new];
+    }
+    return nil;
+}
 
 @end

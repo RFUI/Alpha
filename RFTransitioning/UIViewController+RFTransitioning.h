@@ -18,4 +18,5 @@
  Name of RFTransitioningStyle class.
  */
 @property (copy, nonatomic) NSString *RFTransitioningStyle;
+
 @end

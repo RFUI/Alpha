@@ -30,7 +30,7 @@ RFInitializingRootForNSObject
 }
 
 - (void)animateTransition:(id<UIViewControllerContextTransitioning>)transitionContext fromVC:(UIViewController *)fromVC toVC:(UIViewController *)toVC fromView:(UIView *)fromView toView:(UIView *)toView {
+    RFAssert(false, @"Subclass must overwrite animateTransition:fromVC:toVC:fromView:toView:")
 }
-
 
 @end

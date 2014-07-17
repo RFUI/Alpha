@@ -29,6 +29,14 @@
  */
 @property (nonatomic, assign) NSTimeInterval duration;
 
+/**
+ Subclass must overwrite this method to perform the transition animations.
+ */
 - (void)animateTransition:(id<UIViewControllerContextTransitioning>)transitionContext fromVC:(UIViewController *)fromVC toVC:(UIViewController *)toVC fromView:(UIView *)fromView toView:(UIView *)toView;
+
+/**
+ Class name of a UIViewControllerInteractiveTransitioning object.
+ */
+@property (copy, nonatomic) NSString *interactionControllerType;
 
 @end

@@ -51,9 +51,9 @@
         bind.toView = vTo;
         bind.toViewHidden = vTo.hidden;
 
-        // vTo has not been rendered, so we cannot snapshotting it.
-        // Rendered it as a image instead.
-        UIView *sTo = reverse? [vTo snapshotViewAfterScreenUpdates:NO] : [[UIImageView alloc] initWithImage:[vTo renderToImage]];
+        // vTo may not been rendered, so we cannot snapshotting it.
+        // Also vTo may need update, snapshot now may get a wrong status. So always rendered it as an image.
+        UIView *sTo = [[UIImageView alloc] initWithImage:[vTo renderToImage]];
         sTo.frame = [containerView convertRect:vFrom.frame fromView:vFrom.superview];
         [containerView addSubview:sTo];
         sTo.alpha = 0;

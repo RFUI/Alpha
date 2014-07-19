@@ -62,7 +62,7 @@
         UIView *sFrom = [vFrom snapshotViewAfterScreenUpdates:NO];
         sFrom.frame = [containerView convertRect:vFrom.frame fromView:vFrom.superview];
         [containerView addSubview:sFrom];
-        sFrom.alpha = vTo.hidden? 0 : vTo.alpha;
+        sFrom.alpha = vFrom.alpha;
         bind.fromViewSnapshot = sFrom;
 
         vTo.hidden = YES;
@@ -76,7 +76,7 @@
         for (RFMagicMoveTransitioningBinding *bind in bindings) {
             UIView *vTo = bind.toView;
             bind.fromViewSnapshot.alpha = 0;
-            bind.toViewSnapshot.alpha = bind.toView.alpha;
+            bind.toViewSnapshot.alpha = bind.toViewHidden? 0 : bind.toView.alpha;
             bind.fromViewSnapshot.frame = [containerView convertRect:vTo.frame fromView:vTo.superview];
             bind.toViewSnapshot.frame = bind.fromViewSnapshot.frame;
         }

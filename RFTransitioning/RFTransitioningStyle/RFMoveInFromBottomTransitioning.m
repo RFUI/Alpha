@@ -16,26 +16,28 @@
     UIView* containerView = transitionContext.containerView;
     CGRect fromFrame = [transitionContext initialFrameForViewController:fromVC];
     CGRect toFrame = [transitionContext finalFrameForViewController:toVC];
+    BOOL reverse = self.reverse;
+
+    // Navigation bar hidden may change between transition.
+    // Let initial frame bigger can avoid user see window background.
+    toView.frame = CGRectContainsRect(toFrame, fromFrame)? toFrame : fromFrame;
 
     if (self.reverse) {
-        toView.frame = toFrame;
         [containerView insertSubview:toView belowSubview:fromView];
-        [UIView animateWithDuration:self.duration delay:0 options:UIViewAnimationOptionCurveEaseInOut animations:^{
-            fromView.y = fromView.height;
-        } completion:^(BOOL finished) {
-            [transitionContext completeTransition:![transitionContext transitionWasCancelled]];
-        }];
     }
     else {
-        toView.frame = fromFrame;
         toView.y = toView.height;
         [containerView insertSubview:toView aboveSubview:fromView];
-        [UIView animateWithDuration:self.duration delay:0 options:UIViewAnimationOptionCurveEaseInOut animations:^{
-            toView.frame = toFrame;
-        } completion:^(BOOL finished) {
-            [transitionContext completeTransition:![transitionContext transitionWasCancelled]];
-        }];
     }
+
+    [UIView animateWithDuration:self.duration delay:0 options:UIViewAnimationOptionCurveEaseInOut animations:^{
+        if (reverse) {
+            fromView.y = fromView.height;
+        }
+        toView.frame = toFrame;
+    } completion:^(BOOL finished) {
+        [transitionContext completeTransition:![transitionContext transitionWasCancelled]];
+    }];
 }
 
 @end

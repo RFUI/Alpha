@@ -23,7 +23,6 @@
     CGFloat offset = translation - self.translationStartOffset;
 
     CGFloat percentComplete = (offset * 2) / piece.height;
-    dout_float(percentComplete)
 
     switch (gestureRecognizer.state) {
         case UIGestureRecognizerStateBegan: {

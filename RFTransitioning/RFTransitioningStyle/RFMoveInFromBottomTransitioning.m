@@ -28,13 +28,13 @@
         [containerView insertSubview:toView belowSubview:fromView];
     }
     else {
-        toView.y = toView.height;
+        toView.y += toView.height;
         [containerView insertSubview:toView aboveSubview:fromView];
     }
 
     [UIView animateWithDuration:self.duration delay:0 options:UIViewAnimationOptionCurveEaseInOut animations:^{
         if (reverse) {
-            fromView.y = fromView.height;
+            fromView.y += fromView.height;
         }
         toView.frame = toFrame;
     } completion:^(BOOL finished) {

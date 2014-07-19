@@ -11,12 +11,17 @@
     TEST
  */
 #import <UIKit/UIKit.h>
+#import "RFNavigationPopInteractionController.h"
 
 @interface UIViewController (RFTransitioning)
 
 /**
  Name of RFTransitioningStyle class.
+ 
+ Optional
  */
 @property (copy, nonatomic) NSString *RFTransitioningStyle;
+
+@property (strong, nonatomic) id<UIViewControllerInteractiveTransitioning> RFTransitioningInteractionController;
 
 @end

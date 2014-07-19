@@ -39,4 +39,5 @@
  */
 @property (copy, nonatomic) NSString *interactionControllerType;
 
+@property (weak, nonatomic) id interactionController;
 @end

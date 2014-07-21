@@ -209,4 +209,5 @@ extern NSString *const RFAPIRequestCustomizationControlKey;
 + (instancetype)formDataWithData:(NSData *)data name:(NSString *)name;
 + (instancetype)formDataWithData:(NSData *)data name:(NSString *)name fileName:(NSString *)fileName mimeType:(NSString *)mimeType;
 
+- (void)buildFormData:(id<AFMultipartFormData>)formData error:(NSError * __autoreleasing *)error;
 @end

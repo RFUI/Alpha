@@ -10,18 +10,6 @@
 RFDefineConstString(RFAPIErrorDomain);
 static NSString *RFAPIOperationUIkControl = @"RFAPIOperationUIkControl";
 
-typedef NS_ENUM(short, RFHTTPRequestFormDataSourceType) {
-    RFHTTPRequestFormDataSourceTypeURL = 0,
-    RFHTTPRequestFormDataSourceTypeStream,
-    RFHTTPRequestFormDataSourceTypeData
-};
-
-@interface RFHTTPRequestFormData ()
-@property (assign, nonatomic) RFHTTPRequestFormDataSourceType type;
-
-- (void)buildFormData:(id<AFMultipartFormData>)formData error:(NSError * __autoreleasing *)error;
-@end
-
 @interface RFAPI ()
 @property (strong, nonatomic, readwrite) AFNetworkReachabilityManager *reachabilityManager;
 @property (strong, nonatomic, readwrite) RFAPIDefineManager *defineManager;
@@ -396,6 +384,17 @@ NSString *const RFAPIRequestCustomizationControlKey = @"_RFAPIRequestCustomizati
 
 @end
 
+#pragma mark - RFHTTPRequestFormData
+
+typedef NS_ENUM(short, RFHTTPRequestFormDataSourceType) {
+    RFHTTPRequestFormDataSourceTypeURL = 0,
+    RFHTTPRequestFormDataSourceTypeStream,
+    RFHTTPRequestFormDataSourceTypeData
+};
+
+@interface RFHTTPRequestFormData ()
+@property (assign, nonatomic) RFHTTPRequestFormDataSourceType type;
+@end
 
 @implementation RFHTTPRequestFormData
 

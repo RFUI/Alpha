@@ -119,8 +119,12 @@ RFInitializingRootForNSObject
 
         id parameter = parameters[key];
         if (parameter) {
-            [path replaceCharactersInRange:match.range withString:[parameter description]];
+            NSString *encodedParameter = [[parameter description] stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
+            [path replaceCharactersInRange:match.range withString:encodedParameter];
             [parameters removeObjectForKey:key];
+        }
+        else {
+            [path replaceCharactersInRange:match.range withString:@""];
         }
     }
 
@@ -134,7 +138,7 @@ RFInitializingRootForNSObject
     }
     if (!url) {
 #if RFDEBUG
-        dout_error(@"无法拼接路径 %@ 到 %@\n请检查接口定义", define.path, define.baseURL);
+        dout_error(@"无法拼接路径 %@ 到 %@\n请检查接口定义", path, define.baseURL);
 #endif
         if (error) {
             *error = [NSError errorWithDomain:NSURLErrorDomain code:NSURLErrorBadURL userInfo:@{

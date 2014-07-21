@@ -16,8 +16,13 @@
     RFInitializing
 >
 
+@property (assign, nonatomic) BOOL interactionInProgress;
+
 @property (weak, nonatomic) IBOutlet UIViewController *viewController;
+
+#pragma mark - Gestures
 @property (strong, nonatomic) IBOutlet UIPanGestureRecognizer *gestureRecognizer;
 
-@property (assign, nonatomic) BOOL interactionInProgress;
+- (void)installGestureRecognizer;
+- (void)uninstallGestureRecognizer;
 @end

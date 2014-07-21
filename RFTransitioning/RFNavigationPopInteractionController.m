@@ -26,18 +26,41 @@ RFInitializingRootForNSObject
         _viewController.RFTransitioningInteractionController = nil;
         viewController.RFTransitioningInteractionController = self;
 
-        UIGestureRecognizer *gr = self.gestureRecognizer;
-        if (gr) {
-            [gr.view removeGestureRecognizer:gr];
-            [viewController.navigationController.view addGestureRecognizer:gr];
-        }
+        [self uninstallGestureRecognizer];
 
         _viewController = viewController;
+        [self installGestureRecognizer];
     }
 }
 
 - (CGFloat)completionSpeed {
     return 1 - self.percentComplete;
+}
+
+- (void)installGestureRecognizer {
+    if (self.gestureRecognizer) {
+        [self.viewController.navigationController.view addGestureRecognizer:self.gestureRecognizer];
+    }
+}
+
+- (void)uninstallGestureRecognizer {
+    douts(@"Remove")
+    [self.gestureRecognizer.view removeGestureRecognizer:self.gestureRecognizer];
+}
+
+- (void)startInteractiveTransition:(id<UIViewControllerContextTransitioning>)transitionContext {
+    douto(transitionContext)
+    [super startInteractiveTransition:transitionContext];
+}
+
+/*
+- (void)cancelInteractiveTransition {
+    [super cancelInteractiveTransition];
+}*/
+
+- (void)finishInteractiveTransition {
+    [super finishInteractiveTransition];
+    [self uninstallGestureRecognizer];
 }
 
 @end

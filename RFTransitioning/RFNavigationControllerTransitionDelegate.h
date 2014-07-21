@@ -20,4 +20,8 @@
 
 /// Default NO
 @property (assign, nonatomic) BOOL preferSourceViewControllerTransitionStyle;
+
+@property (readonly, weak, nonatomic) RFNavigationPopInteractionController *currentPopInteractionController;
+@property (readonly, weak, nonatomic) UIGestureRecognizer *currentPopInteractionGestureRecognizer;
+
 @end

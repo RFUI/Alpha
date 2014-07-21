@@ -4,6 +4,8 @@
 #import "RFNavigationPopInteractionController.h"
 
 @interface RFNavigationControllerTransitionDelegate ()
+@property (readwrite, weak, nonatomic) RFNavigationPopInteractionController *currentPopInteractionController;
+@property (readwrite, weak, nonatomic) UIGestureRecognizer *currentPopInteractionGestureRecognizer;
 @end
 
 @implementation RFNavigationControllerTransitionDelegate
@@ -81,6 +83,28 @@
         }
     }
     return interactionController;
+}
+
+- (void)navigationController:(UINavigationController *)navigationController didShowViewController:(UIViewController *)viewController animated:(BOOL)animated {
+    self.currentPopInteractionController = (id)viewController.RFTransitioningInteractionController;
+}
+
+- (void)setCurrentPopInteractionController:(RFNavigationPopInteractionController *)currentPopInteractionController {
+    if (_currentPopInteractionController != currentPopInteractionController) {
+        if ([_currentPopInteractionController isKindOfClass:[RFNavigationPopInteractionController class]]) {
+            [_currentPopInteractionController uninstallGestureRecognizer];
+        }
+
+        _currentPopInteractionController = currentPopInteractionController;
+
+        if ([currentPopInteractionController isKindOfClass:[RFNavigationPopInteractionController class]]) {
+            [currentPopInteractionController installGestureRecognizer];
+            self.currentPopInteractionGestureRecognizer = currentPopInteractionController.gestureRecognizer;
+        }
+        else {
+            self.currentPopInteractionGestureRecognizer = nil;
+        }
+    }
 }
 
 @end

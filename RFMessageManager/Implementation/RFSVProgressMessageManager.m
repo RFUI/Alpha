@@ -43,7 +43,12 @@
             [SVProgressHUD showProgress:message.progress status:stautsString maskType:maskType];
         }
         default: {
-            [SVProgressHUD showWithStatus:stautsString maskType:maskType];
+            if (stautsString.length) {
+                [SVProgressHUD showWithStatus:stautsString maskType:maskType];
+            }
+            else {
+                [SVProgressHUD showWithMaskType:maskType];
+            }
         }
     }
 

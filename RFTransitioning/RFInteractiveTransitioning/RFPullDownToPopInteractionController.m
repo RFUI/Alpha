@@ -27,10 +27,7 @@
     switch (gestureRecognizer.state) {
         case UIGestureRecognizerStateBegan: {
             self.translationStartOffset = offset;
-            if (translation > 0) {
-                self.interactionInProgress = YES;
-                [self.viewController.navigationController popViewControllerAnimated:YES];
-            }
+            break;
         }
         case UIGestureRecognizerStateChanged: {
             if (self.interactionInProgress) {
@@ -46,6 +43,12 @@
                     percentComplete = 0.99;
                 }
                 [self updateInteractiveTransition:percentComplete];
+            }
+            else {
+                if (translation > 0) {
+                    self.interactionInProgress = YES;
+                    [self.viewController.navigationController popViewControllerAnimated:YES];
+                }
             }
             break;
         }

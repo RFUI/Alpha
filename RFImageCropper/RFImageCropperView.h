@@ -1,7 +1,7 @@
 /*!
     RFImageCropperView
 
-    Copyright (c) 2012-2013 BB9z
+    Copyright (c) 2012-2014 BB9z
     https://github.com/RFUI/Alpha
 
     The MIT License (MIT)
@@ -11,27 +11,48 @@
  */
 
 #import "RFUI.h"
-#import "RFInitializing.h"
 
 @class RFImageCropperFrameView;
 
-@interface RFImageCropperView : UIView <RFInitializing>
+/**
+ 
+ If cropSize is bigger than view size, you can scale this view to make sure frameView is visable completely.
+ 
+ eg:
+
+ @code
+self.cropView.cropSize = CGSizeMake(640, 640);
+self.cropView.transform = CGAffineTransformMakeScale(0.5, 0.5);
+ @endcode
+ 
+ */
+@interface RFImageCropperView : UIView <
+    RFInitializing
+>
 @property (strong, nonatomic) RFImageCropperFrameView *frameView;
 
 @property (strong, nonatomic) UIImage *sourceImage;
 
+/// Default (100, 100)
 @property (assign, nonatomic) CGSize cropSize;
-- (UIImage *)cropedImage;
+- (UIImage *)croppedImage;
 
-@property(nonatomic) float minimumZoomScale;
-@property(nonatomic) float maximumZoomScale;
+/// Default 1
+@property (assign, nonatomic) CGFloat maxPixelZoomRatio;
 
 @end
 
-@interface RFImageCropperFrameView : UIView <RFInitializing>
+@interface RFImageCropperFrameView : UIView <
+    RFInitializing
+>
 @property (strong, nonatomic) UIColor *borderColor;
 @property (strong, nonatomic) UIColor *overlayColor;
 @property (strong, nonatomic) UIColor *maskColor;
 
+@property (assign, nonatomic) CGSize frameSize;
+
+// No implementation
+/// Default 10.f
+@property (assign, nonatomic) CGFloat frameMargin;
 @end
 

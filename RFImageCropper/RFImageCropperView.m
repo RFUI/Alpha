@@ -94,26 +94,25 @@ RFInitializingRootForUIView
 
 - (void)updateLayout {
     RFImageCropperFrameView *frameView = self.frameView;
-    UIScrollView *scrollView = self.scrollView;
-
     frameView.frameSize = self.cropSize;
 
+    UIScrollView *scrollView = self.scrollView;
     scrollView.size = self.cropSize;
     scrollView.center = CGPointOfRectCenter(self.bounds);
 
     // Make sure scrollView can scroll
     CGSize contentSize = scrollView.contentSize;
-    CGSize imageSize = self.imageSize;
-    CGFloat expand = self.window.screen? 1/self.window.screen.scale/2. : 0.5;
+    CGSize imageSize = self.cropSize;
+    CGFloat expand = self.window.screen? 1/self.window.screen.scale/2. : 0.25;
     _dout_float(expand);
     if (contentSize.width <= imageSize.width) {
         _dout_debug(@"Expand width")
-        contentSize.width += expand;
+        contentSize.width = imageSize.width + expand;
         scrollView.contentSize = contentSize;
     }
     if (contentSize.height <= imageSize.height) {
         _dout_debug(@"Expand height")
-        contentSize.height += expand;
+        contentSize.height = imageSize.height + expand;
         scrollView.contentSize = contentSize;
     }
     _dout_size(contentSize)
@@ -125,13 +124,16 @@ RFInitializingRootForUIView
     if (_sourceImage != sourceImage) {
         self.imageSize = sourceImage.size;
         self.imageView.image = sourceImage;
-        [self.imageView sizeToFit];
-
-        UIScrollView *scrollView = self.scrollView;
-        scrollView.contentSize = self.imageView.size;
-        scrollView.contentOffset = CGPointOfRectCenter(self.imageView.bounds);
 
         [self updateScaleSetting];
+
+        UIImageView *imageView = self.imageView;
+        UIScrollView *scrollView = self.scrollView;
+        [imageView sizeToFit];
+        [imageView moveToX:0 Y:0];
+        scrollView.contentSize = imageView.size;
+        [scrollView setContentOffset:CGPointOfRectCenter(self.imageView.bounds) animated:YES];
+
         _sourceImage = sourceImage;
     }
 }
@@ -148,6 +150,9 @@ RFInitializingRootForUIView
     if (imageSize.width <= 0 || imageSize.height <=0 || cropSize.width <= 0 || cropSize.height <= 0) {
         return;
     }
+    if (imageSize.width < cropSize.width || imageSize.height < cropSize.height) {
+        dout_warning(@"Image size is smaller than crop size.");
+    }
 
     CGFloat xScale = imageSize.width/cropSize.width;
     CGFloat yScale = imageSize.height/cropSize.height;
@@ -158,11 +163,11 @@ RFInitializingRootForUIView
     scrollView.minimumZoomScale = MAX(1/xScale, 1/yScale);
     scrollView.maximumZoomScale = MIN(xScale *self.maxPixelZoomRatio, yScale*self.maxPixelZoomRatio);
     if (scrollView.maximumZoomScale <= scrollView.minimumZoomScale) {
-        dout_warning(@"Source image size isnt bigger than cropSize");
-        scrollView.maximumZoomScale = scrollView.minimumZoomScale + 0.001;
+        scrollView.maximumZoomScale = scrollView.minimumZoomScale + 0.01;
     }
     _dout_float(self.scrollView.minimumZoomScale)
     _dout_float(self.scrollView.maximumZoomScale)
+    scrollView.zoomScale = scrollView.minimumZoomScale + 0.01;
 
     [self updateLayout];
 }

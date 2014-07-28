@@ -26,8 +26,8 @@
 
 @property (copy, nonatomic) BOOL (^shouldChangeTextInRange)(UITextView *textView, NSRange range, NSString *replacementText, id<UITextViewDelegate> delegate);
 
-@property (copy, nonatomic) BOOL (^didChange)(UITextView *textView, id<UITextViewDelegate> delegate);
-@property (copy, nonatomic) BOOL (^didChangeSelection)(UITextView *textView, id<UITextViewDelegate> delegate);
+@property (copy, nonatomic) void (^didChange)(UITextView *textView, id<UITextViewDelegate> delegate);
+@property (copy, nonatomic) void (^didChangeSelection)(UITextView *textView, id<UITextViewDelegate> delegate);
 
 @property (copy, nonatomic) BOOL (^shouldInteractWithURL)(UITextView *textView, NSURL *URL, NSRange characterRange, id<UITextViewDelegate> delegate);
 @property (copy, nonatomic) BOOL (^shouldInteractWithTextAttachment)(UITextView *textView, NSTextAttachment *textAttachment, NSRange characterRange, id<UITextViewDelegate> delegate);

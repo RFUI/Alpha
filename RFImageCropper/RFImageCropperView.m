@@ -74,7 +74,6 @@ RFInitializingRootForUIView
         sv.minimumZoomScale = 0.01;
         sv.clipsToBounds = NO;
         self.scrollView = sv;
-        sv.backgroundColor = [UIColor colorWithRGBHex:0xFF0000 alpha:1];
     }
     return _scrollView;
 }

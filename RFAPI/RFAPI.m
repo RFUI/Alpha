@@ -217,14 +217,11 @@ RFInitializingRootForNSObject
     return operation;
 }
 
-
-#undef __RFAPICompletionCallback
-#undef __RFAPILogError
-#undef __RFAPICompletionCallbackProccessError
-
 - (AFHTTPRequestOperation *)requestWithName:(NSString *)APIName parameters:(NSDictionary *)parameters controlInfo:(RFAPIControl *)controlInfo success:(void (^)(AFHTTPRequestOperation *, id))success failure:(void (^)(AFHTTPRequestOperation *, NSError *))failure completion:(void (^)(AFHTTPRequestOperation *))completion {
     return [self requestWithName:APIName parameters:parameters formData:nil controlInfo:controlInfo uploadProgress:nil success:success failure:failure completion:completion];
 }
+
+#pragma mark - Build Request
 
 #define __RFAPIMakeRequestError(CONDITION)\
     if (CONDITION) {\
@@ -276,8 +273,6 @@ RFInitializingRootForNSObject
     r = [self finalizeSerializedRequest:r withDefine:define controlInfo:controlInfo];
     return r;
 }
-
-#undef __RFAPIMakeRequestError
 
 // TODO: Full cache policy implementation.
 - (NSURLRequestCachePolicy)cachePolicyWithDefine:(RFAPIDefine *)define controlInfo:(RFAPIControl *)controlInfo {
@@ -334,6 +329,8 @@ RFInitializingRootForNSObject
     }
     return request;
 }
+
+#pragma mark - Handel Response
 
 - (BOOL)generalHandlerForError:(NSError *)error withDefine:(RFAPIDefine *)define controlInfo:(RFAPIControl *)controlInfo requestOperation:(AFHTTPRequestOperation *)operation operationFailureCallback:(void (^)(AFHTTPRequestOperation *, NSError *))operationFailureCallback {
     return YES;

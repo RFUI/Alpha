@@ -31,6 +31,7 @@
 + (instancetype)sharedInstance;
 
 @property (readonly, nonatomic) AFNetworkReachabilityManager *reachabilityManager;
+@property (readonly, nonatomic) NSURLCache *cacheManager;
 
 #pragma mark - Define
 

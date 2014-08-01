@@ -343,10 +343,6 @@ RFInitializingRootForNSObject
     return YES;
 }
 
-- (void)alertError:(NSError *)error title:(NSString *)title {
-    [self.networkActivityIndicatorManager alertError:error title:title];
-}
-
 @end
 
 NSString *const RFAPIMessageControlKey = @"_RFAPIMessageControl";

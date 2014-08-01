@@ -13,7 +13,10 @@
 #import "RFRuntime.h"
 #import "RFAPIDefineConfigFileKeys.h"
 
-@interface RFAPIDefine : NSObject <NSCopying>
+@interface RFAPIDefine : NSObject <
+    NSCopying,
+    NSSecureCoding
+>
 /// Used to get a deine from a RFAPIDefineManager
 @property (copy, nonatomic) NSString *name;
 

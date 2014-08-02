@@ -12,9 +12,7 @@
  */
 #import "RFUI.h"
 
-@interface RFNavigationController : UINavigationController <
-    UINavigationControllerDelegate
->
+@interface RFNavigationController : UINavigationController
 
 + (instancetype)globalNavigationController;
 

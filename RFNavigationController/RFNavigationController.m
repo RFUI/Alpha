@@ -1,10 +1,14 @@
 
 #import "RFNavigationController.h"
 #import "UIViewController+RFTransitioning.h"
+#import "RFDelegateChain.h"
 
 static RFNavigationController *RFNavigationControllerGlobalInstance;
 
-@interface RFNavigationController ()
+@interface RFNavigationController () <
+    UINavigationControllerDelegate
+>
+@property (weak, nonatomic) id<UINavigationControllerDelegate> trueDelegate;
 @end
 
 @implementation RFNavigationController
@@ -17,7 +21,7 @@ RFUIInterfaceOrientationSupportNavigation
 - (void)awakeFromNib {
     [super awakeFromNib];
 
-    self.delegate = self;
+    [super setDelegate:self];
     self.preferredNavigationBarHidden = self.navigationBarHidden;
 }
 
@@ -43,6 +47,14 @@ RFUIInterfaceOrientationSupportNavigation
     }
 }
 
+#pragma mark - Delegate Forward
+
+RFDelegateChainForwordMethods(self, self.trueDelegate)
+
+- (void)setDelegate:(id<UINavigationControllerDelegate>)delegate {
+    self.trueDelegate = delegate;
+}
+
 #pragma mark - UINavigationControllerDelegate
 
 - (void)navigationController:(UINavigationController *)navigationController willShowViewController:(UIViewController *)viewController animated:(BOOL)animated {
@@ -54,7 +66,10 @@ RFUIInterfaceOrientationSupportNavigation
 
     if (self.navigationBarHidden != shouldHide) {
         [self setNavigationBarHidden:shouldHide animated:animated];
-        [self setNeedsStatusBarAppearanceUpdate];
+    }
+
+    if ([self.trueDelegate respondsToSelector:@selector(navigationController:willShowViewController:animated:)]) {
+        [self.trueDelegate navigationController:navigationController willShowViewController:viewController animated:animated];
     }
 }
 

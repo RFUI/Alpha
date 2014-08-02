@@ -14,6 +14,13 @@ RFUIInterfaceOrientationSupportNavigation
     return RFNavigationControllerGlobalInstance;
 }
 
+- (void)awakeFromNib {
+    [super awakeFromNib];
+
+    self.delegate = self;
+    self.preferredNavigationBarHidden = self.navigationBarHidden;
+}
+
 - (void)viewDidLoad {
     [super viewDidLoad];
 
@@ -22,7 +29,34 @@ RFUIInterfaceOrientationSupportNavigation
     }
 }
 
+- (void)setPreferredNavigationBarHidden:(BOOL)preferredNavigationBarHidden {
+    _preferredNavigationBarHidden = preferredNavigationBarHidden;
+    BOOL shouldHide = preferredNavigationBarHidden;
+
+    id<RFNavigationBehaving> vc = (id<RFNavigationBehaving>)self.topViewController;
+    if ([vc respondsToSelector:@selector(prefersNavigationBarHiddenForNavigationController:)]) {
+        shouldHide = [vc prefersNavigationBarHiddenForNavigationController:self];
+    }
+
+    if (self.navigationBarHidden != shouldHide) {
+        [self setNavigationBarHidden:shouldHide animated:NO];
+    }
+}
+
 #pragma mark - UINavigationControllerDelegate
+
+- (void)navigationController:(UINavigationController *)navigationController willShowViewController:(UIViewController *)viewController animated:(BOOL)animated {
+
+    BOOL shouldHide = self.preferredNavigationBarHidden;
+    if ([viewController respondsToSelector:@selector(prefersNavigationBarHiddenForNavigationController:)]) {
+        shouldHide = [(id<RFNavigationBehaving>)viewController prefersNavigationBarHiddenForNavigationController:self];
+    }
+
+    if (self.navigationBarHidden != shouldHide) {
+        [self setNavigationBarHidden:shouldHide animated:animated];
+        [self setNeedsStatusBarAppearanceUpdate];
+    }
+}
 
 //! REF: https://github.com/onegray/UIViewController-BackButtonHandler
 - (BOOL)navigationBar:(UINavigationBar *)navigationBar shouldPopItem:(UINavigationItem *)item {

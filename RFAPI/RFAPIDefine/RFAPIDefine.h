@@ -72,8 +72,8 @@ typedef NS_ENUM(short, RFAPIDefineOfflinePolicy) {
 
 typedef NS_ENUM(short, RFAPIDefineResponseExpectType) {
     RFAPIDefineResponseExpectDefault = 0,   /// 不特殊处理
-    RFAPIDefineResponseExpectSuccess = 1,   // No implementation
-    RFAPIDefineResponseExpectObject  = 2,
+    RFAPIDefineResponseExpectSuccess = 1,   /// Overwrite [RFAPI isSuccessResponse:error:] to  determine whether success or failure.
+    RFAPIDefineResponseExpectObject  = 2,   /// Expect an object
     RFAPIDefineResponseExpectObjects = 3,   /// Expect an array of objects
 };
 ///

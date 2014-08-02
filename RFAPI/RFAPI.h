@@ -17,11 +17,6 @@
 #import "JSONModel.h"
 #import "AFSecurityPolicy.h"
 
-/**
- TODO:
- [ ] 缓存实现
- */
-
 @class RFMessageManager, RFNetworkActivityIndicatorMessage, AFHTTPRequestOperation;
 @class RFAPIControl, RFHTTPRequestFormData;
 
@@ -166,7 +161,7 @@ extern NSString *const RFAPIRequestCustomizationControlKey;
 // No implementation
 @property (assign, nonatomic) BOOL backgroundTask;
 
-/// Ignore cache policy
+/// Ignore cache policy, force current request load from server.
 @property (assign, nonatomic) BOOL forceLoad;
 
 /// Customization URL request object

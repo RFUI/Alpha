@@ -11,12 +11,23 @@
     TEST
  */
 #import "RFUI.h"
-#import "UIViewController+RFTransitioning.h"
 
 @interface RFNavigationController : UINavigationController <
     UINavigationControllerDelegate
 >
 
 + (instancetype)globalNavigationController;
+
+@end
+
+@protocol RFNavigationBehaving <NSObject>
+@optional
+
+/**
+ Ask current view controller whether should pop or not when user tap the back button.
+
+ @return Return NO to cancel pop.
+ */
+- (BOOL)shouldPopOnBackButtonTappedForNavigationController:(RFNavigationController *)navigation;
 
 @end

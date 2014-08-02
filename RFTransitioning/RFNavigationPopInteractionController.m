@@ -44,12 +44,10 @@ RFInitializingRootForNSObject
 }
 
 - (void)uninstallGestureRecognizer {
-    douts(@"Remove")
     [self.gestureRecognizer.view removeGestureRecognizer:self.gestureRecognizer];
 }
 
 - (void)startInteractiveTransition:(id<UIViewControllerContextTransitioning>)transitionContext {
-    douto(transitionContext)
     [super startInteractiveTransition:transitionContext];
 }
 

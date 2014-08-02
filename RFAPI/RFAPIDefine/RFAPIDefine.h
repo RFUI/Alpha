@@ -61,8 +61,8 @@ typedef NS_ENUM(short, RFAPIDefineCachePolicy) {
 @property (assign, nonatomic) NSTimeInterval expire;
 
 typedef NS_ENUM(short, RFAPIDefineOfflinePolicy) {
-    RFAPOfflinePolicyDefault = 0,       /// 不特殊处理
-    RFAPOfflinePolicyLoadCache = 1      /// 返回缓存数据
+    RFAPIOfflinePolicyDefault = 0,       /// 不特殊处理
+    RFAPIOfflinePolicyLoadCache = 1      /// 返回缓存数据
 };
 @property (assign, nonatomic) RFAPIDefineOfflinePolicy offlinePolicy;
 

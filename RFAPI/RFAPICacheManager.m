@@ -27,7 +27,7 @@
     }
     else {
         switch (define.offlinePolicy) {
-            case RFAPOfflinePolicyLoadCache:
+            case RFAPIOfflinePolicyLoadCache:
                 return NSURLRequestReturnCacheDataElseLoad;
 
             default:
@@ -65,7 +65,7 @@
     }
     else {
         switch (define.offlinePolicy) {
-            case RFAPOfflinePolicyLoadCache:
+            case RFAPIOfflinePolicyLoadCache:
                 return cachedResponse;
 
             default:
@@ -77,7 +77,7 @@
 
 - (void)storeCachedResponseForRequest:(NSURLRequest *)request response:(NSHTTPURLResponse *)response data:(NSData *)responseData define:(RFAPIDefine *)define control:(RFAPIControl *)control {
     // No need to store cache
-    if (define.cachePolicy == RFAPICachePolicyNoCache && define.offlinePolicy == RFAPOfflinePolicyDefault) {
+    if (define.cachePolicy == RFAPICachePolicyNoCache && define.offlinePolicy == RFAPIOfflinePolicyDefault) {
         return;
     }
 

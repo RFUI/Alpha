@@ -266,8 +266,8 @@ RFInitializingRootForNSObject
 
         __RFAPIDefineConfigFileValue(RFAPIDefineOfflinePolicyKey) {
             switch ([value shortValue]) {
-                    __RFAPIDefineConfigFileEnumCase(offlinePolicy, RFAPOfflinePolicyDefault)
-                    __RFAPIDefineConfigFileEnumCase(offlinePolicy, RFAPOfflinePolicyLoadCache)
+                    __RFAPIDefineConfigFileEnumCase(offlinePolicy, RFAPIOfflinePolicyDefault)
+                    __RFAPIDefineConfigFileEnumCase(offlinePolicy, RFAPIOfflinePolicyLoadCache)
                 default:
                     dout_error(@"Unknow offline policy: %@", value)
                     return nil;

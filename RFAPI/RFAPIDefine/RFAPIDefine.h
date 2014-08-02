@@ -57,7 +57,7 @@ typedef NS_ENUM(short, RFAPIDefineCachePolicy) {
 };
 @property (assign, nonatomic) RFAPIDefineCachePolicy cachePolicy;
 
-// No implementation
+/// Gives the date/time after which the cache is considered stale
 @property (assign, nonatomic) NSTimeInterval expire;
 
 typedef NS_ENUM(short, RFAPIDefineOfflinePolicy) {

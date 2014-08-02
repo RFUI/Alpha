@@ -15,7 +15,7 @@ static NSString *RFAPICacheUIkDefine = @"RFAPICacheUIkDefine";
 @interface RFAPI ()
 @property (strong, nonatomic, readwrite) AFNetworkReachabilityManager *reachabilityManager;
 @property (strong, nonatomic, readwrite) RFAPIDefineManager *defineManager;
-@property (strong, nonatomic, readwrite) NSURLCache *cacheManager;
+@property (strong, nonatomic, readwrite) RFAPICacheManager *cacheManager;
 @end
 
 @implementation RFAPI
@@ -39,9 +39,9 @@ RFInitializingRootForNSObject
     self.securityPolicy = [AFSecurityPolicy defaultPolicy];
     self.shouldUseCredentialStorage = YES;
 
-    NSString *cacheFilePath = [[[NSFileManager defaultManager] subDirectoryURLWithPathComponent:@"com.github.RFUI.RFAPICache" inDirectory:NSCachesDirectory createIfNotExist:YES error:nil] path];
-    douto(cacheFilePath)
-    self.cacheManager = [[NSURLCache alloc] initWithMemoryCapacity:1000000 diskCapacity:32000000 diskPath:cacheFilePath];
+    // As most request are API reqest, we dont need too much space
+    self.cacheManager = [[RFAPICacheManager alloc] initWithMemoryCapacity:10 * 1000 diskCapacity:500 * 1000 diskPath:@"com.github.RFUI.RFAPICache"];
+    self.cacheManager.reachabilityManager = self.reachabilityManager;
 }
 
 - (void)afterInit {
@@ -164,8 +164,24 @@ RFInitializingRootForNSObject
     };
 
     // Check cache
-//    NSCachedURLResponse *cachedResponse = [self.cacheManager cachedResponseForRequest:request];
-//    douto(cachedResponse)
+    NSCachedURLResponse *cachedResponse = [self.cacheManager cachedResponseForRequest:request define:define control:controlInfo];
+    if (cachedResponse) {
+        dout_debug(@"Cache(%@) vaild for request: %@", cachedResponse, request);
+        AFHTTPResponseSerializer *serializer = [self.defineManager responseSerializerForDefine:define];
+
+        NSError *error = nil;
+        id responseObject = [serializer responseObjectForResponse:cachedResponse.response data:cachedResponse.data error:&error];
+        if (error) {
+            operationFailure(nil, error);
+            operationCompletion(nil);
+            return nil;
+        }
+
+        dispatch_async(dispatch_get_main_queue(), ^{
+            [self processingCompletionWithHTTPOperation:nil responseObject:responseObject define:define control:controlInfo success:operationSuccess failure:operationFailure completion:operationCompletion];
+        });
+        return nil;
+    }
 
     // Setup HTTP operation
     AFHTTPRequestOperation *operation = [[AFHTTPRequestOperation alloc] initWithRequest:request];
@@ -180,11 +196,8 @@ RFInitializingRootForNSObject
     [operation setCompletionBlockWithSuccess:^(AFHTTPRequestOperation *op, id responseObject) {
         dout_debug(@"HTTP request operation(%p) with info: %@ completed.", op, [op valueForKeyPath:@"userInfo.RFAPIOperationUIkControl"]);
 
-//        douto(op.response);
-//        NSCachedURLResponse *cachedResponse = [[NSCachedURLResponse alloc] initWithResponse:op.response data:op.responseData userInfo:@{ RFAPICacheUIkDefine : define } storagePolicy:NSURLCacheStorageAllowed];
-//        [self.cacheManager storeCachedResponse:cachedResponse forRequest:op.request];
-
         [self processingCompletionWithHTTPOperation:op responseObject:responseObject define:define control:controlInfo success:operationSuccess failure:operationFailure completion:operationCompletion];
+        [self.cacheManager storeCachedResponseForRequest:op.request response:op.response data:op.responseData define:define control:controlInfo];
     } failure:^(AFHTTPRequestOperation *op, NSError *error) {
         operationFailure(op, error);
         operationCompletion(op);
@@ -242,7 +255,7 @@ RFInitializingRootForNSObject
         } error:&e];
     }
     else {
-        NSURLRequestCachePolicy cachePolicy = [self cachePolicyWithDefine:define controlInfo:controlInfo];
+        NSURLRequestCachePolicy cachePolicy = [self.cacheManager cachePolicyWithDefine:define control:controlInfo];
         r = [[NSMutableURLRequest alloc] initWithURL:url cachePolicy:cachePolicy timeoutInterval:10];
         [r setHTTPMethod:define.method];
         r = [[s requestBySerializingRequest:r withParameters:requestParameters error:&e] mutableCopy];
@@ -257,40 +270,6 @@ RFInitializingRootForNSObject
     // Finalization
     r = [self finalizeSerializedRequest:r withDefine:define controlInfo:controlInfo];
     return r;
-}
-
-// TODO: Full cache policy implementation.
-- (NSURLRequestCachePolicy)cachePolicyWithDefine:(RFAPIDefine *)define controlInfo:(RFAPIControl *)controlInfo {
-    if (controlInfo.forceLoad) {
-        return NSURLRequestReloadIgnoringLocalCacheData;
-    }
-
-    if (self.reachabilityManager.reachable) {
-        switch (define.cachePolicy) {
-            case RFAPICachePolicyAlways:
-                return NSURLRequestReturnCacheDataDontLoad;
-
-            case RFAPICachePolicyNoCache:
-                return NSURLRequestReloadIgnoringLocalCacheData;
-
-            case RFAPICachePolicyExpire:
-                // TODO: similar, but not right
-                return NSURLRequestReturnCacheDataElseLoad;
-
-            default:
-                break;
-        }
-    }
-    else {
-        switch (define.offlinePolicy) {
-            case RFAPOfflinePolicyLoadCache:
-                return NSURLRequestReturnCacheDataElseLoad;
-
-            default:
-                break;
-        }
-    }
-    return NSURLRequestUseProtocolCachePolicy;
 }
 
 - (void)preprocessingRequestParameters:(NSMutableDictionary **)requestParameters HTTPHeaders:(NSMutableDictionary **)requestHeaders withParameters:(NSDictionary *)parameters define:(RFAPIDefine *)define controlInfo:(RFAPIControl *)controlInfo {
@@ -373,6 +352,8 @@ RFInitializingRootForNSObject
 
 @end
 
+
+#pragma mark - RFAPIControl
 NSString *const RFAPIMessageControlKey = @"_RFAPIMessageControl";
 NSString *const RFAPIIdentifierControlKey = @"_RFAPIIdentifierControl";
 NSString *const RFAPIGroupIdentifierControlKey = @"_RFAPIGroupIdentifierControl";

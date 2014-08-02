@@ -12,6 +12,7 @@
 #import "RFUI.h"
 #import "RFAPIDefine.h"
 #import "RFAPIDefineManager.h"
+#import "RFAPICacheManager.h"
 #import "AFNetworkReachabilityManager.h"
 #import "JSONModel.h"
 #import "AFSecurityPolicy.h"
@@ -31,7 +32,7 @@
 + (instancetype)sharedInstance;
 
 @property (readonly, nonatomic) AFNetworkReachabilityManager *reachabilityManager;
-@property (readonly, nonatomic) NSURLCache *cacheManager;
+@property (readonly, nonatomic) RFAPICacheManager *cacheManager;
 
 #pragma mark - Define
 
@@ -52,7 +53,7 @@
 /**
  Creat and send a HTTP request.
 
- @discussion 当请求取消时，success 和 failure 都不会被调用，只有 completion 会被调用
+ @discussion 当请求取消时，success 和 failure 都不会被调用，只有 completion 会被调用。请求从缓存读取时，几个 block 回调中的 operation 参数会为空。
 
  @param APIName     接口名
  @param parameters  请求的参数

@@ -11,6 +11,9 @@
     TEST
  */
 #import "RFUI.h"
+#import "RFNavigationControllerTransitionDelegate.h"
+
+@protocol RFNavigationBehaving;
 
 @interface RFNavigationController : UINavigationController <
     RFInitializing
@@ -20,6 +23,8 @@
  Generally, the first navigation controller instance will become the globalNavigationController.
  */
 + (instancetype)globalNavigationController;
+
+- (void)updateNavigationAppearanceWithViewController:(id)viewController animated:(BOOL)animated;
 
 /**
  Determine navigaiton bar should hidden or not by default.
@@ -43,9 +48,7 @@
 @property (strong, nonatomic) IBOutlet UIView *bottomBar;
 
 #pragma mark - Delegate
-@property (weak, nonatomic) IBOutlet id<UINavigationControllerDelegate> forwardDelegate;
-
-- (void)navigationController:(UINavigationController *)navigationController didShowViewController:(UIViewController *)viewController animated:(BOOL)animated;
+@property (strong, nonatomic) IBOutlet RFNavigationControllerTransitionDelegate *forwardDelegate;
 
 @end
 
@@ -68,5 +71,12 @@
 
 
 - (BOOL)prefersBottomBarShown;
+
+@end
+
+
+@interface UIViewController (RFNavigationBehaving)
+
+- (void)updateNavigationAppearanceAnimated:(BOOL)animated;
 
 @end

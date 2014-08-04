@@ -21,8 +21,8 @@ RFUIInterfaceOrientationSupportNavigation
 RFInitializingRootForUIViewController
 
 - (void)onInit {
-    [super setDelegate:self];
-    [self.view addSubview:self.bottomBarHolder];
+    self.forwardDelegate = [RFNavigationControllerTransitionDelegate new];
+    self.delegate = self.forwardDelegate;
 }
 
 - (void)awakeFromNib {
@@ -39,26 +39,34 @@ RFInitializingRootForUIViewController
 }
 
 - (void)viewDidLoad {
-    [super viewDidLoad];
-
     if (!RFNavigationControllerGlobalInstance) {
         RFNavigationControllerGlobalInstance = self;
     }
 
+    [super viewDidLoad];
+
     self.transitionView = self.view.subviews.firstObject;
+
+    self.bottomBarHolder.frame = self.view.bounds;
+    [self.view addSubview:self.bottomBarHolder];
+
+    UIView *bottomBar = self.bottomBar;
+    if (bottomBar) {
+        self.bottomBarHolder.height = bottomBar.height;
+        [self.bottomBarHolder addSubview:bottomBar resizeOption:RFViewResizeOptionFill];
+
+        NSDictionary *dic = NSDictionaryOfVariableBindings(bottomBar);
+        bottomBar.translatesAutoresizingMaskIntoConstraints = NO;
+        [self.bottomBarHolder addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"|-0-[bottomBar]-0-|" options:0 metrics:nil views:dic]];
+        [self.bottomBarHolder addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"V:|-0-[bottomBar]-0-|" options:0 metrics:nil views:dic]];
+    }
+    [self updateNavigationAppearanceWithViewController:self.topViewController animated:NO];
 }
 
 - (void)setPreferredNavigationBarHidden:(BOOL)preferredNavigationBarHidden {
-    _preferredNavigationBarHidden = preferredNavigationBarHidden;
-    BOOL shouldHide = preferredNavigationBarHidden;
-
-    id<RFNavigationBehaving> vc = (id<RFNavigationBehaving>)self.topViewController;
-    if ([vc respondsToSelector:@selector(prefersNavigationBarHiddenForNavigationController:)]) {
-        shouldHide = [vc prefersNavigationBarHiddenForNavigationController:self];
-    }
-
-    if (self.navigationBarHidden != shouldHide) {
-        [self setNavigationBarHidden:shouldHide animated:NO];
+    if (_preferredNavigationBarHidden != preferredNavigationBarHidden) {
+        _preferredNavigationBarHidden = preferredNavigationBarHidden;
+        [self updateNavigationAppearanceWithViewController:self.topViewController animated:NO];
     }
 }
 
@@ -85,7 +93,7 @@ RFInitializingRootForUIViewController
 
 - (RFNavigationBottomBar *)bottomBarHolder {
     if (!_bottomBarHolder) {
-        RFNavigationBottomBar *bar = [[RFNavigationBottomBar alloc] initWithFrame:self.view.bounds];
+        RFNavigationBottomBar *bar = [RFNavigationBottomBar new];
         bar.autoresizingMask = UIViewAutoresizingFlexibleTopMargin|UIViewAutoresizingFlexibleHeight;
         _bottomBarHolder = bar;
     }
@@ -97,31 +105,29 @@ RFInitializingRootForUIViewController
         if (_bottomBar.superview == self.bottomBarHolder) {
             [_bottomBar removeFromSuperview];
         }
-        self.bottomBarHolder.height = bottomBar.height;
-        [self.bottomBarHolder addSubview:bottomBar resizeOption:RFViewResizeOptionFill];
+
+        if (bottomBar && self.isViewLoaded) {
+            self.bottomBarHolder.height = bottomBar.height;
+            [self.bottomBarHolder addSubview:bottomBar resizeOption:RFViewResizeOptionFill];
+
+            NSDictionary *dic = NSDictionaryOfVariableBindings(bottomBar);
+            bottomBar.translatesAutoresizingMaskIntoConstraints = NO;
+            [self.bottomBarHolder addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"|-0-[bottomBar]-0-|" options:0 metrics:nil views:dic]];
+            [self.bottomBarHolder addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"V:|-0-[bottomBar]-0-|" options:0 metrics:nil views:dic]];
+        }
+
         _bottomBar = bottomBar;
     }
 }
 
-#pragma mark - Delegate Forward
-
-- (void)setDelegate:(id<UINavigationControllerDelegate>)delegate {
-    self.forwardDelegate = delegate;
-}
-
-RFDelegateChainForwordMethods(super, self.forwardDelegate)
-
-#pragma mark - UINavigationControllerDelegate
-
-- (void)navigationController:(UINavigationController *)navigationController didShowViewController:(UIViewController *)viewController animated:(BOOL)animated {
-
+- (void)updateNavigationAppearanceWithViewController:(UIViewController *)viewController animated:(BOOL)animated {
     BOOL shouldHide = self.preferredNavigationBarHidden;
     if ([viewController respondsToSelector:@selector(prefersNavigationBarHiddenForNavigationController:)]) {
         shouldHide = [(id<RFNavigationBehaving>)viewController prefersNavigationBarHiddenForNavigationController:self];
     }
 
     if (self.navigationBarHidden != shouldHide) {
-        self.navigationBarHidden = shouldHide;
+        [self setNavigationBarHidden:shouldHide animated:YES];
     }
 
     shouldHide = YES;
@@ -135,10 +141,6 @@ RFDelegateChainForwordMethods(super, self.forwardDelegate)
         } animations:^{
             self.bottomBarHidden = shouldHide;
         } completion:nil];
-    }
-
-    if ([self.forwardDelegate respondsToSelector:@selector(navigationController:didShowViewController:animated:)]) {
-        [self.forwardDelegate navigationController:navigationController didShowViewController:viewController animated:animated];
     }
 }
 
@@ -177,4 +179,13 @@ RFDelegateChainForwordMethods(super, self.forwardDelegate)
 @end
 
 @implementation RFNavigationBottomBar
+@end
+
+@implementation UIViewController (RFNavigationBehaving)
+
+- (void)updateNavigationAppearanceAnimated:(BOOL)animated {
+    RFNavigationController *nav = (id)self.navigationController;
+    [nav updateNavigationAppearanceWithViewController:(id)self animated:animated];
+}
+
 @end

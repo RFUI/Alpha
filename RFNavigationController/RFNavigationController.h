@@ -12,7 +12,9 @@
  */
 #import "RFUI.h"
 
-@interface RFNavigationController : UINavigationController
+@interface RFNavigationController : UINavigationController <
+    RFInitializing
+>
 
 /**
  Generally, the first navigation controller instance will become the globalNavigationController.

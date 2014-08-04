@@ -19,17 +19,25 @@ static RFNavigationController *RFNavigationControllerGlobalInstance;
 
 @implementation RFNavigationController
 RFUIInterfaceOrientationSupportNavigation
+RFInitializingRootForUIViewController
 
-+ (instancetype)globalNavigationController {
-    return RFNavigationControllerGlobalInstance;
+- (void)onInit {
+    [super setDelegate:self];
+    [self.view addSubview:self.bottomBarHolder];
 }
 
 - (void)awakeFromNib {
     [super awakeFromNib];
-
-    [super setDelegate:self];
     self.preferredNavigationBarHidden = self.navigationBarHidden;
-    [self.view addSubview:self.bottomBarHolder];
+}
+
+
+- (void)afterInit {
+    // Nothing
+}
+
++ (instancetype)globalNavigationController {
+    return RFNavigationControllerGlobalInstance;
 }
 
 - (void)viewDidLoad {

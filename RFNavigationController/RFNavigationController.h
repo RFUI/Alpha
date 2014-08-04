@@ -14,6 +14,9 @@
 
 @interface RFNavigationController : UINavigationController
 
+/**
+ Generally, the first navigation controller instance will become the globalNavigationController.
+ */
 + (instancetype)globalNavigationController;
 
 /**
@@ -23,6 +26,19 @@
  */
 @property (assign, nonatomic) BOOL preferredNavigationBarHidden;
 
+#pragma mark - Tab Bar
+
+/**
+ A Boolean indicating whether the navigation controller’s built-in bottom bar is visible.
+ */
+@property (assign, nonatomic) BOOL bottomBarHidden;
+
+/**
+ Changes the visibility of the navigation controller’s built-in bottom bar.
+ */
+- (void)setBottomBarHidden:(BOOL)hidden animated:(BOOL)animated;
+
+@property (strong, nonatomic) IBOutlet UIView *bottomBar;
 @end
 
 @protocol RFNavigationBehaving <NSObject>
@@ -41,5 +57,8 @@
  @return Return NO to cancel pop.
  */
 - (BOOL)shouldPopOnBackButtonTappedForNavigationController:(RFNavigationController *)navigation;
+
+
+- (BOOL)prefersBottomBarShown;
 
 @end

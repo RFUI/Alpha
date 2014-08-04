@@ -19,11 +19,11 @@
 
 #define RFDelegateChainForwordMethods(FROM, TO) \
 - (BOOL)respondsToSelector:(SEL)aSelector {\
-    if ([super respondsToSelector:aSelector]) {\
+    if ([FROM respondsToSelector:aSelector]) {\
         return YES;\
     }\
 \
-    if ([self.delegate respondsToSelector:aSelector]) {\
+    if ([TO respondsToSelector:aSelector]) {\
         return YES;\
     }\
 \
@@ -31,12 +31,12 @@
 }\
 \
 - (NSMethodSignature *)methodSignatureForSelector:(SEL)aSelector {\
-    NSMethodSignature* signature = [super methodSignatureForSelector:aSelector];\
+    NSMethodSignature* signature = [FROM methodSignatureForSelector:aSelector];\
 \
     if (!signature) {\
-        __strong id delegate = self.delegate;\
-        if ([delegate respondsToSelector:aSelector]) {\
-            return [delegate methodSignatureForSelector:aSelector];\
+        __strong id next = TO;\
+        if ([next respondsToSelector:aSelector]) {\
+            return [next methodSignatureForSelector:aSelector];\
         }\
     }\
 \
@@ -44,17 +44,17 @@
 }\
 \
 - (void)forwardInvocation:(NSInvocation *)anInvocation {\
-    __strong id delegate = self.delegate;\
-    if ([delegate respondsToSelector:anInvocation.selector]) {\
-        [anInvocation invokeWithTarget:delegate];\
+    __strong id next = TO;\
+    if ([next respondsToSelector:anInvocation.selector]) {\
+        [anInvocation invokeWithTarget:next];\
     }\
 }\
 \
 - (id)forwardingTargetForSelector:(SEL)aSelector {\
-    __strong id delegate = self.delegate;\
-    id target = [super forwardingTargetForSelector:aSelector];\
-    if (target != delegate) {\
-        return [delegate forwardingTargetForSelector:aSelector];\
+    __strong id next = TO;\
+    id target = [FROM forwardingTargetForSelector:aSelector];\
+    if (target != next) {\
+        return [next forwardingTargetForSelector:aSelector];\
     }\
     return target;\
 }

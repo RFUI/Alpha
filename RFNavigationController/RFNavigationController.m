@@ -12,7 +12,6 @@ static RFNavigationController *RFNavigationControllerGlobalInstance;
 @interface RFNavigationController () <
     UINavigationControllerDelegate
 >
-@property (weak, nonatomic) id<UINavigationControllerDelegate> trueDelegate;
 @property (strong, nonatomic) RFNavigationBottomBar *bottomBarHolder;
 @property (weak, nonatomic) UIView *transitionView;
 @end
@@ -30,7 +29,6 @@ RFInitializingRootForUIViewController
     [super awakeFromNib];
     self.preferredNavigationBarHidden = self.navigationBarHidden;
 }
-
 
 - (void)afterInit {
     // Nothing
@@ -108,8 +106,10 @@ RFInitializingRootForUIViewController
 #pragma mark - Delegate Forward
 
 - (void)setDelegate:(id<UINavigationControllerDelegate>)delegate {
-    self.trueDelegate = delegate;
+    self.forwardDelegate = delegate;
 }
+
+RFDelegateChainForwordMethods(super, self.forwardDelegate)
 
 #pragma mark - UINavigationControllerDelegate
 
@@ -137,8 +137,8 @@ RFInitializingRootForUIViewController
         } completion:nil];
     }
 
-    if ([self.trueDelegate respondsToSelector:@selector(navigationController:didShowViewController:animated:)]) {
-        [self.trueDelegate navigationController:navigationController didShowViewController:viewController animated:animated];
+    if ([self.forwardDelegate respondsToSelector:@selector(navigationController:didShowViewController:animated:)]) {
+        [self.forwardDelegate navigationController:navigationController didShowViewController:viewController animated:animated];
     }
 }
 

@@ -41,6 +41,12 @@
 - (void)setBottomBarHidden:(BOOL)hidden animated:(BOOL)animated;
 
 @property (strong, nonatomic) IBOutlet UIView *bottomBar;
+
+#pragma mark - Delegate
+@property (weak, nonatomic) IBOutlet id<UINavigationControllerDelegate> forwardDelegate;
+
+- (void)navigationController:(UINavigationController *)navigationController didShowViewController:(UIViewController *)viewController animated:(BOOL)animated;
+
 @end
 
 @protocol RFNavigationBehaving <NSObject>

@@ -22,4 +22,7 @@
 - (NSCachedURLResponse *)cachedResponseForRequest:(NSURLRequest *)request define:(RFAPIDefine *)define control:(RFAPIControl *)control;
 - (void)storeCachedResponseForRequest:(NSURLRequest *)request response:(NSHTTPURLResponse *)response data:(NSData *)responseData define:(RFAPIDefine *)define control:(RFAPIControl *)control;
 
+// TODO
+// - (void)removeCachedResponseForDefine:(RFAPIDefine *)define;
+
 @end

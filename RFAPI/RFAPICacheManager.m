@@ -97,8 +97,7 @@
     NSCachedURLResponse *cachedResponse = [[NSCachedURLResponse alloc] initWithResponse:modifiedResponse data:responseData userInfo:@{ RFAPIDefineExpireKey : @(expire) } storagePolicy:NSURLCacheStorageAllowed];
     [self storeCachedResponse:cachedResponse forRequest:request];
 
-    dout_int(self.currentDiskUsage)
-    dout_int(self.currentMemoryUsage)
+    dout_debug(@"RFAPICache current usage: disk = %ul, memory = %ul", self.currentDiskUsage, self.currentMemoryUsage);
 }
 
 @end

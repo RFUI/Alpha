@@ -14,6 +14,7 @@
     [super onInit];
 
     self.gestureRecognizer = [[UIPanGestureRecognizer alloc] initWithTarget:self action:@selector(handleGesture:)];
+    self.gestureRecognizer.delaysTouchesBegan = YES;
 }
 
 - (void)handleGesture:(UIPanGestureRecognizer*)gestureRecognizer {

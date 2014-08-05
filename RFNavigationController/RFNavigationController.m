@@ -10,7 +10,8 @@ static RFNavigationController *RFNavigationControllerGlobalInstance;
 @end
 
 @interface RFNavigationController () <
-    UINavigationControllerDelegate
+    UINavigationControllerDelegate,
+    UIGestureRecognizerDelegate
 >
 @property (strong, nonatomic) RFNavigationBottomBar *bottomBarHolder;
 @property (weak, nonatomic) UIView *transitionView;
@@ -31,7 +32,7 @@ RFInitializingRootForUIViewController
 }
 
 - (void)afterInit {
-    // Nothing
+    self.interactivePopGestureRecognizer.delegate = self;
 }
 
 + (instancetype)globalNavigationController {
@@ -68,6 +69,25 @@ RFInitializingRootForUIViewController
         _preferredNavigationBarHidden = preferredNavigationBarHidden;
         [self updateNavigationAppearanceWithViewController:self.topViewController animated:NO];
     }
+}
+
+//! REF: http://stackoverflow.com/a/20923477
+- (BOOL)gestureRecognizerShouldBegin:(UIGestureRecognizer *)gestureRecognizer {
+    if ([self.transitionCoordinator isAnimated]) {
+        return NO;
+    }
+
+    if (gestureRecognizer == self.interactivePopGestureRecognizer) {
+        if (self.forwardDelegate.currentPopInteractionGestureRecognizer) {
+            return NO;
+        }
+    }
+
+    if ([gestureRecognizer.view respondsToSelector:@selector(gestureRecognizerShouldBegin:)]) {
+        BOOL result = [gestureRecognizer.view gestureRecognizerShouldBegin:gestureRecognizer];
+        return result;
+    }
+    return YES;
 }
 
 #pragma mark - Tab bar

@@ -14,10 +14,37 @@
 @interface RFAssetsCache ()
 @property (strong, nonatomic) NSManagedObjectContext *context;
 @property (strong, readwrite, nonatomic) NSOperationQueue *operationQueue;
-
+@property (copy, nonatomic) NSString *cacheFileName;
 @end
 
 @implementation RFAssetsCache
+RFInitializingRootForNSObject
+
+- (instancetype)initWithCacheFileName:(NSString *)cacheFileName {
+    self = [super init];
+    if (self) {
+        _cacheFileName = cacheFileName;
+        [self onInit];
+        [self performSelector:@selector(afterInit) withObject:self afterDelay:0];
+    }
+    return self;
+}
+
+- (void)onInit {
+    NSOperationQueue *oq = [[NSOperationQueue alloc] init];
+    [oq setName:@"com.github.RFUI.RFAssetsCacheQueue"];
+    [oq setMaxConcurrentOperationCount:1];
+    self.operationQueue = oq;
+
+    [oq addOperationWithBlock:^{
+        [self setupContext];
+    }];
+}
+
+- (void)afterInit {
+    // Nothing
+}
+
 + (instancetype)sharedInstance {
 	static RFAssetsCache *sharedInstance = nil;
     static dispatch_once_t oncePredicate;
@@ -27,29 +54,13 @@
 	return sharedInstance;
 }
 
-- (instancetype)init {
-    self = [super init];
-    if (self) {
-        NSOperationQueue *oq = [[NSOperationQueue alloc] init];
-        [oq setName:@"com.github.RFUI.RFAssetsCacheQueue"];
-        [oq setMaxConcurrentOperationCount:1];
-        
-        [oq addOperationWithBlock:^{
-            [self setupContext];
-        }];
-
-        self.operationQueue = oq;
-    }
-    return self;
-}
-
 - (void)setupContext {
     NSURL *modelURL = [[NSBundle mainBundle] URLForResource:@"RFAssetsCache" withExtension:@"mom" subdirectory:@"RFAssetsCache.momd"];
     RFAssert(modelURL, nil);
     NSManagedObjectModel *model = [[NSManagedObjectModel alloc] initWithContentsOfURL:modelURL];
     NSPersistentStoreCoordinator *psc = [[NSPersistentStoreCoordinator alloc] initWithManagedObjectModel:model];
     NSURL *cacheDirectoryURL = [[[NSFileManager defaultManager] URLsForDirectory:NSCachesDirectory inDomains:NSUserDomainMask] firstObject];
-    NSURL *cacheURL = [cacheDirectoryURL URLByAppendingPathComponent:@"com.github.RFUI.RFAssetsCacheQueue"];
+    NSURL *cacheURL = [cacheDirectoryURL URLByAppendingPathComponent:self.cacheFileName?: @"com.github.RFUI.RFAssetsCacheRecord"];
     RFAssert(cacheURL, nil);
     NSError __autoreleasing *e = nil;
     if (![psc addPersistentStoreWithType:NSSQLiteStoreType configuration:nil URL:modelURL options:@{
@@ -59,7 +70,7 @@
         [[NSFileManager defaultManager] removeItemAtURL:cacheURL error:nil];
         [psc addPersistentStoreWithType:NSSQLiteStoreType configuration:nil URL:modelURL options:nil error:nil];
     };
-    self.context = [[NSManagedObjectContext alloc] init];
+    self.context = [[NSManagedObjectContext alloc] initWithConcurrencyType:NSPrivateQueueConcurrencyType];
     [self.context setPersistentStoreCoordinator:psc];
     douto(self.context)
 }

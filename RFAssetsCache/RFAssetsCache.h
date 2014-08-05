@@ -1,6 +1,7 @@
 // TEST
 
 #import "RFKit.h"
+#import "RFInitializing.h"
 
 /**
 
@@ -15,8 +16,11 @@ typedef NS_ENUM(short, RFAssetsCacheStatus) {
 
 @protocol RFAssetsCacheRecord;
 
-@interface RFAssetsCache : NSObject
+@interface RFAssetsCache : NSObject <
+    RFInitializing
+>
 + (instancetype)sharedInstance;
+- (instancetype)initWithCacheFileName:(NSString *)cacheFileName;
 
 @property (strong, readonly, nonatomic) NSOperationQueue *operationQueue;
 

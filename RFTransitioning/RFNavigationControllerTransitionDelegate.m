@@ -85,6 +85,16 @@
     return interactionController;
 }
 
+- (void)navigationController:(UINavigationController *)navigationController willShowViewController:(UIViewController *)viewController animated:(BOOL)animated {
+    if ([navigationController respondsToSelector:@selector(updateNavigationAppearanceWithViewController:animated:)]) {
+        [(id)navigationController updateNavigationAppearanceWithViewController:viewController animated:animated];
+    }
+
+    if ([self.delegate respondsToSelector:@selector(navigationController:willShowViewController:animated:)]) {
+        [self.delegate navigationController:navigationController willShowViewController:viewController animated:animated];
+    }
+}
+
 - (void)navigationController:(UINavigationController *)navigationController didShowViewController:(UIViewController *)viewController animated:(BOOL)animated {
     self.currentPopInteractionController = (id)viewController.RFTransitioningInteractionController;
     if ([self.delegate respondsToSelector:@selector(navigationController:didShowViewController:animated:)]) {

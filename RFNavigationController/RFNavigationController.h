@@ -16,7 +16,8 @@
 @protocol RFNavigationBehaving;
 
 @interface RFNavigationController : UINavigationController <
-    RFInitializing
+    RFInitializing,
+    RFNavigationControllerAppearanceUpdating
 >
 
 /**
@@ -24,6 +25,9 @@
  */
 + (instancetype)globalNavigationController;
 
+/**
+ Call this method to update the reciver's status, such as navigationBar/bottomBar hidden/unhidden.
+ */
 - (void)updateNavigationAppearanceWithViewController:(id)viewController animated:(BOOL)animated;
 
 /**
@@ -69,7 +73,11 @@
  */
 - (BOOL)shouldPopOnBackButtonTappedForNavigationController:(RFNavigationController *)navigation;
 
+/**
+ Specifies whether the view controller prefers the bottom bar to be hidden or shown.
 
+ @return A Boolean value of YES specifies the bottom bar should be visiable. Default value is NO.
+ */
 - (BOOL)prefersBottomBarShown;
 
 @end
@@ -77,6 +85,11 @@
 
 @interface UIViewController (RFNavigationBehaving)
 
+/**
+ Generally, you dont need call this method manually unless there is an interactive transition.
+ 
+ When an interactive transition canceled, you should call this method in viewWillApear:.
+ */
 - (void)updateNavigationAppearanceAnimated:(BOOL)animated;
 
 @end

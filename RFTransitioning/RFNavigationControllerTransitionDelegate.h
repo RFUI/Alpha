@@ -25,3 +25,9 @@
 @property (readonly, weak, nonatomic) UIGestureRecognizer *currentPopInteractionGestureRecognizer;
 
 @end
+
+@protocol RFNavigationControllerAppearanceUpdating <NSObject>
+@optional
+- (void)updateNavigationAppearanceWithViewController:(id)viewController animated:(BOOL)animated;
+
+@end

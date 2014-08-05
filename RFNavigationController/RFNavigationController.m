@@ -140,6 +140,8 @@ RFInitializingRootForUIViewController
     }
 }
 
+#pragma mark - Appearance update
+
 - (void)updateNavigationAppearanceWithViewController:(id)viewController animated:(BOOL)animated {
     BOOL shouldHide = self.preferredNavigationBarHidden;
     if ([viewController respondsToSelector:@selector(prefersNavigationBarHiddenForNavigationController:)]) {
@@ -165,6 +167,10 @@ RFInitializingRootForUIViewController
         } completion:nil];
     }
 }
+
+
+
+#pragma mark - Back button
 
 //! REF: https://github.com/onegray/UIViewController-BackButtonHandler
 - (BOOL)navigationBar:(UINavigationBar *)navigationBar shouldPopItem:(UINavigationItem *)item {

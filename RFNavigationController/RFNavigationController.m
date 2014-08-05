@@ -140,7 +140,7 @@ RFInitializingRootForUIViewController
     }
 }
 
-- (void)updateNavigationAppearanceWithViewController:(UIViewController *)viewController animated:(BOOL)animated {
+- (void)updateNavigationAppearanceWithViewController:(id)viewController animated:(BOOL)animated {
     BOOL shouldHide = self.preferredNavigationBarHidden;
     if ([viewController respondsToSelector:@selector(prefersNavigationBarHiddenForNavigationController:)]) {
         shouldHide = [(id<RFNavigationBehaving>)viewController prefersNavigationBarHiddenForNavigationController:self];
@@ -156,8 +156,10 @@ RFInitializingRootForUIViewController
     }
 
     if (self.bottomBarHidden != shouldHide) {
+        // If is interactive transitioning, use transitionDuration.
         // Show, no animation for better visual effect.
-        [UIView animateWithDuration:shouldHide? 0.1 : 0 delay:0 options:UIViewAnimationOptionBeginFromCurrentState animated:animated beforeAnimations:^{
+        NSTimeInterval transitionDuration = (self.transitionCoordinator.isInteractive || shouldHide)? self.transitionCoordinator.transitionDuration : 0;
+        [UIView animateWithDuration:transitionDuration delay:0 options:UIViewAnimationOptionBeginFromCurrentState animated:animated beforeAnimations:^{
         } animations:^{
             self.bottomBarHidden = shouldHide;
         } completion:nil];

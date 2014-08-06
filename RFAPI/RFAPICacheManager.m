@@ -58,6 +58,9 @@
                 if (expireTime > [NSDate timeIntervalSinceReferenceDate]) {
                     return cachedResponse;
                 }
+                else {
+                    dout_debug(@"Cache expired.")
+                }
             }
             default:
                 return nil;
@@ -77,8 +80,16 @@
 
 - (void)storeCachedResponseForRequest:(NSURLRequest *)request response:(NSHTTPURLResponse *)response data:(NSData *)responseData define:(RFAPIDefine *)define control:(RFAPIControl *)control {
     // No need to store cache
-    if (define.cachePolicy == RFAPICachePolicyNoCache && define.offlinePolicy == RFAPIOfflinePolicyDefault) {
-        return;
+    if (define.offlinePolicy == RFAPIOfflinePolicyDefault) {
+        if (define.cachePolicy == RFAPICachePolicyNoCache) {
+            return;
+        }
+
+        // Cache controlled by server, ignore.
+        if (define.cachePolicy == RFAPICachePolicyDefault
+            || define.cachePolicy == RFAPICachePolicyProtocol) {
+            return;
+        }
     }
 
     NSTimeInterval age = define.expire;

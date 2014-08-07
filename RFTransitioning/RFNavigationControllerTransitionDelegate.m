@@ -97,6 +97,8 @@
 
 - (void)navigationController:(UINavigationController *)navigationController didShowViewController:(UIViewController *)viewController animated:(BOOL)animated {
     self.currentPopInteractionController = (id)viewController.RFTransitioningInteractionController;
+    navigationController.interactivePopGestureRecognizer.enabled = (!self.currentPopInteractionController && navigationController.viewControllers.count > 1);
+
     if ([self.delegate respondsToSelector:@selector(navigationController:didShowViewController:animated:)]) {
         [self.delegate navigationController:navigationController didShowViewController:viewController animated:animated];
     }

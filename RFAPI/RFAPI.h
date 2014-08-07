@@ -41,6 +41,10 @@
 - (void)cancelOperationWithIdentifier:(NSString *)identifier;
 - (void)cancelOperationsWithGroupIdentifier:(NSString *)identifier;
 
+#pragma mark - Activity Indicator
+
+@property (strong, nonatomic) RFMessageManager *networkActivityIndicatorManager;
+
 #pragma mark - Request
 
 // 如果传一个特殊请求，直接创建一个 AFHTTPRequestOperation 并加进来也许更合适
@@ -78,13 +82,14 @@
         failure:(void (^)(AFHTTPRequestOperation *operation, NSError *error))failure
      completion:(void (^)(AFHTTPRequestOperation *operation))completion;
 
+/**
+ Creat a mutable URLRequest with special info.
+ */
+- (NSMutableURLRequest *)URLRequestWithDefine:(RFAPIDefine *)define parameters:(NSDictionary *)parameters formData:(NSArray *)RFFormData controlInfo:(RFAPIControl *)controlInfo error:(NSError *__autoreleasing *)error;
 
 #pragma mark - Response
 
-
-#pragma mark - Activity Indicator
-
-@property (strong, nonatomic) RFMessageManager *networkActivityIndicatorManager;
+- (void)invalidateCacheWithName:(NSString *)APIName parameters:(NSDictionary *)parameters;
 
 #pragma mark - Methods for overwrite
 

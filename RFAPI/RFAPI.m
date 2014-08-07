@@ -219,6 +219,19 @@ RFInitializingRootForNSObject
     return [self requestWithName:APIName parameters:parameters formData:nil controlInfo:controlInfo uploadProgress:nil success:success failure:failure completion:completion];
 }
 
+- (void)invalidateCacheWithName:(NSString *)APIName parameters:(NSDictionary *)parameters {
+    if (!APIName.length) return;
+
+    RFAPIDefine *define = [self.defineManager defineForName:APIName];
+    if (!define) return;
+
+    NSError __autoreleasing *e = nil;
+    NSURLRequest *request = [self URLRequestWithDefine:define parameters:parameters formData:nil controlInfo:nil error:&e];
+    if (e) dout_error(@"%@", e);
+
+    [self.cacheManager removeCachedResponseForRequest:request];
+}
+
 #pragma mark - Build Request
 
 #define __RFAPIMakeRequestError(CONDITION)\

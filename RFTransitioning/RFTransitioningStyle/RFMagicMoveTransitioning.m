@@ -56,7 +56,7 @@
         UIView *sTo = [[UIImageView alloc] initWithImage:[vTo renderToImage]];
         sTo.frame = [containerView convertRect:vFrom.frame fromView:vFrom.superview];
         [containerView addSubview:sTo];
-        sTo.alpha = 0;
+        sTo.alpha = vFrom.alpha;
         bind.toViewSnapshot = sTo;
 
         UIView *sFrom = [vFrom snapshotViewAfterScreenUpdates:NO];

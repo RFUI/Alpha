@@ -114,7 +114,7 @@ RFInitializingRootForUIViewController
 - (RFNavigationBottomBar *)bottomBarHolder {
     if (!_bottomBarHolder) {
         RFNavigationBottomBar *bar = [RFNavigationBottomBar new];
-        bar.autoresizingMask = UIViewAutoresizingFlexibleTopMargin|UIViewAutoresizingFlexibleHeight;
+        bar.autoresizingMask = UIViewAutoresizingFlexibleTopMargin|UIViewAutoresizingFlexibleWidth;
         _bottomBarHolder = bar;
     }
     return _bottomBarHolder;

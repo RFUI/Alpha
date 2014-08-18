@@ -131,7 +131,7 @@ static NSTimeInterval RFPullToFetchAnimateTimeInterval = .2;
 }
 
 - (void)triggerHeaderProcess {
-    if (self.headerProcessing) return;
+    if (self.headerProcessing || !self.headerFetchingEnabled) return;
     _doutwork()
 
     if (self.footerProcessing) {
@@ -164,7 +164,7 @@ static NSTimeInterval RFPullToFetchAnimateTimeInterval = .2;
 }
 
 - (void)triggerFooterProcess {
-    if (self.footerProcessing) return;
+    if (self.footerProcessing || !self.footerFetchingEnabled) return;
     _doutwork()
 
     if (self.headerProcessing) {

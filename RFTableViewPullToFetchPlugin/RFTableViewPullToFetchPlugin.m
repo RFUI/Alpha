@@ -164,7 +164,7 @@ static NSTimeInterval RFPullToFetchAnimateTimeInterval = .2;
 }
 
 - (void)triggerFooterProcess {
-    if (self.footerProcessing || !self.footerFetchingEnabled) return;
+    if (self.footerProcessing || !self.footerFetchingEnabled || self.footerReachEnd) return;
     _doutwork()
 
     if (self.headerProcessing) {

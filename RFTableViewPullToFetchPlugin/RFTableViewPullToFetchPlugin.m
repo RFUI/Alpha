@@ -21,9 +21,6 @@ static NSTimeInterval RFPullToFetchAnimateTimeInterval = .2;
 @property (strong, nonatomic) id contentSizeChangedObserver;
 
 @property (assign, nonatomic) BOOL hasFetched;
-
-@property (readonly, nonatomic) RFPullToFetchIndicatorStatus headerStatus;
-@property (readonly, nonatomic) RFPullToFetchIndicatorStatus footerStatus;
 @end
 
 @implementation RFTableViewPullToFetchPlugin

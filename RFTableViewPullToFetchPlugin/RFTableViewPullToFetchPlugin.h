@@ -49,9 +49,11 @@ typedef void (^RFPullToFetchIndicatorStatusChangeBlock)(RFTableViewPullToFetchPl
 //@property(assign, nonatomic) RFPullToFetchTableIndicatorLayoutType footerStyle;
 
 @property(copy, nonatomic) RFPullToFetchIndicatorStatusChangeBlock headerStatusChangeBlock;
+@property (readonly, nonatomic) RFPullToFetchIndicatorStatus headerStatus;
 - (void)setHeaderStatusChangeBlock:(void (^)(RFTableViewPullToFetchPlugin *control, id indicatorView, RFPullToFetchIndicatorStatus status, CGFloat visibleHeight, UITableView *tableView))headerStatusChangeBlock;
 
 @property(copy, nonatomic) RFPullToFetchIndicatorStatusChangeBlock footerStatusChangeBlock;
+@property (readonly, nonatomic) RFPullToFetchIndicatorStatus footerStatus;
 - (void)setFooterStatusChangeBlock:(void (^)(RFTableViewPullToFetchPlugin *control, id indicatorView, RFPullToFetchIndicatorStatus status, CGFloat visibleHeight, UITableView *tableView))footerStatusChangeBlock;
 
 - (void)setNeedsDisplayHeader;

@@ -30,7 +30,9 @@
 
 @end
 
-@interface RFTableViewCellHeightDelegate : RFDelegateChain
+@interface RFTableViewCellHeightDelegate : RFDelegateChain <
+    UITableViewDelegate
+>
 @property (weak, nonatomic) IBOutlet id<UITableViewDelegate> delegate;
 @property (assign, nonatomic) UIEdgeInsets cellLayoutEdgeInsets;
 

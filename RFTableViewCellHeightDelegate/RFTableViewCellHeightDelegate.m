@@ -3,7 +3,9 @@
 #import "dout.h"
 #import "UIView+RFAnimate.h"
 
-@interface RFTableViewCellHeightDelegate ()
+@interface RFTableViewCellHeightDelegate () <
+    UITableViewDelegate
+>
 @property (strong, nonatomic) NSCache *offscreenCellCache;
 @property (strong, nonatomic) NSCache *cellHeightCache;
 @property (assign, atomic) BOOL requestNewCellLock;
@@ -30,14 +32,6 @@
     _cellHeightCacheEnabled = YES;
 
     _canonicalCellHeight = [NSCache new];
-}
-
-- (void)setDelegate:(id<RFTableViewCellHeightDelegate>)delegate {
-    if (self.delegate != delegate) {
-        [self invalidateOffscreenCellCache];
-        [self invalidateCellHeightCache];
-    }
-    [super setDelegate:delegate];
 }
 
 #pragma mark - Update Height
@@ -110,9 +104,9 @@
 
 - (UITableViewCell *)tableView:(UITableView *)tableView offscreenCellForRowAtIndexPath:(NSIndexPath *)indexPath {
     UITableViewCell *cell;
-    BOOL suportCache = [self.delegate respondsToSelector:@selector(tableView:cellReuseIdentifierForRowAtIndexPath:)];
+    BOOL suportCache = [tableView.dataSource respondsToSelector:@selector(tableView:cellReuseIdentifierForRowAtIndexPath:)];
     if (suportCache) {
-        NSString *cellReuseIdentifier = [self.delegate tableView:tableView cellReuseIdentifierForRowAtIndexPath:indexPath];
+        NSString *cellReuseIdentifier = [(id)tableView.dataSource tableView:tableView cellReuseIdentifierForRowAtIndexPath:indexPath];
         if (cellReuseIdentifier) {
             cell = [self.offscreenCellCache objectForKey:cellReuseIdentifier];
             [cell prepareForReuse];
@@ -169,7 +163,7 @@
         UITableViewCell *cell = [self tableView:tableView offscreenCellForRowAtIndexPath:indexPath];
         RFAssert(cell, @"Cannot get a cached cell or an new one.");
 
-        [self.delegate tableView:tableView configureCell:cell forIndexPath:indexPath offscreenRendering:YES];
+        [(id)tableView.dataSource tableView:tableView configureCell:cell forIndexPath:indexPath offscreenRendering:YES];
         CGFloat height = [self calculateCellHeightWithCell:cell tableView:tableView atIndexPath:indexPath];
         if (self.cellHeightCacheEnabled) {
             [self.cellHeightCache setObject:@(height) forKey:indexPath];

@@ -7,7 +7,7 @@
     The MIT License (MIT)
     http://www.opensource.org/licenses/mit-license.php
 
-    BETA
+    Alpha
  */
 
 /**
@@ -16,7 +16,10 @@
 
 #import "RFDelegateChain.h"
 
-@protocol RFTableViewCellHeightDelegate <UITableViewDelegate>
+/**
+ The table view’s data source must confirm to RFTableViewCellHeightDataSource.
+ */
+@protocol RFTableViewCellHeightDataSource <UITableViewDataSource>
 @required
 
 - (void)tableView:(UITableView *)tableView configureCell:(id)cell forIndexPath:(NSIndexPath *)indexPath offscreenRendering:(BOOL)isOffscreenRendering;
@@ -27,15 +30,11 @@
 
 @end
 
-@interface RFTableViewCellHeightDelegate : RFDelegateChain <
-    UITableViewDelegate
->
-@property (weak, nonatomic) IBOutlet id<RFTableViewCellHeightDelegate> delegate;
+@interface RFTableViewCellHeightDelegate : RFDelegateChain
+@property (weak, nonatomic) IBOutlet id<UITableViewDelegate> delegate;
 @property (assign, nonatomic) UIEdgeInsets cellLayoutEdgeInsets;
 
 #pragma mark -
-
-
 
 - (CGFloat)calculateCellHeightWithCell:(UITableViewCell *)cell tableView:(UITableView *)tableView atIndexPath:(NSIndexPath *)indexPath;
 
@@ -57,5 +56,9 @@
 - (void)invalidateCellHeightCache;
 - (void)invalidateCellHeightCacheAtIndexPath:(NSIndexPath *)indexPath;
 - (void)invalidateCellHeightCacheAtIndexPaths:(NSArray *)indexPaths;
+
+#pragma mark - UITableViewDelegate
+- (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath;
+- (CGFloat)tableView:(UITableView *)tableView estimatedHeightForRowAtIndexPath:(NSIndexPath *)indexPath;
 
 @end

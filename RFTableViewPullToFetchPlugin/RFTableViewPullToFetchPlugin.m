@@ -303,6 +303,9 @@ static NSTimeInterval RFPullToFetchAnimateTimeInterval = .2;
         UIEdgeInsets edge = self.tableView.contentInset;
         edge.bottom = (self.footerProcessing? self.footerContainer.height : 0);
         self.tableView.contentInset = edge;
+        if (self.tableView.tableFooterView) {
+            self.tableView.tableFooterView = self.tableView.tableFooterView;
+        }
     } completion:^(BOOL finished) {
         if (finished) {
             self.animating = NO;

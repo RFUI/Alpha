@@ -6,6 +6,7 @@
 @interface RFNavigationControllerTransitionDelegate ()
 @property (readwrite, weak, nonatomic) RFNavigationPopInteractionController *currentPopInteractionController;
 @property (readwrite, weak, nonatomic) UIGestureRecognizer *currentPopInteractionGestureRecognizer;
+@property (assign, nonatomic) BOOL gestureRecognizerEnabled;
 @end
 
 @implementation RFNavigationControllerTransitionDelegate
@@ -93,9 +94,19 @@
     if ([self.delegate respondsToSelector:@selector(navigationController:willShowViewController:animated:)]) {
         [self.delegate navigationController:navigationController willShowViewController:viewController animated:animated];
     }
+
+    UIGestureRecognizer *gr = self.currentPopInteractionGestureRecognizer;
+    if (gr.state == UIGestureRecognizerStatePossible) {
+        self.gestureRecognizerEnabled = gr.enabled;
+        gr.enabled = NO;
+    }
 }
 
 - (void)navigationController:(UINavigationController *)navigationController didShowViewController:(UIViewController *)viewController animated:(BOOL)animated {
+    if (self.currentPopInteractionGestureRecognizer && self.gestureRecognizerEnabled) {
+        self.currentPopInteractionGestureRecognizer.enabled = YES;
+    }
+
     self.currentPopInteractionController = (id)viewController.RFTransitioningInteractionController;
     navigationController.interactivePopGestureRecognizer.enabled = (!self.currentPopInteractionController && navigationController.viewControllers.count > 1);
 

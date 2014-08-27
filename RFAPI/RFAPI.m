@@ -172,12 +172,14 @@ RFInitializingRootForNSObject
         NSError *error = nil;
         id responseObject = [serializer responseObjectForResponse:cachedResponse.response data:cachedResponse.data error:&error];
         if (error) {
-            operationFailure(nil, error);
-            operationCompletion(nil);
+            dispatch_after_seconds(0, ^{
+                operationFailure(nil, error);
+                operationCompletion(nil);
+            });
             return nil;
         }
 
-        dispatch_async(dispatch_get_main_queue(), ^{
+        dispatch_after_seconds(0, ^{
             [self processingCompletionWithHTTPOperation:nil responseObject:responseObject define:define control:controlInfo success:operationSuccess failure:operationFailure completion:operationCompletion];
         });
         return nil;

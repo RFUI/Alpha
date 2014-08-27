@@ -100,6 +100,18 @@
     }];
 }
 
+- (NSNumber *)cachedHeightAtIndexPath:(NSIndexPath *)indexPath {
+    NSNumber *height = [self.canonicalCellHeight objectForKey:indexPath];
+    if (height) {
+        return height;
+    }
+
+    if (self.cellHeightCacheEnabled) {
+        height = [self.cellHeightCache objectForKey:indexPath];
+    }
+    return height;
+}
+
 #pragma mark -
 
 - (UITableViewCell *)tableView:(UITableView *)tableView offscreenCellForRowAtIndexPath:(NSIndexPath *)indexPath {
@@ -131,14 +143,6 @@
 #pragma mark - Height
 
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath {
-    if ([self.canonicalCellHeight objectForKey:indexPath]) {
-        return [[self.canonicalCellHeight objectForKey:indexPath] floatValue];
-    }
-
-    if (self.requestNewCellLock) {
-        return 0;
-    }
-
     // A simplified way to check whether the table view width changed.
     if (self.lastTableView != tableView) {
         self.lastTableView = tableView;
@@ -150,12 +154,13 @@
         [self invalidateCellHeightCache];
     }
 
-    if (self.cellHeightCacheEnabled) {
-        NSNumber *heightCache = [self.cellHeightCache objectForKey:indexPath];
-        if (heightCache) {
-            dout_debug(@"Return cached height: %@", heightCache);
-            return [heightCache floatValue];
-        }
+    NSNumber *height = [self cachedHeightAtIndexPath:indexPath];
+    if (height) {
+        return [height floatValue];
+    }
+
+    if (self.requestNewCellLock) {
+        return 0;
     }
 
     // Make duplicated cells deallocated faster.
@@ -173,6 +178,11 @@
 }
 
 - (CGFloat)tableView:(UITableView *)tableView estimatedHeightForRowAtIndexPath:(NSIndexPath *)indexPath {
+    NSNumber *height = [self cachedHeightAtIndexPath:indexPath];
+    if (height) {
+        return [height floatValue];
+    }
+
     if ([self.delegate respondsToSelector:@selector(tableView:estimatedHeightForRowAtIndexPath:)]) {
         return [(id<UITableViewDelegate>)self.delegate tableView:tableView estimatedHeightForRowAtIndexPath:indexPath];
     }

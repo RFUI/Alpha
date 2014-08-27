@@ -59,6 +59,8 @@
 - (void)invalidateCellHeightCacheAtIndexPath:(NSIndexPath *)indexPath;
 - (void)invalidateCellHeightCacheAtIndexPaths:(NSArray *)indexPaths;
 
+- (NSNumber *)cachedHeightAtIndexPath:(NSIndexPath *)indexPath;
+
 #pragma mark - UITableViewDelegate
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath;
 - (CGFloat)tableView:(UITableView *)tableView estimatedHeightForRowAtIndexPath:(NSIndexPath *)indexPath;

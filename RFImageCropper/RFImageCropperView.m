@@ -106,7 +106,7 @@ RFInitializingRootForUIView
     // Make sure scrollView can scroll
     CGSize contentSize = scrollView.contentSize;
     CGSize imageSize = self.cropSize;
-    CGFloat expand = 1/self.contentScaleFactor/2.;
+    CGFloat expand = self.window.screen? 1/self.window.screen.scale/2. : 0.25;
     _dout_float(expand);
     if (contentSize.width <= imageSize.width) {
         _dout_debug(@"Expand width")

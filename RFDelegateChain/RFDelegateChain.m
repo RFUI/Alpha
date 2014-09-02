@@ -16,6 +16,15 @@ RFInitializingRootForNSObject
     return [NSString stringWithFormat:@"<%@: %p, delegate = %@>", self.class, self, self.delegate];
 }
 
+- (void)setDelegate:(id)delegate {
+    if (delegate != self) {
+        _delegate = delegate;
+    }
+    else {
+        dout_debug(@"Try set %@ delegtate to itself, ignored.", self);
+    }
+}
+
 RFDelegateChainForwordMethods(super, self.delegate)
 
 @end

@@ -22,6 +22,10 @@ RFUIInterfaceOrientationSupportNavigation
 RFInitializingRootForUIViewController
 
 - (void)onInit {
+    _prefersStatusBarHidden = NO;
+    _preferredStatusBarStyle = UIStatusBarStyleDefault;
+    _preferredStatusBarUpdateAnimation = UIStatusBarAnimationFade;
+
     self.forwardDelegate = [RFNavigationControllerTransitionDelegate new];
     self.delegate = self.forwardDelegate;
 }
@@ -152,6 +156,7 @@ RFInitializingRootForUIViewController
         [self setNavigationBarHidden:shouldHide animated:YES];
     }
 
+    // Handel bottom bar appearance
     shouldHide = YES;
     if ([viewController respondsToSelector:@selector(prefersBottomBarShown)]) {
         shouldHide = ![(id)viewController prefersBottomBarShown];
@@ -166,8 +171,31 @@ RFInitializingRootForUIViewController
             self.bottomBarHidden = shouldHide;
         } completion:nil];
     }
-}
 
+    // Handel status bar appearance
+    if (self.handelViewControllerBasedStatusBarAppearance) {
+        BOOL shouldStatusBarHidden = self.prefersStatusBarHidden;
+        if ([viewController respondsToSelector:@selector(prefersStatusBarHidden)]) {
+            shouldStatusBarHidden = [viewController prefersStatusBarHidden];
+        }
+
+        if (shouldStatusBarHidden != [UIApplication sharedApplication].statusBarHidden) {
+            UIStatusBarAnimation preferredStatusBarUpdateAnimation = self.preferredStatusBarUpdateAnimation;
+            if ([viewController respondsToSelector:@selector(preferredStatusBarUpdateAnimation)]) {
+                preferredStatusBarUpdateAnimation = [viewController preferredStatusBarUpdateAnimation];
+            }
+            [[UIApplication sharedApplication] setStatusBarHidden:shouldStatusBarHidden withAnimation:animated? preferredStatusBarUpdateAnimation : UIStatusBarAnimationNone];
+        }
+
+        UIStatusBarStyle preferredStatusBarStyle = self.preferredStatusBarStyle;
+        if ([viewController respondsToSelector:@selector(preferredStatusBarStyle)]) {
+            preferredStatusBarStyle = [viewController preferredStatusBarStyle];
+        }
+        if (preferredStatusBarStyle != [UIApplication sharedApplication].statusBarStyle) {
+            [[UIApplication sharedApplication] setStatusBarStyle:preferredStatusBarStyle animated:animated];
+        }
+    }
+}
 
 
 #pragma mark - Back button

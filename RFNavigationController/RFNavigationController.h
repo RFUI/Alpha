@@ -8,14 +8,17 @@
     The MIT License (MIT)
     http://www.opensource.org/licenses/mit-license.php
 
-    TEST
+    BETA
  */
 #import "RFUI.h"
 #import "RFNavigationControllerTransitionDelegate.h"
 
 @protocol RFNavigationBehaving;
 
-@interface RFNavigationController : UINavigationController <
+/**
+ 
+ */
+NS_CLASS_AVAILABLE_IOS(7_0) @interface RFNavigationController : UINavigationController <
     RFInitializing,
     RFNavigationControllerAppearanceUpdating
 >
@@ -37,10 +40,12 @@
  */
 @property (assign, nonatomic) BOOL preferredNavigationBarHidden;
 
-#pragma mark - Tab Bar
+#pragma mark - Bottom Bar
 
 /**
  A Boolean indicating whether the navigation controller’s built-in bottom bar is visible.
+ 
+ This bottom bar is a custom view, not the same with navigation controller’s toolbar.
  */
 @property (assign, nonatomic) BOOL bottomBarHidden;
 
@@ -50,6 +55,26 @@
 - (void)setBottomBarHidden:(BOOL)hidden animated:(BOOL)animated;
 
 @property (strong, nonatomic) IBOutlet UIView *bottomBar;
+
+#pragma mark - Status Bar
+
+/**
+ If you want modify staus bar manually through UIApplication, you need set UIViewControllerBasedStatusBarAppearance to NO in application’s info.plist.
+ 
+ Set YES will let the reciver ask current view controller for status bar appearance and then update.
+
+ Default No.
+ */
+@property (assign, nonatomic) BOOL handelViewControllerBasedStatusBarAppearance;
+
+/// Default `NO`.
+@property (assign, nonatomic) BOOL prefersStatusBarHidden;
+
+/// Default `UIStatusBarStyleDefault`.
+@property (assign, nonatomic) UIStatusBarStyle preferredStatusBarStyle;
+
+/// Default `UIStatusBarAnimationFade`.
+@property (assign, nonatomic) UIStatusBarAnimation preferredStatusBarUpdateAnimation;
 
 #pragma mark - Delegate
 @property (strong, nonatomic) IBOutlet RFNavigationControllerTransitionDelegate *forwardDelegate;

@@ -16,6 +16,10 @@ Components List
 
 状态：待评估
 
+### RFAsynchronousSegue
+
+状态：良好，达到预期
+
 ### RFAudioPlayer
 
 状态：待评估
@@ -50,7 +54,7 @@ Components List
 
 ### RFImageCropper
 
-状态：待评估
+状态：正常，需要改进
 
 ### RFImageGallery
 
@@ -72,13 +76,17 @@ Components List
 
 状态：正常
 
+### RFRefreshControl
+
+状态：计划阶段
+
 ### RFReusing
 
 状态：待评估
 
 ### RFScrollViewPageControl
 
-状态：良好
+状态：良好，达到预期
 
 ### RFSidePanel
 
@@ -121,6 +129,10 @@ Core Data 数据获取插件
 状态：正常
 
 ### RFTimer
+
+状态：正常
+
+### RFTransitioning
 
 状态：正常
 

@@ -155,4 +155,10 @@ RFInitializingRootForUIView
 @end
 
 @implementation RFSliderViewSimpleImageCell
+
+- (void)awakeFromNib {
+    [super awakeFromNib];
+    self.contentView.autoresizingMask = UIViewAutoresizingFlexibleSize;
+}
+
 @end

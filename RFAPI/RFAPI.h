@@ -192,7 +192,8 @@ extern NSString *const RFAPIRequestCustomizationControlKey;
 
 // No implementation
 @property (strong, nonatomic) NSInputStream *inputStream;
-// No implementation
+
+/// The data to be encoded and appended to the form data.
 @property (strong, nonatomic) NSData *data;
 
 /**

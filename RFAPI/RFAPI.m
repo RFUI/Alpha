@@ -204,7 +204,9 @@ RFInitializingRootForNSObject
 
     // Start request
     if (message) {
-        [self.networkActivityIndicatorManager showMessage:message];
+        dispatch_sync_on_main(^{
+            [self.networkActivityIndicatorManager showMessage:message];
+        });
     }
     [self addOperation:operation];
     return operation;

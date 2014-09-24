@@ -148,8 +148,14 @@ RFInitializingRootForUIViewController
 
 - (void)updateNavigationAppearanceWithViewController:(id)viewController animated:(BOOL)animated {
     BOOL shouldHide = self.preferredNavigationBarHidden;
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wdeprecated-declarations"
     if ([viewController respondsToSelector:@selector(prefersNavigationBarHiddenForNavigationController:)]) {
         shouldHide = [(id<RFNavigationBehaving>)viewController prefersNavigationBarHiddenForNavigationController:self];
+    }
+#pragma clang diagnostic pop
+    if ([viewController respondsToSelector:@selector(prefersNavigationBarHidden)]) {
+        shouldHide = [(id<RFNavigationBehaving>)viewController prefersNavigationBarHidden];
     }
 
     if (self.navigationBarHidden != shouldHide) {

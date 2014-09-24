@@ -89,7 +89,9 @@ NS_CLASS_AVAILABLE_IOS(7_0) @interface RFNavigationController : UINavigationCont
 
  @return A Boolean value of YES specifies the navigation bar should be hidden. Default value is NO.
  */
-- (BOOL)prefersNavigationBarHiddenForNavigationController:(RFNavigationController *)navigation;
+- (BOOL)prefersNavigationBarHidden;
+
+- (BOOL)prefersNavigationBarHiddenForNavigationController:(RFNavigationController *)navigation  DEPRECATED_ATTRIBUTE;
 
 /**
  Ask current view controller whether should pop or not when user tap the back button.

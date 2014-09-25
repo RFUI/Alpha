@@ -28,7 +28,7 @@ RFInitializingRootForUIView
                 self.observer = [FBKVOController controllerWithObserver:self];
             }
 
-            [self.observer observe:scrollView keyPath:@keypath(scrollView, contentOffset) options:NSKeyValueObservingOptionNew|NSKeyValueObservingOptionInitial block:^(RFScrollViewPageControl *observer, id object, NSDictionary *change) {
+            [self.observer observe:scrollView keyPath:@keypath(scrollView, contentOffset) options:(NSKeyValueObservingOptions)(NSKeyValueObservingOptionNew|NSKeyValueObservingOptionInitial) block:^(RFScrollViewPageControl *observer, id object, NSDictionary *change) {
                 [observer setNeedsUpdatePage];
             }];
         }

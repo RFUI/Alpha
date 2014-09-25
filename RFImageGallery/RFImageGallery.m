@@ -276,7 +276,7 @@
             _rCell.backgroundColor = [UIColor randColorWithAlpha:.5];
         }
         
-        UIViewAutoresizing mask = UIViewAutoresizingFlexibleHeight | UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleRightMargin | UIViewAutoresizingFlexibleLeftMargin;
+        UIViewAutoresizing mask = (UIViewAutoresizing)(UIViewAutoresizingFlexibleHeight | UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleRightMargin | UIViewAutoresizingFlexibleLeftMargin);
         _lCell.autoresizingMask = mask;
         _mCell.autoresizingMask = mask;
         _rCell.autoresizingMask = mask;
@@ -335,7 +335,7 @@
 @implementation RFImageGalleryCell
 
 - (RFImageGalleryCell *)initWithFrame:(CGRect)frame {
-    if (self = [super initWithFrame:frame]) {
+    if ((self = [super initWithFrame:frame])) {
         self.imageView = [[UIImageView alloc] initWithFrame:self.frame];
         _imageView.contentMode = UIViewContentModeScaleAspectFit;
         _imageView.autoresizingMask = UIViewAutoresizingFlexibleHeight | UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleBottomMargin | UIViewAutoresizingFlexibleTopMargin | UIViewAutoresizingFlexibleLeftMargin | UIViewAutoresizingFlexibleRightMargin;

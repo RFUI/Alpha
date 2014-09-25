@@ -93,7 +93,7 @@ RFInitializingRootForUIView
     self.evaluateBlock = ifProccessingBlock;
 
     [self evaluateEnableStatus];
-    [self.observeTarget addObserver:self forKeyPath:self.observeKeypath options:NSKeyValueObservingOptionNew|NSKeyValueObservingOptionInitial context:RFRefreshButtonKVOContext];
+    [self.observeTarget addObserver:self forKeyPath:self.observeKeypath options:(NSKeyValueObservingOptions)(NSKeyValueObservingOptionNew|NSKeyValueObservingOptionInitial) context:RFRefreshButtonKVOContext];
     self.observing = YES;
 }
 

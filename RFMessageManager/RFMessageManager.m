@@ -96,7 +96,7 @@ RFInitializingRootForNSObject
 }
 
 - (RFNetworkActivityIndicatorMessage *)popNextMessageToDisplay {
-    RFNetworkActivityIndicatorMessagePriority ctPriority = NSIntegerMin;
+    RFNetworkActivityIndicatorMessagePriority ctPriority = (RFNetworkActivityIndicatorMessagePriority)NSIntegerMin;
     RFNetworkActivityIndicatorMessage *message;
     for (RFNetworkActivityIndicatorMessage *obj in self.messageQueue) {
         if (obj.priority > ctPriority) {

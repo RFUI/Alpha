@@ -55,7 +55,7 @@ static NSTimeInterval RFPullToFetchAnimateTimeInterval = .2;
         self.footerContainer.hidden = YES;
 
         @weakify(self);
-        self.contentSizeChangedObserver = [tableView rac_addObserver:self forKeyPath:@keypath(tableView, contentSize) options:NSKeyValueObservingOptionInitial|NSKeyValueObservingOptionNew queue:nil block:^(id observer, NSDictionary *change) {
+        self.contentSizeChangedObserver = [tableView rac_addObserver:self forKeyPath:@keypath(tableView, contentSize) options:(NSKeyValueObservingOptions)(NSKeyValueObservingOptionInitial|NSKeyValueObservingOptionNew) queue:nil block:^(id observer, NSDictionary *change) {
             @strongify(self);
             [self updateFooterLayout];
         }];

@@ -17,7 +17,7 @@
 @property (weak, nonatomic) IBOutlet id delegate;
 @end
 
-#define RFDelegateChainForwordMethods(FROM, TO) \
+#define RFDelegateChainForwardMethods(FROM, TO) \
 - (BOOL)respondsToSelector:(SEL)aSelector {\
     if ([FROM respondsToSelector:aSelector]) {\
         return YES;\

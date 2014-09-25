@@ -25,6 +25,6 @@ RFInitializingRootForNSObject
     }
 }
 
-RFDelegateChainForwordMethods(super, self.delegate)
+RFDelegateChainForwardMethods(super, self.delegate)
 
 @end

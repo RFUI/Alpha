@@ -117,8 +117,9 @@
 - (UITableViewCell *)tableView:(UITableView *)tableView offscreenCellForRowAtIndexPath:(NSIndexPath *)indexPath {
     UITableViewCell *cell;
     BOOL suportCache = [tableView.dataSource respondsToSelector:@selector(tableView:cellReuseIdentifierForRowAtIndexPath:)];
+    NSString *cellReuseIdentifier;
     if (suportCache) {
-        NSString *cellReuseIdentifier = [(id)tableView.dataSource tableView:tableView cellReuseIdentifierForRowAtIndexPath:indexPath];
+        cellReuseIdentifier = [(id)tableView.dataSource tableView:tableView cellReuseIdentifierForRowAtIndexPath:indexPath];
         if (cellReuseIdentifier) {
             cell = [self.offscreenCellCache objectForKey:cellReuseIdentifier];
             [cell prepareForReuse];
@@ -128,7 +129,12 @@
     // No cached cell, ask delegate for an new one.
     if (!cell) {
         self.requestNewCellLock = YES;
-        cell = [tableView.dataSource tableView:tableView cellForRowAtIndexPath:indexPath];
+        if (cellReuseIdentifier) {
+            cell = [tableView dequeueReusableCellWithIdentifier:cellReuseIdentifier];
+        }
+        else {
+            cell = [tableView.dataSource tableView:tableView cellForRowAtIndexPath:indexPath];
+        }
         if (suportCache) {
             [self.offscreenCellCache setObject:cell forKey:cell.reuseIdentifier];
         }

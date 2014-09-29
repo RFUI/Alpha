@@ -20,13 +20,14 @@ RFInitializingRootForNSObject
 }
 
 - (void)animateTransition:(id<UIViewControllerContextTransitioning>)transitionContext {
+    @autoreleasepool {
+        UIViewController *fromVC = [transitionContext viewControllerForKey:UITransitionContextFromViewControllerKey];
+        UIViewController *toVC = [transitionContext viewControllerForKey:UITransitionContextToViewControllerKey];
+        UIView *toView = toVC.view;
+        UIView *fromView = fromVC.view;
 
-    UIViewController *fromVC = [transitionContext viewControllerForKey:UITransitionContextFromViewControllerKey];
-    UIViewController *toVC = [transitionContext viewControllerForKey:UITransitionContextToViewControllerKey];
-    UIView *toView = toVC.view;
-    UIView *fromView = fromVC.view;
-
-    [self animateTransition:transitionContext fromVC:fromVC toVC:toVC fromView:fromView toView:toView];
+        [self animateTransition:transitionContext fromVC:fromVC toVC:toVC fromView:fromView toView:toView];
+    }
 }
 
 - (void)animateTransition:(id<UIViewControllerContextTransitioning>)transitionContext fromVC:(UIViewController *)fromVC toVC:(UIViewController *)toVC fromView:(UIView *)fromView toView:(UIView *)toView {

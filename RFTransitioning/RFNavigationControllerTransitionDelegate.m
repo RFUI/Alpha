@@ -45,16 +45,18 @@
     }
 
     if (operation == UINavigationControllerOperationPush) {
-        // Needs setup pop interaction controller to toVC.
-        RFNavigationPopInteractionController *interactionController;
-        if (animationController.interactionControllerType) {
-            Class controllerClass = NSClassFromString(animationController.interactionControllerType);
-            if (controllerClass && [controllerClass isSubclassOfClass:[RFNavigationPopInteractionController class]]) {
-                interactionController = [controllerClass new];
-            }
+        @autoreleasepool {
+            // Needs setup pop interaction controller to toVC.
+            RFNavigationPopInteractionController *interactionController;
+            if (animationController.interactionControllerType) {
+                Class controllerClass = NSClassFromString(animationController.interactionControllerType);
+                if (controllerClass && [controllerClass isSubclassOfClass:[RFNavigationPopInteractionController class]]) {
+                    interactionController = [controllerClass new];
+                }
 
-            if (interactionController) {
-                interactionController.viewController = toVC;
+                if (interactionController) {
+                    interactionController.viewController = toVC;
+                }
             }
         }
     }

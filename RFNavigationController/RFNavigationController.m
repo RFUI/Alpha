@@ -246,8 +246,10 @@ RFInitializingRootForUIViewController
 @implementation UIViewController (RFNavigationBehaving)
 
 - (void)updateNavigationAppearanceAnimated:(BOOL)animated {
-    RFNavigationController *nav = (id)self.navigationController;
-    [nav updateNavigationAppearanceWithViewController:(id)self animated:animated];
+    @autoreleasepool {
+        RFNavigationController *nav = (id)self.navigationController;
+        [nav updateNavigationAppearanceWithViewController:(id)self animated:animated];
+    }
 }
 
 @end

@@ -145,6 +145,7 @@ RFInitializingRootForUIView
 - (void)setCropSize:(CGSize)cropSize {
     _cropSize = cropSize;
     self.frameView.frameSize = cropSize;
+    [self.frameView setNeedsDisplay];
     [self updateScaleSetting];
 }
 

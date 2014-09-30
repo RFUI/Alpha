@@ -12,6 +12,7 @@
 @property (strong, nonatomic) UIImageView *imageView;
 @property (assign, nonatomic) CGSize imageSize;
 @property (assign, nonatomic) CGFloat frameScale;
+@property (assign, nonatomic) BOOL scaleFixLock;
 @end
 
 @implementation RFImageCropperView
@@ -106,14 +107,14 @@ RFInitializingRootForUIView
     // Make sure scrollView can scroll
     CGSize contentSize = scrollView.contentSize;
     CGSize imageSize = self.cropSize;
-    CGFloat expand = self.window.screen? 1/self.window.screen.scale/2. : 0.25;
+    CGFloat expand = self.window.screen? 1/self.window.screen.scale/2 : 1/[UIScreen mainScreen].scale/2;
     _dout_float(expand);
-    if (contentSize.width <= imageSize.width) {
+    if (contentSize.width <= imageSize.width + expand) {
         _dout_debug(@"Expand width")
         contentSize.width = imageSize.width + expand;
         scrollView.contentSize = contentSize;
     }
-    if (contentSize.height <= imageSize.height) {
+    if (contentSize.height <= imageSize.height + expand) {
         _dout_debug(@"Expand height")
         contentSize.height = imageSize.height + expand;
         scrollView.contentSize = contentSize;
@@ -128,6 +129,7 @@ RFInitializingRootForUIView
         self.imageSize = sourceImage.size;
         self.imageView.image = sourceImage;
 
+        self.scaleFixLock = NO;
         [self updateScaleSetting];
 
         UIImageView *imageView = self.imageView;
@@ -146,6 +148,7 @@ RFInitializingRootForUIView
     _cropSize = cropSize;
     self.frameView.frameSize = cropSize;
     [self.frameView setNeedsDisplay];
+    self.scaleFixLock = NO;
     [self updateScaleSetting];
 }
 
@@ -156,10 +159,13 @@ RFInitializingRootForUIView
     if (imageSize.width <= 0 || imageSize.height <=0 || cropSize.width <= 0 || cropSize.height <= 0) {
         return;
     }
+
     if (imageSize.width < cropSize.width || imageSize.height < cropSize.height) {
         dout_warning(@"Image size is smaller than crop size.");
     }
 
+    CGFloat scale = [UIScreen mainScreen].scale;
+    CGFloat onePixel = 1/scale;
     CGFloat xScale = imageSize.width/cropSize.width;
     CGFloat yScale = imageSize.height/cropSize.height;
     _dout_float(xScale)
@@ -168,16 +174,26 @@ RFInitializingRootForUIView
     UIScrollView *scrollView = self.scrollView;
     scrollView.minimumZoomScale = MAX(1/xScale, 1/yScale);
     scrollView.maximumZoomScale = MIN(xScale *self.maxPixelZoomRatio, yScale*self.maxPixelZoomRatio);
-    CGFloat scaleAdjust = MAX(1/cropSize.width, 1/cropSize.height)/[UIScreen mainScreen].scale/2;
-    _dout_float(scaleAdjust)
+
+    // Make sure scrollView is zoom enabled.
     if (scrollView.maximumZoomScale <= scrollView.minimumZoomScale) {
+        CGFloat scaleAdjust = MIN(onePixel/cropSize.width, onePixel/cropSize.height)/2;
+        _dout_float(scaleAdjust)
         scrollView.maximumZoomScale = scrollView.minimumZoomScale + scaleAdjust;
     }
     _dout_float(self.scrollView.minimumZoomScale)
     _dout_float(self.scrollView.maximumZoomScale)
-    scrollView.zoomScale = scrollView.minimumZoomScale + scaleAdjust;
+    scrollView.zoomScale = scrollView.minimumZoomScale;
 
     [self updateLayout];
+
+    // Set again will fix scrollview could not scroll.
+    if (!self.scaleFixLock) {
+        self.scaleFixLock = YES;
+        dispatch_after_seconds(0, ^{
+            [self updateScaleSetting];
+        });
+    }
 }
 
 

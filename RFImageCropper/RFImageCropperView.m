@@ -168,12 +168,14 @@ RFInitializingRootForUIView
     UIScrollView *scrollView = self.scrollView;
     scrollView.minimumZoomScale = MAX(1/xScale, 1/yScale);
     scrollView.maximumZoomScale = MIN(xScale *self.maxPixelZoomRatio, yScale*self.maxPixelZoomRatio);
+    CGFloat scaleAdjust = MAX(1/cropSize.width, 1/cropSize.height)/[UIScreen mainScreen].scale/2;
+    _dout_float(scaleAdjust)
     if (scrollView.maximumZoomScale <= scrollView.minimumZoomScale) {
-        scrollView.maximumZoomScale = scrollView.minimumZoomScale + 0.01;
+        scrollView.maximumZoomScale = scrollView.minimumZoomScale + scaleAdjust;
     }
     _dout_float(self.scrollView.minimumZoomScale)
     _dout_float(self.scrollView.maximumZoomScale)
-    scrollView.zoomScale = scrollView.minimumZoomScale + 0.01;
+    scrollView.zoomScale = scrollView.minimumZoomScale + scaleAdjust;
 
     [self updateLayout];
 }

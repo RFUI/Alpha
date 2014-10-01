@@ -8,7 +8,7 @@
 
 - (void)searchBar:(UISearchBar *)searchBar textDidChange:(NSString *)searchText {
     if (self.didChange) {
-        self.didChange(searchBar, self.delegate);
+        self.didChange(searchBar, searchText, self.delegate);
         return;
     }
 

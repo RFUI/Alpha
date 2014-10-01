@@ -20,7 +20,7 @@
 
 /// If thest property set, delegate methods wont called.
 #pragma mark Editing Text
-@property (copy, nonatomic) void (^didChange)(UISearchBar *searchBar, id<UISearchBarDelegate> delegate);
+@property (copy, nonatomic) void (^didChange)(UISearchBar *searchBar, NSString *searchText, id<UISearchBarDelegate> delegate);
 @property (copy, nonatomic) BOOL (^shouldChangeTextInRange)(UISearchBar *searchBar, NSRange range, NSString *replacementText, id<UISearchBarDelegate> delegate);
 @property (copy, nonatomic) BOOL (^shouldBeginEditing)(UISearchBar *searchBar, id<UISearchBarDelegate> delegate);
 @property (copy, nonatomic) void (^didBeginEditing)(UISearchBar *searchBar, id<UISearchBarDelegate> delegate);

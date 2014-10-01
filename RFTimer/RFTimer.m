@@ -24,18 +24,21 @@
     return tm;
 }
 
+- (void)dealloc {
+    [self invalidate];
+}
 
 - (void)scheduleInRunLoop:(NSRunLoop *)runLoop forMode:(NSString *)mode {
     if (self.scheduled) return;
+    self.scheduled = YES;
+    self.runLoop = runLoop;
+    self.runLoopMode = mode;
+    self.fireCounter = 0;
 
     if (self.realTimer) {
         [self.realTimer invalidate];
         self.realTimer = nil;
     }
-    self.runLoop = runLoop;
-    self.runLoopMode = mode;
-    self.scheduled = YES;
-    self.fireCounter = 0;
 
     [self resume];
 }

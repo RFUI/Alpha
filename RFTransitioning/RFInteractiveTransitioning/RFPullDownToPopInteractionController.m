@@ -60,7 +60,7 @@
 
                 CGFloat velocity = [gestureRecognizer velocityInView:piece.superview].y;
 
-                if (((offset * 2 + velocity) / piece.height) < 0.5 || gestureRecognizer.state == UIGestureRecognizerStateChanged) {
+                if (((offset * 2 + velocity) / piece.height) < 0.5 || gestureRecognizer.state == UIGestureRecognizerStateCancelled) {
                     [self cancelInteractiveTransition];
                 }
                 else {

@@ -78,6 +78,7 @@ RFInitializingRootForUIView
         sv.maximumZoomScale = 5;
         sv.minimumZoomScale = 0.01;
         sv.clipsToBounds = NO;
+        sv.scrollsToTop = NO;
         self.scrollView = sv;
     }
     return _scrollView;

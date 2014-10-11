@@ -38,7 +38,7 @@ NS_CLASS_AVAILABLE_IOS(7_0) @interface RFNavigationController : UINavigationCont
 
  If the reciver is load from nib, this property will be set with storyboard setting.
  */
-@property (assign, nonatomic) BOOL preferredNavigationBarHidden;
+@property (assign, nonatomic) IBInspectable BOOL preferredNavigationBarHidden;
 
 #pragma mark - Bottom Bar
 
@@ -56,6 +56,13 @@ NS_CLASS_AVAILABLE_IOS(7_0) @interface RFNavigationController : UINavigationCont
 
 @property (strong, nonatomic) IBOutlet UIView *bottomBar;
 
+/**
+ A Boolean value indicating whether the bottom bar is translucent (YES) or not (NO).
+ 
+ If the bottom bar is translucent, layout will be extended includes opaque bars.
+ */
+@property (assign, nonatomic) IBInspectable BOOL translucentBottomBar;
+
 #pragma mark - Status Bar
 
 /**
@@ -65,10 +72,10 @@ NS_CLASS_AVAILABLE_IOS(7_0) @interface RFNavigationController : UINavigationCont
 
  Default No.
  */
-@property (assign, nonatomic) BOOL handelViewControllerBasedStatusBarAppearance;
+@property (assign, nonatomic) IBInspectable BOOL handelViewControllerBasedStatusBarAppearance;
 
 /// Default `NO`.
-@property (assign, nonatomic) BOOL prefersStatusBarHidden;
+@property (assign, nonatomic) IBInspectable BOOL prefersStatusBarHidden;
 
 /// Default `UIStatusBarStyleDefault`.
 @property (assign, nonatomic) UIStatusBarStyle preferredStatusBarStyle;

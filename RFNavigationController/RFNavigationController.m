@@ -104,7 +104,9 @@ RFInitializingRootForUIViewController
     UIView *transitionView = self.transitionView;
 
     bottomBarHolder.y = self.view.height - (bottomBarHidden? 0 : barHeight);
-    bottomBarHolder.alpha = bottomBarHidden? 0 : 1;
+    if (self.bottomBarFadeAnimation) {
+        bottomBarHolder.alpha = bottomBarHidden? 0 : 1;
+    }
     transitionView.height = self.view.height - transitionView.y - ((!bottomBarHidden && !self.translucentBottomBar)? barHeight: 0);
 }
 

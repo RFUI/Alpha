@@ -63,6 +63,11 @@ NS_CLASS_AVAILABLE_IOS(7_0) @interface RFNavigationController : UINavigationCont
  */
 @property (assign, nonatomic) IBInspectable BOOL translucentBottomBar;
 
+/**
+ A Boolean value indicating whether the bottom bar fades in and out as it is shown or hidden, respectively.
+ */
+@property (assign, nonatomic) IBInspectable BOOL bottomBarFadeAnimation;
+
 #pragma mark - Status Bar
 
 /**

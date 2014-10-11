@@ -159,7 +159,7 @@ RFInitializingRootForUIViewController
     }
 
     if (self.navigationBarHidden != shouldHide) {
-        [self setNavigationBarHidden:shouldHide animated:YES];
+        [self setNavigationBarHidden:shouldHide animated:animated];
     }
 
     // Handel bottom bar appearance
@@ -170,9 +170,11 @@ RFInitializingRootForUIViewController
 
     if (self.bottomBarHidden != shouldHide) {
         // If is interactive transitioning, use transitionDuration.
-        // Show, no animation for better visual effect.
-        NSTimeInterval transitionDuration = (self.transitionCoordinator.isInteractive || shouldHide)? self.transitionCoordinator.transitionDuration : 0;
-        [UIView animateWithDuration:transitionDuration delay:0 options:UIViewAnimationOptionBeginFromCurrentState animated:animated beforeAnimations:^{
+        NSTimeInterval transitionDuration = self.transitionCoordinator.isInteractive? self.transitionCoordinator.transitionDuration : 0.35;
+
+        // Show, no animation for better visual effect if bottom bar is not translucent.
+        BOOL shouldAnimatd = (!shouldHide && !self.translucentBottomBar)? NO : animated;
+        [UIView animateWithDuration:transitionDuration delay:0 options:UIViewAnimationOptionBeginFromCurrentState animated:shouldAnimatd beforeAnimations:^{
         } animations:^{
             self.bottomBarHidden = shouldHide;
         } completion:nil];
@@ -248,7 +250,9 @@ RFInitializingRootForUIViewController
 - (void)updateNavigationAppearanceAnimated:(BOOL)animated {
     @autoreleasepool {
         RFNavigationController *nav = (id)self.navigationController;
-        [nav updateNavigationAppearanceWithViewController:(id)self animated:animated];
+        if ([nav respondsToSelector:@selector(updateNavigationAppearanceWithViewController:animated:)]) {
+            [nav updateNavigationAppearanceWithViewController:(id)self animated:animated];
+        }
     }
 }
 

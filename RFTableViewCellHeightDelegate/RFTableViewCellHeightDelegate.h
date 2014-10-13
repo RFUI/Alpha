@@ -11,7 +11,7 @@
  */
 
 /**
- This solution works, and may better than other solutions. But is not perfect, especially when a table view’s frame changed.
+ This solution works, and may better than other solutions. But is not perfect, especially when set height asynchronously or cell’s layout is complex.
  */
 
 #import "RFDelegateChain.h"

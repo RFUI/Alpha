@@ -165,6 +165,16 @@
         return [height floatValue];
     }
 
+    if ([self.delegate respondsToSelector:@selector(tableView:heightForRowAtIndexPath:)]) {
+        CGFloat height = [self.delegate tableView:tableView heightForRowAtIndexPath:indexPath];
+        if (height != UITableViewAutomaticDimension) {
+            if (self.cellHeightCacheEnabled) {
+                [self.cellHeightCache setObject:@(height) forKey:indexPath];
+            }
+            return height;
+        }
+    }
+
     if (self.requestNewCellLock) {
         return 0;
     }

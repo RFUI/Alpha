@@ -22,6 +22,6 @@
 
 /** The name of the pattern image file. Set this property will change the background color of the view using the specified pattern image.
  */
-@property (copy, nonatomic) NSString *backgroundColorPatternImageName UI_APPEARANCE_SELECTOR;
+@property (copy, nonatomic) IBInspectable NSString *backgroundColorPatternImageName UI_APPEARANCE_SELECTOR;
 
 @end

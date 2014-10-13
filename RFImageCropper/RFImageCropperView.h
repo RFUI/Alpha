@@ -31,25 +31,25 @@ self.cropView.transform = CGAffineTransformMakeScale(0.5, 0.5);
 >
 @property (strong, nonatomic) RFImageCropperFrameView *frameView;
 
-@property (strong, nonatomic) UIImage *sourceImage;
+@property (strong, nonatomic) IBInspectable UIImage *sourceImage;
 
 /// Default (100, 100)
-@property (assign, nonatomic) CGSize cropSize;
+@property (assign, nonatomic) IBInspectable CGSize cropSize;
 - (UIImage *)croppedImage;
 
 /// Default 1
-@property (assign, nonatomic) CGFloat maxPixelZoomRatio;
+@property (assign, nonatomic) IBInspectable CGFloat maxPixelZoomRatio;
 
 @end
 
 @interface RFImageCropperFrameView : UIView <
     RFInitializing
 >
-@property (strong, nonatomic) UIColor *borderColor;
-@property (strong, nonatomic) UIColor *overlayColor;
-@property (strong, nonatomic) UIColor *maskColor;
+@property (strong, nonatomic) IBInspectable UIColor *borderColor;
+@property (strong, nonatomic) IBInspectable UIColor *overlayColor;
+@property (strong, nonatomic) IBInspectable UIColor *maskColor;
 
-@property (assign, nonatomic) CGSize frameSize;
+@property (assign, nonatomic) IBInspectable CGSize frameSize;
 
 // No implementation
 /// Default 10.f

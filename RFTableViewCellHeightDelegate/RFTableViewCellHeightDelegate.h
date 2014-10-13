@@ -53,7 +53,7 @@
 #pragma mark - Cache
 - (void)invalidateOffscreenCellCache;
 
-@property (assign, nonatomic) BOOL cellHeightCacheEnabled;
+@property (assign, nonatomic) IBInspectable BOOL cellHeightCacheEnabled;
 
 - (void)invalidateCellHeightCache;
 - (void)invalidateCellHeightCacheAtIndexPath:(NSIndexPath *)indexPath;

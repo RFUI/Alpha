@@ -21,9 +21,9 @@
     RFInitializing
 >
 
-@property(weak, nonatomic) IBOutlet UIScrollView *scrollView;
+@property (weak, nonatomic) IBOutlet UIScrollView *scrollView;
 
-@property(assign, nonatomic) BOOL supportHalfPage;
+@property (assign, nonatomic) IBInspectable BOOL supportHalfPage;
 
 /**
  Call this method force update pageControl status.

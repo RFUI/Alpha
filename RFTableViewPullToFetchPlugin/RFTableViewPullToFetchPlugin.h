@@ -37,8 +37,8 @@ typedef void (^RFPullToFetchIndicatorStatusChangeBlock)(RFTableViewPullToFetchPl
 
 
 // Default YES.
-@property(assign, nonatomic, getter = isHeaderFetchingEnabled) BOOL headerFetchingEnabled;
-@property(assign, nonatomic, getter = isFooterFetchingEnabled) BOOL footerFetchingEnabled;
+@property(assign, nonatomic, getter = isHeaderFetchingEnabled) IBInspectable BOOL headerFetchingEnabled;
+@property(assign, nonatomic, getter = isFooterFetchingEnabled) IBInspectable BOOL footerFetchingEnabled;
 
 #pragma mark - Layout
 
@@ -74,18 +74,18 @@ typedef void (^RFPullToFetchIndicatorStatusChangeBlock)(RFTableViewPullToFetchPl
 #pragma mark - Control
 
 // Default `YES`.
-@property (assign, nonatomic) BOOL shouldHideHeaderWhenFooterProcessing;
-@property (assign, nonatomic) BOOL shouldHideFooterWhenHeaderProcessing;
+@property (assign, nonatomic) IBInspectable BOOL shouldHideHeaderWhenFooterProcessing;
+@property (assign, nonatomic) IBInspectable BOOL shouldHideFooterWhenHeaderProcessing;
 
 
 // If set `YES`, footer proccess will not be proccessed and `footerContainer` will be visiable. Usually for noticing user there are no more data. Header proccess will reset this property.
 @property(assign, nonatomic) BOOL footerReachEnd;
 
 // Default `NO`
-@property(assign, nonatomic) BOOL shouldScrollToTopWhenHeaderEventTrigged;
+@property(assign, nonatomic) IBInspectable BOOL shouldScrollToTopWhenHeaderEventTrigged;
 
 // Default `NO`, not work rightnow.
-@property(assign, nonatomic) BOOL shouldScrollToLastVisibleRowBeforeTriggeAfterFooterProccessFinished;
+@property(assign, nonatomic) IBInspectable BOOL shouldScrollToLastVisibleRowBeforeTriggeAfterFooterProccessFinished;
 
 // Default `NO`
 //@property (assign, nonatomic) BOOL shouldScrollToBottomWhenFooterEventTrigged;

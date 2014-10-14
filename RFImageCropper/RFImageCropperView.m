@@ -216,7 +216,7 @@ RFInitializingRootForUIView
     }
 }
 
-- (void)scrollViewDidEndZooming:(UIScrollView *)scrollView withView:(UIView *)view atScale:(float)scale {
+- (void)scrollViewDidEndZooming:(UIScrollView *)scrollView withView:(UIView *)view atScale:(CGFloat)scale {
     [UIView animateWithDuration:0.1 animations:^{
         [self updateLayout];
         dout_size(self.scrollView.contentSize)

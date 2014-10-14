@@ -121,7 +121,7 @@ RFInitializingRootForNSObject
 @implementation RFNetworkActivityIndicatorMessage
 
 - (NSString *)description {
-    return [NSString stringWithFormat:@"<%@: %p; title = %@; message = %@; identifier = %@; priority = %d>", self.class, self, self.title, self.message, self.identifier, self.priority];
+    return [NSString stringWithFormat:@"<%@: %p; title = %@; message = %@; identifier = %@; priority = %d>", self.class, self, self.title, self.message, self.identifier, (int)self.priority];
 }
 
 - (id)init {

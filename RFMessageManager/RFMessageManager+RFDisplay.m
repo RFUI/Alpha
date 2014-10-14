@@ -16,7 +16,7 @@
         [message appendFormat:@"%@\n", error.localizedRecoverySuggestion];
     }
 #if RFDEBUG
-    dout_error(@"Error: %@ (%d), URL:%@", error.domain, error.code, error.userInfo[NSURLErrorFailingURLErrorKey]);
+    dout_error(@"Error: %@ (%d), URL:%@", error.domain, (int)error.code, error.userInfo[NSURLErrorFailingURLErrorKey]);
 #endif
 
     [self showWithTitle:title?: @"不能完成请求" message:message status:RFNetworkActivityIndicatorStatusFail modal:NO priority:RFNetworkActivityIndicatorMessagePriorityHigh autoHideAfterTimeInterval:0 identifier:nil groupIdentifier:nil userInfo:nil];

@@ -12,10 +12,13 @@
 RFInitializingRootForUIView
 
 - (void)onInit {
-    RFFullSizeCollectionViewFlowLayout *layout = [[RFFullSizeCollectionViewFlowLayout alloc] init];
-    layout.scrollDirection = UICollectionViewScrollDirectionHorizontal;
-    self.collectionViewLayout = layout;
+    if (![self.collectionViewLayout isKindOfClass:[RFFullSizeCollectionViewFlowLayout class]]) {
+        RFFullSizeCollectionViewFlowLayout *layout = [[RFFullSizeCollectionViewFlowLayout alloc] init];
+        layout.scrollDirection = UICollectionViewScrollDirectionHorizontal;
+        self.collectionViewLayout = layout;
+    }
 
+    self.scrollsToTop = NO;
     self.pagingEnabled = YES;
     self.showsHorizontalScrollIndicator = NO;
     self.showsVerticalScrollIndicator = NO;

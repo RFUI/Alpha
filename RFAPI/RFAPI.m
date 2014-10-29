@@ -76,11 +76,15 @@ RFInitializingRootForNSObject
 }
 
 - (NSArray *)operationsWithIdentifier:(NSString *)identifier {
-    return [self.operations filteredArrayUsingPredicate:[NSPredicate predicateWithFormat:@"%K.%K.%K == %@", @keypathClassInstance(AFHTTPRequestOperation, userInfo), RFAPIOperationUIkControl, @keypathClassInstance(RFAPIControl, identifier), identifier]];
+    @autoreleasepool {
+        return [self.operations filteredArrayUsingPredicate:[NSPredicate predicateWithFormat:@"%K.%K.%K == %@", @keypathClassInstance(AFHTTPRequestOperation, userInfo), RFAPIOperationUIkControl, @keypathClassInstance(RFAPIControl, identifier), identifier]];
+    }
 }
 
 - (NSArray *)operationsWithGroupIdentifier:(NSString *)identifier {
-    return [self.operations filteredArrayUsingPredicate:[NSPredicate predicateWithFormat:@"%K.%K.%K == %@", @keypathClassInstance(AFHTTPRequestOperation, userInfo), RFAPIOperationUIkControl, @keypathClassInstance(RFAPIControl, groupIdentifier), identifier]];
+    @autoreleasepool {
+        return [self.operations filteredArrayUsingPredicate:[NSPredicate predicateWithFormat:@"%K.%K.%K == %@", @keypathClassInstance(AFHTTPRequestOperation, userInfo), RFAPIOperationUIkControl, @keypathClassInstance(RFAPIControl, groupIdentifier), identifier]];
+    }
 }
 
 #pragma mark - Request
@@ -190,10 +194,12 @@ RFInitializingRootForNSObject
     AFHTTPRequestOperation *operation = [self requestOperationWithRequest:request define:define controlInfo:controlInfo];
 
     [operation setCompletionBlockWithSuccess:^(AFHTTPRequestOperation *op, id responseObject) {
-        dout_debug(@"HTTP request operation(%p) with info: %@ completed.", op, [op valueForKeyPath:@"userInfo.RFAPIOperationUIkControl"]);
+        @autoreleasepool {
+            dout_debug(@"HTTP request operation(%p) with info: %@ completed.", op, [op valueForKeyPath:@"userInfo.RFAPIOperationUIkControl"]);
 
-        [self processingCompletionWithHTTPOperation:op responseObject:responseObject define:define control:controlInfo success:operationSuccess failure:operationFailure];
-        [self.cacheManager storeCachedResponseForRequest:op.request response:op.response data:op.responseData define:define control:controlInfo];
+            [self processingCompletionWithHTTPOperation:op responseObject:responseObject define:define control:controlInfo success:operationSuccess failure:operationFailure];
+            [self.cacheManager storeCachedResponseForRequest:op.request response:op.response data:op.responseData define:define control:controlInfo];
+        }
     } failure:^(AFHTTPRequestOperation *op, NSError *error) {
         operationFailure(op, error);
     }];

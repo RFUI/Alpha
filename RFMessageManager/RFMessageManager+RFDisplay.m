@@ -41,4 +41,8 @@
     [self showMessage:obj];
 }
 
+- (void)alertErrorWithMessage:(NSString *)message {
+    [self showWithTitle:nil message:message status:RFNetworkActivityIndicatorStatusFail modal:NO priority:RFNetworkActivityIndicatorMessagePriorityHigh autoHideAfterTimeInterval:0 identifier:nil groupIdentifier:nil userInfo:nil];
+}
+
 @end

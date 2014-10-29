@@ -20,5 +20,6 @@
 - (void)showProgress:(float)progress title:(NSString *)title message:(NSString *)message status:(RFNetworkActivityIndicatorStatus)status modal:(BOOL)modal identifier:(NSString *)identifier userInfo:(NSDictionary *)userInfo;
 
 - (void)alertError:(NSError *)error title:(NSString *)title;
+- (void)alertErrorWithMessage:(NSString *)message;
 
 @end

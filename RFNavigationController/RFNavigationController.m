@@ -28,6 +28,10 @@ RFInitializingRootForUIViewController
 
     self.forwardDelegate = [RFNavigationControllerTransitionDelegate new];
     self.delegate = self.forwardDelegate;
+
+    if (!RFNavigationControllerGlobalInstance) {
+        RFNavigationControllerGlobalInstance = self;
+    }
 }
 
 - (void)awakeFromNib {
@@ -44,10 +48,6 @@ RFInitializingRootForUIViewController
 }
 
 - (void)viewDidLoad {
-    if (!RFNavigationControllerGlobalInstance) {
-        RFNavigationControllerGlobalInstance = self;
-    }
-
     [super viewDidLoad];
 
     self.transitionView = self.view.subviews.firstObject;

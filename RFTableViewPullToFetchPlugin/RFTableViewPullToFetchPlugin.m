@@ -194,14 +194,11 @@ static NSTimeInterval RFPullToFetchAnimateTimeInterval = .2;
 }
 
 - (void)headerProcessFinshed {
-    if (!self.headerProcessing) return;
     _doutwork()
-    if (self.shouldHideFooterWhenHeaderProcessing) {
-        self.footerContainer.hidden = NO;
-    }
-
     self.headerProcessing = NO;
     [self updateHeaderDisplay:YES];
+
+    // If there are few cell to show after fetching, footer should be hidden.
     if (self.tableView.distanceBetweenContentAndBottom > 0 && !self.footerReachEnd) {
         self.hasFetched = NO;
         self.footerContainer.hidden = YES;
@@ -212,7 +209,6 @@ static NSTimeInterval RFPullToFetchAnimateTimeInterval = .2;
 }
 
 - (void)footerProcessFinshed {
-    if (!self.footerProcessing) return;
     _doutwork()
 
     if (self.shouldScrollToLastVisibleRowBeforeTriggeAfterFooterProccessFinished && self.lastVisibleRowBeforeTriggeIndexPath) {
@@ -240,6 +236,15 @@ static NSTimeInterval RFPullToFetchAnimateTimeInterval = .2;
 - (void)onDistanceBetweenContentAndBottomChanged {
     CGFloat distance = self.tableView.distanceBetweenContentAndBottom;
     dout_debug(@"Distance between content and bottom changed: %f", distance);
+
+    if (self.autoFetchWhenScroll) {
+        if (distance > -self.autoFetchTolerateDistance) {
+            if (!self.fetching) {
+                [self triggerFooterProcess];
+            }
+        }
+    }
+
     if (distance < -5 || self.footerContainer.hidden) return;
     [self updateFooterIndicatorStatus];
 }
@@ -359,8 +364,8 @@ static NSTimeInterval RFPullToFetchAnimateTimeInterval = .2;
         footer.hidden = NO;
     }
     else if ((self.shouldHideFooterWhenHeaderProcessing && self.headerProcessing)
-        || distance < 0
-        || (self.tableView.distanceBetweenContentAndTop >= 0 && !self.footerReachEnd)) {
+        || distance <= 0
+        || (self.tableView.distanceBetweenContentAndTop > 0 && !self.footerReachEnd)) {
         footer.hidden = YES;
     }
     else {
@@ -470,8 +475,6 @@ static NSTimeInterval RFPullToFetchAnimateTimeInterval = .2;
         [self.delegate scrollViewDidEndDecelerating:scrollView];
     }
     dout_debug(@"TableView did end decelerating.");
-//    [self setNeedsDisplayHeader];
-//    [self setNeedsDisplayFooter];
 }
 
 @end

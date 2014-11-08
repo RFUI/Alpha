@@ -40,6 +40,14 @@ typedef void (^RFPullToFetchIndicatorStatusChangeBlock)(RFTableViewPullToFetchPl
 @property(assign, nonatomic, getter = isHeaderFetchingEnabled) IBInspectable BOOL headerFetchingEnabled;
 @property(assign, nonatomic, getter = isFooterFetchingEnabled) IBInspectable BOOL footerFetchingEnabled;
 
+/**
+ Default, a fetch will be triggered only when user end dragging the table view.
+ Set this property to `YES` will make the table view auto fetching near bottom.
+ Default vaule is `NO`.
+ */
+@property (assign, nonatomic) IBInspectable BOOL autoFetchWhenScroll;
+@property (assign, nonatomic) IBInspectable CGFloat autoFetchTolerateDistance;
+
 #pragma mark - Layout
 
 @property(strong, nonatomic) UIView *headerContainer;

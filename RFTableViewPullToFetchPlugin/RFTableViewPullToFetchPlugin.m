@@ -391,6 +391,7 @@ static NSTimeInterval RFPullToFetchAnimateTimeInterval = .2;
 - (void)setFooterReachEnd:(BOOL)footerReachEnd {
     dout_debug(@"setFooterReachEnd: %@", footerReachEnd? @"YES" : @"NO");
     _footerReachEnd = footerReachEnd;
+    [self updateFooterDisplay:NO];
 }
 
 - (BOOL)isFetching {

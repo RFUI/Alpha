@@ -272,7 +272,7 @@ RFInitializingRootForNSObject
     }
     else {
         NSURLRequestCachePolicy cachePolicy = [self.cacheManager cachePolicyWithDefine:define control:controlInfo];
-        r = [[NSMutableURLRequest alloc] initWithURL:url cachePolicy:cachePolicy timeoutInterval:10];
+        r = [[NSMutableURLRequest alloc] initWithURL:url cachePolicy:cachePolicy timeoutInterval:40];
         [r setHTTPMethod:define.method];
         r = [[s requestBySerializingRequest:r withParameters:requestParameters error:&e] mutableCopy];
     }

@@ -21,12 +21,12 @@
 
 @property (assign, nonatomic, getter = isOn) IBInspectable BOOL on;
 
-@property (strong, nonatomic) IBInspectable UIImage *onImage UI_APPEARANCE_SELECTOR;
-@property (strong, nonatomic) IBInspectable UIImage *onHighlightedImage UI_APPEARANCE_SELECTOR;
-@property (strong, nonatomic) IBInspectable UIImage *onDisabledImage UI_APPEARANCE_SELECTOR;
-@property (strong, nonatomic) IBInspectable UIImage *offImage UI_APPEARANCE_SELECTOR;
-@property (strong, nonatomic) IBInspectable UIImage *offHighlightedImage UI_APPEARANCE_SELECTOR;
-@property (strong, nonatomic) IBInspectable UIImage *offDisabledImage UI_APPEARANCE_SELECTOR;
+@property (strong, nonatomic) IBInspectable UIImage *onImage;
+@property (strong, nonatomic) IBInspectable UIImage *onHighlightedImage;
+@property (strong, nonatomic) IBInspectable UIImage *onDisabledImage;
+@property (strong, nonatomic) IBInspectable UIImage *offImage;
+@property (strong, nonatomic) IBInspectable UIImage *offHighlightedImage;
+@property (strong, nonatomic) IBInspectable UIImage *offDisabledImage;
 
 @end
 

@@ -43,7 +43,7 @@
  @see backgroundImageResizingCapInsets2x
  @see backgroundImageStretchResizingMode
 */
-@property (assign, nonatomic) UIEdgeInsets backgroundImageResizingCapInsets NS_AVAILABLE_IOS(6_0) UI_APPEARANCE_SELECTOR;
+@property (assign, nonatomic) UIEdgeInsets backgroundImageResizingCapInsets NS_AVAILABLE_IOS(6_0);
 
 /** Resizing cap insets for retina display.
 
@@ -52,13 +52,13 @@
  @see backgroundImageResizingCapInsets
  @see backgroundImageStretchResizingMode
  */
-@property (assign, nonatomic) UIEdgeInsets backgroundImageResizingCapInsets2x NS_AVAILABLE_IOS(6_0) UI_APPEARANCE_SELECTOR;
+@property (assign, nonatomic) UIEdgeInsets backgroundImageResizingCapInsets2x NS_AVAILABLE_IOS(6_0);
 
 /** Background image resizing mode.
  
  @discussion If set `YES`, the background image will be stretched when it is resized. Otherwise, it will be tiled.
  */
-@property (assign, nonatomic) BOOL backgroundImageStretchResizingMode NS_AVAILABLE_IOS(6_0) UI_APPEARANCE_SELECTOR;
+@property (assign, nonatomic) BOOL backgroundImageStretchResizingMode NS_AVAILABLE_IOS(6_0);
 
 
 @end

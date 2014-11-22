@@ -14,5 +14,5 @@
 #import "RFUI.h"
 
 @interface RFDrawView : UIView <RFInitializing>
-@property (strong, nonatomic) UIColor *color UI_APPEARANCE_SELECTOR;
+@property (strong, nonatomic) IBInspectable UIColor *color;
 @end

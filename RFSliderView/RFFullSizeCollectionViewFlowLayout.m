@@ -6,7 +6,7 @@
 
 @implementation RFFullSizeCollectionViewFlowLayout
 
-- (id)init {
+- (instancetype)init {
     if (!(self = [super init])) return nil;
 
     self.sectionInset = UIEdgeInsetsZero;

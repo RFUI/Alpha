@@ -44,7 +44,7 @@ RFInitializingRootForNSObject
                 [self.defaultRule setDictionary:rule];
             }
 
-            [self.rawRules setObject:rule forKey:name];
+            (self.rawRules)[name] = rule;
         }
         else {
             dout_warning(@"Bad rule(%@): %@", name, rule);
@@ -93,7 +93,7 @@ RFInitializingRootForNSObject
 }
 
 - (void)setValue:(id)value forRule:(NSString *)key defineName:(NSString *)defineName {
-    [self.rawRules[defineName] setObject:value forKey:key];
+    (self.rawRules[defineName])[key] = value;
 }
 
 - (void)removeRule:(NSString *)key withDefineName:(NSString *)defineName {
@@ -185,7 +185,7 @@ RFInitializingRootForNSObject
 
 @implementation RFAPIDefine (RFConfigFile)
 
-- (id)initWithRule:(NSDictionary *)rule name:(NSString *)name {
+- (instancetype)initWithRule:(NSDictionary *)rule name:(NSString *)name {
     NSParameterAssert(name);
     NSParameterAssert(rule);
     self = [self init];

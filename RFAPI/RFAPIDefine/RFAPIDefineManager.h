@@ -69,6 +69,6 @@
 @end
 
 @interface RFAPIDefine (RFConfigFile)
-- (id)initWithRule:(NSDictionary *)rule name:(NSString *)name;
+- (instancetype)initWithRule:(NSDictionary *)rule name:(NSString *)name;
 
 @end

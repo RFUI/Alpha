@@ -392,7 +392,7 @@ NSString *const RFAPIRequestCustomizationControlKey = @"_RFAPIRequestCustomizati
     return [NSString stringWithFormat:@"<%@: %p, identifier = %@, groupIdentifier = %@>", self.class, self, self.identifier, self.groupIdentifier];
 }
 
-- (id)initWithDictionary:(NSDictionary *)info {
+- (instancetype)initWithDictionary:(NSDictionary *)info {
     self = [super init];
     if (self) {
         _message = info[RFAPIMessageControlKey];
@@ -404,7 +404,7 @@ NSString *const RFAPIRequestCustomizationControlKey = @"_RFAPIRequestCustomizati
     return self;
 }
 
-- (id)initWithIdentifier:(NSString *)identifier loadingMessage:(NSString *)message {
+- (instancetype)initWithIdentifier:(NSString *)identifier loadingMessage:(NSString *)message {
     self = [super init];
     if (self) {
         _identifier = identifier;

@@ -4,6 +4,8 @@
 
 @implementation RFPlugin
 
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wobjc-designated-initializers"
 - (instancetype)init {
     self = [super init];
     if (self) {
@@ -12,6 +14,7 @@
     }
     return self;
 }
+#pragma clang diagnostic pop
 
 - (instancetype)initWithMaster:(id<RFPluginSupported>)master {
     self = [super init];

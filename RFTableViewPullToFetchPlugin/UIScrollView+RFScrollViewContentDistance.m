@@ -18,8 +18,20 @@
     return -self.contentOffset.y;
 }
 
+- (void)setDistanceBetweenContentAndTop:(CGFloat)distanceBetweenContentAndTop {
+    CGPoint offset = self.contentOffset;
+    offset.y = -distanceBetweenContentAndTop;
+    self.contentOffset = offset;
+}
+
 - (CGFloat)distanceBetweenContentAndBottom {
     return self.bounds.size.height + self.contentOffset.y - self.contentSize.height;
+}
+
+- (void)setDistanceBetweenContentAndBottom:(CGFloat)distanceBetweenContentAndBottom {
+    CGPoint offset = self.contentOffset;
+    offset.y = distanceBetweenContentAndBottom + self.contentSize.height - CGRectGetHeight(self.bounds);
+    self.contentOffset = offset;
 }
 
 @end

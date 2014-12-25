@@ -13,7 +13,7 @@
 #import "RFDelegateChain.h"
 #import "UIViewController+RFTransitioning.h"
 
-@interface RFNavigationControllerTransitionDelegate : RFDelegateChain <
+NS_CLASS_AVAILABLE_IOS(7_0) @interface RFNavigationControllerTransitionDelegate : RFDelegateChain <
     UINavigationControllerDelegate
 >
 @property (weak, nonatomic) IBOutlet id<UINavigationControllerDelegate> delegate;

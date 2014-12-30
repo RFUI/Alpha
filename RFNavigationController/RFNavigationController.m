@@ -94,17 +94,6 @@ RFInitializingRootForUIViewController
     return YES;
 }
 
-- (void)viewWillLayoutSubviews {
-    [super viewWillLayoutSubviews];
-
-    [self updateNavigationAppearanceWithViewController:self.topViewController animated:self.transitionCoordinator.isAnimated];
-    [self.transitionCoordinator animateAlongsideTransition:nil completion:^(id<UIViewControllerTransitionCoordinatorContext> context) {
-        if (context.isCancelled) {
-            [self updateNavigationAppearanceWithViewController:self.disappearingViewController animated:context.isAnimated];
-        }
-    }];
-}
-
 #pragma mark - Tab bar
 
 - (void)setBottomBarHidden:(BOOL)bottomBarHidden {

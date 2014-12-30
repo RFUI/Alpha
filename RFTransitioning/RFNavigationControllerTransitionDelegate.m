@@ -89,6 +89,15 @@
 }
 
 - (void)navigationController:(UINavigationController *)navigationController willShowViewController:(UIViewController *)viewController animated:(BOOL)animated {
+    if ([navigationController respondsToSelector:@selector(updateNavigationAppearanceWithViewController:animated:)]) {
+        [(id)navigationController updateNavigationAppearanceWithViewController:viewController animated:animated];
+        [navigationController.transitionCoordinator animateAlongsideTransition:nil completion:^(id<UIViewControllerTransitionCoordinatorContext> context) {
+            if (context.isCancelled) {
+                [(id)navigationController updateNavigationAppearanceWithViewController:navigationController.disappearingViewController animated:context.isAnimated];
+            }
+        }];
+    }
+
     if ([self.delegate respondsToSelector:@selector(navigationController:willShowViewController:animated:)]) {
         [self.delegate navigationController:navigationController willShowViewController:viewController animated:animated];
     }

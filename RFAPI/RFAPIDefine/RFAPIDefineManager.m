@@ -17,6 +17,16 @@
 @implementation RFAPIDefineManager
 RFInitializingRootForNSObject
 
++ (NSRegularExpression *)cachedPathParameterRegularExpression {
+    static NSRegularExpression *sharedInstance = nil;
+    static dispatch_once_t oncePredicate;
+    dispatch_once(&oncePredicate, ^{
+        sharedInstance = [[NSRegularExpression alloc] initWithPattern:@"\\{\\w+\\}" options:NSRegularExpressionAnchorsMatchLines error:nil];
+        RFAssert(sharedInstance, @"Cannot create path parameter regular expression");
+    });
+    return sharedInstance;
+}
+
 - (void)onInit {
     _defineCache = [[NSCache alloc] init];
     _defineCache.name = @"RFAPIDefineCache";
@@ -108,8 +118,7 @@ RFInitializingRootForNSObject
     NSMutableString *path = [define.path mutableCopy];
 
     // Replace {PARAMETER} in path
-    NSRegularExpression *regex = [[NSRegularExpression alloc] initWithPattern:@"\\{\\w+\\}" options:NSRegularExpressionAnchorsMatchLines error:error];
-    NSArray *matches = [regex matchesInString:path options:0 range:NSMakeRange(0, path.length)];
+    NSArray *matches = [[RFAPIDefineManager cachedPathParameterRegularExpression] matchesInString:path options:0 range:NSMakeRange(0, path.length)];
 
     for (NSTextCheckingResult *match in matches.reverseObjectEnumerator) {
         NSRange keyRange = match.range;

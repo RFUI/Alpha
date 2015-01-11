@@ -65,7 +65,6 @@ RFInitializingRootForUIViewController
         [self.bottomBarHolder addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"|-0-[bottomBar]-0-|" options:0 metrics:nil views:dic]];
         [self.bottomBarHolder addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"V:|-0-[bottomBar]-0-|" options:0 metrics:nil views:dic]];
     }
-    [self updateNavigationAppearanceWithViewController:self.topViewController animated:NO];
 }
 
 - (void)setPreferredNavigationBarHidden:(BOOL)preferredNavigationBarHidden {
@@ -143,6 +142,7 @@ RFInitializingRootForUIViewController
         }
 
         _bottomBar = bottomBar;
+        self.bottomBarHidden = self.bottomBarHidden;
     }
 }
 

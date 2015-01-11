@@ -93,7 +93,7 @@
         [(id)navigationController updateNavigationAppearanceWithViewController:viewController animated:animated];
         [navigationController.transitionCoordinator animateAlongsideTransition:nil completion:^(id<UIViewControllerTransitionCoordinatorContext> context) {
             if (context.isCancelled) {
-                [(id)navigationController updateNavigationAppearanceWithViewController:navigationController.disappearingViewController animated:context.isAnimated];
+                [(id)navigationController updateNavigationAppearanceWithViewController:navigationController.topViewController animated:context.isAnimated];
             }
         }];
     }

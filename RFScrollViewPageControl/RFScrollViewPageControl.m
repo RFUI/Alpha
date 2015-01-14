@@ -36,6 +36,14 @@ RFInitializingRootForUIView
     }
 }
 
+- (void)setNumberOfPages:(NSInteger)numberOfPages {
+    [super setNumberOfPages:numberOfPages];
+
+    if (self.hidesWhenOnePage) {
+        self.hidden = (numberOfPages < 1);
+    }
+}
+
 - (void)setNeedsUpdatePage {
     CGFloat pageWidth = self.scrollView.bounds.size.width;
     if (pageWidth) {

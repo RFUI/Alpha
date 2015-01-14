@@ -26,6 +26,11 @@
 @property (assign, nonatomic) IBInspectable BOOL supportHalfPage;
 
 /**
+ A Boolean value that determines whether the receiver is hidden when there are less than two page.
+ */
+@property (assign, nonatomic) IBInspectable BOOL hidesWhenOnePage;
+
+/**
  Call this method force update pageControl status.
  
  Generally, you don’t needs call this method manually.

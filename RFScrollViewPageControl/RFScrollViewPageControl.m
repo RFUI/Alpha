@@ -40,7 +40,7 @@ RFInitializingRootForUIView
     [super setNumberOfPages:numberOfPages];
 
     if (self.hidesWhenOnePage) {
-        self.hidden = (numberOfPages < 1);
+        self.hidden = (numberOfPages <= 1);
     }
 }
 

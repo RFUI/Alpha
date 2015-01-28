@@ -74,6 +74,8 @@ typedef void (^RFPullToFetchIndicatorStatusChangeBlock)(RFTableViewPullToFetchPl
 
 // Call them method to notice proccess is finished.
 - (void)markProcessFinshed;
+- (void)headerProcessFinshed;
+- (void)footerProcessFinshed;
 
 // For manually trigger.
 - (void)triggerHeaderProcess;

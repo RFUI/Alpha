@@ -26,6 +26,7 @@ static NSTimeInterval RFPullToFetchAnimateTimeInterval = .2;
 @implementation RFTableViewPullToFetchPlugin
 
 - (void)onInit {
+    [super onInit];
 //    self.headerStyle = RFPullToFetchTableIndicatorLayoutTypeStatic;
 //    self.footerStyle = RFPullToFetchTableIndicatorLayoutTypeStatic;
 
@@ -36,6 +37,7 @@ static NSTimeInterval RFPullToFetchAnimateTimeInterval = .2;
 }
 
 - (void)afterInit {
+    [super afterInit];
     dout_debug(@"RFPullToFetchPlugin status: delegate = %@, tableView = %@, headerContainer = %@, footerContainer = %@", self.delegate, self.tableView, self.headerContainer, self.footerContainer);
     [self setupViewHierarchy];
 }

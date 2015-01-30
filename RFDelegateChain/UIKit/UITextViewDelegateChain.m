@@ -11,7 +11,7 @@
         return self.shouldBeginEditing(textView, self.delegate);
     }
 
-    if ([self.delegate respondsToSelector:@selector(textViewDidBeginEditing:)]) {
+    if ([self.delegate respondsToSelector:@selector(textViewShouldBeginEditing:)]) {
         return [self.delegate textViewShouldBeginEditing:textView];
     }
     return YES;

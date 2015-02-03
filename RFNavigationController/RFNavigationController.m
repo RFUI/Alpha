@@ -199,7 +199,10 @@ RFInitializingRootForUIViewController
 
         UIStatusBarStyle preferredStatusBarStyle = self.preferredStatusBarStyle;
         if ([viewController respondsToSelector:@selector(preferredStatusBarStyle)]) {
-            preferredStatusBarStyle = [viewController preferredStatusBarStyle];
+            UIStatusBarStyle vcStyle = [viewController preferredStatusBarStyle];
+            if (vcStyle != UIStatusBarStyleDefault) {
+                preferredStatusBarStyle = vcStyle;
+            }
         }
         if (preferredStatusBarStyle != [UIApplication sharedApplication].statusBarStyle) {
             [[UIApplication sharedApplication] setStatusBarStyle:preferredStatusBarStyle animated:animated];

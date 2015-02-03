@@ -20,9 +20,14 @@
     CGRect toFrame = [transitionContext finalFrameForViewController:toVC];
     BOOL reverse = self.reverse;
 
-    // Navigation bar hidden may change between transition.
-    // Let initial frame bigger can avoid user see window background.
-    toView.frame = CGRectContainsRect(toFrame, fromFrame)? toFrame : fromFrame;
+    if (reverse) {
+        toView.frame = toFrame;
+    }
+    else {
+        // Navigation bar hidden may change between transition.
+        // Let initial frame bigger can avoid user see window background.
+        toView.frame = CGRectContainsRect(toFrame, fromFrame)? toFrame : fromFrame;
+    }
 
     if (self.reverse) {
         [containerView insertSubview:toView belowSubview:fromView];

@@ -67,6 +67,11 @@ RFInitializingRootForUIViewController
     }
 }
 
+- (void)viewWillAppear:(BOOL)animated {
+    [super viewWillAppear:animated];
+    [self updateNavigationAppearanceWithViewController:self.topViewController animated:animated];
+}
+
 - (void)setPreferredNavigationBarHidden:(BOOL)preferredNavigationBarHidden {
     if (_preferredNavigationBarHidden != preferredNavigationBarHidden) {
         _preferredNavigationBarHidden = preferredNavigationBarHidden;

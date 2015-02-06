@@ -53,6 +53,18 @@ static void *const RFCheckBoxKVOContext = (void *)&RFCheckBoxKVOContext;
     [self sendActionsForControlEvents:UIControlEventValueChanged];
 }
 
+- (void)setOn:(BOOL)on {
+    _on = on;
+    if (self.selected != on) {
+        self.selected = on;
+    }
+}
+
+- (void)setSelected:(BOOL)selected {
+    [super setSelected:selected];
+    _on = selected;
+}
+
 + (NSSet *)keyPathsForValuesAffectingNeedsUpdateCheckboxImageView {
     RFCheckbox *this;
     return [NSSet setWithObjects:@keypath(this, on), @keypath(this, enabled), @keypath(this, onImage), @keypath(this, onHighlightedImage), @keypath(this, onDisabledImage), @keypath(this, offImage), @keypath(this, offHighlightedImage), @keypath(this, offDisabledImage), nil];

@@ -9,6 +9,7 @@
 @end
 
 @implementation RFSliderView
+@dynamic totalPage;
 RFInitializingRootForUIView
 
 - (void)onInit {

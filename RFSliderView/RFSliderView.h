@@ -20,6 +20,8 @@
 @property (nonatomic) IBInspectable NSInteger currentPage;
 - (void)setCurrentPage:(NSInteger)currentPage animated:(BOOL)animated;
 
+@property (readonly, nonatomic) NSInteger totalPage;
+
 #pragma mark - Auto Scroll
 
 /**

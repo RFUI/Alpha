@@ -20,10 +20,10 @@
     if (self.onePixel) {
         CGFloat pixelOffset = 1 / self.window.screen.scale / 2;
         if (isDrawingVertically) {
-            pixelOffsetX = (self.x > self.rightMargin)? pixelOffset : - pixelOffset;
+            pixelOffsetX = (ABS(self.x) > ABS(self.rightMargin))? pixelOffset : - pixelOffset;
         }
         else {
-            pixelOffsetY = (self.y > self.bottomMargin)? pixelOffset : -pixelOffset;
+            pixelOffsetY = (ABS(self.y) > ABS(self.bottomMargin))? pixelOffset : -pixelOffset;
         }
     }
 

@@ -3,6 +3,8 @@
 
 @import ObjectiveC.runtime;
 
+//! REF: http://nshipster.com/method-swizzling/
+//! REF: https://github.com/rentzsch/jrswizzle
 bool RFSwizzleInstanceMethod(Class cls, SEL originalSelector, SEL swizzledSelector) {
     Method originalMethod = class_getInstanceMethod(cls, originalSelector);
     if (!originalMethod) {
@@ -11,14 +13,14 @@ bool RFSwizzleInstanceMethod(Class cls, SEL originalSelector, SEL swizzledSelect
     }
 
     Method swizzledMethod = class_getInstanceMethod(cls, swizzledSelector);
-
-    BOOL didAddMethod = class_addMethod(cls, originalSelector, method_getImplementation(swizzledMethod), method_getTypeEncoding(swizzledMethod));
-
-    if (didAddMethod) {
-        class_replaceMethod(cls, swizzledSelector, method_getImplementation(originalMethod), method_getTypeEncoding(originalMethod));
-    } else {
-        method_exchangeImplementations(originalMethod, swizzledMethod);
+    if (!swizzledMethod) {
+        dout_error(@"RFSwizzle fail: Swizzled method %@ not found for class %@.", NSStringFromSelector(originalSelector), cls);
+        return false;
     }
+
+    class_addMethod(cls, originalSelector, class_getMethodImplementation(cls, originalSelector), method_getTypeEncoding(originalMethod));
+    class_addMethod(cls, swizzledSelector, class_getMethodImplementation(cls, swizzledSelector), method_getTypeEncoding(swizzledMethod));
+    method_exchangeImplementations(class_getInstanceMethod(cls, originalSelector), class_getInstanceMethod(cls, swizzledSelector));
 
     bool impMatch = (method_getImplementation(originalMethod) == method_getImplementation(class_getInstanceMethod(cls, swizzledSelector)));
     if (!impMatch) {

@@ -1,5 +1,6 @@
 
 #import "RFNoticeView.h"
+#import "RFKVOWrapper.h"
 
 NSTimeInterval RFNoticeViewMinimumDisplayTimeInterval = 0.1f;
 NSTimeInterval RFNoticeViewDefaultDisplayTimeInterval = 1.f;
@@ -24,7 +25,7 @@ RFInitializingRootForUIView
     self.items = [NSMutableArray arrayWithCapacity:20];
     [self addObserver:self forKeyPath:@keypath(self, items) options:NSKeyValueObservingOptionNew context:NULL];
     
-    [self rac_addObserver:self forKeyPath:@keypath(self, items) options:NSKeyValueObservingOptionNew queue:nil block:^(RFNoticeView *observer, NSDictionary *change) {
+    [self RFAddObserver:self forKeyPath:@keypath(self, items) options:NSKeyValueObservingOptionNew queue:nil block:^(RFNoticeView *observer, NSDictionary *change) {
         switch ([change[NSKeyValueChangeKindKey] integerValue]) {
             case NSKeyValueChangeInsertion:
                 [observer onMessageAdded];

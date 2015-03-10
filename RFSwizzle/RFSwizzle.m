@@ -2,6 +2,7 @@
 #import "RFSwizzle.h"
 
 @import ObjectiveC.runtime;
+#import "dout.h"
 
 //! REF: http://nshipster.com/method-swizzling/
 //! REF: https://github.com/rentzsch/jrswizzle

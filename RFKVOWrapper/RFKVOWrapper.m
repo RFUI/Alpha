@@ -1,7 +1,7 @@
 
 #import "RFKVOWrapper.h"
 #import "RFSwizzle.h"
-@import ObjectiveC.runtime;
+#import <objc/runtime.h>
 
 typedef void (^RFKVOBlock)(id, NSDictionary *);
 

@@ -1,9 +1,9 @@
 
 #import "RFScrollViewPageControl.h"
-#import "FBKVOController.h"
+#import "RFKVOWrapper.h"
 
 @interface RFScrollViewPageControl ()
-@property (strong, nonatomic) FBKVOController *observer;
+@property (weak, nonatomic) id observer;
 @end
 
 @implementation RFScrollViewPageControl
@@ -19,16 +19,12 @@ RFInitializingRootForUIView
 
 - (void)setScrollView:(UIScrollView *)scrollView {
     if (_scrollView != scrollView) {
-        if (_scrollView && self.observer) {
-            [self.observer unobserve:_scrollView keyPath:@keypath(scrollView, contentOffset)];
+        if (_scrollView) {
+            [_scrollView RFRemoveObserverWithIdentifier:self.observer];
         }
 
         if (scrollView) {
-            if (!self.observer) {
-                self.observer = [[FBKVOController alloc] initWithObserver:self retainObserved:YES];
-            }
-
-            [self.observer observe:scrollView keyPath:@keypath(scrollView, contentOffset) options:(NSKeyValueObservingOptions)(NSKeyValueObservingOptionNew|NSKeyValueObservingOptionInitial) block:^(RFScrollViewPageControl *observer, id object, NSDictionary *change) {
+            self.observer = [scrollView RFAddObserver:self forKeyPath:@keypath(scrollView, contentOffset) options:(NSKeyValueObservingOptions)(NSKeyValueObservingOptionNew|NSKeyValueObservingOptionInitial) queue:nil block:^(RFScrollViewPageControl *observer, NSDictionary *change) {
                 [observer setNeedsUpdatePage];
             }];
         }

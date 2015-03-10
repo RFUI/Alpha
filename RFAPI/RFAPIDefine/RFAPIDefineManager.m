@@ -118,7 +118,7 @@ RFInitializingRootForNSObject
     NSMutableString *path = [define.path mutableCopy];
 
     // Replace {PARAMETER} in path
-    NSArray *matches = [[RFAPIDefineManager cachedPathParameterRegularExpression] matchesInString:path options:0 range:NSMakeRange(0, path.length)];
+    NSArray *matches = [[RFAPIDefineManager cachedPathParameterRegularExpression] matchesInString:path options:kNilOptions range:NSMakeRange(0, path.length)];
 
     for (NSTextCheckingResult *match in matches.reverseObjectEnumerator) {
         NSRange keyRange = match.range;

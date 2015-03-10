@@ -12,7 +12,7 @@ static NSMutableSet *RFSwizzledClasses() {
     static dispatch_once_t onceToken;
     static NSMutableSet *swizzledClasses = nil;
     dispatch_once(&onceToken, ^{
-        swizzledClasses = [[NSMutableSet alloc] init];
+        swizzledClasses = [NSMutableSet new];
     });
 
     return swizzledClasses;
@@ -45,7 +45,7 @@ static NSMutableSet *RFSwizzledClasses() {
 
 - (id)initWithTarget:(NSObject *)target observer:(NSObject *)observer keyPath:(NSString *)keyPath options:(NSKeyValueObservingOptions)options queue:(NSOperationQueue *)queue block:(RFKVOBlock)block {
     self = [super init];
-    if (self == nil) return nil;
+    if (!self) return nil;
 
     _keyPath = [keyPath copy];
     _queue = queue;
@@ -63,9 +63,10 @@ static NSMutableSet *RFSwizzledClasses() {
 
 - (void)addAsTrampolineOnObject:(NSObject *)obj {
     @synchronized (obj) {
-        if (obj.RFKVOTrampolines == nil) {
+        if (!obj.RFKVOTrampolines) {
             obj.RFKVOTrampolines = [NSMutableSet setWithObject:self];
-        } else {
+        }
+        else {
             [obj.RFKVOTrampolines addObject:self];
         }
     }
@@ -121,12 +122,14 @@ static NSMutableSet *RFSwizzledClasses() {
     }
 
     void (^notificationBlock)(void) = ^{
-        if (block != nil) block(observer, change);
+        if (!block) return;
+        block(observer, change);
     };
 
-    if (self.queue == nil || self.queue == [NSOperationQueue currentQueue]) {
+    if (!self.queue || self.queue == [NSOperationQueue currentQueue]) {
         notificationBlock();
-    } else {
+    }
+    else {
         [self.queue addOperationWithBlock:^{
             notificationBlock();
             target = nil;

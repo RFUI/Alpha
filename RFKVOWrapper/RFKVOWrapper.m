@@ -28,7 +28,7 @@
 /**
  Returns a started observation
  */
-+ (RFKVOController *)observe:(id)observedObject keyPath:(NSString *)keyPath options:(NSKeyValueObservingOptions)options callback:(void (^)(RFKVOController * observation, NSDictionary * changeDictionary))callbackBlock;
++ (RFKVOController *)observe:(id)observedObject keyPath:(NSString *)keyPath options:(NSKeyValueObservingOptions)options queue:(NSOperationQueue *)queue callback:(void (^)(RFKVOController * observation, NSDictionary * changeDictionary))callbackBlock;
 
 /**
  Returns an observation that will automatically update the `boundObjectKeyPath` on the `boundObject` whenever the `observedKeyPath` changes on the `observedObject`
@@ -60,6 +60,7 @@ const NSString *RFKVOControllerClassIsSwizzledLockKey = @"RFKVOControllerClassIs
 const char *RFKVOControllerObjectObserversKey = "RFKVOControllerObjectObserversKey";
 
 @interface RFKVOController ()
+@property (strong, nonatomic) NSOperationQueue *queue;
 
 - (void)setIsValid:(BOOL)isValid;
 - (void)prepareObservedObjectAndClass;
@@ -82,7 +83,7 @@ const char *RFKVOControllerObjectObserversKey = "RFKVOControllerObjectObserversK
 
 #pragma mark - convenience constructors
 
-+ (RFKVOController *)observe:(id)observedObject keyPath:(NSString *)keyPath options:(NSKeyValueObservingOptions)options callback:(void (^)(RFKVOController * observation, NSDictionary * changeDictionary))callbackBlock {
++ (RFKVOController *)observe:(id)observedObject keyPath:(NSString *)keyPath options:(NSKeyValueObservingOptions)options queue:(NSOperationQueue *)queue callback:(void (^)(RFKVOController * observation, NSDictionary * changeDictionary))callbackBlock {
     RFKVOController * obj = [self new];
 
     obj.observedObject = observedObject;
@@ -276,7 +277,16 @@ const char *RFKVOControllerObjectObserversKey = "RFKVOControllerObjectObserversK
         return;
     }
 
-    self.callbackBlock(self, change);
+    if (!self.queue || self.queue == [NSOperationQueue currentQueue]) {
+        self.callbackBlock(self, change);
+    }
+    else {
+        @weakify(self);
+        [self.queue addOperationWithBlock:^{
+            @strongify(self);
+            self.callbackBlock(self, change);
+        }];
+    }
 }
 
 @end
@@ -287,7 +297,7 @@ const char *RFKVOControllerObjectObserversKey = "RFKVOControllerObjectObserversK
 - (id)RFAddObserver:(NSObject *)observer forKeyPath:(NSString *)keyPath options:(NSKeyValueObservingOptions)options queue:(NSOperationQueue *)queue block:(void (^)(id observer, NSDictionary *change))block {
 
     @weakify(observer);
-    RFKVOController *info = [RFKVOController observe:self keyPath:keyPath options:options callback:^(RFKVOController *observation, NSDictionary *changeDictionary) {
+    RFKVOController *info = [RFKVOController observe:self keyPath:keyPath options:options queue:(NSOperationQueue *)queue callback:^(RFKVOController *observation, NSDictionary *changeDictionary) {
         if (block) {
             @strongify(observer);
             block(observer, changeDictionary);

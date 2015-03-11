@@ -11,28 +11,17 @@
  */
 
 /*!
- RFKVOWrapper contains code from ReactiveCocoa v0.6.0, the use of which is hereby acknowledged.
+ RFKVOWrapper contains code from HTBKVObservation, the use of which is hereby acknowledged.
 
- ReactiveCocoa https://github.com/ReactiveCocoa/ReactiveCocoa
- Copyright (c) 2011-2012, GitHub, Inc. All rights reserved.
+ HTBKVObservation https://github.com/thehtb/HTBKVObservation
 
- Permission is hereby granted, free of charge, to any person obtaining a copy of
- this software and associated documentation files (the "Software"), to deal in
- the Software without restriction, including without limitation the rights to
- use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of
- the Software, and to permit persons to whom the Software is furnished to do so,
- subject to the following conditions:
+ Copyright (c) 2012 The High Technology Bureau, Mark Aufflick
 
- The above copyright notice and this permission notice shall be included in all
- copies or substantial portions of the Software.
+ Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
 
- THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
- IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS
- FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR
- COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
- IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
- CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+ The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
 
+ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
 #import <Foundation/Foundation.h>
@@ -57,7 +46,7 @@
 /**
  Remove the observer represented by the identifier.
  
- @param identifier  The identifier to removed. This should be an object previously returned by a called to -addObserverForKeyPath:options:queue:block:.
+ @param identifier  The identifier to removed. This should be an object previously returned by a called to -RFAddObserverForKeyPath:options:queue:block:.
  
  @return Whether the removal was successful. The only reason for failure would be if the identifier doesn't represent anything currently being observed by the object, or if the identifier is nil.
  */

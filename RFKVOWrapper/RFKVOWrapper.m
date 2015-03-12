@@ -213,7 +213,7 @@ const char *RFKVOControllerObjectObserversKey = "RFKVOControllerObjectObserversK
         // create the NSHashTable if needed - NSHashTable (when created as below) is bascially an NSMutableSet with weak references (doesn't require ARC)
 
         if (!objc_getAssociatedObject(self.observedObject, RFKVOControllerObjectObserversKey)) {
-            NSHashTable * observeeObserverTrackingHashTable = [NSHashTable weakObjectsHashTable];
+            NSHashTable * observeeObserverTrackingHashTable = [NSHashTable hashTableWithOptions:NSPointerFunctionsStrongMemory];
 
             objc_setAssociatedObject(self.observedObject, RFKVOControllerObjectObserversKey, observeeObserverTrackingHashTable, OBJC_ASSOCIATION_RETAIN);
         }

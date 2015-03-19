@@ -10,11 +10,14 @@
 
     Alpha
  */
-#import "RFDelegateChain.h"
 
-@interface UICollectionViewDelegateChain : RFDelegateChain <
+#import "UIScrollViewDelegateChain.h"
+
+@interface UICollectionViewDelegateChain : UIScrollViewDelegateChain <
     UICollectionViewDelegate
 >
+
+@property (weak, nonatomic) IBOutlet id<UICollectionViewDelegate> delegate;
 
 #pragma mark Managing the Selected Cells
 

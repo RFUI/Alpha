@@ -5,22 +5,22 @@
 
 - (BOOL)respondsToSelector:(SEL)aSelector {
     if (aSelector == @selector(collectionView:layout:sizeForItemAtIndexPath:)) {
-        return !!(self.sizeForItem);
+        if (self.sizeForItem) return YES;
     }
     else if (aSelector == @selector(collectionView:layout:insetForSectionAtIndex:)) {
-        return !!(self.insetForSection);
+        if (self.insetForSection) return YES;
     }
     else if (aSelector == @selector(collectionView:layout:minimumLineSpacingForSectionAtIndex:)) {
-        return !!(self.minimumLineSpacingForSection);
+        if (self.minimumLineSpacingForSection) return YES;
     }
     else if (aSelector == @selector(collectionView:layout:minimumInteritemSpacingForSectionAtIndex:)) {
-        return !!(self.minimumInteritemSpacingForSection);
+        if (self.minimumInteritemSpacingForSection) return YES;
     }
     else if (aSelector == @selector(collectionView:layout:referenceSizeForHeaderInSection:)) {
-        return !!(self.referenceSizeForHeaderInSection);
+        if (self.referenceSizeForHeaderInSection) return YES;
     }
     else if (aSelector == @selector(collectionView:layout:referenceSizeForFooterInSection:)) {
-        return !!(self.referenceSizeForFooterInSection);
+        if (self.referenceSizeForFooterInSection) return YES;
     }
     return [super respondsToSelector:aSelector];
 }

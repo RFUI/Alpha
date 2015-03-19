@@ -5,16 +5,16 @@
 
 - (BOOL)respondsToSelector:(SEL)aSelector {
     if (aSelector == @selector(collectionView:numberOfItemsInSection:)) {
-        return !!(self.numberOfItemsInSection);
+        if (self.numberOfItemsInSection) return YES;
     }
     else if (aSelector == @selector(collectionView:cellForItemAtIndexPath:)) {
-        return !!(self.cellForItemAtIndexPath);
+        if (self.cellForItemAtIndexPath) return YES;
     }
     else if (aSelector == @selector(numberOfSectionsInCollectionView:)) {
-        return !!(self.numberOfSections);
+        if (self.numberOfSections) return YES;
     }
     else if (aSelector == @selector(collectionView:viewForSupplementaryElementOfKind:atIndexPath:)) {
-        return !!(self.viewForSupplementaryElement);
+        if (self.viewForSupplementaryElement) return YES;
     }
     return [super respondsToSelector:aSelector];
 }

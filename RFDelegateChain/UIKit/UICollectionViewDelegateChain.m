@@ -5,49 +5,49 @@
 
 - (BOOL)respondsToSelector:(SEL)aSelector {
     if (aSelector == @selector(collectionView:shouldSelectItemAtIndexPath:)) {
-        return !!(self.shouldSelectItem);
+        if (self.shouldSelectItem) return YES;
     }
     else if (aSelector == @selector(collectionView:shouldDeselectItemAtIndexPath:)) {
-        return !!(self.shouldDeselectItem);
+        if (self.shouldDeselectItem) return YES;
     }
     else if (aSelector == @selector(collectionView:didSelectItemAtIndexPath:)) {
-        return !!(self.didSelectItem);
+        if (self.didSelectItem) return YES;
     }
     else if (aSelector == @selector(collectionView:didDeselectItemAtIndexPath:)) {
-        return !!(self.didDeselectItem);
+        if (self.didDeselectItem) return YES;
     }
     if (aSelector == @selector(collectionView:shouldHighlightItemAtIndexPath:)) {
-        return !!(self.shouldHighlightItem);
+        if (self.shouldHighlightItem) return YES;
     }
     else if (aSelector == @selector(collectionView:didHighlightItemAtIndexPath:)) {
-        return !!(self.didHighlightItem);
+        if (self.didHighlightItem) return YES;
     }
     else if (aSelector == @selector(collectionView:didUnhighlightItemAtIndexPath:)) {
-        return !!(self.didUnhighlightItem);
+        if (self.didUnhighlightItem) return YES;
     }
     else if (aSelector == @selector(collectionView:willDisplayCell:forItemAtIndexPath:)) {
-        return !!(self.willDisplayCell);
+        if (self.willDisplayCell) return YES;
     }
     else if (aSelector == @selector(collectionView:willDisplaySupplementaryView:forElementKind:atIndexPath:)) {
-        return !!(self.willDisplaySupplementaryView);
+        if (self.willDisplaySupplementaryView) return YES;
     }
     else if (aSelector == @selector(collectionView:didEndDisplayingCell:forItemAtIndexPath:)) {
-        return !!(self.didEndDisplayingCell);
+        if (self.didEndDisplayingCell) return YES;
     }
     else if (aSelector == @selector(collectionView:didEndDisplayingSupplementaryView:forElementOfKind:atIndexPath:)) {
-        return !!(self.didEndDisplayingSupplementaryView);
+        if (self.didEndDisplayingSupplementaryView) return YES;
     }
     else if (aSelector == @selector(collectionView:transitionLayoutForOldLayout:newLayout:)) {
-        return !!(self.transitionLayout);
+        if (self.transitionLayout) return YES;
     }
     else if (aSelector == @selector(collectionView:shouldShowMenuForItemAtIndexPath:)) {
-        return !!(self.shouldShowMenuForItem);
+        if (self.shouldShowMenuForItem) return YES;
     }
     else if (aSelector == @selector(collectionView:canPerformAction:forItemAtIndexPath:withSender:)) {
-        return !!(self.canPerformAction);
+        if (self.canPerformAction) return YES;
     }
     else if (aSelector == @selector(collectionView:performAction:forItemAtIndexPath:withSender:)) {
-        return !!(self.performAction);
+        if (self.performAction) return YES;
     }
 
     return [super respondsToSelector:aSelector];

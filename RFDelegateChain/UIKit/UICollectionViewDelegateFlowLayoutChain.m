@@ -4,24 +4,12 @@
 @implementation UICollectionViewDelegateFlowLayoutChain
 
 - (BOOL)respondsToSelector:(SEL)aSelector {
-    if (aSelector == @selector(collectionView:layout:sizeForItemAtIndexPath:)) {
-        if (self.sizeForItem) return YES;
-    }
-    else if (aSelector == @selector(collectionView:layout:insetForSectionAtIndex:)) {
-        if (self.insetForSection) return YES;
-    }
-    else if (aSelector == @selector(collectionView:layout:minimumLineSpacingForSectionAtIndex:)) {
-        if (self.minimumLineSpacingForSection) return YES;
-    }
-    else if (aSelector == @selector(collectionView:layout:minimumInteritemSpacingForSectionAtIndex:)) {
-        if (self.minimumInteritemSpacingForSection) return YES;
-    }
-    else if (aSelector == @selector(collectionView:layout:referenceSizeForHeaderInSection:)) {
-        if (self.referenceSizeForHeaderInSection) return YES;
-    }
-    else if (aSelector == @selector(collectionView:layout:referenceSizeForFooterInSection:)) {
-        if (self.referenceSizeForFooterInSection) return YES;
-    }
+    _RFDelegateChainHasBlockPropertyRespondsToSelector(sizeForItem, collectionView:layout:sizeForItemAtIndexPath:)
+    _RFDelegateChainHasBlockPropertyRespondsToSelector(insetForSection, collectionView:layout:insetForSectionAtIndex:)
+    _RFDelegateChainHasBlockPropertyRespondsToSelector(minimumLineSpacingForSection, collectionView:layout:minimumLineSpacingForSectionAtIndex:)
+    _RFDelegateChainHasBlockPropertyRespondsToSelector(minimumInteritemSpacingForSection, collectionView:layout:minimumInteritemSpacingForSectionAtIndex:)
+    _RFDelegateChainHasBlockPropertyRespondsToSelector(referenceSizeForHeaderInSection, collectionView:layout:referenceSizeForHeaderInSection:)
+    _RFDelegateChainHasBlockPropertyRespondsToSelector(referenceSizeForFooterInSection, collectionView:layout:referenceSizeForFooterInSection:)
     return [super respondsToSelector:aSelector];
 }
 

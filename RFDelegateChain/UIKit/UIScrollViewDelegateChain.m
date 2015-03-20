@@ -4,105 +4,128 @@
 @implementation UIScrollViewDelegateChain
 
 - (BOOL)respondsToSelector:(SEL)aSelector {
-    if (aSelector == @selector(scrollViewDidScroll:)) {
-        if (self.didScroll) return YES;
-    }
-    else if (aSelector == @selector(scrollViewWillBeginDragging:)) {
-        if (self.willBeginDragging) return YES;
-    }
-    else if (aSelector == @selector(scrollViewWillEndDragging:withVelocity:targetContentOffset:)) {
-        if (self.willEndDragging) return YES;
-    }
-    else if (aSelector == @selector(scrollViewDidEndDragging:willDecelerate:)) {
-        if (self.didEndDragging) return YES;
-    }
-    else if (aSelector == @selector(scrollViewShouldScrollToTop:)) {
-        if (self.shouldScrollToTop) return YES;
-    }
-    else if (aSelector == @selector(scrollViewDidScrollToTop:)) {
-        if (self.didScrollToTop) return YES;
-    }
-    else if (aSelector == @selector(scrollViewWillBeginDecelerating:)) {
-        if (self.willBeginDecelerating) return YES;
-    }
-    else if (aSelector == @selector(scrollViewDidEndDecelerating:)) {
-        if (self.didEndDecelerating) return YES;
-    }
-    else if (aSelector == @selector(viewForZoomingInScrollView:)) {
-        if (self.viewForZooming) return YES;
-    }
-    else if (aSelector == @selector(scrollViewWillBeginZooming:withView:)) {
-        if (self.willBeginZoomingView) return YES;
-    }
-    else if (aSelector == @selector(scrollViewDidEndZooming:withView:atScale:)) {
-        if (self.didEndZoomingView) return YES;
-    }
-    else if (aSelector == @selector(scrollViewDidZoom:)) {
-        if (self.didZoom) return YES;
-    }
-    else if (aSelector == @selector(scrollViewDidEndScrollingAnimation:)) {
-        if (self.didEndScrollingAnimation) return YES;
-    }
-
+    _RFDelegateChainHasBlockPropertyRespondsToSelector(didScroll, scrollViewDidScroll:)
+    _RFDelegateChainHasBlockPropertyRespondsToSelector(willBeginDragging, scrollViewWillBeginDragging:)
+    _RFDelegateChainHasBlockPropertyRespondsToSelector(willEndDragging, scrollViewWillEndDragging:withVelocity:targetContentOffset:)
+    _RFDelegateChainHasBlockPropertyRespondsToSelector(didEndDragging, scrollViewDidEndDragging:willDecelerate:)
+    _RFDelegateChainHasBlockPropertyRespondsToSelector(shouldScrollToTop, scrollViewShouldScrollToTop:)
+    _RFDelegateChainHasBlockPropertyRespondsToSelector(didScrollToTop, scrollViewDidScrollToTop:)
+    _RFDelegateChainHasBlockPropertyRespondsToSelector(willBeginDecelerating, scrollViewWillBeginDecelerating:)
+    _RFDelegateChainHasBlockPropertyRespondsToSelector(didEndDecelerating, scrollViewDidEndDecelerating:)
+    _RFDelegateChainHasBlockPropertyRespondsToSelector(viewForZooming, viewForZoomingInScrollView:)
+    _RFDelegateChainHasBlockPropertyRespondsToSelector(willBeginZoomingView, scrollViewWillBeginZooming:withView:)
+    _RFDelegateChainHasBlockPropertyRespondsToSelector(didEndZoomingView, scrollViewDidEndZooming:withView:atScale:)
+    _RFDelegateChainHasBlockPropertyRespondsToSelector(didZoom, scrollViewDidZoom:)
+    _RFDelegateChainHasBlockPropertyRespondsToSelector(didEndScrollingAnimation, scrollViewDidEndScrollingAnimation:)
     return [super respondsToSelector:aSelector];
 }
 
 #pragma mark -
 
 - (void)scrollViewDidScroll:(UIScrollView *)scrollView {
-    self.didScroll(scrollView, self.delegate);
+    if (self.didScroll) {
+        self.didScroll(scrollView, self.delegate);
+        return;
+    }
+    [self.delegate scrollViewDidScroll:scrollView];
 }
 
 - (void)scrollViewWillBeginDragging:(UIScrollView *)scrollView {
-    self.willBeginDragging(scrollView, self.delegate);
+    if (self.willBeginDragging) {
+        self.willBeginDragging(scrollView, self.delegate);
+        return;
+    }
+    [self.delegate scrollViewWillBeginDragging:scrollView];
 }
 
 - (void)scrollViewWillEndDragging:(UIScrollView *)scrollView withVelocity:(CGPoint)velocity targetContentOffset:(inout CGPoint *)targetContentOffset {
-    self.willEndDragging(scrollView, velocity, targetContentOffset, self.delegate);
+    if (self.willEndDragging) {
+        self.willEndDragging(scrollView, velocity, targetContentOffset, self.delegate);
+        return;
+    }
+    [self.delegate scrollViewWillEndDragging:scrollView withVelocity:velocity targetContentOffset:targetContentOffset];
 }
 
 - (void)scrollViewDidEndDragging:(UIScrollView *)scrollView willDecelerate:(BOOL)decelerate {
-    self.didEndDragging(scrollView, decelerate, self.delegate);
+    if (self.didEndDragging) {
+        self.didEndDragging(scrollView, decelerate, self.delegate);
+        return;
+    }
+    [self.delegate scrollViewDidEndDragging:scrollView willDecelerate:decelerate];
 }
 
 - (BOOL)scrollViewShouldScrollToTop:(UIScrollView *)scrollView {
-    return self.shouldScrollToTop(scrollView, self.delegate);
+    if (self.shouldScrollToTop) {
+        return self.shouldScrollToTop(scrollView, self.delegate);
+    }
+    return [self.delegate scrollViewShouldScrollToTop:scrollView];
 }
 
 - (void)scrollViewDidScrollToTop:(UIScrollView *)scrollView {
-    self.didScrollToTop(scrollView, self.delegate);
+    if (self.didScrollToTop) {
+        self.didScrollToTop(scrollView, self.delegate);
+        return;
+    }
+    [self scrollViewDidScrollToTop:scrollView];
 }
 
 - (void)scrollViewWillBeginDecelerating:(UIScrollView *)scrollView {
-    self.willBeginDecelerating(scrollView, self.delegate);
+    if (self.willBeginDecelerating) {
+        self.willBeginDecelerating(scrollView, self.delegate);
+        return;
+    }
+    [self.delegate scrollViewWillBeginDecelerating:scrollView];
 }
 
 - (void)scrollViewDidEndDecelerating:(UIScrollView *)scrollView {
-    self.didEndDecelerating(scrollView, self.delegate);
+    if (self.didEndDecelerating) {
+        self.didEndDecelerating(scrollView, self.delegate);
+        return;
+    }
+    [self.delegate scrollViewDidEndDecelerating:scrollView];
 }
 
 #pragma mark -
 
 - (UIView *)viewForZoomingInScrollView:(UIScrollView *)scrollView {
-    return self.viewForZooming(scrollView, self.delegate);
+    if (self.viewForZooming) {
+        return self.viewForZooming(scrollView, self.delegate);
+    }
+    return [self.delegate viewForZoomingInScrollView:scrollView];
 }
 
 - (void)scrollViewWillBeginZooming:(UIScrollView *)scrollView withView:(UIView *)view {
-    self.willBeginZoomingView(scrollView, view, self.delegate);
+    if (self.willBeginZoomingView) {
+        self.willBeginZoomingView(scrollView, view, self.delegate);
+        return;
+    }
+    [self.delegate scrollViewWillBeginZooming:scrollView withView:view];
 }
 
 - (void)scrollViewDidEndZooming:(UIScrollView *)scrollView withView:(UIView *)view atScale:(CGFloat)scale {
-    self.didEndZoomingView(scrollView, view, scale, self.delegate);
+    if (self.didEndZoomingView) {
+        self.didEndZoomingView(scrollView, view, scale, self.delegate);
+        return;
+    }
+    [self.delegate scrollViewDidEndZooming:scrollView withView:view atScale:scale];
 }
 
 - (void)scrollViewDidZoom:(UIScrollView *)scrollView {
-    self.didZoom(scrollView, self.delegate);
+    if (self.didZoom) {
+        self.didZoom(scrollView, self.delegate);
+        return;
+    }
+    [self.delegate scrollViewDidZoom:scrollView];
 }
 
 #pragma mark -
 
 - (void)scrollViewDidEndScrollingAnimation:(UIScrollView *)scrollView {
-    self.didEndScrollingAnimation(scrollView, self.delegate);
+    if (self.didEndScrollingAnimation) {
+        self.didEndScrollingAnimation(scrollView, self.delegate);
+        return;
+    }
+    [self.delegate scrollViewDidEndScrollingAnimation:scrollView];
 }
 
 @end

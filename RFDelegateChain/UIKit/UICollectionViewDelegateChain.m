@@ -4,123 +4,146 @@
 @implementation UICollectionViewDelegateChain
 
 - (BOOL)respondsToSelector:(SEL)aSelector {
-    if (aSelector == @selector(collectionView:shouldSelectItemAtIndexPath:)) {
-        if (self.shouldSelectItem) return YES;
-    }
-    else if (aSelector == @selector(collectionView:shouldDeselectItemAtIndexPath:)) {
-        if (self.shouldDeselectItem) return YES;
-    }
-    else if (aSelector == @selector(collectionView:didSelectItemAtIndexPath:)) {
-        if (self.didSelectItem) return YES;
-    }
-    else if (aSelector == @selector(collectionView:didDeselectItemAtIndexPath:)) {
-        if (self.didDeselectItem) return YES;
-    }
-    if (aSelector == @selector(collectionView:shouldHighlightItemAtIndexPath:)) {
-        if (self.shouldHighlightItem) return YES;
-    }
-    else if (aSelector == @selector(collectionView:didHighlightItemAtIndexPath:)) {
-        if (self.didHighlightItem) return YES;
-    }
-    else if (aSelector == @selector(collectionView:didUnhighlightItemAtIndexPath:)) {
-        if (self.didUnhighlightItem) return YES;
-    }
-    else if (aSelector == @selector(collectionView:willDisplayCell:forItemAtIndexPath:)) {
-        if (self.willDisplayCell) return YES;
-    }
-    else if (aSelector == @selector(collectionView:willDisplaySupplementaryView:forElementKind:atIndexPath:)) {
-        if (self.willDisplaySupplementaryView) return YES;
-    }
-    else if (aSelector == @selector(collectionView:didEndDisplayingCell:forItemAtIndexPath:)) {
-        if (self.didEndDisplayingCell) return YES;
-    }
-    else if (aSelector == @selector(collectionView:didEndDisplayingSupplementaryView:forElementOfKind:atIndexPath:)) {
-        if (self.didEndDisplayingSupplementaryView) return YES;
-    }
-    else if (aSelector == @selector(collectionView:transitionLayoutForOldLayout:newLayout:)) {
-        if (self.transitionLayout) return YES;
-    }
-    else if (aSelector == @selector(collectionView:shouldShowMenuForItemAtIndexPath:)) {
-        if (self.shouldShowMenuForItem) return YES;
-    }
-    else if (aSelector == @selector(collectionView:canPerformAction:forItemAtIndexPath:withSender:)) {
-        if (self.canPerformAction) return YES;
-    }
-    else if (aSelector == @selector(collectionView:performAction:forItemAtIndexPath:withSender:)) {
-        if (self.performAction) return YES;
-    }
-
+    _RFDelegateChainHasBlockPropertyRespondsToSelector(shouldSelectItem, collectionView:shouldSelectItemAtIndexPath:)
+    _RFDelegateChainHasBlockPropertyRespondsToSelector(shouldDeselectItem, collectionView:shouldDeselectItemAtIndexPath:)
+    _RFDelegateChainHasBlockPropertyRespondsToSelector(didSelectItem, collectionView:didSelectItemAtIndexPath:)
+    _RFDelegateChainHasBlockPropertyRespondsToSelector(didDeselectItem, collectionView:didDeselectItemAtIndexPath:)
+    _RFDelegateChainHasBlockPropertyRespondsToSelector(shouldHighlightItem, collectionView:shouldHighlightItemAtIndexPath:)
+    _RFDelegateChainHasBlockPropertyRespondsToSelector(didHighlightItem, collectionView:didHighlightItemAtIndexPath:)
+    _RFDelegateChainHasBlockPropertyRespondsToSelector(didUnhighlightItem, collectionView:didUnhighlightItemAtIndexPath:)
+    _RFDelegateChainHasBlockPropertyRespondsToSelector(willDisplayCell, collectionView:willDisplayCell:forItemAtIndexPath:)
+    _RFDelegateChainHasBlockPropertyRespondsToSelector(willDisplaySupplementaryView, collectionView:willDisplaySupplementaryView:forElementKind:atIndexPath:)
+    _RFDelegateChainHasBlockPropertyRespondsToSelector(didEndDisplayingCell, collectionView:didEndDisplayingCell:forItemAtIndexPath:)
+    _RFDelegateChainHasBlockPropertyRespondsToSelector(didEndDisplayingSupplementaryView, collectionView:didEndDisplayingSupplementaryView:forElementOfKind:atIndexPath:)
+    _RFDelegateChainHasBlockPropertyRespondsToSelector(transitionLayout, collectionView:transitionLayoutForOldLayout:newLayout:)
+    _RFDelegateChainHasBlockPropertyRespondsToSelector(shouldShowMenuForItem, collectionView:shouldShowMenuForItemAtIndexPath:)
+    _RFDelegateChainHasBlockPropertyRespondsToSelector(canPerformAction, collectionView:canPerformAction:forItemAtIndexPath:withSender:)
+    _RFDelegateChainHasBlockPropertyRespondsToSelector(performAction, collectionView:performAction:forItemAtIndexPath:withSender:)
     return [super respondsToSelector:aSelector];
 }
 
 #pragma mark -
 
 - (BOOL)collectionView:(UICollectionView *)collectionView shouldSelectItemAtIndexPath:(NSIndexPath *)indexPath {
-    return self.shouldSelectItem(collectionView, indexPath, self.delegate);
+    if (self.shouldSelectItem) {
+        return self.shouldSelectItem(collectionView, indexPath, self.delegate);
+    }
+    return [self.delegate collectionView:collectionView shouldSelectItemAtIndexPath:indexPath];
 }
 
 - (BOOL)collectionView:(UICollectionView *)collectionView shouldDeselectItemAtIndexPath:(NSIndexPath *)indexPath {
-    return self.shouldDeselectItem(collectionView, indexPath, self.delegate);
+    if (self.shouldDeselectItem) {
+        return self.shouldDeselectItem(collectionView, indexPath, self.delegate);
+    }
+    return [self.delegate collectionView:collectionView shouldDeselectItemAtIndexPath:indexPath];
 }
 
 - (void)collectionView:(UICollectionView *)collectionView didSelectItemAtIndexPath:(NSIndexPath *)indexPath {
-    self.didSelectItem(collectionView, indexPath, self.delegate);
+    if (self.didSelectItem) {
+        self.didSelectItem(collectionView, indexPath, self.delegate);
+        return;
+    }
+    [self.delegate collectionView:collectionView didSelectItemAtIndexPath:indexPath];
 }
 
 - (void)collectionView:(UICollectionView *)collectionView didDeselectItemAtIndexPath:(NSIndexPath *)indexPath {
-    self.didDeselectItem(collectionView, indexPath, self.delegate);
+    if (self.didDeselectItem) {
+        self.didDeselectItem(collectionView, indexPath, self.delegate);
+        return;
+    }
+    [self.delegate collectionView:collectionView didDeselectItemAtIndexPath:indexPath];
 }
 
 #pragma mark -
 
 - (BOOL)collectionView:(UICollectionView *)collectionView shouldHighlightItemAtIndexPath:(NSIndexPath *)indexPath {
-    return self.shouldHighlightItem(collectionView, indexPath, self.delegate);
+    if (self.shouldHighlightItem) {
+        return self.shouldHighlightItem(collectionView, indexPath, self.delegate);
+    }
+    return [self.delegate collectionView:collectionView shouldHighlightItemAtIndexPath:indexPath];
 }
 
 - (void)collectionView:(UICollectionView *)collectionView didHighlightItemAtIndexPath:(NSIndexPath *)indexPath {
-    self.didHighlightItem(collectionView, indexPath, self.delegate);
+    if (self.didHighlightItem) {
+        self.didHighlightItem(collectionView, indexPath, self.delegate);
+        return;
+    }
+    [self.delegate collectionView:collectionView didHighlightItemAtIndexPath:indexPath];
 }
 
 - (void)collectionView:(UICollectionView *)collectionView didUnhighlightItemAtIndexPath:(NSIndexPath *)indexPath {
-    self.didUnhighlightItem(collectionView, indexPath, self.delegate);
+    if (self.didUnhighlightItem) {
+        self.didUnhighlightItem(collectionView, indexPath, self.delegate);
+        return;
+    }
+    [self.delegate collectionView:collectionView didUnhighlightItemAtIndexPath:indexPath];
 }
 
 #pragma mark -
 
 - (void)collectionView:(UICollectionView *)collectionView willDisplayCell:(UICollectionViewCell *)cell forItemAtIndexPath:(NSIndexPath *)indexPath {
-    self.willDisplayCell(collectionView, cell, indexPath, self.delegate);
+    if (self.willDisplayCell) {
+        self.willDisplayCell(collectionView, cell, indexPath, self.delegate);
+        return;
+    }
+    [self.delegate collectionView:collectionView willDisplayCell:cell forItemAtIndexPath:indexPath];
 }
 
 - (void)collectionView:(UICollectionView *)collectionView willDisplaySupplementaryView:(UICollectionReusableView *)view forElementKind:(NSString *)elementKind atIndexPath:(NSIndexPath *)indexPath {
-    self.willDisplaySupplementaryView(collectionView, view, elementKind, indexPath, self.delegate);
+    if (self.willDisplaySupplementaryView) {
+        self.willDisplaySupplementaryView(collectionView, view, elementKind, indexPath, self.delegate);
+        return;
+    }
+    [self.delegate collectionView:collectionView willDisplaySupplementaryView:view forElementKind:elementKind atIndexPath:indexPath];
 }
 
 - (void)collectionView:(UICollectionView *)collectionView didEndDisplayingCell:(UICollectionViewCell *)cell forItemAtIndexPath:(NSIndexPath *)indexPath {
-    self.didEndDisplayingCell(collectionView, cell, indexPath, self.delegate);
+    if (self.didEndDisplayingCell) {
+        self.didEndDisplayingCell(collectionView, cell, indexPath, self.delegate);
+        return;
+    }
+    [self.delegate collectionView:collectionView didEndDisplayingCell:cell forItemAtIndexPath:indexPath];
 }
 
 - (void)collectionView:(UICollectionView *)collectionView didEndDisplayingSupplementaryView:(UICollectionReusableView *)view forElementOfKind:(NSString *)elementKind atIndexPath:(NSIndexPath *)indexPath {
-    self.didEndDisplayingSupplementaryView(collectionView, view, elementKind, indexPath, self.delegate);
+    if (self.didEndDisplayingSupplementaryView) {
+        self.didEndDisplayingSupplementaryView(collectionView, view, elementKind, indexPath, self.delegate);
+        return;
+    }
+    [self.delegate collectionView:collectionView didEndDisplayingSupplementaryView:view forElementOfKind:elementKind atIndexPath:indexPath];
 }
 
 #pragma mark -
 
 - (UICollectionViewTransitionLayout *)collectionView:(UICollectionView *)collectionView transitionLayoutForOldLayout:(UICollectionViewLayout *)fromLayout newLayout:(UICollectionViewLayout *)toLayout {
-    return self.transitionLayout(collectionView, fromLayout, toLayout, self.delegate);
+    if (self.transitionLayout) {
+        return self.transitionLayout(collectionView, fromLayout, toLayout, self.delegate);
+    }
+    return [self.delegate collectionView:collectionView transitionLayoutForOldLayout:fromLayout newLayout:toLayout];
 }
 
 #pragma mark -
 
 - (BOOL)collectionView:(UICollectionView *)collectionView shouldShowMenuForItemAtIndexPath:(NSIndexPath *)indexPath {
-    return self.shouldShowMenuForItem(collectionView, indexPath, self.delegate);
+    if (self.shouldShowMenuForItem) {
+        return self.shouldShowMenuForItem(collectionView, indexPath, self.delegate);
+    }
+    return [self.delegate collectionView:collectionView shouldShowMenuForItemAtIndexPath:indexPath];
 }
 
 - (BOOL)collectionView:(UICollectionView *)collectionView canPerformAction:(SEL)action forItemAtIndexPath:(NSIndexPath *)indexPath withSender:(id)sender {
-    return self.canPerformAction(collectionView, action, indexPath, sender, self.delegate);
+    if (self.canPerformAction) {
+        return self.canPerformAction(collectionView, action, indexPath, sender, self.delegate);
+    }
+    return [self.delegate collectionView:collectionView canPerformAction:action forItemAtIndexPath:indexPath withSender:sender];
 }
 
 - (void)collectionView:(UICollectionView *)collectionView performAction:(SEL)action forItemAtIndexPath:(NSIndexPath *)indexPath withSender:(id)sender {
-    self.performAction(collectionView, action, indexPath, sender, self.delegate);
+    if (self.performAction) {
+        self.performAction(collectionView, action, indexPath, sender, self.delegate);
+        return;
+    }
+    [self.delegate collectionView:collectionView performAction:action forItemAtIndexPath:indexPath withSender:sender];
 }
 
 @end

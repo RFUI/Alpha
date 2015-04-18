@@ -25,6 +25,7 @@ static NSTimeInterval RFPullToFetchAnimateTimeInterval = .2;
 @end
 
 @implementation RFTableViewPullToFetchPlugin
+@dynamic delegate;
 
 - (void)onInit {
     [super onInit];

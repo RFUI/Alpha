@@ -15,6 +15,7 @@
 @end
 
 @implementation RFTableViewCellHeightDelegate
+@dynamic delegate;
 
 #pragma mark - Cache management
 

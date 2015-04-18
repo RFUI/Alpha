@@ -2,6 +2,7 @@
 #import "UICollectionViewDelegateFlowLayoutChain.h"
 
 @implementation UICollectionViewDelegateFlowLayoutChain
+@dynamic delegate;
 
 - (BOOL)respondsToSelector:(SEL)aSelector {
     _RFDelegateChainHasBlockPropertyRespondsToSelector(sizeForItem, collectionView:layout:sizeForItemAtIndexPath:)

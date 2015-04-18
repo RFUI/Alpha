@@ -2,6 +2,7 @@
 #import "UICollectionViewDelegateChain.h"
 
 @implementation UICollectionViewDelegateChain
+@dynamic delegate;
 
 - (BOOL)respondsToSelector:(SEL)aSelector {
     _RFDelegateChainHasBlockPropertyRespondsToSelector(shouldSelectItem, collectionView:shouldSelectItemAtIndexPath:)

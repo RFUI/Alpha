@@ -5,6 +5,7 @@
 @end
 
 @implementation UITextViewDelegateChain
+@dynamic delegate;
 
 - (BOOL)textViewShouldBeginEditing:(UITextView *)textView {
     if (self.shouldBeginEditing) {

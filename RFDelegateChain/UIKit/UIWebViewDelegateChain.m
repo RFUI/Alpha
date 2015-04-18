@@ -2,6 +2,7 @@
 #import "UIWebViewDelegateChain.h"
 
 @implementation UIWebViewDelegateChain
+@dynamic delegate;
 
 - (BOOL)webView:(UIWebView *)webView shouldStartLoadWithRequest:(NSURLRequest *)request navigationType:(UIWebViewNavigationType)navigationType {
     if (self.shouldStartLoadRequest) {

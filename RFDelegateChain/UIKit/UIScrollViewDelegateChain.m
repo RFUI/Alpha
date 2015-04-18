@@ -2,6 +2,7 @@
 #import "UIScrollViewDelegateChain.h"
 
 @implementation UIScrollViewDelegateChain
+@dynamic delegate;
 
 - (BOOL)respondsToSelector:(SEL)aSelector {
     _RFDelegateChainHasBlockPropertyRespondsToSelector(didScroll, scrollViewDidScroll:)

@@ -5,6 +5,7 @@
 @end
 
 @implementation UISearchBarDelegateChain
+@dynamic delegate;
 
 - (void)searchBar:(UISearchBar *)searchBar textDidChange:(NSString *)searchText {
     if (self.didChange) {

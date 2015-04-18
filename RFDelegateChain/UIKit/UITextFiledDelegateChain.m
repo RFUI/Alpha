@@ -2,6 +2,7 @@
 #import "UITextFiledDelegateChain.h"
 
 @implementation UITextFiledDelegateChain
+@dynamic delegate;
 
 - (BOOL)textFieldShouldBeginEditing:(UITextField *)textField {
     if (self.shouldBeginEditing) {

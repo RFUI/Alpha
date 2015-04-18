@@ -2,6 +2,7 @@
 #import "UICollectionViewDataSourceChain.h"
 
 @implementation UICollectionViewDataSourceChain
+@dynamic delegate;
 
 - (BOOL)respondsToSelector:(SEL)aSelector {
     _RFDelegateChainHasBlockPropertyRespondsToSelector(numberOfItemsInSection, collectionView:numberOfItemsInSection:)

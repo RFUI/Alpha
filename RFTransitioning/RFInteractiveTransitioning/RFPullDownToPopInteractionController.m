@@ -9,6 +9,7 @@
 @end
 
 @implementation RFPullDownToPopInteractionController
+@dynamic gestureRecognizer;
 
 - (void)onInit {
     [super onInit];

@@ -283,9 +283,12 @@ static NSTimeInterval RFPullToFetchAnimateTimeInterval = .2;
     [UIView animateWithDuration:RFPullToFetchAnimateTimeInterval delay:0 options:UIViewAnimationOptionBeginFromCurrentState animated:animated beforeAnimations:nil animations:^{
         [self updateHeaderLayout];
 
-        UIEdgeInsets edge = self.tableView.contentInset;
+        UITableView *tb = self.tableView;
+        if (!tb) return;
+
+        UIEdgeInsets edge = tb.contentInset;
         edge.top = (self.headerProcessing? self.headerContainer.height : 0);
-        self.tableView.contentInset = edge;
+        tb.contentInset = edge;
     } completion:^(BOOL finished) {
         if (finished) {
             self.animating = NO;
@@ -309,11 +312,14 @@ static NSTimeInterval RFPullToFetchAnimateTimeInterval = .2;
     [UIView animateWithDuration:RFPullToFetchAnimateTimeInterval delay:0 options:UIViewAnimationOptionBeginFromCurrentState animated:animated beforeAnimations:nil animations:^{
         [self updateFooterLayout];
 
-        UIEdgeInsets edge = self.tableView.contentInset;
+        UITableView *tb = self.tableView;
+        if (!tb) return;
+
+        UIEdgeInsets edge = tb.contentInset;
         edge.bottom = (self.footerProcessing? self.footerContainer.height : 0);
-        self.tableView.contentInset = edge;
-        if (self.tableView.tableFooterView) {
-            self.tableView.tableFooterView = self.tableView.tableFooterView;
+        tb.contentInset = edge;
+        if (tb.tableFooterView) {
+            tb.tableFooterView = tb.tableFooterView;
         }
     } completion:^(BOOL finished) {
         if (finished) {

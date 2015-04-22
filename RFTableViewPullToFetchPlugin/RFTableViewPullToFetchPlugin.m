@@ -284,7 +284,7 @@ static NSTimeInterval RFPullToFetchAnimateTimeInterval = .2;
         [self updateHeaderLayout];
 
         UITableView *tb = self.tableView;
-        if (!tb) return;
+        if (!tb || !tb.window) return;
 
         UIEdgeInsets edge = tb.contentInset;
         edge.top = (self.headerProcessing? self.headerContainer.height : 0);
@@ -313,7 +313,7 @@ static NSTimeInterval RFPullToFetchAnimateTimeInterval = .2;
         [self updateFooterLayout];
 
         UITableView *tb = self.tableView;
-        if (!tb) return;
+        if (!tb || !tb.window) return;
 
         UIEdgeInsets edge = tb.contentInset;
         edge.bottom = (self.footerProcessing? self.footerContainer.height : 0);

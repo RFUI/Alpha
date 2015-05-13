@@ -17,8 +17,9 @@
     BOOL isDrawingVertically = (height > width);
     CGFloat pixelOffsetX = 0;
     CGFloat pixelOffsetY = 0;
+    CGFloat pixelScale = (self.window.screen)? self.window.screen.scale : [UIApplication sharedApplication].keyWindow.screen.scale;
     if (self.onePixel) {
-        CGFloat pixelOffset = 1 / self.window.screen.scale / 2;
+        CGFloat pixelOffset = 1 / pixelScale / 2;
         if (isDrawingVertically) {
             pixelOffsetX = (ABS(self.x) > ABS(self.rightMargin))? pixelOffset : - pixelOffset;
         }
@@ -40,7 +41,7 @@
 
     CGFloat lineWidth = 1;
     if (self.onePixel) {
-        lineWidth = 1 / self.window.screen.scale;
+        lineWidth = 1 / pixelScale;
     }
     else {
         lineWidth = (isDrawingVertically)? width : height;

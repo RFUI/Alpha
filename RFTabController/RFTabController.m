@@ -97,9 +97,10 @@ RFInitializingRootForUIViewController
     }
 
     if ([self.delegate respondsToSelector:@selector(RFTabController:shouldSelectViewController:atIndex:)]) {
-        UIViewController *toViewController = (self.viewControllers)[newSelectedIndex];
-        if (![self.delegate RFTabController:self shouldSelectViewController:toViewController atIndex:newSelectedIndex])
+        UIViewController *toViewController = self.viewControllers[newSelectedIndex];
+        if (![self.delegate RFTabController:self shouldSelectViewController:toViewController atIndex:newSelectedIndex]) {
             return;
+        }
     }
 
     if (!self.isViewLoaded) {
@@ -126,58 +127,43 @@ RFInitializingRootForUIViewController
         toViewController = self.selectedViewController;
     }
 
-    if (!toViewController) {
-        dout_debug(@"No toViewController")
-        // Don't animate
-        [fromViewController.view removeFromSuperview];
-    }
-    else if (!fromViewController) {
-        dout_debug(@"No fromViewController")
-        // Don't animate
-        toViewController.view.frame = contentContainerView.bounds;
-        [contentContainerView addSubview:toViewController.view];
-
-        if ([self.delegate respondsToSelector:@selector(RFTabController:didSelectViewController:atIndex:)])
-            [self.delegate RFTabController:self didSelectViewController:toViewController atIndex:newSelectedIndex];
-    }
-    else if (animated) {
-        dout_debug(@"Animated transition")
-        CGRect rect = contentContainerView.bounds;
-        if (oldSelectedIndex < newSelectedIndex)
-            rect.origin.x = rect.size.width;
-        else
-            rect.origin.x = -rect.size.width;
-
-        toViewController.view.frame = rect;
-        self.tabButtonsContainerView.userInteractionEnabled = NO;
-
-        [self transitionFromViewController:fromViewController toViewController:toViewController duration:0.3f options:(UIViewAnimationOptions)(UIViewAnimationOptionLayoutSubviews | UIViewAnimationOptionCurveEaseOut) animations:^{
-            CGRect rect = fromViewController.view.frame;
-            if (oldSelectedIndex < newSelectedIndex)
-                rect.origin.x = -rect.size.width;
-            else
-                rect.origin.x = rect.size.width;
-
-            fromViewController.view.frame = rect;
-            toViewController.view.frame = contentContainerView.bounds;
-        } completion:^(BOOL finished) {
-            self.tabButtonsContainerView.userInteractionEnabled = YES;
-
-            if ([self.delegate respondsToSelector:@selector(RFTabController:didSelectViewController:atIndex:)])
-                [self.delegate RFTabController:self didSelectViewController:toViewController atIndex:newSelectedIndex];
-        }];
-    }
-    else {
+    if (!animated
+        || !fromViewController
+        || !toViewController) {
         dout_debug(@"No animation")
-        // not animated
         [fromViewController.view removeFromSuperview];
 
-        toViewController.view.frame = contentContainerView.bounds;
-        [contentContainerView addSubview:toViewController.view];
-
-        if ([self.delegate respondsToSelector:@selector(RFTabController:didSelectViewController:atIndex:)])
-            [self.delegate RFTabController:self didSelectViewController:toViewController atIndex:newSelectedIndex];
+        if (toViewController) {
+            toViewController.view.frame = contentContainerView.bounds;
+            [contentContainerView addSubview:toViewController.view];
+            [self noticeDelegateDidSelectViewController:toViewController atIndex:newSelectedIndex];
+        }
+        return;
     }
+
+    dout_debug(@"Animated transition")
+    CGRect rect = contentContainerView.bounds;
+    if (oldSelectedIndex < newSelectedIndex)
+        rect.origin.x = rect.size.width;
+    else
+        rect.origin.x = -rect.size.width;
+
+    toViewController.view.frame = rect;
+    self.tabButtonsContainerView.userInteractionEnabled = NO;
+
+    [self transitionFromViewController:fromViewController toViewController:toViewController duration:0.3f options:(UIViewAnimationOptions)(UIViewAnimationOptionLayoutSubviews | UIViewAnimationOptionCurveEaseOut) animations:^{
+        CGRect rect = fromViewController.view.frame;
+        if (oldSelectedIndex < newSelectedIndex)
+            rect.origin.x = -rect.size.width;
+        else
+            rect.origin.x = rect.size.width;
+
+        fromViewController.view.frame = rect;
+        toViewController.view.frame = contentContainerView.bounds;
+    } completion:^(BOOL finished) {
+        self.tabButtonsContainerView.userInteractionEnabled = YES;
+        [self noticeDelegateDidSelectViewController:toViewController atIndex:newSelectedIndex];
+    }];
 }
 
 - (UIViewController *)selectedViewController {
@@ -193,6 +179,11 @@ RFInitializingRootForUIViewController
     if (index != NSNotFound) {
         [self setSelectedIndex:index animated:animated];
     }
+}
+
+- (void)noticeDelegateDidSelectViewController:(UIViewController *)viewController atIndex:(NSUInteger)index {
+    if (![self.delegate respondsToSelector:@selector(RFTabController:didSelectViewController:atIndex:)]) return;
+    [self.delegate RFTabController:self didSelectViewController:viewController atIndex:index];
 }
 
 @end

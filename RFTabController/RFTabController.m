@@ -1,10 +1,10 @@
 
-#import "RFTabBarController.h"
+#import "RFTabController.h"
 
-@interface RFTabBarController ()
+@interface RFTabController ()
 @end
 
-@implementation RFTabBarController
+@implementation RFTabController
 RFInitializingRootForUIViewController
 
 - (void)onInit {
@@ -96,9 +96,9 @@ RFInitializingRootForUIViewController
         return;
     }
 
-    if ([self.delegate respondsToSelector:@selector(RFTabBarController:shouldSelectViewController:atIndex:)]) {
+    if ([self.delegate respondsToSelector:@selector(RFTabController:shouldSelectViewController:atIndex:)]) {
         UIViewController *toViewController = (self.viewControllers)[newSelectedIndex];
-        if (![self.delegate RFTabBarController:self shouldSelectViewController:toViewController atIndex:newSelectedIndex])
+        if (![self.delegate RFTabController:self shouldSelectViewController:toViewController atIndex:newSelectedIndex])
             return;
     }
 
@@ -137,8 +137,8 @@ RFInitializingRootForUIViewController
         toViewController.view.frame = contentContainerView.bounds;
         [contentContainerView addSubview:toViewController.view];
 
-        if ([self.delegate respondsToSelector:@selector(RFTabBarController:didSelectViewController:atIndex:)])
-            [self.delegate RFTabBarController:self didSelectViewController:toViewController atIndex:newSelectedIndex];
+        if ([self.delegate respondsToSelector:@selector(RFTabController:didSelectViewController:atIndex:)])
+            [self.delegate RFTabController:self didSelectViewController:toViewController atIndex:newSelectedIndex];
     }
     else if (animated) {
         dout_debug(@"Animated transition")
@@ -163,8 +163,8 @@ RFInitializingRootForUIViewController
         } completion:^(BOOL finished) {
             self.tabButtonsContainerView.userInteractionEnabled = YES;
 
-            if ([self.delegate respondsToSelector:@selector(RFTabBarController:didSelectViewController:atIndex:)])
-                [self.delegate RFTabBarController:self didSelectViewController:toViewController atIndex:newSelectedIndex];
+            if ([self.delegate respondsToSelector:@selector(RFTabController:didSelectViewController:atIndex:)])
+                [self.delegate RFTabController:self didSelectViewController:toViewController atIndex:newSelectedIndex];
         }];
     }
     else {
@@ -175,8 +175,8 @@ RFInitializingRootForUIViewController
         toViewController.view.frame = contentContainerView.bounds;
         [contentContainerView addSubview:toViewController.view];
 
-        if ([self.delegate respondsToSelector:@selector(RFTabBarController:didSelectViewController:atIndex:)])
-            [self.delegate RFTabBarController:self didSelectViewController:toViewController atIndex:newSelectedIndex];
+        if ([self.delegate respondsToSelector:@selector(RFTabController:didSelectViewController:atIndex:)])
+            [self.delegate RFTabController:self didSelectViewController:toViewController atIndex:newSelectedIndex];
     }
 }
 

@@ -1,5 +1,5 @@
 /*!
-    RFTabBarController
+    RFTabController
 
     Copyright (c) 2015 BB9z
     https://github.com/RFUI/Alpha
@@ -11,15 +11,15 @@
  */
 #import "RFUI.h"
 
-@protocol RFTabBarControllerDelegate;
+@protocol RFTabControllerDelegate;
 
-@interface RFTabBarController : UIViewController <
-RFInitializing
+@interface RFTabController : UIViewController <
+    RFInitializing
 >
 @property (copy, nonatomic) NSArray *viewControllers;
 @property (weak, nonatomic) UIViewController *selectedViewController;
 @property (assign, nonatomic) NSUInteger selectedIndex;
-@property (weak, nonatomic) IBOutlet id<RFTabBarControllerDelegate> delegate;
+@property (weak, nonatomic) IBOutlet id<RFTabControllerDelegate> delegate;
 
 - (void)setSelectedIndex:(NSUInteger)index animated:(BOOL)animated;
 - (void)setSelectedViewController:(UIViewController *)viewController animated:(BOOL)animated;
@@ -38,8 +38,8 @@ RFInitializing
 @end
 
 
-@protocol RFTabBarControllerDelegate <NSObject>
+@protocol RFTabControllerDelegate <NSObject>
 @optional
-- (BOOL)RFTabBarController:(RFTabBarController *)tabBarController shouldSelectViewController:(UIViewController *)viewController atIndex:(NSUInteger)index;
-- (void)RFTabBarController:(RFTabBarController *)tabBarController didSelectViewController:(UIViewController *)viewController atIndex:(NSUInteger)index;
+- (BOOL)RFTabController:(RFTabController *)tabController shouldSelectViewController:(UIViewController *)viewController atIndex:(NSUInteger)index;
+- (void)RFTabController:(RFTabController *)tabController didSelectViewController:(UIViewController *)viewController atIndex:(NSUInteger)index;
 @end

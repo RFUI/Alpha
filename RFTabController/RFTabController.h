@@ -15,17 +15,14 @@
 
 @interface RFTabController : UIViewController <
     RFInitializing
-> {
-@protected
-    NSUInteger _selectedIndex;
-}
+>
 @property (copy, nonatomic) NSArray *viewControllers;
 @property (weak, nonatomic) UIViewController *selectedViewController;
 @property (assign, nonatomic) NSUInteger selectedIndex;
 @property (weak, nonatomic) IBOutlet id<RFTabControllerDelegate> delegate;
 
-- (void)setSelectedIndex:(NSUInteger)index animated:(BOOL)animated;
-- (void)setSelectedViewController:(UIViewController *)viewController animated:(BOOL)animated;
+- (void)setSelectedIndex:(NSUInteger)index animated:(BOOL)animated completion:(void (^)(BOOL finished))completion;
+- (void)setSelectedViewController:(UIViewController *)viewController animated:(BOOL)animated completion:(void (^)(BOOL finished))completion;
 
 @property (weak, nonatomic) IBOutlet UIView *wrapperView;
 

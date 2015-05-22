@@ -1,6 +1,10 @@
 
 #import "RFPageTabController.h"
 
+@interface RFTabController (Private)
+@property (assign, nonatomic) NSUInteger _selectedIndex;
+@end
+
 @interface RFPageTabController () <
     UIPageViewControllerDataSource,
     UIPageViewControllerDelegate
@@ -32,29 +36,28 @@
 - (void)didDataSourceUpdateFromArray:(NSArray *)oldViewControllers toArray:(NSArray *)newViewControllers {
     UIViewController *oldSelectedViewController = self.selectedViewController;
     NSUInteger newIndex = [newViewControllers indexOfObject:oldSelectedViewController];
-    if (newIndex != NSNotFound) {
-        self.selectedIndex = newIndex;
-    }
-    else if (newIndex < newViewControllers.count) {
-        self.selectedIndex = newIndex;
+    if (newIndex == NSNotFound) {
+        self.selectedIndex = 0;
     }
     else {
-        self.selectedIndex = 0;
+        self.selectedIndex = newIndex;
     }
 }
 
-- (void)setSelectedIndex:(NSUInteger)newSelectedIndex animated:(BOOL)animated {
+- (void)setSelectedIndex:(NSUInteger)newSelectedIndex animated:(BOOL)animated completion:(void (^)(BOOL))completion {
     UIViewController *svc = [self.viewControllers rf_objectAtIndex:newSelectedIndex];
     if (!svc) {
+        if (completion) completion(NO);
         return;
     }
 
     if (![self askDelegateShouldSelectViewController:svc atIndex:newSelectedIndex]) {
+        if (completion) completion(NO);
         return;
     }
 
-    UIPageViewControllerNavigationDirection direction = (_selectedIndex > newSelectedIndex)? UIPageViewControllerNavigationDirectionReverse : UIPageViewControllerNavigationDirectionForward;
-    _selectedIndex = newSelectedIndex;
+    UIPageViewControllerNavigationDirection direction = (self._selectedIndex > newSelectedIndex)? UIPageViewControllerNavigationDirectionReverse : UIPageViewControllerNavigationDirectionForward;
+    self._selectedIndex = newSelectedIndex;
 
     @weakify(self);
     UIView *tabContainer = self.tabButtonsContainerView;
@@ -63,6 +66,7 @@
         @strongify(self);
         tabContainer.userInteractionEnabled = YES;
         [self noticeDelegateDidSelectViewController:svc atIndex:newSelectedIndex];
+        if (completion) completion(finished);
     }];
 }
 
@@ -104,7 +108,7 @@
 - (void)pageViewController:(UIPageViewController *)pageViewController didFinishAnimating:(BOOL)finished previousViewControllers:(NSArray *)previousViewControllers transitionCompleted:(BOOL)completed {
     _doutwork()
     self.tabButtonsContainerView.userInteractionEnabled = YES;
-    _selectedIndex = [self.viewControllers indexOfObject:pageViewController.viewControllers.firstObject];
+    self._selectedIndex = [self.viewControllers indexOfObject:pageViewController.viewControllers.firstObject];
 }
 
 @end

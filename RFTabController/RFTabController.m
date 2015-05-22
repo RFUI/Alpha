@@ -2,13 +2,17 @@
 #import "RFTabController.h"
 
 @interface RFTabController ()
+@property (assign, nonatomic) NSUInteger _selectedIndex;
 @end
 
-@implementation RFTabController
+@implementation RFTabController {
+    BOOL _transitingViewController;
+}
+@dynamic selectedIndex;
 RFInitializingRootForUIViewController
 
 - (void)onInit {
-    _selectedIndex = NSNotFound;
+    __selectedIndex = NSNotFound;
 }
 
 - (void)afterInit {
@@ -72,14 +76,11 @@ RFInitializingRootForUIViewController
     // This follows the same rules as UITabBarController for trying to
     // re-select the previously selected view controller.
     NSUInteger newIndex = [newViewControllers indexOfObject:oldSelectedViewController];
-    if (newIndex != NSNotFound) {
-        self.selectedIndex = newIndex;
-    }
-    else if (newIndex < newViewControllers.count) {
-        self.selectedIndex = newIndex;
+    if (newIndex == NSNotFound) {
+        self.selectedIndex = 0;
     }
     else {
-        self.selectedIndex = 0;
+        self.selectedIndex = newIndex;
     }
 
     // Add the new child view controllers.
@@ -89,41 +90,49 @@ RFInitializingRootForUIViewController
     }
 }
 
-- (void)setSelectedIndex:(NSUInteger)newSelectedIndex {
-    [self setSelectedIndex:newSelectedIndex animated:NO];
+- (NSUInteger)selectedIndex {
+    return __selectedIndex;
 }
 
-- (void)setSelectedIndex:(NSUInteger)newSelectedIndex animated:(BOOL)animated {
+- (void)setSelectedIndex:(NSUInteger)newSelectedIndex {
+    [self setSelectedIndex:newSelectedIndex animated:NO completion:nil];
+}
+
+- (void)setSelectedIndex:(NSUInteger)newSelectedIndex animated:(BOOL)animated completion:(void (^)(BOOL finished))completion {
     if (newSelectedIndex >= self.viewControllers.count) {
         RFAssert(false, @"View controller index out of bounds");
+        if (completion) completion(NO);
         return;
     }
 
-    if (![self askDelegateShouldSelectViewController:self.viewControllers[newSelectedIndex] atIndex:newSelectedIndex]) {
+    // Should not change selected view controller
+    if (![self askDelegateShouldSelectViewController:self.viewControllers[newSelectedIndex] atIndex:newSelectedIndex]
+        || __selectedIndex == newSelectedIndex
+        || _transitingViewController) {
+        if (completion) completion(NO);
         return;
     }
 
+    // View not loadded, just change index vaule
     if (!self.isViewLoaded) {
-        _selectedIndex = newSelectedIndex;
+        __selectedIndex = newSelectedIndex;
+        if (completion) completion(NO);
         return;
     }
 
-    if (_selectedIndex == newSelectedIndex) {
-        return;
-    }
-
+    // Prepare view controller
     UIViewController *fromViewController;
     UIViewController *toViewController;
     UIView *contentContainerView = self.wrapperView;
 
-    if (_selectedIndex != NSNotFound) {
+    if (__selectedIndex != NSNotFound) {
         fromViewController = self.selectedViewController;
     }
 
-    NSUInteger oldSelectedIndex = _selectedIndex;
-    _selectedIndex = newSelectedIndex;
+    NSUInteger oldSelectedIndex = __selectedIndex;
+    __selectedIndex = newSelectedIndex;
 
-    if (_selectedIndex != NSNotFound) {
+    if (__selectedIndex != NSNotFound) {
         toViewController = self.selectedViewController;
     }
 
@@ -138,33 +147,30 @@ RFInitializingRootForUIViewController
             [contentContainerView addSubview:toViewController.view];
             [self noticeDelegateDidSelectViewController:toViewController atIndex:newSelectedIndex];
         }
+        if (completion) completion(NO);
         return;
     }
 
     dout_debug(@"Animated transition")
+    _transitingViewController = YES;
+
     UIView *fromView = fromViewController.view;
     UIView *toView = toViewController.view;
     CGRect rect = contentContainerView.bounds;
-    if (oldSelectedIndex < newSelectedIndex)
-        rect.origin.x = rect.size.width;
-    else
-        rect.origin.x = -rect.size.width;
-
+    rect.origin.x = (oldSelectedIndex < newSelectedIndex)? rect.size.width : -rect.size.width;
     toView.frame = rect;
     self.tabButtonsContainerView.userInteractionEnabled = NO;
 
     [self transitionFromViewController:fromViewController toViewController:toViewController duration:0.3f options:(UIViewAnimationOptions)(UIViewAnimationOptionLayoutSubviews | UIViewAnimationOptionCurveEaseOut) animations:^{
         CGRect rect = fromView.frame;
-        if (oldSelectedIndex < newSelectedIndex)
-            rect.origin.x = -rect.size.width;
-        else
-            rect.origin.x = rect.size.width;
-
+        rect.origin.x = (oldSelectedIndex < newSelectedIndex)? -rect.size.width : rect.size.width;
         fromView.frame = rect;
         toView.frame = contentContainerView.bounds;
     } completion:^(BOOL finished) {
+        self->_transitingViewController = NO;
         self.tabButtonsContainerView.userInteractionEnabled = YES;
         [self noticeDelegateDidSelectViewController:toViewController atIndex:newSelectedIndex];
+        if (completion) completion(finished);
     }];
 }
 
@@ -173,13 +179,13 @@ RFInitializingRootForUIViewController
 }
 
 - (void)setSelectedViewController:(UIViewController *)newSelectedViewController {
-    [self setSelectedViewController:newSelectedViewController animated:NO];
+    [self setSelectedViewController:newSelectedViewController animated:NO completion:nil];
 }
 
-- (void)setSelectedViewController:(UIViewController *)newSelectedViewController animated:(BOOL)animated {
+- (void)setSelectedViewController:(UIViewController *)newSelectedViewController animated:(BOOL)animated completion:(void (^)(BOOL finished))completion {
     NSUInteger index = [self.viewControllers indexOfObject:newSelectedViewController];
     if (index != NSNotFound) {
-        [self setSelectedIndex:index animated:animated];
+        [self setSelectedIndex:index animated:animated completion:completion];
     }
 }
 

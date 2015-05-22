@@ -55,24 +55,27 @@ RFInitializingRootForUIViewController
 }
 
 - (void)setViewControllers:(NSArray *)newViewControllers {
+    id old = _viewControllers;
+    _viewControllers = [newViewControllers copy];
+    [self didDataSourceUpdateFromArray:old toArray:newViewControllers];
+}
 
+- (void)didDataSourceUpdateFromArray:(NSArray *)oldViewControllers toArray:(NSArray *)newViewControllers {
     UIViewController *oldSelectedViewController = self.selectedViewController;
 
     // Remove the old child view controllers.
-    for (UIViewController *viewController in _viewControllers) {
-        [viewController willMoveToParentViewController:nil];
-        [viewController removeFromParentViewController];
+    for (UIViewController *vc in oldViewControllers) {
+        [vc willMoveToParentViewController:nil];
+        [vc removeFromParentViewController];
     }
-
-    _viewControllers = [newViewControllers copy];
 
     // This follows the same rules as UITabBarController for trying to
     // re-select the previously selected view controller.
-    NSUInteger newIndex = [_viewControllers indexOfObject:oldSelectedViewController];
+    NSUInteger newIndex = [newViewControllers indexOfObject:oldSelectedViewController];
     if (newIndex != NSNotFound) {
         self.selectedIndex = newIndex;
     }
-    else if (newIndex < [_viewControllers count]) {
+    else if (newIndex < newViewControllers.count) {
         self.selectedIndex = newIndex;
     }
     else {
@@ -80,9 +83,9 @@ RFInitializingRootForUIViewController
     }
 
     // Add the new child view controllers.
-    for (UIViewController *viewController in _viewControllers) {
-        [self addChildViewController:viewController];
-        [viewController didMoveToParentViewController:self];
+    for (UIViewController *vc in newViewControllers) {
+        [self addChildViewController:vc];
+        [vc didMoveToParentViewController:self];
     }
 }
 
@@ -96,11 +99,8 @@ RFInitializingRootForUIViewController
         return;
     }
 
-    if ([self.delegate respondsToSelector:@selector(RFTabController:shouldSelectViewController:atIndex:)]) {
-        UIViewController *toViewController = self.viewControllers[newSelectedIndex];
-        if (![self.delegate RFTabController:self shouldSelectViewController:toViewController atIndex:newSelectedIndex]) {
-            return;
-        }
+    if (![self askDelegateShouldSelectViewController:self.viewControllers[newSelectedIndex] atIndex:newSelectedIndex]) {
+        return;
     }
 
     if (!self.isViewLoaded) {
@@ -142,24 +142,26 @@ RFInitializingRootForUIViewController
     }
 
     dout_debug(@"Animated transition")
+    UIView *fromView = fromViewController.view;
+    UIView *toView = toViewController.view;
     CGRect rect = contentContainerView.bounds;
     if (oldSelectedIndex < newSelectedIndex)
         rect.origin.x = rect.size.width;
     else
         rect.origin.x = -rect.size.width;
 
-    toViewController.view.frame = rect;
+    toView.frame = rect;
     self.tabButtonsContainerView.userInteractionEnabled = NO;
 
     [self transitionFromViewController:fromViewController toViewController:toViewController duration:0.3f options:(UIViewAnimationOptions)(UIViewAnimationOptionLayoutSubviews | UIViewAnimationOptionCurveEaseOut) animations:^{
-        CGRect rect = fromViewController.view.frame;
+        CGRect rect = fromView.frame;
         if (oldSelectedIndex < newSelectedIndex)
             rect.origin.x = -rect.size.width;
         else
             rect.origin.x = rect.size.width;
 
-        fromViewController.view.frame = rect;
-        toViewController.view.frame = contentContainerView.bounds;
+        fromView.frame = rect;
+        toView.frame = contentContainerView.bounds;
     } completion:^(BOOL finished) {
         self.tabButtonsContainerView.userInteractionEnabled = YES;
         [self noticeDelegateDidSelectViewController:toViewController atIndex:newSelectedIndex];
@@ -184,6 +186,11 @@ RFInitializingRootForUIViewController
 - (void)noticeDelegateDidSelectViewController:(UIViewController *)viewController atIndex:(NSUInteger)index {
     if (![self.delegate respondsToSelector:@selector(RFTabController:didSelectViewController:atIndex:)]) return;
     [self.delegate RFTabController:self didSelectViewController:viewController atIndex:index];
+}
+
+- (BOOL)askDelegateShouldSelectViewController:(UIViewController *)viewController atIndex:(NSUInteger)index {
+    if (![self.delegate respondsToSelector:@selector(RFTabController:shouldSelectViewController:atIndex:)]) return YES;
+    return [self.delegate RFTabController:self shouldSelectViewController:viewController atIndex:index];
 }
 
 @end

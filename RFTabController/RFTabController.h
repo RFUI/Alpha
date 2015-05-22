@@ -15,7 +15,10 @@
 
 @interface RFTabController : UIViewController <
     RFInitializing
->
+> {
+@protected
+    NSUInteger _selectedIndex;
+}
 @property (copy, nonatomic) NSArray *viewControllers;
 @property (weak, nonatomic) UIViewController *selectedViewController;
 @property (assign, nonatomic) NSUInteger selectedIndex;
@@ -34,6 +37,13 @@
 #pragma mark - Memory Management
 
 @property (assign, nonatomic) IBInspectable BOOL forceUnloadInvisibleWhenMemoryWarningReceived;
+
+#pragma mark - For Overwrite
+
+- (void)didDataSourceUpdateFromArray:(NSArray *)oldViewControllers toArray:(NSArray *)newViewControllers;
+
+- (void)noticeDelegateDidSelectViewController:(UIViewController *)viewController atIndex:(NSUInteger)index;
+- (BOOL)askDelegateShouldSelectViewController:(UIViewController *)viewController atIndex:(NSUInteger)index;
 
 @end
 

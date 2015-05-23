@@ -10,10 +10,11 @@
     UIPageViewControllerDelegate
 >
 @property (strong, readwrite, nonatomic) UIPageViewController *pageViewController;
-
+@property (assign, nonatomic) BOOL scrollEnabledStatusNeedsResetAfterViewLoadded;
 @end
 
 @implementation RFPageTabController
+@synthesize scrollEnabled = _scrollEnabled;
 
 - (void)onInit {
     [super onInit];
@@ -31,6 +32,10 @@
     UIView *pv = self.pageViewController.view;
     pv.autoresizingMask = UIViewAutoresizingFlexibleSize;
     [self.wrapperView addSubview:pv resizeOption:RFViewResizeOptionFill];
+
+    if (self.scrollEnabledStatusNeedsResetAfterViewLoadded) {
+        self.scrollEnabled = _scrollEnabled;
+    }
 }
 
 - (void)didDataSourceUpdateFromArray:(NSArray *)oldViewControllers toArray:(NSArray *)newViewControllers {
@@ -67,6 +72,42 @@
         tabContainer.userInteractionEnabled = YES;
         [self noticeDelegateDidSelectViewController:svc atIndex:newSelectedIndex];
         if (completion) completion(finished);
+    }];
+}
+
+#pragma mark - Scroll Enabled
+
+- (BOOL)scrollEnabled {
+    if (![self.pageViewController isViewLoaded]) return _scrollEnabled;
+    return [self pageViewControllerScrollEnabled];
+}
+
+- (void)setScrollEnabled:(BOOL)scrollEnabled {
+    _scrollEnabled = scrollEnabled;
+    if (![self.pageViewController isViewLoaded]) {
+        self.scrollEnabledStatusNeedsResetAfterViewLoadded = YES;
+        return;
+    }
+    [self setPageViewControllerScrollEnabled:scrollEnabled];
+}
+
+- (BOOL)pageViewControllerScrollEnabled {
+    __block BOOL se = YES;
+    [self.pageViewController.view.subviews enumerateObjectsUsingBlock:^(UIScrollView *view, NSUInteger idx, BOOL *stop) {
+        if ([view isKindOfClass:[UIScrollView class]]) {
+            se = view.scrollEnabled;
+            *stop = YES;
+        }
+    }];
+    return se;
+}
+
+- (void)setPageViewControllerScrollEnabled:(BOOL)scrollEnabled {
+    [self.pageViewController.view.subviews enumerateObjectsUsingBlock:^(UIScrollView *view, NSUInteger idx, BOOL *stop) {
+        if ([view isKindOfClass:[UIScrollView class]]) {
+            view.scrollEnabled = scrollEnabled;
+            *stop = YES;
+        }
     }];
 }
 

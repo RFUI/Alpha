@@ -14,4 +14,5 @@
 @interface RFPageTabController : RFTabController
 @property (readonly, nonatomic) UIPageViewController *pageViewController;
 
+@property (assign, nonatomic) IBInspectable BOOL scrollEnabled;
 @end

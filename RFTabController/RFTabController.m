@@ -31,6 +31,12 @@ RFInitializingRootForUIViewController
 
 - (void)viewDidLoad {
     [super viewDidLoad];
+    if (self.selectedViewController
+        && ![self.selectedViewController isViewLoaded]) {
+        NSUInteger tmp = __selectedIndex;
+        __selectedIndex = NSNotFound;
+        self.selectedIndex = tmp;
+    }
 }
 
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation {

@@ -14,5 +14,10 @@
 @interface RFPageTabController : RFTabController
 @property (readonly, nonatomic) UIPageViewController *pageViewController;
 
+/**
+ Calling this method does not cause the delegate to receive a RFTabController:didSelectViewController:atIndex: message.
+ */
+- (void)setSelectedIndex:(NSUInteger)newSelectedIndex animated:(BOOL)animated completion:(void (^)(BOOL))completion;
+
 @property (assign, nonatomic) IBInspectable BOOL scrollEnabled;
 @end

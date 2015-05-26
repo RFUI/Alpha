@@ -50,6 +50,10 @@
 }
 
 - (void)setSelectedIndex:(NSUInteger)newSelectedIndex animated:(BOOL)animated completion:(void (^)(BOOL))completion {
+    if (self._selectedIndex == newSelectedIndex) {
+        return;
+    }
+    
     UIViewController *svc = [self.viewControllers rf_objectAtIndex:newSelectedIndex];
     if (!svc) {
         if (completion) completion(NO);
@@ -64,13 +68,10 @@
     UIPageViewControllerNavigationDirection direction = (self._selectedIndex > newSelectedIndex)? UIPageViewControllerNavigationDirectionReverse : UIPageViewControllerNavigationDirectionForward;
     self._selectedIndex = newSelectedIndex;
 
-    @weakify(self);
-    UIView *tabContainer = self.tabButtonsContainerView;
+    __weak UIView *tabContainer = self.tabButtonsContainerView;
     tabContainer.userInteractionEnabled = NO;
     [self.pageViewController setViewControllers:@[ svc ] direction:direction animated:animated completion:^(BOOL finished) {
-        @strongify(self);
         tabContainer.userInteractionEnabled = YES;
-        [self noticeDelegateDidSelectViewController:svc atIndex:newSelectedIndex];
         if (completion) completion(finished);
     }];
 }
@@ -149,7 +150,10 @@
 - (void)pageViewController:(UIPageViewController *)pageViewController didFinishAnimating:(BOOL)finished previousViewControllers:(NSArray *)previousViewControllers transitionCompleted:(BOOL)completed {
     _doutwork()
     self.tabButtonsContainerView.userInteractionEnabled = YES;
-    self._selectedIndex = [self.viewControllers indexOfObject:pageViewController.viewControllers.firstObject];
+    UIViewController *ct = pageViewController.viewControllers.firstObject;
+    NSUInteger idx = [self.viewControllers indexOfObject:ct];
+    self._selectedIndex = idx;
+    [self noticeDelegateDidSelectViewController:ct atIndex:idx];
 }
 
 @end

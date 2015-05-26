@@ -1,8 +1,10 @@
 
 #import "RFPageTabController.h"
+#import "RFDataSourceArray.h"
 
 @interface RFTabController (Private)
 @property (assign, nonatomic) NSUInteger _selectedIndex;
+@property (strong, nonatomic) RFDataSourceArray *viewControllerStore;
 @end
 
 @interface RFPageTabController () <
@@ -51,7 +53,7 @@
 }
 
 - (void)setSelectedIndex:(NSUInteger)newSelectedIndex animated:(BOOL)animated completion:(void (^)(BOOL))completion {
-    UIViewController *svc = [self.viewControllers rf_objectAtIndex:newSelectedIndex];
+    UIViewController *svc = [self.viewControllerStore rf_objectAtIndex:newSelectedIndex];
     if (!svc) {
         if (completion) completion(NO);
         return;
@@ -76,7 +78,6 @@
         if (completion) completion(finished);
     }];
 }
-
 
 #pragma mark - Scroll View Property
 
@@ -109,10 +110,10 @@
 #pragma mark - UIPageViewControllerDataSource
 
 - (UIViewController *)pageViewController:(UIPageViewController *)pageViewController viewControllerBeforeViewController:(UIViewController *)viewController {
-    NSUInteger idx = [self.viewControllers indexOfObject:viewController];
+    NSUInteger idx = [self.viewControllerStore indexOfObject:viewController];
     idx--;
 
-    UIViewController *vc = [self.viewControllers rf_objectAtIndex:idx];
+    UIViewController *vc = [self.viewControllerStore rf_objectAtIndex:idx];
     if (!vc) return nil;
 
     if (![self askDelegateShouldSelectViewController:vc atIndex:idx]) {
@@ -122,10 +123,10 @@
 }
 
 - (UIViewController *)pageViewController:(UIPageViewController *)pageViewController viewControllerAfterViewController:(UIViewController *)viewController {
-    NSUInteger idx = [self.viewControllers indexOfObject:viewController];
+    NSUInteger idx = [self.viewControllerStore indexOfObject:viewController];
     idx++;
 
-    UIViewController *vc = [self.viewControllers rf_objectAtIndex:idx];
+    UIViewController *vc = [self.viewControllerStore rf_objectAtIndex:idx];
     if (!vc) return nil;
 
     if (![self askDelegateShouldSelectViewController:vc atIndex:idx]) {
@@ -145,7 +146,7 @@
     _doutwork()
     self.tabButtonsContainerView.userInteractionEnabled = YES;
     UIViewController *ct = pageViewController.viewControllers.firstObject;
-    NSUInteger idx = [self.viewControllers indexOfObject:ct];
+    NSUInteger idx = [self.viewControllerStore indexOfObject:ct];
     self._selectedIndex = idx;
     [self noticeDelegateDidSelectViewController:ct atIndex:idx];
 }

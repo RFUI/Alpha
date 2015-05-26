@@ -1,9 +1,15 @@
 
 #import "RFTabController.h"
+#import "RFDataSourceArray.h"
 
-@interface RFTabController ()
+
+@interface RFTabController () <
+    RFDataSourceArrayDataSource
+>
 @property (assign, nonatomic) NSUInteger _selectedIndex;
+@property (strong, nonatomic) RFDataSourceArray *viewControllerStore;
 @end
+
 
 @implementation RFTabController {
     BOOL _transitingViewController;
@@ -41,7 +47,7 @@ RFInitializingRootForUIViewController
 
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation {
     // Only rotate if all child view controllers agree on the new orientation.
-    for (UIViewController *viewController in self.viewControllers) {
+    for (UIViewController *viewController in self.viewControllerStore) {
         if (![viewController shouldAutorotateToInterfaceOrientation:interfaceOrientation]) return NO;
     }
     return YES;
@@ -50,18 +56,41 @@ RFInitializingRootForUIViewController
 - (void)didReceiveMemoryWarning {
     [super didReceiveMemoryWarning];
 
-    if (self.forceUnloadInvisibleWhenMemoryWarningReceived) {
-        UIViewController *selectedVC = self.selectedViewController;
-        for (UIViewController *subVC in self.viewControllers) {
-            if (subVC != selectedVC) {
-                subVC.view = nil;
-            }
-        }
+    if (self.dataSource) {
+        [self.viewControllerStore reloadData];
     }
 
     if ([self isViewLoaded] && !self.view.window) {
         self.view = nil;
     }
+}
+
+#pragma mark - Data Source
+
+- (RFDataSourceArray *)viewControllerStore {
+    if (_viewControllerStore) return _viewControllerStore;
+    _viewControllerStore = [RFDataSourceArray new];
+    _viewControllerStore.dataSource = self;
+    return _viewControllerStore;
+}
+
+- (void)setDataSource:(id<RFTabControllerDataSource>)dataSource {
+    _dataSource = dataSource;
+    [self.viewControllerStore reloadData];
+}
+
+- (NSUInteger)numberOfObjectInDataSourceArray:(RFDataSourceArray *)array {
+    if (self.dataSource) {
+        return [self.dataSource RFNumberOfViewControllerInTabController:self];
+    }
+    return self.viewControllers.count;
+}
+
+- (id)dataSourceArray:(RFDataSourceArray *)array objectAtIndex:(NSUInteger)index {
+    if (self.dataSource) {
+        return [self.dataSource RFTabController:self viewControllerAtIndex:index];
+    }
+    return self.viewControllers[index];
 }
 
 - (void)setViewControllers:(NSArray *)newViewControllers {
@@ -96,6 +125,8 @@ RFInitializingRootForUIViewController
     }
 }
 
+#pragma mark -
+
 - (NSUInteger)selectedIndex {
     return __selectedIndex;
 }
@@ -105,14 +136,14 @@ RFInitializingRootForUIViewController
 }
 
 - (void)setSelectedIndex:(NSUInteger)newSelectedIndex animated:(BOOL)animated completion:(void (^)(BOOL finished))completion {
-    if (newSelectedIndex >= self.viewControllers.count) {
+    if (newSelectedIndex >= self.viewControllerStore.count) {
         RFAssert(false, @"View controller index out of bounds");
         if (completion) completion(NO);
         return;
     }
 
     // Should not change selected view controller
-    if (![self askDelegateShouldSelectViewController:self.viewControllers[newSelectedIndex] atIndex:newSelectedIndex]
+    if (![self askDelegateShouldSelectViewController:self.viewControllerStore[newSelectedIndex] atIndex:newSelectedIndex]
         || __selectedIndex == newSelectedIndex
         || _transitingViewController) {
         if (completion) completion(NO);
@@ -181,7 +212,7 @@ RFInitializingRootForUIViewController
 }
 
 - (UIViewController *)selectedViewController {
-    return [self.viewControllers rf_objectAtIndex:self.selectedIndex];
+    return [self.viewControllerStore rf_objectAtIndex:self.selectedIndex];
 }
 
 - (void)setSelectedViewController:(UIViewController *)newSelectedViewController {
@@ -189,11 +220,13 @@ RFInitializingRootForUIViewController
 }
 
 - (void)setSelectedViewController:(UIViewController *)newSelectedViewController animated:(BOOL)animated completion:(void (^)(BOOL finished))completion {
-    NSUInteger index = [self.viewControllers indexOfObject:newSelectedViewController];
+    NSUInteger index = [self.viewControllerStore indexOfObject:newSelectedViewController];
     if (index != NSNotFound) {
         [self setSelectedIndex:index animated:animated completion:completion];
     }
 }
+
+#pragma mark -
 
 - (void)noticeDelegateDidSelectViewController:(UIViewController *)viewController atIndex:(NSUInteger)index {
     if (![self.delegate respondsToSelector:@selector(RFTabController:didSelectViewController:atIndex:)]) return;

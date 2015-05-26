@@ -11,20 +11,24 @@
  */
 #import "RFUI.h"
 
-@protocol RFTabControllerDelegate;
+@protocol RFTabControllerDelegate, RFTabControllerDataSource;
 
 @interface RFTabController : UIViewController <
     RFInitializing
 >
+@property (weak, nonatomic) IBOutlet id<RFTabControllerDelegate> delegate;
+
 @property (copy, nonatomic) NSArray *viewControllers;
+@property (weak, nonatomic) IBOutlet id<RFTabControllerDataSource> dataSource;
+
 @property (weak, nonatomic) UIViewController *selectedViewController;
 @property (assign, nonatomic) NSUInteger selectedIndex;
-@property (weak, nonatomic) IBOutlet id<RFTabControllerDelegate> delegate;
 
 - (void)setSelectedIndex:(NSUInteger)index animated:(BOOL)animated completion:(void (^)(BOOL finished))completion;
 - (void)setSelectedViewController:(UIViewController *)viewController animated:(BOOL)animated completion:(void (^)(BOOL finished))completion;
 
 @property (weak, nonatomic) IBOutlet UIView *wrapperView;
+
 
 /**
  一般设置为 tab 按钮所在的容器，设置后会在切换 tab 时禁用 userInteractionEnabled，结束后启用
@@ -33,6 +37,9 @@
 
 #pragma mark - Memory Management
 
+/**
+ No implementation. For overwrite
+ */
 @property (assign, nonatomic) IBInspectable BOOL forceUnloadInvisibleWhenMemoryWarningReceived;
 
 #pragma mark - For Overwrite
@@ -49,4 +56,14 @@
 @optional
 - (BOOL)RFTabController:(RFTabController *)tabController shouldSelectViewController:(UIViewController *)viewController atIndex:(NSUInteger)index;
 - (void)RFTabController:(RFTabController *)tabController didSelectViewController:(UIViewController *)viewController atIndex:(NSUInteger)index;
+@end
+
+@protocol RFTabControllerDataSource <NSObject>
+@required
+- (NSUInteger)RFNumberOfViewControllerInTabController:(RFTabController *)tabController;
+- (UIViewController *)RFTabController:(RFTabController *)tabController viewControllerAtIndex:(NSUInteger)index;
+
+@optional
+- (BOOL)RFTabController:(RFTabController *)tabController shouldUnlodadViewControllerAtIndex:(NSUInteger)index;
+
 @end

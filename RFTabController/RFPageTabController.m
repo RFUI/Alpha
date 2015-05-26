@@ -10,7 +10,8 @@
     UIPageViewControllerDelegate
 >
 @property (strong, readwrite, nonatomic) UIPageViewController *pageViewController;
-@property (assign, nonatomic) BOOL scrollEnabledStatusNeedsResetAfterViewLoadded;
+@property (assign, nonatomic) BOOL pageScrollViewScrollEnabledNeedsResetAfterViewLoadded;
+@property (weak, nonatomic) UIScrollView *pageScrollView;
 @end
 
 @implementation RFPageTabController
@@ -33,7 +34,7 @@
     pv.autoresizingMask = UIViewAutoresizingFlexibleSize;
     [self.wrapperView addSubview:pv resizeOption:RFViewResizeOptionFill];
 
-    if (self.scrollEnabledStatusNeedsResetAfterViewLoadded) {
+    if (self.pageScrollViewScrollEnabledNeedsResetAfterViewLoadded) {
         self.scrollEnabled = _scrollEnabled;
     }
 }
@@ -50,10 +51,6 @@
 }
 
 - (void)setSelectedIndex:(NSUInteger)newSelectedIndex animated:(BOOL)animated completion:(void (^)(BOOL))completion {
-    if (self._selectedIndex == newSelectedIndex) {
-        return;
-    }
-    
     UIViewController *svc = [self.viewControllers rf_objectAtIndex:newSelectedIndex];
     if (!svc) {
         if (completion) completion(NO);
@@ -62,6 +59,10 @@
 
     if (![self askDelegateShouldSelectViewController:svc atIndex:newSelectedIndex]) {
         if (completion) completion(NO);
+        return;
+    }
+
+    if (self._selectedIndex == newSelectedIndex) {
         return;
     }
 
@@ -76,40 +77,33 @@
     }];
 }
 
-#pragma mark - Scroll Enabled
+
+#pragma mark - Scroll View Property
+
+- (UIScrollView *)pageScrollView {
+    if (_pageScrollView) return _pageScrollView;
+
+    for (UIScrollView *v in self.pageViewController.view.subviews) {
+        if ([v isKindOfClass:[UIScrollView class]]) {
+            _pageScrollView = v;
+            break;
+        }
+    }
+    return _pageScrollView;
+}
 
 - (BOOL)scrollEnabled {
     if (![self.pageViewController isViewLoaded]) return _scrollEnabled;
-    return [self pageViewControllerScrollEnabled];
+    return self.pageScrollView.scrollEnabled;
 }
 
 - (void)setScrollEnabled:(BOOL)scrollEnabled {
     _scrollEnabled = scrollEnabled;
     if (![self.pageViewController isViewLoaded]) {
-        self.scrollEnabledStatusNeedsResetAfterViewLoadded = YES;
+        self.pageScrollViewScrollEnabledNeedsResetAfterViewLoadded = YES;
         return;
     }
-    [self setPageViewControllerScrollEnabled:scrollEnabled];
-}
-
-- (BOOL)pageViewControllerScrollEnabled {
-    __block BOOL se = YES;
-    [self.pageViewController.view.subviews enumerateObjectsUsingBlock:^(UIScrollView *view, NSUInteger idx, BOOL *stop) {
-        if ([view isKindOfClass:[UIScrollView class]]) {
-            se = view.scrollEnabled;
-            *stop = YES;
-        }
-    }];
-    return se;
-}
-
-- (void)setPageViewControllerScrollEnabled:(BOOL)scrollEnabled {
-    [self.pageViewController.view.subviews enumerateObjectsUsingBlock:^(UIScrollView *view, NSUInteger idx, BOOL *stop) {
-        if ([view isKindOfClass:[UIScrollView class]]) {
-            view.scrollEnabled = scrollEnabled;
-            *stop = YES;
-        }
-    }];
+    self.pageScrollView.scrollEnabled = scrollEnabled;
 }
 
 #pragma mark - UIPageViewControllerDataSource

@@ -24,6 +24,7 @@
 
 @property (weak, nonatomic) id<RFDataSourceArrayDataSource> dataSource;
 - (void)reloadData;
+- (void)removeObjectsAtIndexes:(NSIndexSet *)indexes;
 
 @end
 

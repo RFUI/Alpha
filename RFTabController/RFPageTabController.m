@@ -53,6 +53,11 @@
 }
 
 - (void)setSelectedIndex:(NSUInteger)newSelectedIndex animated:(BOOL)animated completion:(void (^)(BOOL))completion {
+    if (self._selectedIndex == newSelectedIndex) {
+        return;
+    }
+
+    dout_int(self.viewControllerStore.count);
     UIViewController *svc = [self.viewControllerStore rf_objectAtIndex:newSelectedIndex];
     if (!svc) {
         if (completion) completion(NO);
@@ -61,10 +66,6 @@
 
     if (![self askDelegateShouldSelectViewController:svc atIndex:newSelectedIndex]) {
         if (completion) completion(NO);
-        return;
-    }
-
-    if (self._selectedIndex == newSelectedIndex) {
         return;
     }
 

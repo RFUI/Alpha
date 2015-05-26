@@ -56,9 +56,27 @@
     [self.staticStore setArray:otherArray];
 }
 
+- (void)setDataSource:(id<RFDataSourceArrayDataSource>)dataSource {
+    _dataSource = dataSource;
+    [self reloadData];
+}
+
 - (void)reloadData {
     self.cachedCount = nil;
     [self.cachedObjectMap removeAllObjects];
+}
+
+- (void)removeObjectsAtIndexes:(NSIndexSet *)indexes {
+    if (!self.dataSource) {
+        [self.staticStore removeObjectsAtIndexes:indexes];
+        return;
+    }
+
+    if (_cachedObjectMap) {
+        [indexes enumerateIndexesUsingBlock:^(NSUInteger idx, BOOL *stop) {
+            [self.cachedObjectMap removeObjectForKey:@(idx)];
+        }];
+    }
 }
 
 @end

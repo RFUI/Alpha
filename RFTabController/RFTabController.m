@@ -57,7 +57,18 @@ RFInitializingRootForUIViewController
     [super didReceiveMemoryWarning];
 
     if (self.dataSource) {
-        [self.viewControllerStore reloadData];
+        if ([self.dataSource respondsToSelector:@selector(RFTabController:shouldUnlodadViewControllerAtIndex:)]) {
+            NSMutableIndexSet *set = [NSMutableIndexSet new];
+            for (NSUInteger i = 0; i < self.viewControllerStore.count; i++) {
+                if ([self.dataSource RFTabController:self shouldUnlodadViewControllerAtIndex:i]) {
+                    [set addIndex:i];
+                }
+            }
+            [self.viewControllerStore removeObjectsAtIndexes:set];
+        }
+        else {
+            [self.viewControllerStore reloadData];
+        }
     }
 
     if ([self isViewLoaded] && !self.view.window) {
@@ -75,7 +86,12 @@ RFInitializingRootForUIViewController
 }
 
 - (void)setDataSource:(id<RFTabControllerDataSource>)dataSource {
-    _dataSource = dataSource;
+    if (_dataSource != dataSource) {
+        _dataSource = dataSource;
+        NSUInteger idx = __selectedIndex;
+        __selectedIndex = NSNotFound;
+        self.selectedIndex = idx;
+    }
     [self.viewControllerStore reloadData];
 }
 
@@ -96,6 +112,7 @@ RFInitializingRootForUIViewController
 - (void)setViewControllers:(NSArray *)newViewControllers {
     id old = _viewControllers;
     _viewControllers = [newViewControllers copy];
+    [self.viewControllerStore reloadData];
     [self didDataSourceUpdateFromArray:old toArray:newViewControllers];
 }
 

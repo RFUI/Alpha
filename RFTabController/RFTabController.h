@@ -64,6 +64,10 @@
 - (UIViewController *)RFTabController:(RFTabController *)tabController viewControllerAtIndex:(NSUInteger)index;
 
 @optional
+
+/**
+ Default `YES`
+ */
 - (BOOL)RFTabController:(RFTabController *)tabController shouldUnlodadViewControllerAtIndex:(NSUInteger)index;
 
 @end

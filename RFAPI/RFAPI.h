@@ -143,6 +143,8 @@
 
 @end
 
+extern NSString *const RFAPIRequestArrayParameterKey;
+
 extern NSString *const RFAPIErrorDomain;
 
 extern NSString *const RFAPIMessageControlKey;

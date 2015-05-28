@@ -11,6 +11,7 @@
 RFDefineConstString(RFAPIErrorDomain);
 static NSString *RFAPIOperationUIkControl = @"RFAPIOperationUIkControl";
 static NSString *RFAPICacheUIkDefine = @"RFAPICacheUIkDefine";
+NSString *const RFAPIRequestArrayParameterKey = @"_RFArray_";
 
 @interface RFAPI ()
 @property (strong, nonatomic, readwrite) AFNetworkReachabilityManager *reachabilityManager;
@@ -274,7 +275,8 @@ RFInitializingRootForNSObject
         NSURLRequestCachePolicy cachePolicy = [self.cacheManager cachePolicyWithDefine:define control:controlInfo];
         r = [[NSMutableURLRequest alloc] initWithURL:url cachePolicy:cachePolicy timeoutInterval:40];
         [r setHTTPMethod:define.method];
-        r = [[s requestBySerializingRequest:r withParameters:requestParameters error:&e] mutableCopy];
+        NSArray *arrayParameter = requestParameters[RFAPIRequestArrayParameterKey];
+        r = [[s requestBySerializingRequest:r withParameters:arrayParameter?: requestParameters error:&e] mutableCopy];
     }
     __RFAPIMakeRequestError(!r);
 

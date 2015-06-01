@@ -24,5 +24,5 @@
 
 
 @property (weak, nonatomic) IBOutlet UIButton *agentButton;
-@property (copy, nonatomic, setter = setTappedBlock:) void (^tappedBlock)(RFButton *) DEPRECATED_ATTRIBUTE;
+@property (copy, nonatomic) void (^touchUpInsideCallback)(RFButton *sender);
 @end

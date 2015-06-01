@@ -52,12 +52,9 @@
         [self.agentButton sendActionsForControlEvents:UIControlEventTouchUpInside];
     }
 
-#pragma clang diagnostic push
-#pragma clang diagnostic ignored "-Wdeprecated-declarations"
-    if (self.tappedBlock) {
-        self.tappedBlock(self);
+    if (self.touchUpInsideCallback) {
+        self.touchUpInsideCallback(self);
     }
-#pragma clang diagnostic pop
 }
 
 @end

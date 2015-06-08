@@ -43,6 +43,10 @@ RFInitializingRootForUIView
     self.contentOffset = CGPointMake(page * newWidth, self.contentOffset.y);
 }
 
+- (CGSize)intrinsicContentSize {
+    return self.collectionViewLayout.collectionViewContentSize;
+}
+
 #pragma mark - Page
 
 - (NSInteger)currentPage {

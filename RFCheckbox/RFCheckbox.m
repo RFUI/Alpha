@@ -1,7 +1,7 @@
 
 #import "RFCheckbox.h"
 
-CGFloat RFCheckBoxNoImageDisableAlpha = 0.5002;
+CGFloat RFCheckBoxNoImageDisableAlpha = 0.5;
 static void *const RFCheckBoxKVOContext = (void *)&RFCheckBoxKVOContext;
 
 @interface RFCheckbox ()

@@ -160,7 +160,11 @@ static NSTimeInterval RFPullToFetchAnimateTimeInterval = .2;
     if (self.shouldScrollToTopWhenHeaderEventTrigged) {
         CGPoint conentOffset = self.tableView.contentOffset;
         conentOffset.y = animate? -self.headerContainer.height : 0;
-        [self.tableView setContentOffset:conentOffset animated:animate];
+        [UIView animateWithDuration:RFPullToFetchAnimateTimeInterval animations:^{
+            if (self.animating) {
+                self.tableView.contentOffset = conentOffset;
+            }
+        } completion:nil];
     }
 }
 

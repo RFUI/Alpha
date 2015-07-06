@@ -88,6 +88,13 @@ RFInitializingRootForUIView
 
 #pragma mark - Auto Scroll
 
+- (void)willMoveToWindow:(UIWindow *)newWindow {
+    [super willMoveToWindow:newWindow];
+    if (self.autoScrollEnable) {
+        self.timer.suspended = !newWindow;
+    }
+}
+
 - (void)setupBuildInGestureRecognizer {
     __block UIPanGestureRecognizer *gr;
     [self.gestureRecognizers enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop) {

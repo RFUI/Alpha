@@ -5,6 +5,10 @@
 @interface RFTabController (Private)
 @property (assign, nonatomic) NSUInteger _selectedIndex;
 @property (strong, nonatomic) RFDataSourceArray *viewControllerStore;
+
+- (void)noticeDelegateWillSelectViewController:(UIViewController *)viewController atIndex:(NSUInteger)index;
+- (void)noticeDelegateDidSelectViewController:(UIViewController *)viewController atIndex:(NSUInteger)index;
+- (BOOL)askDelegateShouldSelectViewController:(UIViewController *)viewController atIndex:(NSUInteger)index;
 @end
 
 @interface RFPageTabController () <
@@ -141,6 +145,9 @@
 - (void)pageViewController:(UIPageViewController *)pageViewController willTransitionToViewControllers:(NSArray *)pendingViewControllers {
     _doutwork()
     self.tabButtonsContainerView.userInteractionEnabled = NO;
+    UIViewController *ct = pendingViewControllers.firstObject;
+    NSUInteger idx = [self.viewControllerStore indexOfObject:ct];
+    [self noticeDelegateWillSelectViewController:ct atIndex:idx];
 }
 
 - (void)pageViewController:(UIPageViewController *)pageViewController didFinishAnimating:(BOOL)finished previousViewControllers:(NSArray *)previousViewControllers transitionCompleted:(BOOL)completed {

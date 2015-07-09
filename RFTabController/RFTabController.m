@@ -194,6 +194,9 @@ RFInitializingRootForUIViewController
         || !fromViewController
         || !toViewController) {
         dout_debug(@"No animation")
+        if (toViewController) {
+            [self noticeDelegateWillSelectViewController:toViewController atIndex:newSelectedIndex];
+        }
         [fromViewController.view removeFromSuperview];
 
         if (toViewController) {
@@ -214,6 +217,7 @@ RFInitializingRootForUIViewController
     rect.origin.x = (oldSelectedIndex < newSelectedIndex)? rect.size.width : -rect.size.width;
     toView.frame = rect;
     self.tabButtonsContainerView.userInteractionEnabled = NO;
+    [self noticeDelegateWillSelectViewController:toViewController atIndex:newSelectedIndex];
 
     [self transitionFromViewController:fromViewController toViewController:toViewController duration:0.3f options:(UIViewAnimationOptions)(UIViewAnimationOptionLayoutSubviews | UIViewAnimationOptionCurveEaseOut) animations:^{
         CGRect rect = fromView.frame;
@@ -244,6 +248,11 @@ RFInitializingRootForUIViewController
 }
 
 #pragma mark -
+
+- (void)noticeDelegateWillSelectViewController:(UIViewController *)viewController atIndex:(NSUInteger)index {
+    if (![self.delegate respondsToSelector:@selector(RFTabController:willSelectViewController:atIndex:)]) return;
+    [self.delegate RFTabController:self willSelectViewController:viewController atIndex:index];
+}
 
 - (void)noticeDelegateDidSelectViewController:(UIViewController *)viewController atIndex:(NSUInteger)index {
     if (![self.delegate respondsToSelector:@selector(RFTabController:didSelectViewController:atIndex:)]) return;

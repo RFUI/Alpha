@@ -46,15 +46,13 @@
 
 - (void)didDataSourceUpdateFromArray:(NSArray *)oldViewControllers toArray:(NSArray *)newViewControllers;
 
-- (void)noticeDelegateDidSelectViewController:(UIViewController *)viewController atIndex:(NSUInteger)index;
-- (BOOL)askDelegateShouldSelectViewController:(UIViewController *)viewController atIndex:(NSUInteger)index;
-
 @end
 
 
 @protocol RFTabControllerDelegate <NSObject>
 @optional
 - (BOOL)RFTabController:(RFTabController *)tabController shouldSelectViewController:(UIViewController *)viewController atIndex:(NSUInteger)index;
+- (void)RFTabController:(RFTabController *)tabController willSelectViewController:(UIViewController *)viewController atIndex:(NSUInteger)index;
 - (void)RFTabController:(RFTabController *)tabController didSelectViewController:(UIViewController *)viewController atIndex:(NSUInteger)index;
 @end
 

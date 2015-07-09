@@ -9,6 +9,9 @@
 - (void)noticeDelegateWillSelectViewController:(UIViewController *)viewController atIndex:(NSUInteger)index;
 - (void)noticeDelegateDidSelectViewController:(UIViewController *)viewController atIndex:(NSUInteger)index;
 - (BOOL)askDelegateShouldSelectViewController:(UIViewController *)viewController atIndex:(NSUInteger)index;
+
+- (void)_setupAfterViewLoaded;
+
 @end
 
 @interface RFPageTabController () <
@@ -34,14 +37,25 @@
 }
 
 - (void)viewDidLoad {
-    [super viewDidLoad];
-
     UIView *pv = self.pageViewController.view;
     pv.autoresizingMask = UIViewAutoresizingFlexibleSize;
     [self.wrapperView addSubview:pv resizeOption:RFViewResizeOptionFill];
 
+    [super viewDidLoad];
+
     if (self.pageScrollViewScrollEnabledNeedsResetAfterViewLoadded) {
         self.scrollEnabled = _scrollEnabled;
+    }
+}
+
+- (void)_setupAfterViewLoaded {
+    UIViewController *selectedViewController = self.selectedViewController;
+    if (!selectedViewController) {
+        return;
+    }
+
+    if (![self.pageViewController.viewControllers containsObject:selectedViewController]) {
+        [self.pageViewController setViewControllers:@[ selectedViewController ] direction:UIPageViewControllerNavigationDirectionForward animated:NO completion:nil];
     }
 }
 
@@ -58,10 +72,11 @@
 
 - (void)setSelectedIndex:(NSUInteger)newSelectedIndex animated:(BOOL)animated completion:(void (^)(BOOL))completion {
     if (self._selectedIndex == newSelectedIndex) {
+        if (completion) completion(NO);
         return;
     }
 
-    dout_int(self.viewControllerStore.count);
+    _dout_int(self.viewControllerStore.count);
     UIViewController *svc = [self.viewControllerStore rf_objectAtIndex:newSelectedIndex];
     if (!svc) {
         if (completion) completion(NO);
@@ -69,6 +84,12 @@
     }
 
     if (![self askDelegateShouldSelectViewController:svc atIndex:newSelectedIndex]) {
+        if (completion) completion(NO);
+        return;
+    }
+
+    if (!self.isViewLoaded) {
+        self._selectedIndex = newSelectedIndex;
         if (completion) completion(NO);
         return;
     }

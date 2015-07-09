@@ -37,6 +37,10 @@ RFInitializingRootForUIViewController
 
 - (void)viewDidLoad {
     [super viewDidLoad];
+    [self _setupAfterViewLoaded];
+}
+
+- (void)_setupAfterViewLoaded {
     if (self.selectedViewController
         && ![self.selectedViewController isViewLoaded]) {
         NSUInteger tmp = __selectedIndex;

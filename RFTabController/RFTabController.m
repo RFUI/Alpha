@@ -148,6 +148,16 @@ RFInitializingRootForUIViewController
 
 #pragma mark -
 
+- (NSUInteger)indexForViewController:(UIViewController *)viewController {
+    return [self.viewControllerStore indexOfObject:viewController];
+}
+
+- (UIViewController *)viewControllerAtIndex:(NSUInteger)index {
+    return self.viewControllerStore[index];
+}
+
+#pragma mark -
+
 - (NSUInteger)selectedIndex {
     return __selectedIndex;
 }

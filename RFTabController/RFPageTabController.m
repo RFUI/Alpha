@@ -55,7 +55,18 @@
     }
 
     if (![self.pageViewController.viewControllers containsObject:selectedViewController]) {
-        [self.pageViewController setViewControllers:@[ selectedViewController ] direction:UIPageViewControllerNavigationDirectionForward animated:NO completion:nil];
+        BOOL noticeDelegate = self.noticeDelegateWhenSelectionChangedProgrammatically;
+        NSUInteger index = self.selectedIndex;
+        if (noticeDelegate) {
+            [self noticeDelegateWillSelectViewController:selectedViewController atIndex:index];
+        }
+        @weakify(self);
+        [self.pageViewController setViewControllers:@[ selectedViewController ] direction:UIPageViewControllerNavigationDirectionForward animated:NO completion:^(BOOL finished) {
+            @strongify(self);
+            if (noticeDelegate) {
+                [self noticeDelegateDidSelectViewController:selectedViewController atIndex:index];
+            }
+        }];
     }
 }
 
@@ -83,9 +94,12 @@
         return;
     }
 
-    if (![self askDelegateShouldSelectViewController:svc atIndex:newSelectedIndex]) {
-        if (completion) completion(NO);
-        return;
+    BOOL noticeDelegate = self.noticeDelegateWhenSelectionChangedProgrammatically;
+    if (noticeDelegate) {
+        if (![self askDelegateShouldSelectViewController:svc atIndex:newSelectedIndex]) {
+            if (completion) completion(NO);
+            return;
+        }
     }
 
     if (!self.isViewLoaded) {
@@ -99,8 +113,16 @@
 
     __weak UIView *tabContainer = self.tabButtonsContainerView;
     tabContainer.userInteractionEnabled = NO;
+    if (noticeDelegate) {
+        [self noticeDelegateWillSelectViewController:svc atIndex:newSelectedIndex];
+    }
+    @weakify(self);
     [self.pageViewController setViewControllers:@[ svc ] direction:direction animated:animated completion:^(BOOL finished) {
+        @strongify(self);
         tabContainer.userInteractionEnabled = YES;
+        if (noticeDelegate) {
+            [self noticeDelegateDidSelectViewController:svc atIndex:newSelectedIndex];
+        }
         if (completion) completion(finished);
     }];
 }

@@ -20,4 +20,9 @@
 - (void)setSelectedIndex:(NSUInteger)newSelectedIndex animated:(BOOL)animated completion:(void (^)(BOOL))completion;
 
 @property (assign, nonatomic) IBInspectable BOOL scrollEnabled;
+
+/**
+ Default `NO`
+ */
+@property (assign, nonatomic) IBInspectable BOOL noticeDelegateWhenSelectionChangedProgrammatically;
 @end

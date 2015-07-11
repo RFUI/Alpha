@@ -77,6 +77,7 @@
             [self.cachedObjectMap removeObjectForKey:@(idx)];
         }];
     }
+    self.cachedCount = nil;
 }
 
 @end

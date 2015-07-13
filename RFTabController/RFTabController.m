@@ -74,10 +74,6 @@ RFInitializingRootForUIViewController
             [self.viewControllerStore reloadData];
         }
     }
-
-    if ([self isViewLoaded] && !self.view.window) {
-        self.view = nil;
-    }
 }
 
 #pragma mark - Data Source

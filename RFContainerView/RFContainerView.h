@@ -1,0 +1,57 @@
+/*!
+    RFContainerView
+
+    Copyright (c) 2015 BB9z
+    https://github.com/RFUI/Alpha
+
+    The MIT License (MIT)
+    http://www.opensource.org/licenses/mit-license.php
+
+    TEST
+ */
+#import "RFUI.h"
+
+/**
+ Embed view controller into another view controller.
+ */
+IB_DESIGNABLE
+@interface RFContainerView : UIView <
+    RFInitializing
+>
+
+
+/**
+ 用于指定嵌入 view controller 所在的 Storyboard
+
+ nil 为当前 Storyboard
+ */
+@property (copy, nullable, nonatomic) IBInspectable NSString *storyboardName;
+
+/**
+ 嵌入 view controller 的 Storyboard ID，为空使用 Storyboard 的初始视图
+ */
+@property (copy, nullable, nonatomic) IBInspectable NSString *instantiationIdentifier;
+
+/**
+ YES 时不自动载入子 view controller
+ */
+@property (assign, nonatomic) IBInspectable BOOL lazyLoad;
+
+
+@property (readonly, nonatomic) BOOL embedViewControllerLoaded;
+
+/**
+ 加载并嵌入 view controller 到所属 view controller
+ */
+- (void)loadEmbedViewController;
+
+/**
+ */
+- (void)unloadEmbedViewController:(BOOL)shouldReleaseEmbedViewController;
+
+/**
+ 设置 parentViewController 时会自动执行 loadEmbedViewController
+ */
+@property (weak, nullable, nonatomic) IBOutlet UIViewController *parentViewController;
+
+@end

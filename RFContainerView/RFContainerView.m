@@ -2,7 +2,7 @@
 #import "RFContainerView.h"
 
 @interface RFContainerView ()
-@property (strong, nullable, nonatomic) id embedViewController;
+@property (readwrite, strong, nullable, nonatomic) id embedViewController;
 @property (readwrite, nonatomic) BOOL embedViewControllerLoaded;
 @end
 
@@ -68,7 +68,7 @@ RFInitializingRootForUIView
     }
 }
 
-- (void)loadEmbedViewController {
+- (void)loadEmbedViewControllerWithPrepareBlock:(void (^ __nullable)(id __nonnull viewController, RFContainerView * __nonnull container))prepareBlock {
     if (self.embedViewControllerLoaded) return;
 
     UIViewController *parentViewController = self.parentViewController?: self.viewController;
@@ -83,12 +83,19 @@ RFInitializingRootForUIView
     }
 
     if (vc) {
-        self.embedViewControllerLoaded = YES;
+        if (prepareBlock) {
+            prepareBlock(vc, self);
+        }
         [parentViewController addChildViewController:vc];
         vc.view.autoresizingMask = UIViewAutoresizingFlexibleSize;
         [self addSubview:vc.view resizeOption:RFViewResizeOptionFill];
         [vc didMoveToParentViewController:parentViewController];
+        self.embedViewControllerLoaded = YES;
     }
+}
+
+- (void)loadEmbedViewController {
+    [self loadEmbedViewControllerWithPrepareBlock:nil];
 }
 
 - (void)unloadEmbedViewController:(BOOL)shouldReleaseEmbedViewController {

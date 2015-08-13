@@ -103,7 +103,9 @@ RFInitializingRootForNSObject
 }
 
 - (void)setValue:(id)value forRule:(NSString *)key defineName:(NSString *)defineName {
-    (self.rawRules[defineName])[key] = value;
+    NSMutableDictionary *rule = [self.rawRules[defineName] mutableCopy];
+    [rule rf_setObject:value forKey:key];
+    self.rawRules[defineName] = rule;
 }
 
 - (void)removeRule:(NSString *)key withDefineName:(NSString *)defineName {

@@ -205,17 +205,17 @@ RFInitializingRootForNSObject
 
         id value;
 
-#define __RFAPIDefineConfigFileValue(KEY)\
+#define RFAPIDefineConfigFileValue_(KEY)\
     value = nil;\
     if ((value = rule[KEY]))
 
-#define __RFAPIDefineConfigFileProperty(PROPERTY, KEY)\
-    __RFAPIDefineConfigFileValue(KEY) {\
+#define RFAPIDefineConfigFileProperty_(PROPERTY, KEY)\
+    RFAPIDefineConfigFileValue_(KEY) {\
         self.PROPERTY = value;\
     }
 
-#define __RFAPIDefineConfigFileDictionaryProperty(PROPERTY, KEY)\
-    __RFAPIDefineConfigFileValue(KEY) {\
+#define RFAPIDefineConfigFileDictionaryProperty_(PROPERTY, KEY)\
+    RFAPIDefineConfigFileValue_(KEY) {\
         if (![value isKindOfClass:[NSDictionary class]]) {\
             dout_error(@"%@ must be a dictionary.", KEY);\
             return nil;\
@@ -223,8 +223,8 @@ RFInitializingRootForNSObject
         self.PROPERTY = value;\
     }
 
-#define __RFAPIDefineConfigFileClassProperty(PROPERTY, KEY)\
-    __RFAPIDefineConfigFileValue(KEY) {\
+#define RFAPIDefineConfigFileClassProperty_(PROPERTY, KEY)\
+    RFAPIDefineConfigFileValue_(KEY) {\
         Class aClass = NSClassFromString(value);\
         if (aClass) {\
             self.PROPERTY = aClass;\
@@ -234,72 +234,72 @@ RFInitializingRootForNSObject
         }\
     }
 
-#define __RFAPIDefineConfigFileEnumCase(PROPERTY, ENUM)\
+#define RFAPIDefineConfigFileEnumCase_(PROPERTY, ENUM)\
     case ENUM:\
         self.PROPERTY = ENUM;\
         break;
 
-        __RFAPIDefineConfigFileValue(RFAPIDefineBaseKey) {
+        RFAPIDefineConfigFileValue_(RFAPIDefineBaseKey) {
             NSURL *url = [NSURL URLWithString:value];
             if (url) {
                 self.baseURL = url;
             }
         }
 
-        __RFAPIDefineConfigFileProperty(pathPrefix, RFAPIDefinePathPrefixKey)
-        __RFAPIDefineConfigFileProperty(path, RFAPIDefinePathKey)
-        __RFAPIDefineConfigFileProperty(method, RFAPIDefineMethodKey)
-        __RFAPIDefineConfigFileDictionaryProperty(HTTPRequestHeaders, RFAPIDefineHeadersKey)
+        RFAPIDefineConfigFileProperty_(pathPrefix, RFAPIDefinePathPrefixKey)
+        RFAPIDefineConfigFileProperty_(path, RFAPIDefinePathKey)
+        RFAPIDefineConfigFileProperty_(method, RFAPIDefineMethodKey)
+        RFAPIDefineConfigFileDictionaryProperty_(HTTPRequestHeaders, RFAPIDefineHeadersKey)
 
-        __RFAPIDefineConfigFileDictionaryProperty(defaultParameters, RFAPIDefineParametersKey)
+        RFAPIDefineConfigFileDictionaryProperty_(defaultParameters, RFAPIDefineParametersKey)
 
-        __RFAPIDefineConfigFileValue(RFAPIDefineAuthorizationKey) {
+        RFAPIDefineConfigFileValue_(RFAPIDefineAuthorizationKey) {
             self.needsAuthorization = [value boolValue];
         }
-        __RFAPIDefineConfigFileClassProperty(requestSerializerClass, RFAPIDefineRequestSerializerKey)
+        RFAPIDefineConfigFileClassProperty_(requestSerializerClass, RFAPIDefineRequestSerializerKey)
 
-        __RFAPIDefineConfigFileValue(RFAPIDefineCachePolicyKey) {
+        RFAPIDefineConfigFileValue_(RFAPIDefineCachePolicyKey) {
             switch ([value shortValue]) {
-                __RFAPIDefineConfigFileEnumCase(cachePolicy, RFAPICachePolicyDefault)
-                __RFAPIDefineConfigFileEnumCase(cachePolicy, RFAPICachePolicyProtocol)
-                __RFAPIDefineConfigFileEnumCase(cachePolicy, RFAPICachePolicyAlways)
-                __RFAPIDefineConfigFileEnumCase(cachePolicy, RFAPICachePolicyExpire)
-                __RFAPIDefineConfigFileEnumCase(cachePolicy, RFAPICachePolicyNoCache)
+                RFAPIDefineConfigFileEnumCase_(cachePolicy, RFAPICachePolicyDefault)
+                RFAPIDefineConfigFileEnumCase_(cachePolicy, RFAPICachePolicyProtocol)
+                RFAPIDefineConfigFileEnumCase_(cachePolicy, RFAPICachePolicyAlways)
+                RFAPIDefineConfigFileEnumCase_(cachePolicy, RFAPICachePolicyExpire)
+                RFAPIDefineConfigFileEnumCase_(cachePolicy, RFAPICachePolicyNoCache)
                 default:
                     dout_error(@"Unknow cache policy: %@", value)
                     return nil;
             }
         }
 
-        __RFAPIDefineConfigFileValue(RFAPIDefineExpireKey) {
+        RFAPIDefineConfigFileValue_(RFAPIDefineExpireKey) {
             self.expire = [value intValue];
         }
 
-        __RFAPIDefineConfigFileValue(RFAPIDefineOfflinePolicyKey) {
+        RFAPIDefineConfigFileValue_(RFAPIDefineOfflinePolicyKey) {
             switch ([value shortValue]) {
-                    __RFAPIDefineConfigFileEnumCase(offlinePolicy, RFAPIOfflinePolicyDefault)
-                    __RFAPIDefineConfigFileEnumCase(offlinePolicy, RFAPIOfflinePolicyLoadCache)
+                    RFAPIDefineConfigFileEnumCase_(offlinePolicy, RFAPIOfflinePolicyDefault)
+                    RFAPIDefineConfigFileEnumCase_(offlinePolicy, RFAPIOfflinePolicyLoadCache)
                 default:
                     dout_error(@"Unknow offline policy: %@", value)
                     return nil;
             }
         }
 
-        __RFAPIDefineConfigFileValue(RFAPIDefineResponseTypeKey) {
+        RFAPIDefineConfigFileValue_(RFAPIDefineResponseTypeKey) {
             self.responseExpectType = [value intValue];
         }
 
-        __RFAPIDefineConfigFileClassProperty(responseSerializerClass, RFAPIDefineResponseSerializerKey)
+        RFAPIDefineConfigFileClassProperty_(responseSerializerClass, RFAPIDefineResponseSerializerKey)
 
-        __RFAPIDefineConfigFileClassProperty(responseClass, RFAPIDefineResponseClassKey)
-        __RFAPIDefineConfigFileDictionaryProperty(userInfo, RFAPIDefineUserInfoKey)
-        __RFAPIDefineConfigFileProperty(notes, RFAPIDefineNotesKey)
+        RFAPIDefineConfigFileClassProperty_(responseClass, RFAPIDefineResponseClassKey)
+        RFAPIDefineConfigFileDictionaryProperty_(userInfo, RFAPIDefineUserInfoKey)
+        RFAPIDefineConfigFileProperty_(notes, RFAPIDefineNotesKey)
 
-#undef __RFAPIDefineConfigFileValue
-#undef __RFAPIDefineConfigFileProperty
-#undef __RFAPIDefineConfigFileDictionaryProperty
-#undef __RFAPIDefineConfigFileClassProperty
-#undef __RFAPIDefineConfigFileEnumCase
+#undef RFAPIDefineConfigFileValue_
+#undef RFAPIDefineConfigFileProperty_
+#undef RFAPIDefineConfigFileDictionaryProperty_
+#undef RFAPIDefineConfigFileClassProperty_
+#undef RFAPIDefineConfigFileEnumCase_
     }
     return self;
 }

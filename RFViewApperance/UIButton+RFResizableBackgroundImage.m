@@ -26,7 +26,7 @@ static char UIButtonBackgroundImageStretchResizingModeCateogryProperty;
     objc_setAssociatedObject(self, &UIButtonBackgroundImageResizingCapInsetsCateogryProperty, @(backgroundImageStretchResizingMode), OBJC_ASSOCIATION_RETAIN_NONATOMIC);
 }
 
-#define __UIButtonSetResizableBackgroundImageForState(IX, STATE)\
+#define _x_UIButtonSetResizableBackgroundImageForState(IX, STATE)\
     tmp = [self backgroundImageForState:STATE];\
     if (tmp) {\
         [self setBackgroundImage:[tmp resizableImageWithCapInsets:backgroundImageResizingCapInsets resizingMode:mode] forState:STATE];\
@@ -41,7 +41,7 @@ static char UIButtonBackgroundImageStretchResizingModeCateogryProperty;
     else {
         UIImage *tmp;
         UIImageResizingMode mode = self.backgroundImageStretchResizingMode? UIImageResizingModeStretch : UIImageResizingModeTile;
-        metamacro_foreach(__UIButtonSetResizableBackgroundImageForState,,
+        metamacro_foreach(_x_UIButtonSetResizableBackgroundImageForState,,
                           UIControlStateNormal,
                           UIControlStateHighlighted,
                           UIControlStateSelected,
@@ -58,7 +58,7 @@ static char UIButtonBackgroundImageStretchResizingModeCateogryProperty;
     else {
         UIImage *tmp;
         UIImageResizingMode mode = self.backgroundImageStretchResizingMode? UIImageResizingModeStretch : UIImageResizingModeTile;
-        metamacro_foreach(__UIButtonSetResizableBackgroundImageForState,,
+        metamacro_foreach(_x_UIButtonSetResizableBackgroundImageForState,,
                           UIControlStateNormal,
                           UIControlStateHighlighted,
                           UIControlStateSelected,
@@ -66,5 +66,5 @@ static char UIButtonBackgroundImageStretchResizingModeCateogryProperty;
     }
 }
 
-#undef __UIButtonSetResizableBackgroundImageForState
+#undef _x_UIButtonSetResizableBackgroundImageForState
 @end

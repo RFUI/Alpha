@@ -60,6 +60,8 @@
     return target;\
 }
 
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wreserved-id-macro"
 /**
  This should be private.
  */
@@ -67,3 +69,5 @@
     if (@selector(SELECTOR) == aSelector) {\
         return (self.PROPERTY) || [self.delegate respondsToSelector:aSelector];\
     }
+
+#pragma clang diagnostic pop

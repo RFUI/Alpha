@@ -1,7 +1,7 @@
 /*!
     RFAPI
 
-    Copyright (c) 2014 BB9z
+    Copyright (c) 2014-2015 BB9z
     https://github.com/RFUI/Alpha
 
     The MIT License (MIT)

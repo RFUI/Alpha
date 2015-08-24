@@ -1,4 +1,5 @@
 
+#import "RFRuntime.h"
 #import "RFAPI.h"
 #import "RFMessageManager+RFDisplay.h"
 #import "RFAPIDefineManager.h"
@@ -90,22 +91,22 @@ RFInitializingRootForNSObject
 
 #pragma mark - Request
 
-#define __RFAPICompletionCallback(BLOCK, ...)\
+#define RFAPICompletionCallback_(BLOCK, ...)\
     if (BLOCK) {\
         BLOCK(__VA_ARGS__);\
     }
 
 #if RFDEBUG
-#   define __RFAPILogError(DEBUG_ERROR, ...) dout_error(DEBUG_ERROR, __VA_ARGS__);
+#   define RFAPILogError_(DEBUG_ERROR, ...) dout_error(DEBUG_ERROR, __VA_ARGS__);
 #else
-#   define __RFAPILogError(DEBUG_ERROR, ...)
+#   define RFAPILogError_(DEBUG_ERROR, ...)
 #endif
 
-#define __RFAPICompletionCallbackProccessError(CONDITION, DEBUG_ERROR, DEBUG_ARG, ERROR_DESCRIPTION, ERROR_FAILUREREASON, ERROR_RECOVERYSUGGESTION)\
+#define RFAPICompletionCallback_ProccessError(CONDITION, DEBUG_ERROR, DEBUG_ARG, ERROR_DESCRIPTION, ERROR_FAILUREREASON, ERROR_RECOVERYSUGGESTION)\
     if (CONDITION) {\
-        __RFAPILogError(DEBUG_ERROR, DEBUG_ARG);\
+        RFAPILogError_(DEBUG_ERROR, DEBUG_ARG);\
         error = [NSError errorWithDomain:RFAPIErrorDomain code:0 userInfo:@{ NSLocalizedDescriptionKey: ERROR_DESCRIPTION, NSLocalizedFailureReasonErrorKey: ERROR_FAILUREREASON, NSLocalizedRecoverySuggestionErrorKey: ERROR_RECOVERYSUGGESTION }];\
-        __RFAPICompletionCallback(operationFailure, op, error);\
+        RFAPICompletionCallback_(operationFailure, op, error);\
         return;\
     }
 
@@ -118,15 +119,15 @@ RFInitializingRootForNSObject
     NSError __autoreleasing *e = nil;
     NSMutableURLRequest *request = [self URLRequestWithDefine:define parameters:parameters formData:arrayContainsFormDataObj controlInfo:controlInfo error:&e];
     if (!request) {
-        __RFAPILogError(@"无法创建请求: %@", e);
+        RFAPILogError_(@"无法创建请求: %@", e);
         NSError *error = [NSError errorWithDomain:NSURLErrorDomain code:NSURLErrorCancelled userInfo:@{
             NSLocalizedDescriptionKey : @"内部错误，无法创建请求",
             NSLocalizedFailureReasonErrorKey : @"很可能是应用 bug",
             NSLocalizedRecoverySuggestionErrorKey : @"请再试一次，如果依旧请尝试重启应用。给您带来不便，敬请谅解"
         }];
 
-        __RFAPICompletionCallback(failure, nil, error);
-        __RFAPICompletionCallback(completion, nil);
+        RFAPICompletionCallback_(failure, nil, error);
+        RFAPICompletionCallback_(completion, nil);
         return nil;
     }
 
@@ -238,7 +239,7 @@ RFInitializingRootForNSObject
 
 #pragma mark - Build Request
 
-#define __RFAPIMakeRequestError(CONDITION)\
+#define RFAPIMakeRequestError_(CONDITION)\
     if (CONDITION) {\
         if (error) {\
             *error = e;\
@@ -257,7 +258,7 @@ RFInitializingRootForNSObject
     // Creat URL
     NSError __autoreleasing *e = nil;
     NSURL *url = [self.defineManager requestURLForDefine:define parameters:requestParameters error:&e];
-    __RFAPIMakeRequestError(!url);
+    RFAPIMakeRequestError_(!url);
 
     // Creat URLRequest
     NSMutableURLRequest *r;
@@ -278,7 +279,7 @@ RFInitializingRootForNSObject
         NSArray *arrayParameter = requestParameters[RFAPIRequestArrayParameterKey];
         r = [[s requestBySerializingRequest:r withParameters:arrayParameter?: requestParameters error:&e] mutableCopy];
     }
-    __RFAPIMakeRequestError(!r);
+    RFAPIMakeRequestError_(!r);
 
     // Set header
     [requestHeaders enumerateKeysAndObjectsUsingBlock:^(id field, id value, BOOL *__unused stop) {
@@ -332,21 +333,21 @@ RFInitializingRootForNSObject
     NSError *error = nil;
     switch (define.responseExpectType) {
         case RFAPIDefineResponseExpectObject: {
-            __RFAPICompletionCallbackProccessError(![responseObject isKindOfClass:[NSDictionary class]], @"期望的数据类型是字典，而实际是 %@\n请先确认一下代码，如果服务器没按要求返回请联系后台人员", [responseObject class], @"返回数据异常", @"可能服务器正在升级或者维护，也可能是应用bug", @"建议稍后重试，如果持续报告这个错误请检查应用是否有新版本");
+            RFAPICompletionCallback_ProccessError(![responseObject isKindOfClass:[NSDictionary class]], @"期望的数据类型是字典，而实际是 %@\n请先确认一下代码，如果服务器没按要求返回请联系后台人员", [responseObject class], @"返回数据异常", @"可能服务器正在升级或者维护，也可能是应用bug", @"建议稍后重试，如果持续报告这个错误请检查应用是否有新版本");
 
             NSError __autoreleasing *e = nil;
             id JSONModelObject = [[expectClass alloc] initWithDictionary:responseObject error:&e];
-            __RFAPICompletionCallbackProccessError(!JSONModelObject, @"不能将返回内容转换为Model：%@\n请先确认一下代码，如果服务器没按要求返回请联系后台人员", e, @"返回数据异常", @"可能服务器正在升级或者维护，也可能是应用bug", @"建议稍后重试，如果持续报告这个错误请检查应用是否有新版本");
+            RFAPICompletionCallback_ProccessError(!JSONModelObject, @"不能将返回内容转换为Model：%@\n请先确认一下代码，如果服务器没按要求返回请联系后台人员", e, @"返回数据异常", @"可能服务器正在升级或者维护，也可能是应用bug", @"建议稍后重试，如果持续报告这个错误请检查应用是否有新版本");
             responseObject = JSONModelObject;
             break;
         }
         case RFAPIDefineResponseExpectObjects: {
-            __RFAPICompletionCallbackProccessError(![responseObject isKindOfClass:[NSArray class]], @"期望的数据类型是数组，而实际是 %@\n", [responseObject class], @"返回数据异常", @"可能服务器正在升级或者维护，也可能是应用bug", @"建议稍后重试，如果持续报告这个错误请检查应用是否有新版本");
+            RFAPICompletionCallback_ProccessError(![responseObject isKindOfClass:[NSArray class]], @"期望的数据类型是数组，而实际是 %@\n", [responseObject class], @"返回数据异常", @"可能服务器正在升级或者维护，也可能是应用bug", @"建议稍后重试，如果持续报告这个错误请检查应用是否有新版本");
 
             NSMutableArray *objects = [NSMutableArray arrayWithCapacity:[responseObject count]];
             for (NSDictionary *info in responseObject) {
                 id obj = [[expectClass alloc] initWithDictionary:info error:&error];
-                __RFAPICompletionCallbackProccessError(!obj, @"不能将数组中的元素转换为Model %@\n请先确认一下代码，如果服务器没按要求返回请联系后台人员", error, @"返回数据异常", @"可能服务器正在升级或者维护，也可能是应用bug", @"建议稍后重试，如果持续报告这个错误请检查应用是否有新版本")
+                RFAPICompletionCallback_ProccessError(!obj, @"不能将数组中的元素转换为Model %@\n请先确认一下代码，如果服务器没按要求返回请联系后台人员", error, @"返回数据异常", @"可能服务器正在升级或者维护，也可能是应用bug", @"建议稍后重试，如果持续报告这个错误请检查应用是否有新版本")
                 else {
                     [objects addObject:obj];
                 }

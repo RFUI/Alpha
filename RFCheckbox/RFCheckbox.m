@@ -23,6 +23,18 @@ static void *const RFCheckBoxKVOContext = (void *)&RFCheckBoxKVOContext;
     _needsUpdateCheckboxImageView = NO;
 }
 
+- (void)awakeFromNib {
+    [super awakeFromNib];
+    if (self.checkBoxImageView.image
+        && !self.offImage) {
+        self.offImage = self.checkBoxImageView.image;
+    }
+    if (self.checkBoxImageView.highlightedImage
+        && !self.onImage) {
+        self.onImage = self.checkBoxImageView.highlightedImage;
+    }
+}
+
 - (void)afterInit {
     [super afterInit];
     

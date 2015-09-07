@@ -153,38 +153,43 @@ RFInitializingRootForUIViewController
 
 #pragma mark - Appearance update
 
-- (void)updateNavigationAppearanceWithViewController:(id)viewController animated:(BOOL)animated {
+- (void)updateNavigationAppearanceWithViewController:(UIViewController *)viewController animated:(BOOL)animated {
     BOOL shouldHide = self.preferredNavigationBarHidden;
+    if (viewController.navigationController == self) {
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Wdeprecated-declarations"
-    if ([viewController respondsToSelector:@selector(prefersNavigationBarHiddenForNavigationController:)]) {
-        shouldHide = [(id<RFNavigationBehaving>)viewController prefersNavigationBarHiddenForNavigationController:self];
-    }
+        if ([viewController respondsToSelector:@selector(prefersNavigationBarHiddenForNavigationController:)]) {
+            shouldHide = [(id<RFNavigationBehaving>)viewController prefersNavigationBarHiddenForNavigationController:self];
+        }
 #pragma clang diagnostic pop
-    if ([viewController respondsToSelector:@selector(prefersNavigationBarHidden)]) {
-        shouldHide = [(id<RFNavigationBehaving>)viewController prefersNavigationBarHidden];
-    }
+        if ([viewController respondsToSelector:@selector(prefersNavigationBarHidden)]) {
+            shouldHide = [(id<RFNavigationBehaving>)viewController prefersNavigationBarHidden];
+        }
 
-    if (self.navigationBarHidden != shouldHide) {
-        [self setNavigationBarHidden:shouldHide animated:animated];
+        if (self.navigationBarHidden != shouldHide) {
+            [self setNavigationBarHidden:shouldHide animated:animated];
+        }
     }
 
     // Handel bottom bar appearance
     shouldHide = YES;
-    if ([viewController respondsToSelector:@selector(prefersBottomBarShown)]) {
-        shouldHide = ![(id)viewController prefersBottomBarShown];
-    }
+    if (viewController.navigationController == self) {
+        if ([viewController respondsToSelector:@selector(prefersBottomBarShown)]) {
+            shouldHide = ![(id)viewController prefersBottomBarShown];
+        }
 
-    if (self.bottomBarHidden != shouldHide) {
-        // If is interactive transitioning, use transitionDuration.
-        NSTimeInterval transitionDuration = self.transitionCoordinator.isInteractive? self.transitionCoordinator.transitionDuration : 0.35;
+        if (viewController.navigationController == self
+            && self.bottomBarHidden != shouldHide) {
+            // If is interactive transitioning, use transitionDuration.
+            NSTimeInterval transitionDuration = self.transitionCoordinator.isInteractive? self.transitionCoordinator.transitionDuration : 0.35;
 
-        // Show, no animation for better visual effect if bottom bar is not translucent.
-        BOOL shouldAnimatd = (!shouldHide && !self.translucentBottomBar)? NO : animated;
-        [UIView animateWithDuration:transitionDuration delay:0 options:UIViewAnimationOptionBeginFromCurrentState animated:shouldAnimatd beforeAnimations:^{
-        } animations:^{
-            self.bottomBarHidden = shouldHide;
-        } completion:nil];
+            // Show, no animation for better visual effect if bottom bar is not translucent.
+            BOOL shouldAnimatd = (!shouldHide && !self.translucentBottomBar)? NO : animated;
+            [UIView animateWithDuration:transitionDuration delay:0 options:UIViewAnimationOptionBeginFromCurrentState animated:shouldAnimatd beforeAnimations:^{
+            } animations:^{
+                self.bottomBarHidden = shouldHide;
+            } completion:nil];
+        }
     }
 
     // Handel status bar appearance

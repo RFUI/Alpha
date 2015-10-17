@@ -3,6 +3,9 @@
 #import "RFAPI.h"
 #import "RFAPIDefineConfigFileKeys.h"
 
+#import "AFURLRequestSerialization.h"
+#import "AFURLResponseSerialization.h"
+
 @interface RFAPIDefineManager ()
 @property (strong, nonatomic) NSCache *defineCache;
 

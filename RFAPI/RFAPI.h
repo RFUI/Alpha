@@ -13,9 +13,10 @@
 #import "RFAPIDefine.h"
 #import "RFAPIDefineManager.h"
 #import "RFAPICacheManager.h"
-#import "AFNetworkReachabilityManager.h"
-#import "JSONModel.h"
-#import "AFSecurityPolicy.h"
+
+@class AFNetworkReachabilityManager;
+@class AFSecurityPolicy;
+@protocol AFMultipartFormData;
 
 @class RFMessageManager, RFNetworkActivityIndicatorMessage, AFHTTPRequestOperation;
 @class RFAPIControl, RFHTTPRequestFormData;

@@ -12,10 +12,10 @@
  */
 #import "RFAPIDefine.h"
 #import "RFInitializing.h"
-#import "AFURLRequestSerialization.h"
-#import "AFURLResponseSerialization.h"
 
 @class RFAPI;
+@protocol AFURLRequestSerialization;
+@protocol AFURLResponseSerialization;
 
 @interface RFAPIDefineManager : NSObject <RFInitializing>
 @property (weak, nonatomic) RFAPI *master;

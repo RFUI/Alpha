@@ -5,8 +5,10 @@
 #import "RFAPIDefineManager.h"
 
 #import "AFHTTPRequestOperation.h"
-#import "AFNetworkReachabilityManager.h"
 #import "AFNetworkActivityIndicatorManager.h"
+#import "AFNetworkReachabilityManager.h"
+#import "AFSecurityPolicy.h"
+#import "JSONModel.h"
 #import "NSFileManager+RFKit.h"
 
 RFDefineConstString(RFAPIErrorDomain);

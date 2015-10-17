@@ -1,6 +1,7 @@
 
 #import "RFAPICacheManager.h"
 #import "RFAPI.h"
+#import "AFNetworkReachabilityManager.h"
 
 @interface RFAPICacheManager ()
 @end

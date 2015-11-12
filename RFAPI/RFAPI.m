@@ -5,6 +5,8 @@
 #import "RFAPIDefineManager.h"
 
 #import "AFHTTPRequestOperation.h"
+#import "AFURLRequestSerialization.h"
+#import "AFURLResponseSerialization.h"
 #import "AFNetworkActivityIndicatorManager.h"
 #import "AFNetworkReachabilityManager.h"
 #import "AFSecurityPolicy.h"

@@ -2,6 +2,35 @@
 #import "RFPageTabController.h"
 #import "RFDataSourceArray.h"
 
+@interface _RFTab_UIPageViewController : UIPageViewController
+@end
+
+@implementation _RFTab_UIPageViewController
+
+//! Try fix No view controller managing visible view
+//! http://stackoverflow.com/q/14220289
+- (void)setViewControllers:(NSArray*)viewControllers direction:(UIPageViewControllerNavigationDirection)direction animated:(BOOL)animated completion:(void (^)(BOOL))completion {
+    if (!animated) {
+        [super setViewControllers:viewControllers direction:direction animated:NO completion:completion];
+        return;
+    }
+
+    [super setViewControllers:viewControllers direction:direction animated:YES completion:^(BOOL finished){
+        if (finished) {
+            dispatch_async(dispatch_get_main_queue(), ^{
+                [super setViewControllers:viewControllers direction:direction animated:NO completion:completion];
+            });
+        }
+        else {
+            if (completion) {
+                completion(finished);
+            }
+        }
+    }];
+}
+
+@end
+
 @interface RFTabController (Private)
 @property (assign, nonatomic) NSUInteger _selectedIndex;
 @property (strong, nonatomic) RFDataSourceArray *viewControllerStore;
@@ -29,7 +58,7 @@
 - (void)onInit {
     [super onInit];
 
-    UIPageViewController *pc = [[UIPageViewController alloc] initWithTransitionStyle:UIPageViewControllerTransitionStyleScroll navigationOrientation:UIPageViewControllerNavigationOrientationHorizontal options:nil];
+    UIPageViewController *pc = [[_RFTab_UIPageViewController alloc] initWithTransitionStyle:UIPageViewControllerTransitionStyleScroll navigationOrientation:UIPageViewControllerNavigationOrientationHorizontal options:nil];
     pc.dataSource = self;
     pc.delegate = self;
     [self addChildViewController:pc];

@@ -89,9 +89,7 @@
         if (noticeDelegate) {
             [self noticeDelegateWillSelectViewController:selectedViewController atIndex:index];
         }
-        @weakify(self);
         [self.pageViewController setViewControllers:@[ selectedViewController ] direction:UIPageViewControllerNavigationDirectionForward animated:NO completion:^(BOOL finished) {
-            @strongify(self);
             if (noticeDelegate) {
                 [self noticeDelegateDidSelectViewController:selectedViewController atIndex:index];
             }
@@ -145,9 +143,7 @@
     if (noticeDelegate) {
         [self noticeDelegateWillSelectViewController:svc atIndex:newSelectedIndex];
     }
-    @weakify(self);
     [self.pageViewController setViewControllers:@[ svc ] direction:direction animated:animated completion:^(BOOL finished) {
-        @strongify(self);
         tabContainer.userInteractionEnabled = YES;
         if (noticeDelegate) {
             [self noticeDelegateDidSelectViewController:svc atIndex:newSelectedIndex];

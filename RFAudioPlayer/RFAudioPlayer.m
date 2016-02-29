@@ -2,13 +2,16 @@
 #import "RFAudioPlayer.h"
 #import "dout.h"
 
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wcast-qual"
 static void *const RFAudioPlayerKVOContext = (void *)&RFAudioPlayerKVOContext;
+#pragma clang diagnostic pop
 
 @interface RFAudioPlayer ()
-@property (readwrite, strong, nonatomic) AVPlayer *player;
-@property (RF_GCD_STRONG, nonatomic) dispatch_queue_t dispatchQueue;
+@property (nonatomic, nullable, readwrite) AVPlayer *player;
+@property (strong, nonatomic) dispatch_queue_t dispatchQueue;
 @property (copy, nonatomic) NSURL *toBeCreatPlayerURL;
-@property (readwrite, copy, nonatomic) NSURL *currentPlayItemURL;
+@property (nonatomic, nullable, readwrite, copy) NSURL *currentPlayItemURL;
 @end
 
 @implementation RFAudioPlayer
@@ -32,19 +35,7 @@ static void *const RFAudioPlayerKVOContext = (void *)&RFAudioPlayerKVOContext;
     return self;
 }
 
-- (void)dealloc {
-    RF_dispatch_release(self.dispatchQueue);
-}
-
-
-#define _RFAudioPlayer_CreatCallBack(IsReady)\
-dispatch_async(dispatch_get_main_queue(), ^{\
-    if (callback) {\
-        callback(IsReady);\
-    }\
-})
-
-- (void)playURL:(NSURL *)url ready:(void (^)(BOOL creat))callback {
+- (void)playURL:(NSURL *_Nonnull)url ready:(void (^_Nullable)(BOOL creat))callback {
     if ([url isEqual:self.currentPlayItemURL]) {
         [self play];
         return;
@@ -56,9 +47,16 @@ dispatch_async(dispatch_get_main_queue(), ^{\
     // Creat an AVPlayer will block current thread, we will creat it on our queue.
     self.toBeCreatPlayerURL = url;
     dispatch_async(self.dispatchQueue, ^{
+        void (^safeCallback)(BOOL) = ^(BOOL ct){
+            if (!callback) return;
+            dispatch_async_on_main(^{
+                callback(ct);
+            });
+        };
+
         if (![url isEqual:self.toBeCreatPlayerURL]) {
             _dout(@"Skip, URL changed when task in queue.")
-            _RFAudioPlayer_CreatCallBack(NO);
+            safeCallback(NO);
             return;
         }
         
@@ -67,7 +65,7 @@ dispatch_async(dispatch_get_main_queue(), ^{\
         
         if (![url isEqual:self.toBeCreatPlayerURL]) {
             _douto(@"URL changed when creating, abandon this player");
-            _RFAudioPlayer_CreatCallBack(NO);
+            safeCallback(NO);
         }
         else {
             _dout(@"Player created success: %@", url);
@@ -75,12 +73,11 @@ dispatch_async(dispatch_get_main_queue(), ^{\
             self.currentPlayItemURL = self.toBeCreatPlayerURL;
             self.toBeCreatPlayerURL = nil;
             
-            _RFAudioPlayer_CreatCallBack(YES);
+            safeCallback(YES);
             [self play];
         }
     });
 }
-#undef _RFAudioPlayer_CreatCallBack
 
 - (NSTimeInterval)currentTime {
     if (self.player) {
@@ -160,6 +157,7 @@ dispatch_async(dispatch_get_main_queue(), ^{\
 - (BOOL)stop {
     [self pause];
     self.currentTime = 0;
+    self.currentPlayItemURL = nil;
     return YES;
 }
 

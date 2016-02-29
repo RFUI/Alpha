@@ -99,7 +99,6 @@ CGFloat RFStatusBarNotificationWindowDefauleBarWidth = 200.f;
 
 - (void)dealloc {
 	[[NSNotificationCenter defaultCenter] removeObserver:self];
-	RF_DEALLOC_OBJ(super)
 }
 
 @end

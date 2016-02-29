@@ -21,7 +21,7 @@
 @interface RFPlugin : NSObject <
     RFInitializing
 >
-@property (RF_WEAK, nonatomic) IBOutlet id<RFPluginSupported> master;
+@property (weak, nonatomic) IBOutlet id<RFPluginSupported> master;
 
 - (instancetype)initWithMaster:(id<RFPluginSupported>)master NS_DESIGNATED_INITIALIZER;
 

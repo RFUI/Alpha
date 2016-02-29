@@ -4,7 +4,7 @@
 static void *const RFCoreDataAutoFetchTableViewPluginKVOContext = (void *)&RFCoreDataAutoFetchTableViewPluginKVOContext;
 
 @interface RFTableViewAutoFetchDataSource ()
-@property (RF_STRONG, readwrite, nonatomic) NSFetchedResultsController *fetchController;
+@property (strong, readwrite, nonatomic) NSFetchedResultsController *fetchController;
 @end
 
 @implementation RFTableViewAutoFetchDataSource

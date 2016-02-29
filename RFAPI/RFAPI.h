@@ -1,7 +1,7 @@
 /*!
     RFAPI
 
-    Copyright (c) 2014-2015 BB9z
+    Copyright (c) 2014-2016 BB9z
     https://github.com/RFUI/Alpha
 
     The MIT License (MIT)
@@ -119,7 +119,7 @@
  @param responseObjectRef 可以用来修改返回值
  @param error 可选的错误信息
  */
-- (BOOL)isSuccessResponse:(id *)responseObjectRef error:(NSError *__autoreleasing *)error;
+- (BOOL)isSuccessResponse:(id __strong *)responseObjectRef error:(NSError *__autoreleasing *)error;
 
 #pragma mark - Credentials & Security
 

@@ -2,7 +2,7 @@
     UIView (RFLayerApperance)
     RFUI
 
-    Copyright (c) 2014 BB9z
+    Copyright (c) 2014, 2016 BB9z
     https://github.com/RFUI/Alpha
 
     The MIT License (MIT)
@@ -14,7 +14,7 @@
 #import "RFUI.h"
 
 @interface UIView (RFLayerApperance)
-@property IBInspectable CGFloat cornerRadius;
-@property IBInspectable CGFloat borderWidth;
-@property IBInspectable UIColor *borderColor;
+@property (nonatomic) IBInspectable CGFloat cornerRadius;
+@property (nonatomic) IBInspectable CGFloat borderWidth;
+@property (nonatomic) IBInspectable UIColor *borderColor;
 @end

@@ -306,7 +306,7 @@ static const char *RFKVOControllerObjectObserversKey = "RFKVOControllerObjectObs
     return info;
 }
 
-- (BOOL)RFRemoveObserverWithIdentifier:(RFKVOController *)trampoline {
+- (BOOL)RFRemoveObserverWithIdentifier:(id)trampoline {
     if ([trampoline respondsToSelector:@selector(invalidate)]) {
         [trampoline invalidate];
         return YES;

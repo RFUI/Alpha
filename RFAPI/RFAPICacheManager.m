@@ -99,12 +99,12 @@
     NSMutableDictionary *headers = [response.allHeaderFields mutableCopy];
 
     // Rewrite cache headers to force NSURLCache store responses.
-    headers[@"Cache-Control"] = [NSString stringWithFormat:@"%@; max-age=%ld", define.needsAuthorization? @"private" : @"public", (long)fmax(age, 1)];
+    headers[@"Cache-Control"] = [NSString stringWithFormat:@"%@; max-age=%.0f", define.needsAuthorization? @"private" : @"public", fmax(age, 1)];
     [headers removeObjectForKey:@"Expires"];
     [headers removeObjectForKey:@"Pragma"];
 
     // MARK: How to avoid hard-code HTTPVersion?
-    NSHTTPURLResponse *modifiedResponse = [[NSHTTPURLResponse alloc] initWithURL:response.URL statusCode:response.statusCode HTTPVersion:@"HTTP/1.1" headerFields:headers];
+    NSHTTPURLResponse *modifiedResponse = [[NSHTTPURLResponse alloc] initWithURL:(id)response.URL statusCode:response.statusCode HTTPVersion:@"HTTP/1.1" headerFields:headers];
 
     NSCachedURLResponse *cachedResponse = [[NSCachedURLResponse alloc] initWithResponse:modifiedResponse data:responseData userInfo:@{ RFAPIDefineExpireKey : @(expire) } storagePolicy:NSURLCacheStorageAllowed];
     [self storeCachedResponse:cachedResponse forRequest:request];

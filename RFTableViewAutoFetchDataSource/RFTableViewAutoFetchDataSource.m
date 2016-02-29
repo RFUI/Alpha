@@ -1,13 +1,18 @@
 
 #import "RFTableViewAutoFetchDataSource.h"
 
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wcast-qual"
 static void *const RFCoreDataAutoFetchTableViewPluginKVOContext = (void *)&RFCoreDataAutoFetchTableViewPluginKVOContext;
+#pragma clang diagnostic pop
+
 
 @interface RFTableViewAutoFetchDataSource ()
 @property (strong, readwrite, nonatomic) NSFetchedResultsController *fetchController;
 @end
 
 @implementation RFTableViewAutoFetchDataSource
+@dynamic delegate;
 
 - (void)setTableView:(UITableView *)tableView {
     if (_tableView != tableView) {

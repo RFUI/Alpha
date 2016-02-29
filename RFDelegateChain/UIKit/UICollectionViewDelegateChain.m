@@ -120,7 +120,7 @@
     if (self.transitionLayout) {
         return self.transitionLayout(collectionView, fromLayout, toLayout, self.delegate);
     }
-    return [self.delegate collectionView:collectionView transitionLayoutForOldLayout:fromLayout newLayout:toLayout];
+    return (UICollectionViewTransitionLayout *_Nonnull)[self.delegate collectionView:collectionView transitionLayoutForOldLayout:fromLayout newLayout:toLayout];
 }
 
 #pragma mark -

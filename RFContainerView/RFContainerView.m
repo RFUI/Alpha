@@ -77,8 +77,8 @@ RFInitializingRootForUIView
 
     UIViewController *vc = self.embedViewController;
     if (!vc) {
-        UIStoryboard *sb = self.storyboardName?  [UIStoryboard storyboardWithName:self.storyboardName bundle:nil] : parentViewController.storyboard;
-        vc = self.instantiationIdentifier? [sb instantiateViewControllerWithIdentifier:self.instantiationIdentifier] : [sb instantiateInitialViewController];
+        UIStoryboard *sb = self.storyboardName? [UIStoryboard storyboardWithName:(id)self.storyboardName bundle:nil] : parentViewController.storyboard;
+        vc = self.instantiationIdentifier? [sb instantiateViewControllerWithIdentifier:(id)self.instantiationIdentifier] : [sb instantiateInitialViewController];
         self.embedViewController = vc;
     }
 

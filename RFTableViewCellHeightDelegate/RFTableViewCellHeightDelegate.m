@@ -136,8 +136,9 @@
         else {
             cell = [tableView.dataSource tableView:tableView cellForRowAtIndexPath:indexPath];
         }
-        if (suportCache) {
-            [self.offscreenCellCache setObject:cell forKey:cell.reuseIdentifier];
+        if (suportCache
+            && cell.reuseIdentifier) {
+            [self.offscreenCellCache setObject:cell forKey:(id)cell.reuseIdentifier];
         }
 
         // Hide cell created by `dequeueReusableCellWithIdentifier:forIndexPath:` method.

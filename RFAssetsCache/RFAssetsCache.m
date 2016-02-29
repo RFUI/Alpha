@@ -136,7 +136,7 @@ RFInitializingRootForNSObject
     [self.operationQueue addOperation:op];
 }
 
-- (RFAssetsCacheRecord *)recordWithURI:(NSString *)uri error:(NSError **)error {
+- (RFAssetsCacheRecord *)recordWithURI:(NSString *)uri error:(NSError *__autoreleasing *)error {
     NSFetchRequest *request = RFAssetsCacheRecord.fetchRequest;
     request.predicate = [NSPredicate predicateWithFormat:@"%K == %d && %K == %@", @keypathClassInstance(RFAssetsCacheRecord, indexHash), uri.hash, @keypathClassInstance(RFAssetsCacheRecord, uri), uri];
     

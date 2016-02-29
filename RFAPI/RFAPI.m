@@ -7,7 +7,6 @@
 #import "AFHTTPRequestOperation.h"
 #import "AFURLRequestSerialization.h"
 #import "AFURLResponseSerialization.h"
-#import "AFNetworkActivityIndicatorManager.h"
 #import "AFNetworkReachabilityManager.h"
 #import "AFSecurityPolicy.h"
 #import "JSONModel.h"
@@ -295,7 +294,7 @@ RFInitializingRootForNSObject
     return r;
 }
 
-- (void)preprocessingRequestParameters:(NSMutableDictionary **)requestParameters HTTPHeaders:(NSMutableDictionary **)requestHeaders withParameters:(NSDictionary *)parameters define:(RFAPIDefine *)define controlInfo:(RFAPIControl *)controlInfo {
+- (void)preprocessingRequestParameters:(NSMutableDictionary *_Nullable *_Nonnull)requestParameters HTTPHeaders:(NSMutableDictionary *_Nullable *_Nonnull)requestHeaders withParameters:(NSDictionary *)parameters define:(RFAPIDefine *_Nonnull)define controlInfo:(RFAPIControl *_Nullable)controlInfo {
     BOOL needsAuthorization = define.needsAuthorization;
 
     [*requestParameters addEntriesFromDictionary:define.defaultParameters];
@@ -379,7 +378,7 @@ RFInitializingRootForNSObject
     return YES;
 }
 
-- (BOOL)isSuccessResponse:(id *)responseObjectRef error:(NSError *__autoreleasing *)error {
+- (BOOL)isSuccessResponse:(id __strong *)responseObjectRef error:(NSError *__autoreleasing *)error {
     return YES;
 }
 

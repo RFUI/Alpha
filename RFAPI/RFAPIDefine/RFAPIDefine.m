@@ -80,13 +80,13 @@
     self.HTTPRequestHeaders = [decoder decodeObjectOfClass:[NSDictionary class] forKey:@keypath(self, HTTPRequestHeaders)];
     self.defaultParameters = [decoder decodeObjectOfClass:[NSDictionary class] forKey:@keypath(self, defaultParameters)];
     self.needsAuthorization = [[decoder decodeObjectOfClass:[NSNumber class] forKey:@keypath(self, needsAuthorization)] boolValue];
-    self.requestSerializerClass = NSClassFromString([decoder decodeObjectOfClass:[NSString class] forKey:@keypath(self, requestSerializerClass)]);
+    self.requestSerializerClass = NSClassFromString((id)[decoder decodeObjectOfClass:[NSString class] forKey:@keypath(self, requestSerializerClass)]);
     self.cachePolicy = [[decoder decodeObjectOfClass:[NSNumber class] forKey:@keypath(self, cachePolicy)] shortValue];
     self.expire = [[decoder decodeObjectOfClass:[NSNumber class] forKey:@keypath(self, expire)] doubleValue];
     self.offlinePolicy = [[decoder decodeObjectOfClass:[NSNumber class] forKey:@keypath(self, offlinePolicy)] shortValue];
-    self.responseSerializerClass = NSClassFromString([decoder decodeObjectOfClass:[NSString class] forKey:@keypath(self, responseSerializerClass)]);
+    self.responseSerializerClass = NSClassFromString((id)[decoder decodeObjectOfClass:[NSString class] forKey:@keypath(self, responseSerializerClass)]);
     self.responseExpectType = [[decoder decodeObjectOfClass:[NSNumber class] forKey:@keypath(self, responseExpectType)] shortValue];
-    self.responseClass = NSClassFromString([decoder decodeObjectOfClass:[NSString class] forKey:@keypath(self, responseClass)]);
+    self.responseClass = NSClassFromString((id)[decoder decodeObjectOfClass:[NSString class] forKey:@keypath(self, responseClass)]);
     self.userInfo = [decoder decodeObjectOfClass:[NSDictionary class] forKey:@keypath(self, userInfo)];
     self.notes = [decoder decodeObjectOfClass:[NSString class] forKey:@keypath(self, notes)];
 

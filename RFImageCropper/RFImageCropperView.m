@@ -203,8 +203,6 @@ RFInitializingRootForUIView
 - (void)scrollViewDidZoom:(UIScrollView *)scrollView {
     CGFloat zoom = self.scrollView.zoomScale;
     CGFloat minScale = self.scrollView.minimumZoomScale;
-    _dout_float(zoom)
-    _dout_float(minScale)
 
     if (zoom < minScale) {
         scrollView.size = CGSizeScaled(self.cropSize, zoom/minScale);
@@ -219,7 +217,6 @@ RFInitializingRootForUIView
 - (void)scrollViewDidEndZooming:(UIScrollView *)scrollView withView:(UIView *)view atScale:(CGFloat)scale {
     [UIView animateWithDuration:0.1 animations:^{
         [self updateLayout];
-        dout_size(self.scrollView.contentSize)
     }];
 }
 

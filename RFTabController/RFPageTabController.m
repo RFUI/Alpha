@@ -89,9 +89,10 @@
         if (noticeDelegate) {
             [self noticeDelegateWillSelectViewController:selectedViewController atIndex:index];
         }
+        __strong RFPageTabController *this = self;
         [self.pageViewController setViewControllers:@[ selectedViewController ] direction:UIPageViewControllerNavigationDirectionForward animated:NO completion:^(BOOL finished) {
             if (noticeDelegate) {
-                [self noticeDelegateDidSelectViewController:selectedViewController atIndex:index];
+                [this noticeDelegateDidSelectViewController:selectedViewController atIndex:index];
             }
         }];
     }
@@ -143,10 +144,11 @@
     if (noticeDelegate) {
         [self noticeDelegateWillSelectViewController:svc atIndex:newSelectedIndex];
     }
+    __strong RFPageTabController *this = self;
     [self.pageViewController setViewControllers:@[ svc ] direction:direction animated:animated completion:^(BOOL finished) {
         tabContainer.userInteractionEnabled = YES;
         if (noticeDelegate) {
-            [self noticeDelegateDidSelectViewController:svc atIndex:newSelectedIndex];
+            [this noticeDelegateDidSelectViewController:svc atIndex:newSelectedIndex];
         }
         if (completion) completion(finished);
     }];

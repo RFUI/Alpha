@@ -291,7 +291,9 @@ RFInitializingRootForNSObject
         RFAPIDefineConfigFileValue_(RFAPIDefineResponseTypeKey) {
             self.responseExpectType = [value intValue];
         }
-
+        RFAPIDefineConfigFileValue_(RFAPIDefineResponseAcceptNullKey) {
+            self.responseAcceptNull = [value boolValue];
+        }
         RFAPIDefineConfigFileClassProperty_(responseSerializerClass, RFAPIDefineResponseSerializerKey)
 
         RFAPIDefineConfigFileClassProperty_(responseClass, RFAPIDefineResponseClassKey)

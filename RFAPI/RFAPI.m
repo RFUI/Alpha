@@ -332,6 +332,11 @@ RFInitializingRootForNSObject
 
 - (void)processingCompletionWithHTTPOperation:(AFHTTPRequestOperation *)op responseObject:(id)responseObject define:(RFAPIDefine *)define control:(RFAPIControl *)control success:(void (^)(AFHTTPRequestOperation *, id))operationSuccess failure:(void (^)(id, NSError*))operationFailure {
 
+    if ((!responseObject || responseObject == [NSNull null])
+        && define.responseAcceptNull) {
+        operationSuccess(op, nil);
+        return;
+    }
     Class expectClass = define.responseClass;
     NSError *error = nil;
     switch (define.responseExpectType) {
@@ -371,7 +376,6 @@ RFInitializingRootForNSObject
     }
     _douto(responseObject)
     operationSuccess(op, responseObject);
-
 }
 
 - (BOOL)generalHandlerForError:(NSError *)error withDefine:(RFAPIDefine *)define controlInfo:(RFAPIControl *)controlInfo requestOperation:(AFHTTPRequestOperation *)operation operationFailureCallback:(void (^)(AFHTTPRequestOperation *, NSError *))operationFailureCallback {

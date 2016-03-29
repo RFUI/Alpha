@@ -41,7 +41,7 @@
 @property (copy, nonatomic) NSDictionary *defaultParameters;
 
 /// If send authorization HTTP header or parameters
-@property (assign, nonatomic) BOOL needsAuthorization;
+@property (nonatomic) BOOL needsAuthorization;
 
 /// AFURLRequestSerialization class
 @property (strong, nonatomic) Class requestSerializerClass;
@@ -55,16 +55,16 @@ typedef NS_ENUM(short, RFAPIDefineCachePolicy) {
     RFAPICachePolicyExpire = 3,         /// 一段时间内不再请求
     RFAPICachePolicyNoCache = 5         /// 无缓存，总是请求新数据
 };
-@property (assign, nonatomic) RFAPIDefineCachePolicy cachePolicy;
+@property (nonatomic) RFAPIDefineCachePolicy cachePolicy;
 
 /// Gives the date/time after which the cache is considered stale
-@property (assign, nonatomic) NSTimeInterval expire;
+@property (nonatomic) NSTimeInterval expire;
 
 typedef NS_ENUM(short, RFAPIDefineOfflinePolicy) {
     RFAPIOfflinePolicyDefault = 0,       /// 不特殊处理
     RFAPIOfflinePolicyLoadCache = 1      /// 返回缓存数据
 };
-@property (assign, nonatomic) RFAPIDefineOfflinePolicy offlinePolicy;
+@property (nonatomic) RFAPIDefineOfflinePolicy offlinePolicy;
 
 #pragma mark - Response
 
@@ -77,7 +77,10 @@ typedef NS_ENUM(short, RFAPIDefineResponseExpectType) {
     RFAPIDefineResponseExpectObjects = 3,   /// Expect an array of objects
 };
 ///
-@property (assign, nonatomic) RFAPIDefineResponseExpectType responseExpectType;
+@property (nonatomic) RFAPIDefineResponseExpectType responseExpectType;
+
+/// Accept null response
+@property (nonatomic) BOOL responseAcceptNull;
 
 /// Expect JSONModel class
 @property (strong, nonatomic) Class responseClass;

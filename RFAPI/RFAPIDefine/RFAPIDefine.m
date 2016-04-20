@@ -5,7 +5,7 @@
 @implementation RFAPIDefine
 
 - (NSString *)description {
-    return [NSString stringWithFormat:@"<%@: %p, name = %@, path = %@>", self.class, self, self.name, self.path];
+    return [NSString stringWithFormat:@"<%@: %p, name = %@, path = %@>", self.class, (void *)self, self.name, self.path];
 }
 
 - (NSString *)debugDescription {
@@ -28,7 +28,7 @@
             "\t responseClass = %@,\n"
             "\t userInfo = %@\n"
             "\t notes = %@\n"
-            ">", self.class, self, self.name,
+            ">", self.class, (void *)self, self.name,
             self.baseURL, self.pathPrefix, self.path, self.method,
             self.HTTPRequestHeaders, self.defaultParameters, @(self.needsAuthorization),
             self.responseSerializerClass,

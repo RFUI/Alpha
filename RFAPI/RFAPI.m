@@ -14,13 +14,12 @@
 
 RFDefineConstString(RFAPIErrorDomain);
 static NSString *RFAPIOperationUIkControl = @"RFAPIOperationUIkControl";
-static NSString *RFAPICacheUIkDefine = @"RFAPICacheUIkDefine";
 NSString *const RFAPIRequestArrayParameterKey = @"_RFArray_";
 
 @interface RFAPI ()
-@property (strong, nonatomic, readwrite) AFNetworkReachabilityManager *reachabilityManager;
-@property (strong, nonatomic, readwrite) RFAPIDefineManager *defineManager;
-@property (strong, nonatomic, readwrite) RFAPICacheManager *cacheManager;
+@property (strong, readwrite) AFNetworkReachabilityManager *reachabilityManager;
+@property (strong, readwrite) RFAPIDefineManager *defineManager;
+@property (strong, readwrite) RFAPICacheManager *cacheManager;
 @end
 
 @implementation RFAPI
@@ -53,40 +52,33 @@ RFInitializingRootForNSObject
     [self.reachabilityManager startMonitoring];
 }
 
-//- (NSString *)description {
-//    return [NSString stringWithFormat:@"<%@: %p, baseURL: %@, operationQueue: %@>", self.class, self, [self.baseURL absoluteString], self.operationQueue];
-//}
+- (NSString *)debugDescription {
+    return [NSString stringWithFormat:@"<%@: %p, operations: %@>", self.class, (void *)self, self.operations];
+}
 
 #pragma mark - Request management
 
-#if RFDebugLevel > RFDebugLevelInfo
-- (void)addOperation:(NSOperation *)op {
-    dout_debug(@"Add HTTP request operation(%p) with info: %@", op, [op valueForKeyPath:@"userInfo.RFAPIOperationUIkControl"]);
-    [super addOperation:op];
-}
-#endif
-
-- (void)cancelOperationWithIdentifier:(NSString *)identifier {
+- (void)cancelOperationWithIdentifier:(nullable NSString *)identifier {
     for (AFHTTPRequestOperation *op in [self operationsWithIdentifier:identifier]) {
-        dout_debug(@"Cancel HTTP request operation(%p) with identifier: %@", op, identifier);
+        _dout_debug(@"Cancel HTTP request operation(%p) with identifier: %@", (void *)op, identifier);
         [op cancel];
     }
 }
 
-- (void)cancelOperationsWithGroupIdentifier:(NSString *)identifier {
+- (void)cancelOperationsWithGroupIdentifier:(nullable NSString *)identifier {
     for (AFHTTPRequestOperation *op in [self operationsWithGroupIdentifier:identifier]) {
-        dout_debug(@"Cancel HTTP request operation(%p) with group identifier: %@", op, identifier);
+        _dout_debug(@"Cancel HTTP request operation(%p) with group identifier: %@", (void *)op, identifier);
         [op cancel];
     }
 }
 
-- (NSArray *)operationsWithIdentifier:(NSString *)identifier {
+- (nonnull NSArray<AFHTTPRequestOperation *> *)operationsWithIdentifier:(nullable NSString *)identifier {
     @autoreleasepool {
         return [self.operations filteredArrayUsingPredicate:[NSPredicate predicateWithFormat:@"%K.%K.%K == %@", @keypathClassInstance(AFHTTPRequestOperation, userInfo), RFAPIOperationUIkControl, @keypathClassInstance(RFAPIControl, identifier), identifier]];
     }
 }
 
-- (NSArray *)operationsWithGroupIdentifier:(NSString *)identifier {
+- (nonnull NSArray<AFHTTPRequestOperation *> *)operationsWithGroupIdentifier:(nullable NSString *)identifier {
     @autoreleasepool {
         return [self.operations filteredArrayUsingPredicate:[NSPredicate predicateWithFormat:@"%K.%K.%K == %@", @keypathClassInstance(AFHTTPRequestOperation, userInfo), RFAPIOperationUIkControl, @keypathClassInstance(RFAPIControl, groupIdentifier), identifier]];
     }
@@ -113,7 +105,7 @@ RFInitializingRootForNSObject
         return;\
     }
 
-- (AFHTTPRequestOperation *)requestWithName:(NSString *)APIName parameters:(NSDictionary *)parameters formData:(NSArray *)arrayContainsFormDataObj controlInfo:(RFAPIControl *)controlInfo uploadProgress:(void (^)(NSUInteger bytesWritten, long long totalBytesWritten, long long totalBytesExpectedToWrite))progress success:(void (^)(AFHTTPRequestOperation *operation, id responseObject))success failure:(void (^)(AFHTTPRequestOperation *operation, NSError *error))failure completion:(void (^)(AFHTTPRequestOperation *operation))completion {
+- (nullable AFHTTPRequestOperation *)requestWithName:(nonnull NSString *)APIName parameters:(NSDictionary *)parameters formData:(nullable NSArray<RFHTTPRequestFormData *> *)arrayContainsFormDataObj controlInfo:(nullable RFAPIControl *)controlInfo uploadProgress:(void (^_Nullable)(NSUInteger bytesWritten, long long totalBytesWritten, long long totalBytesExpectedToWrite))progress success:(void (^_Nullable )(AFHTTPRequestOperation *_Nullable operation, id _Nullable responseObject))success failure:(void (^_Nullable)(AFHTTPRequestOperation *_Nullable operation, NSError *_Nonnull error))failure completion:(void (^_Nullable)(AFHTTPRequestOperation *_Nullable operation))completion {
     NSParameterAssert(APIName);
     RFAPIDefine *define = [self.defineManager defineForName:APIName];
     RFAssert(define, @"Can not find an API with name: %@.", APIName);
@@ -181,7 +173,7 @@ RFInitializingRootForNSObject
         AFHTTPResponseSerializer *serializer = [self.defineManager responseSerializerForDefine:define];
 
         NSError *error = nil;
-        id responseObject = [serializer responseObjectForResponse:cachedResponse.response data:cachedResponse.data error:&error];
+        id _Nullable responseObject = [serializer responseObjectForResponse:cachedResponse.response data:cachedResponse.data error:&error];
         if (error) {
             dispatch_after_seconds(0, ^{
                 operationFailure(nil, error);
@@ -198,14 +190,14 @@ RFInitializingRootForNSObject
     // Setup HTTP operation
     AFHTTPRequestOperation *operation = [self requestOperationWithRequest:request define:define controlInfo:controlInfo];
 
-    [operation setCompletionBlockWithSuccess:^(AFHTTPRequestOperation *op, id responseObject) {
+    [operation setCompletionBlockWithSuccess:^(AFHTTPRequestOperation *_Nonnull op, id _Nullable responseObject) {
         @autoreleasepool {
-            dout_debug(@"HTTP request operation(%p) with info: %@ completed.", op, [op valueForKeyPath:@"userInfo.RFAPIOperationUIkControl"]);
+            dout_debug(@"HTTP request operation(%p) with info: %@ completed.", (void *)op, [op valueForKeyPath:@"userInfo.RFAPIOperationUIkControl"]);
 
             [self processingCompletionWithHTTPOperation:op responseObject:responseObject define:define control:controlInfo success:operationSuccess failure:operationFailure];
             [self.cacheManager storeCachedResponseForRequest:op.request response:op.response data:op.responseData define:define control:controlInfo];
         }
-    } failure:^(AFHTTPRequestOperation *op, NSError *error) {
+    } failure:^(AFHTTPRequestOperation *_Nonnull op, NSError *_Nonnull error) {
         operationFailure(op, error);
     }];
 
@@ -223,11 +215,11 @@ RFInitializingRootForNSObject
     return operation;
 }
 
-- (AFHTTPRequestOperation *)requestWithName:(NSString *)APIName parameters:(NSDictionary *)parameters controlInfo:(RFAPIControl *)controlInfo success:(void (^)(AFHTTPRequestOperation *, id))success failure:(void (^)(AFHTTPRequestOperation *, NSError *))failure completion:(void (^)(AFHTTPRequestOperation *))completion {
+- (AFHTTPRequestOperation *)requestWithName:(nonnull NSString *)APIName parameters:(NSDictionary *)parameters controlInfo:(RFAPIControl *)controlInfo success:(void (^)(AFHTTPRequestOperation *, id))success failure:(void (^)(AFHTTPRequestOperation *, NSError *))failure completion:(void (^)(AFHTTPRequestOperation *))completion {
     return [self requestWithName:APIName parameters:parameters formData:nil controlInfo:controlInfo uploadProgress:nil success:success failure:failure completion:completion];
 }
 
-- (void)invalidateCacheWithName:(NSString *)APIName parameters:(NSDictionary *)parameters {
+- (void)invalidateCacheWithName:(nullable NSString *)APIName parameters:(nullable NSDictionary *)parameters {
     if (!APIName.length) return;
 
     RFAPIDefine *define = [self.defineManager defineForName:APIName];
@@ -250,7 +242,7 @@ RFInitializingRootForNSObject
         return nil;\
     }
 
-- (NSMutableURLRequest *)URLRequestWithDefine:(RFAPIDefine *)define parameters:(NSDictionary *)parameters formData:(NSArray *)RFFormData controlInfo:(RFAPIControl *)controlInfo error:(NSError *__autoreleasing *)error {
+- (nullable NSMutableURLRequest *)URLRequestWithDefine:(nonnull RFAPIDefine *)define parameters:(nullable NSDictionary *)parameters formData:(nullable NSArray *)RFFormData controlInfo:(nullable RFAPIControl *)controlInfo error:(NSError *_Nullable __autoreleasing *_Nullable)error {
     NSParameterAssert(define);
 
     // Preprocessing arguments
@@ -294,14 +286,16 @@ RFInitializingRootForNSObject
     return r;
 }
 
-- (void)preprocessingRequestParameters:(NSMutableDictionary *_Nullable *_Nonnull)requestParameters HTTPHeaders:(NSMutableDictionary *_Nullable *_Nonnull)requestHeaders withParameters:(NSDictionary *)parameters define:(RFAPIDefine *_Nonnull)define controlInfo:(RFAPIControl *_Nullable)controlInfo {
+- (void)preprocessingRequestParameters:(NSMutableDictionary *_Nullable *_Nonnull)requestParameters HTTPHeaders:(NSMutableDictionary *_Nullable *_Nonnull)requestHeaders withParameters:(nullable NSDictionary *)parameters define:(nonnull RFAPIDefine *)define controlInfo:(nullable RFAPIControl *)controlInfo {
     BOOL needsAuthorization = define.needsAuthorization;
 
     [*requestParameters addEntriesFromDictionary:define.defaultParameters];
     if (needsAuthorization) {
         [*requestParameters addEntriesFromDictionary:self.defineManager.authorizationParameters];
     }
-    [*requestParameters addEntriesFromDictionary:parameters];
+    if (parameters) {
+        [*requestParameters addEntriesFromDictionary:(NSDictionary *)parameters];
+    }
 
     [*requestHeaders addEntriesFromDictionary:define.HTTPRequestHeaders];
     if (needsAuthorization) {
@@ -309,14 +303,14 @@ RFInitializingRootForNSObject
     }
 }
 
-- (NSMutableURLRequest *)finalizeSerializedRequest:(NSMutableURLRequest *)request withDefine:(RFAPIDefine *)define controlInfo:(RFAPIControl *)controlInfo {
+- (nullable NSMutableURLRequest *)finalizeSerializedRequest:(nonnull NSMutableURLRequest *)request withDefine:(nonnull RFAPIDefine *)define controlInfo:(nullable RFAPIControl *)controlInfo {
     if (controlInfo.requestCustomization) {
-        request = controlInfo.requestCustomization(request);
+        return controlInfo.requestCustomization(request);
     }
     return request;
 }
 
-- (AFHTTPRequestOperation *)requestOperationWithRequest:(NSURLRequest *)request define:(RFAPIDefine *)define controlInfo:(RFAPIControl *)controlInfo {
+- (nonnull AFHTTPRequestOperation *)requestOperationWithRequest:(nonnull NSURLRequest *)request define:(nonnull RFAPIDefine *)define controlInfo:(nullable RFAPIControl *)controlInfo {
     AFHTTPRequestOperation *operation = [[AFHTTPRequestOperation alloc] initWithRequest:request];
     operation.responseSerializer = [self.defineManager responseSerializerForDefine:define];
     operation.shouldUseCredentialStorage = self.shouldUseCredentialStorage;
@@ -330,7 +324,7 @@ RFInitializingRootForNSObject
 
 #pragma mark - Handel Response
 
-- (void)processingCompletionWithHTTPOperation:(AFHTTPRequestOperation *)op responseObject:(id)responseObject define:(RFAPIDefine *)define control:(RFAPIControl *)control success:(void (^)(AFHTTPRequestOperation *, id))operationSuccess failure:(void (^)(id, NSError*))operationFailure {
+- (void)processingCompletionWithHTTPOperation:(nullable AFHTTPRequestOperation *)op responseObject:(nullable id)responseObject define:(nonnull RFAPIDefine *)define control:(nullable RFAPIControl *)control success:(void (^_Nonnull)(AFHTTPRequestOperation *_Nullable, id _Nullable))operationSuccess failure:(void (^_Nonnull)(id _Nullable, NSError *_Nonnull))operationFailure {
 
     if ((!responseObject || responseObject == [NSNull null])
         && define.responseAcceptNull) {
@@ -378,11 +372,11 @@ RFInitializingRootForNSObject
     operationSuccess(op, responseObject);
 }
 
-- (BOOL)generalHandlerForError:(NSError *)error withDefine:(RFAPIDefine *)define controlInfo:(RFAPIControl *)controlInfo requestOperation:(AFHTTPRequestOperation *)operation operationFailureCallback:(void (^)(AFHTTPRequestOperation *, NSError *))operationFailureCallback {
+- (BOOL)generalHandlerForError:(nonnull NSError *)error withDefine:(nonnull RFAPIDefine *)define controlInfo:(nullable RFAPIControl *)controlInfo requestOperation:(nullable AFHTTPRequestOperation *)operation operationFailureCallback:(void (^_Nullable)(AFHTTPRequestOperation *_Nullable, NSError *_Nonnull))operationFailureCallback {
     return YES;
 }
 
-- (BOOL)isSuccessResponse:(id __strong *)responseObjectRef error:(NSError *__autoreleasing *)error {
+- (BOOL)isSuccessResponse:(id _Nullable __strong *_Nonnull)responseObjectRef error:(NSError *_Nullable __autoreleasing *_Nullable)error {
     return YES;
 }
 
@@ -399,10 +393,10 @@ NSString *const RFAPIRequestCustomizationControlKey = @"_RFAPIRequestCustomizati
 @implementation RFAPIControl
 
 - (NSString *)description {
-    return [NSString stringWithFormat:@"<%@: %p, identifier = %@, groupIdentifier = %@>", self.class, self, self.identifier, self.groupIdentifier];
+    return [NSString stringWithFormat:@"<%@: %p, identifier = %@, groupIdentifier = %@>", self.class, (void *)self, self.identifier, self.groupIdentifier];
 }
 
-- (instancetype)initWithDictionary:(NSDictionary *)info {
+- (nonnull id)initWithDictionary:(nonnull NSDictionary *)info {
     self = [super init];
     if (self) {
         _message = info[RFAPIMessageControlKey];
@@ -414,7 +408,7 @@ NSString *const RFAPIRequestCustomizationControlKey = @"_RFAPIRequestCustomizati
     return self;
 }
 
-- (instancetype)initWithIdentifier:(NSString *)identifier loadingMessage:(NSString *)message {
+- (nonnull id)initWithIdentifier:(nonnull NSString *)identifier loadingMessage:(nullable NSString *)message {
     self = [super init];
     if (self) {
         _identifier = identifier;
@@ -434,12 +428,12 @@ typedef NS_ENUM(short, RFHTTPRequestFormDataSourceType) {
 };
 
 @interface RFHTTPRequestFormData ()
-@property (assign, nonatomic) RFHTTPRequestFormDataSourceType type;
+@property RFHTTPRequestFormDataSourceType type;
 @end
 
 @implementation RFHTTPRequestFormData
 
-+ (instancetype)formDataWithFileURL:(NSURL *)fileURL name:(NSString *)name {
++ (nonnull instancetype)formDataWithFileURL:(nonnull NSURL *)fileURL name:(nonnull NSString *)name {
     RFHTTPRequestFormData *this = [RFHTTPRequestFormData new];
     this.fileURL = fileURL;
     this.name = name;
@@ -447,7 +441,7 @@ typedef NS_ENUM(short, RFHTTPRequestFormDataSourceType) {
     return this;
 }
 
-+ (instancetype)formDataWithData:(NSData *)data name:(NSString *)name {
++ (nonnull instancetype)formDataWithData:(nonnull NSData *)data name:(nonnull NSString *)name {
     RFHTTPRequestFormData *this = [RFHTTPRequestFormData new];
     this.data = data;
     this.name = name;
@@ -455,7 +449,7 @@ typedef NS_ENUM(short, RFHTTPRequestFormDataSourceType) {
     return this;
 }
 
-+ (instancetype)formDataWithData:(NSData *)data name:(NSString *)name fileName:(NSString *)fileName mimeType:(NSString *)mimeType {
++ (nonnull instancetype)formDataWithData:(nonnull NSData *)data name:(nonnull NSString *)name fileName:(nullable NSString *)fileName mimeType:(nullable NSString *)mimeType {
     RFHTTPRequestFormData *this = [RFHTTPRequestFormData new];
     this.data = data;
     this.name = name;
@@ -465,21 +459,24 @@ typedef NS_ENUM(short, RFHTTPRequestFormDataSourceType) {
     return this;
 }
 
-- (void)buildFormData:(id<AFMultipartFormData>)formData error:(NSError * __autoreleasing *)error {
+- (void)buildFormData:(nonnull id<AFMultipartFormData>)formData error:(NSError *_Nullable __autoreleasing *_Nullable)error {
     switch (self.type) {
-        case RFHTTPRequestFormDataSourceTypeURL:
-            [formData appendPartWithFileURL:self.fileURL name:self.name error:error];
+        case RFHTTPRequestFormDataSourceTypeURL: {
+            NSURL *fileURL = self.fileURL;
+            [formData appendPartWithFileURL:fileURL name:self.name error:error];
             break;
-
-        case RFHTTPRequestFormDataSourceTypeData:
-            if (self.fileName || self.mimeType) {
-                [formData appendPartWithFileData:self.data name:self.name fileName:self.fileName mimeType:self.mimeType];
+        }
+        case RFHTTPRequestFormDataSourceTypeData: {
+            NSData *data = self.data;
+            if (self.fileName
+                && self.mimeType) {
+                [formData appendPartWithFileData:data name:self.name fileName:(NSString *)self.fileName mimeType:(NSString *)self.mimeType];
             }
             else {
-                [formData appendPartWithFormData:self.data name:self.name];
+                [formData appendPartWithFormData:data name:self.name];
             }
             break;
-
+        }
         default:
             break;
     }

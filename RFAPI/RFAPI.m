@@ -434,6 +434,8 @@ typedef NS_ENUM(short, RFHTTPRequestFormDataSourceType) {
 @implementation RFHTTPRequestFormData
 
 + (nonnull instancetype)formDataWithFileURL:(nonnull NSURL *)fileURL name:(nonnull NSString *)name {
+    NSParameterAssert(fileURL);
+    NSParameterAssert(name);
     RFHTTPRequestFormData *this = [RFHTTPRequestFormData new];
     this.fileURL = fileURL;
     this.name = name;
@@ -442,6 +444,8 @@ typedef NS_ENUM(short, RFHTTPRequestFormDataSourceType) {
 }
 
 + (nonnull instancetype)formDataWithData:(nonnull NSData *)data name:(nonnull NSString *)name {
+    NSParameterAssert(data);
+    NSParameterAssert(name);
     RFHTTPRequestFormData *this = [RFHTTPRequestFormData new];
     this.data = data;
     this.name = name;
@@ -450,6 +454,8 @@ typedef NS_ENUM(short, RFHTTPRequestFormDataSourceType) {
 }
 
 + (nonnull instancetype)formDataWithData:(nonnull NSData *)data name:(nonnull NSString *)name fileName:(nullable NSString *)fileName mimeType:(nullable NSString *)mimeType {
+    NSParameterAssert(data);
+    NSParameterAssert(name);
     RFHTTPRequestFormData *this = [RFHTTPRequestFormData new];
     this.data = data;
     this.name = name;

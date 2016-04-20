@@ -129,41 +129,46 @@ RFInitializingRootForNSObject
     // Request object get ready.
     // Build operation block.
     RFNetworkActivityIndicatorMessage *message = controlInfo.message;
-    void (^operationCompletion)(id) = ^(AFHTTPRequestOperation *blockOp){
-        NSString *mid = message.identifier;
-        if (mid) {
-            [self.networkActivityIndicatorManager hideWithIdentifier:mid];
-        }
+    void (^operationCompletion)(id) = ^(AFHTTPRequestOperation *blockOp) {
+        dispatch_async_on_main(^{
+            NSString *mid = message.identifier;
+            if (mid) {
+                [self.networkActivityIndicatorManager hideWithIdentifier:mid];
+            }
 
-        if (completion) {
-            completion(blockOp);
-        }
+            if (completion) {
+                completion(blockOp);
+            }
+        });
     };
 
-    void (^operationSuccess)(id, id) = ^(AFHTTPRequestOperation *blockOp, id blockResponse){
-        if (success) {
-            success(blockOp, blockResponse);
-        }
-        operationCompletion(blockOp);
+    void (^operationSuccess)(id, id) = ^(AFHTTPRequestOperation *blockOp, id blockResponse) {
+        dispatch_async_on_main(^{
+            if (success) {
+                success(blockOp, blockResponse);
+            }
+            operationCompletion(blockOp);
+        });
     };
 
     void (^operationFailure)(id, NSError*) = ^(AFHTTPRequestOperation *blockOp, NSError *blockError) {
+        dispatch_async_on_main(^{
+            if (blockError.code == NSURLErrorCancelled && blockError.domain == NSURLErrorDomain) {
+                dout_info(@"A HTTP operation cancelled: %@", blockOp);
+                operationCompletion(blockOp);
+                return;
+            }
 
-        if (blockError.code == NSURLErrorCancelled && blockError.domain == NSURLErrorDomain) {
-            dout_info(@"A HTTP operation cancelled: %@", blockOp);
+            if ([self generalHandlerForError:blockError withDefine:define controlInfo:controlInfo requestOperation:blockOp operationFailureCallback:failure]) {
+                if (failure) {
+                    failure(blockOp, blockError);
+                }
+                else {
+                    [self.networkActivityIndicatorManager alertError:blockError title:@"请求失败"];
+                }
+            };
             operationCompletion(blockOp);
-            return;
-        }
-
-        if ([self generalHandlerForError:blockError withDefine:define controlInfo:controlInfo requestOperation:blockOp operationFailureCallback:failure]) {
-            if (failure) {
-                failure(blockOp, blockError);
-            }
-            else {
-                [self.networkActivityIndicatorManager alertError:blockError title:@"请求失败"];
-            }
-        };
-        operationCompletion(blockOp);
+        });
     };
 
     // Check cache
@@ -175,13 +180,13 @@ RFInitializingRootForNSObject
         NSError *error = nil;
         id _Nullable responseObject = [serializer responseObjectForResponse:cachedResponse.response data:cachedResponse.data error:&error];
         if (error) {
-            dispatch_after_seconds(0, ^{
+            dispatch_async(self.responseProcessingQueue, ^{
                 operationFailure(nil, error);
             });
             return nil;
         }
 
-        dispatch_after_seconds(0, ^{
+        dispatch_async(self.responseProcessingQueue, ^{
             [self processingCompletionWithHTTPOperation:nil responseObject:responseObject define:define control:controlInfo success:operationSuccess failure:operationFailure];
         });
         return nil;
@@ -189,7 +194,7 @@ RFInitializingRootForNSObject
 
     // Setup HTTP operation
     AFHTTPRequestOperation *operation = [self requestOperationWithRequest:request define:define controlInfo:controlInfo];
-
+    operation.completionQueue = self.responseProcessingQueue;
     [operation setCompletionBlockWithSuccess:^(AFHTTPRequestOperation *_Nonnull op, id _Nullable responseObject) {
         @autoreleasepool {
             dout_debug(@"HTTP request operation(%p) with info: %@ completed.", (void *)op, [op valueForKeyPath:@"userInfo.RFAPIOperationUIkControl"]);
@@ -323,6 +328,12 @@ RFInitializingRootForNSObject
 }
 
 #pragma mark - Handel Response
+
+- (dispatch_queue_t)responseProcessingQueue {
+    if (_responseProcessingQueue) return _responseProcessingQueue;
+    _responseProcessingQueue = dispatch_get_main_queue();
+    return _responseProcessingQueue;
+}
 
 - (void)processingCompletionWithHTTPOperation:(nullable AFHTTPRequestOperation *)op responseObject:(nullable id)responseObject define:(nonnull RFAPIDefine *)define control:(nullable RFAPIControl *)control success:(void (^_Nonnull)(AFHTTPRequestOperation *_Nullable, id _Nullable))operationSuccess failure:(void (^_Nonnull)(id _Nullable, NSError *_Nonnull))operationFailure {
 

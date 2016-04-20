@@ -98,12 +98,19 @@
 
 #pragma mark - Response
 
+/**
+ If `NULL` (default), the main queue will be used.
+ */
+@property (nonatomic, null_resettable, strong) dispatch_queue_t responseProcessingQueue;
+
 - (void)invalidateCacheWithName:(nullable NSString *)APIName parameters:(nullable NSDictionary *)parameters;
 
 #pragma mark - Methods for overwrite
 
 /**
  Default implementation first add parameters from APIDefine then add parameters from define manager.
+ 
+ This method is called on responseProcessingQueue.
  */
 - (void)preprocessingRequestParameters:(NSMutableDictionary *_Nullable *_Nonnull)requestParameters HTTPHeaders:(NSMutableDictionary *_Nullable *_Nonnull)requestHeaders withParameters:(nullable NSDictionary *)parameters define:(nonnull RFAPIDefine *)define controlInfo:(nullable RFAPIControl *)controlInfo;
 
@@ -114,6 +121,8 @@
 
 /**
  默认实现返回 YES
+ 
+ This method is called on the main queue.
 
  @return 返回 YES 将继续错误的处理继续交由请求的回调处理，NO 处理结束
  */
@@ -123,6 +132,8 @@
  判断响应是否是成功的结果
  
  Default implementation just return YES.
+ 
+ This method is called on responseProcessingQueue.
  
  @param responseObjectRef 可以用来修改返回值
  @param error 可选的错误信息

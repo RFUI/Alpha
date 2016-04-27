@@ -109,8 +109,6 @@
 
 /**
  Default implementation first add parameters from APIDefine then add parameters from define manager.
- 
- This method is called on responseProcessingQueue.
  */
 - (void)preprocessingRequestParameters:(NSMutableDictionary *_Nullable *_Nonnull)requestParameters HTTPHeaders:(NSMutableDictionary *_Nullable *_Nonnull)requestHeaders withParameters:(nullable NSDictionary *)parameters define:(nonnull RFAPIDefine *)define controlInfo:(nullable RFAPIControl *)controlInfo;
 

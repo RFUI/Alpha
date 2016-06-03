@@ -27,7 +27,12 @@ static void *const RFCoreDataAutoFetchTableViewPluginKVOContext = (void *)&RFCor
 }
 
 - (NSString *)description {
-    return [NSString stringWithFormat:@"<%@: %p, delegate = %@, fetchedResultsController = %@, tableView = %p>", self.class, self, self.delegate, self.fetchController, self.tableView];
+    return [NSString stringWithFormat:@"<%@: %p, delegate = %@, fetchedResultsController = %@, tableView = %p>",
+            self.class,
+            (void *)self,
+            self.delegate,
+            self.fetchController,
+            (void *)self.tableView];
 }
 
 #pragma mark -

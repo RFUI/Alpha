@@ -61,7 +61,7 @@ CGFloat RFStatusBarNotificationWindowDefauleBarWidth = 200.f;
 }
 
 - (void)updateOrientation {
-	CGAffineTransform rotation;
+    CGAffineTransform rotation = CGAffineTransformIdentity;
 	CGRect statusBarFrame = [UIApplication sharedApplication].statusBarFrame;
 	_dout_rect(statusBarFrame)
 	
@@ -91,6 +91,8 @@ CGFloat RFStatusBarNotificationWindowDefauleBarWidth = 200.f;
 			statusBarFrame.size.height = self.barWidth;
 			rotation = CGAffineTransformMakeRotation(M_PI_2);
 			break;
+        case UIInterfaceOrientationUnknown:
+            break;
 	}
 	self.frame = statusBarFrame;
 //	self.viewHolder.frame = statusBarFrame;

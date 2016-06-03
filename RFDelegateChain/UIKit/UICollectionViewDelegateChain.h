@@ -2,7 +2,7 @@
     UICollectionViewDelegateChain
     RFDelegateChain
 
-    Copyright (c) 2015 BB9z
+    Copyright (c) 2015-2016 BB9z
     https://github.com/RFUI/Alpha
 
     The MIT License (MIT)

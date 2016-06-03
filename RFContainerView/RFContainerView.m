@@ -22,7 +22,7 @@ RFInitializingRootForUIView
     }
 }
 
-#if TARGET_INTERFACE_BUILDER
+#if defined(TARGET_INTERFACE_BUILDER) && TARGET_INTERFACE_BUILDER
 - (void)drawRect:(CGRect)rect {
     CGRect frame = self.bounds;
 

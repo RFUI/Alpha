@@ -32,7 +32,21 @@ RFInitializingRootForUIView
 }
 
 - (NSString *)debugDescription {
-    return [NSString stringWithFormat:@"<%@: %p; frame = %@; contentOffset = %@; contentSize = %@; zoomScale = %f; maximumZoomScale = %f; minimumZoomScale = %f; imageSize = %@; cropSize = %@; sourceImage = %@; maxPixelZoomRatio = %f; scrollView frame = %@>", self.class, self, NSStringFromCGRect(self.frame), NSStringFromCGPoint(self.scrollView.contentOffset), NSStringFromCGSize(self.scrollView.contentSize), self.scrollView.zoomScale, self.scrollView.maximumZoomScale, self.scrollView.minimumZoomScale, NSStringFromCGSize(self.imageSize), NSStringFromCGSize(self.cropSize), self.sourceImage, self.maxPixelZoomRatio, NSStringFromCGRect(self.scrollView.frame)];
+    return [NSString stringWithFormat:@"<%@: %p; frame = %@; contentOffset = %@; contentSize = %@; zoomScale = %f; maximumZoomScale = %f; minimumZoomScale = %f; imageSize = %@; cropSize = %@; sourceImage = %@; maxPixelZoomRatio = %f; scrollView frame = %@>",
+            self.class,
+            (void *)self,
+            NSStringFromCGRect(self.frame),
+            NSStringFromCGPoint(self.scrollView.contentOffset),
+            NSStringFromCGSize(self.scrollView.contentSize),
+            self.scrollView.zoomScale,
+            self.scrollView.maximumZoomScale,
+            self.scrollView.minimumZoomScale,
+            NSStringFromCGSize(self.imageSize),
+            NSStringFromCGSize(self.cropSize),
+            self.sourceImage,
+            self.maxPixelZoomRatio,
+            NSStringFromCGRect(self.scrollView.frame)
+            ];
 }
 
 - (UIImage *)croppedImage {

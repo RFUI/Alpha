@@ -1,7 +1,7 @@
 /*!
     RFImageCropperView
 
-    Copyright (c) 2012-2014 BB9z
+    Copyright (c) 2012-2014, 2016 BB9z
     https://github.com/RFUI/Alpha
 
     The MIT License (MIT)

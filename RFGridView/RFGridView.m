@@ -23,7 +23,7 @@ RFInitializingRootForUIView
 - (NSString *)description {
     return [NSString stringWithFormat:@"<%@: %p; contentOffset:%@; contentSize:%@; layoutOrientation:%@; cellSize:%@>",
             NSStringFromClass([self class]),
-            self,
+            (void *)self,
             NSStringFromCGPoint(self.contentOffset),
             NSStringFromCGSize(self.contentSize),
             ((self.layoutOrientation == RFUIOrientationHorizontal)? @"RFUIOrientationHorizontal": @"RFUIOrientationVertical"),

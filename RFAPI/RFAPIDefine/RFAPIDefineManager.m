@@ -133,7 +133,7 @@ RFInitializingRootForNSObject
 
         id parameter = parameters[key];
         if (parameter) {
-            NSString *encodedParameter = [[parameter description] stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
+            NSString *encodedParameter = [[parameter description] stringByAddingPercentEncodingWithAllowedCharacters:[NSCharacterSet URLQueryAllowedCharacterSet]];
             [path replaceCharactersInRange:match.range withString:encodedParameter];
             [parameters removeObjectForKey:key];
         }

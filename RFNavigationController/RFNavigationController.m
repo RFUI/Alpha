@@ -177,7 +177,10 @@ RFInitializingRootForUIViewController
             if ([viewController respondsToSelector:@selector(preferredStatusBarUpdateAnimation)]) {
                 preferredStatusBarUpdateAnimation = [viewController preferredStatusBarUpdateAnimation];
             }
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wdeprecated-declarations"
             [[UIApplication sharedApplication] setStatusBarHidden:shouldStatusBarHidden withAnimation:animated? preferredStatusBarUpdateAnimation : UIStatusBarAnimationNone];
+#pragma clang diagnostic pop
         }
 
         UIStatusBarStyle preferredStatusBarStyle = self.preferredStatusBarStyle;
@@ -187,8 +190,12 @@ RFInitializingRootForUIViewController
                 preferredStatusBarStyle = vcStyle;
             }
         }
+        
         if (preferredStatusBarStyle != [UIApplication sharedApplication].statusBarStyle) {
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wdeprecated-declarations"
             [[UIApplication sharedApplication] setStatusBarStyle:preferredStatusBarStyle animated:animated];
+#pragma clang diagnostic pop
         }
     }
 

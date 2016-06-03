@@ -13,7 +13,7 @@ RFInitializingRootForNSObject
 }
 
 - (NSString *)description {
-    return [NSString stringWithFormat:@"<%@: %p, delegate = %@>", self.class, self, self.delegate];
+    return [NSString stringWithFormat:@"<%@: %p, delegate = %@>", self.class, (void *)self, self.delegate];
 }
 
 - (void)setDelegate:(id)delegate {

@@ -3,6 +3,7 @@
 #import "UIViewController+RFTransitioning.h"
 #import "RFDelegateChain.h"
 #import "UIView+RFAnimate.h"
+#import "RFAnimationTransitioning.h"
 
 static RFNavigationController *RFNavigationControllerGlobalInstance;
 
@@ -10,11 +11,14 @@ static RFNavigationController *RFNavigationControllerGlobalInstance;
 @end
 
 @interface RFNavigationController () <
-    UINavigationControllerDelegate,
     UIGestureRecognizerDelegate
 >
 @property (strong, nonatomic) RFNavigationBottomBar *bottomBarHolder;
 @property (weak, nonatomic) UIView *transitionView;
+
+@property (readwrite, weak, nonatomic) RFNavigationPopInteractionController *currentPopInteractionController;
+@property (readwrite, weak, nonatomic) UIGestureRecognizer *currentPopInteractionGestureRecognizer;
+@property (assign, nonatomic) BOOL gestureRecognizerEnabled;
 @end
 
 @implementation RFNavigationController
@@ -22,12 +26,11 @@ RFUIInterfaceOrientationSupportNavigation
 RFInitializingRootForUIViewController
 
 - (void)onInit {
+    [super setDelegate:self];
+
     _prefersStatusBarHidden = NO;
     _preferredStatusBarStyle = UIStatusBarStyleDefault;
     _preferredStatusBarUpdateAnimation = UIStatusBarAnimationFade;
-
-    self.forwardDelegate = [RFNavigationControllerTransitionDelegate new];
-    self.delegate = self.forwardDelegate;
 
     @synchronized([RFNavigationController class]) {
         if (!RFNavigationControllerGlobalInstance) {
@@ -94,7 +97,7 @@ RFInitializingRootForUIViewController
     }
 
     if (gestureRecognizer == self.interactivePopGestureRecognizer) {
-        if (self.forwardDelegate.currentPopInteractionGestureRecognizer) {
+        if (self.currentPopInteractionGestureRecognizer) {
             return NO;
         }
     }
@@ -106,7 +109,7 @@ RFInitializingRootForUIViewController
     return YES;
 }
 
-#pragma mark - Tab bar
+#pragma mark - Bottom bar
 
 - (void)setBottomBarHidden:(BOOL)bottomBarHidden {
     _bottomBarHidden = bottomBarHidden;
@@ -275,6 +278,145 @@ RFInitializingRootForUIViewController
 	}
 
 	return NO;
+}
+
+#pragma mark - Delegate
+
+- (void)setDelegate:(id<UINavigationControllerDelegate>)delegate {
+    NSAssert(false, @"You must not change RFNavigationController’s delegate.");
+}
+
+- (void)navigationController:(UINavigationController *)navigationController willShowViewController:(UIViewController *)viewController animated:(BOOL)animated {
+    if (navigationController != self) return;
+
+    [self updateNavigationAppearanceWithViewController:viewController animated:animated];
+    [self.transitionCoordinator animateAlongsideTransition:nil completion:^(id<UIViewControllerTransitionCoordinatorContext> context) {
+        if (context.isCancelled) {
+            [self updateNavigationAppearanceWithViewController:self.topViewController animated:context.isAnimated];
+        }
+    }];
+
+    UIGestureRecognizer *gr = self.currentPopInteractionGestureRecognizer;
+    if (gr.state == UIGestureRecognizerStatePossible) {
+        self.gestureRecognizerEnabled = gr.enabled;
+        gr.enabled = NO;
+    }
+
+    if (self.willShowViewControllerBlock) {
+        self.willShowViewControllerBlock(self, viewController, animated);
+    }
+}
+
+- (void)navigationController:(UINavigationController *)navigationController didShowViewController:(UIViewController *)viewController animated:(BOOL)animated {
+    if (navigationController != self) return;
+
+    if (self.currentPopInteractionGestureRecognizer && self.gestureRecognizerEnabled) {
+        self.currentPopInteractionGestureRecognizer.enabled = YES;
+    }
+
+    self.currentPopInteractionController = (id)viewController.RFTransitioningInteractionController;
+    self.interactivePopGestureRecognizer.enabled = (!self.currentPopInteractionController && self.viewControllers.count > 1);
+
+    if (self.didShowViewControllerBlock) {
+        self.didShowViewControllerBlock(self, viewController, animated);
+    }
+}
+
+#pragma mark - Transitioning
+
+- (id<UIViewControllerAnimatedTransitioning>)navigationController:(UINavigationController *)navigationController animationControllerForOperation:(UINavigationControllerOperation)operation fromViewController:(UIViewController *)fromVC toViewController:(UIViewController *)toVC {
+
+    // Ask for a TransitionStyle
+    BOOL usingToTransitionStyle = YES;
+    if (self.preferSourceViewControllerTransitionStyle) {
+        usingToTransitionStyle = !usingToTransitionStyle;
+    }
+    if (operation == UINavigationControllerOperationPop) {
+        usingToTransitionStyle = !usingToTransitionStyle;
+    }
+
+    NSString *transitionClassName = usingToTransitionStyle? toVC.RFTransitioningStyle : fromVC.RFTransitioningStyle;
+    if (!transitionClassName) {
+        transitionClassName = navigationController.RFTransitioningStyle;
+    }
+
+    // Check class
+    Class transitionClass = NSClassFromString(transitionClassName);
+    if (!transitionClass
+        || ![transitionClass isSubclassOfClass:[RFAnimationTransitioning class]]) {
+        return nil;
+    }
+
+    RFAnimationTransitioning *animationController = [transitionClass new];
+    if (!animationController) {
+        return nil;
+    }
+
+    // Addition setup
+    if ([animationController respondsToSelector:@selector(setReverse:)]) {
+        animationController.reverse = (UINavigationControllerOperationPop == operation);
+    }
+
+    if (operation == UINavigationControllerOperationPush) {
+        @autoreleasepool {
+            // Needs setup pop interaction controller to toVC.
+            RFNavigationPopInteractionController *interactionController;
+            if (animationController.interactionControllerType) {
+                Class controllerClass = NSClassFromString(animationController.interactionControllerType);
+                if (controllerClass && [controllerClass isSubclassOfClass:[RFNavigationPopInteractionController class]]) {
+                    interactionController = [controllerClass new];
+                }
+
+                if (interactionController) {
+                    interactionController.viewController = toVC;
+                }
+            }
+        }
+    }
+    else {
+        // Assign interactionController to animationController.
+        // So we can get it in below delegate method.
+        animationController.interactionController = fromVC.RFTransitioningInteractionController;
+    }
+
+    return animationController;
+}
+
+- (id<UIViewControllerInteractiveTransitioning>)navigationController:(UINavigationController *)navigationController interactionControllerForAnimationController:(id<UIViewControllerAnimatedTransitioning>)animationController {
+
+    if (![animationController respondsToSelector:@selector(interactionController)]) {
+        return nil;
+    }
+
+    RFNavigationPopInteractionController *interactionController = [(RFAnimationTransitioning *)animationController interactionController];
+    if (![interactionController conformsToProtocol:@protocol(UIViewControllerInteractiveTransitioning)]) {
+        return nil;
+    }
+
+    if ([interactionController respondsToSelector:@selector(interactionInProgress)]) {
+        if (!interactionController.interactionInProgress) {
+            return nil;
+        }
+    }
+    return interactionController;
+}
+
+- (void)setCurrentPopInteractionController:(RFNavigationPopInteractionController *)currentPopInteractionController {
+    if (_currentPopInteractionController != currentPopInteractionController) {
+        if ([_currentPopInteractionController isKindOfClass:[RFNavigationPopInteractionController class]]) {
+            [_currentPopInteractionController uninstallGestureRecognizer];
+        }
+
+        _currentPopInteractionController = currentPopInteractionController;
+
+        if ([currentPopInteractionController isKindOfClass:[RFNavigationPopInteractionController class]]) {
+            [currentPopInteractionController installGestureRecognizer];
+            self.currentPopInteractionGestureRecognizer = currentPopInteractionController.gestureRecognizer;
+        }
+        else {
+            self.currentPopInteractionGestureRecognizer = nil;
+        }
+    }
 }
 
 @end

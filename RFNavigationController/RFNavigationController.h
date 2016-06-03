@@ -11,9 +11,9 @@
     BETA
  */
 #import "RFUI.h"
-#import "RFNavigationControllerTransitionDelegate.h"
 
 @protocol RFNavigationBehaving;
+@class RFNavigationPopInteractionController;
 
 /**
  
@@ -21,7 +21,7 @@
 NS_CLASS_AVAILABLE_IOS(7_0)
 @interface RFNavigationController : UINavigationController <
     RFInitializing,
-    RFNavigationControllerAppearanceUpdating
+    UINavigationControllerDelegate
 >
 
 /**
@@ -96,8 +96,18 @@ NS_CLASS_AVAILABLE_IOS(7_0)
 
 #pragma mark - Delegate
 
-///
-@property (nonatomic, nullable, strong) IBOutlet RFNavigationControllerTransitionDelegate *forwardDelegate;
+- (void)setDelegate:(nullable id<UINavigationControllerDelegate>)delegate __attribute__((unavailable("You can’t change RFNavigationController’s delegtae")));
+
+@property (nonatomic, nullable, copy) void (^willShowViewControllerBlock)(UINavigationController *__nonnull navigationController, UIViewController *__nonnull viewController, BOOL animated);
+@property (nonatomic, nullable, copy) void (^didShowViewControllerBlock)(UINavigationController *__nonnull navigationController, UIViewController *__nonnull viewController, BOOL animated);
+
+#pragma mark - Transitioning
+
+/// Default NO
+@property (nonatomic) BOOL preferSourceViewControllerTransitionStyle;
+
+@property (nonatomic, nullable, weak, readonly) RFNavigationPopInteractionController *currentPopInteractionController;
+@property (nonatomic, nullable, weak, readonly) UIGestureRecognizer *currentPopInteractionGestureRecognizer;
 
 @end
 

@@ -23,7 +23,7 @@
     if (self.cellForItemAtIndexPath) {
         return self.cellForItemAtIndexPath(collectionView, indexPath, self.delegate);
     }
-    return [self.delegate collectionView:collectionView cellForItemAtIndexPath:indexPath];
+    return (UICollectionViewCell *_Nonnull)[self.delegate collectionView:collectionView cellForItemAtIndexPath:indexPath];
 }
 
 - (NSInteger)numberOfSectionsInCollectionView:(UICollectionView *)collectionView {
@@ -37,7 +37,7 @@
     if (self.viewForSupplementaryElement) {
         return self.viewForSupplementaryElement(collectionView, kind, indexPath, self.delegate);
     }
-    return [self.delegate collectionView:collectionView viewForSupplementaryElementOfKind:kind atIndexPath:indexPath];
+    return (UICollectionReusableView *_Nonnull)[self.delegate collectionView:collectionView viewForSupplementaryElementOfKind:kind atIndexPath:indexPath];
 }
 
 @end

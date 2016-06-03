@@ -19,6 +19,7 @@ NSString *const RFAPIDefineOfflinePolicyKey = @"Offline Policy";
 
 NSString *const RFAPIDefineResponseSerializerKey = @"Response Serializer";
 NSString *const RFAPIDefineResponseTypeKey  = @"Response Type";
+NSString *const RFAPIDefineResponseAcceptNullKey = @"Response Accept Null";
 NSString *const RFAPIDefineResponseClassKey = @"Response Class";
 
 NSString *const RFAPIDefineUserInfoKey      = @"User Info";

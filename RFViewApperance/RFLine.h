@@ -20,9 +20,9 @@
  */
 @interface RFLine : RFDrawView
 
-@property (assign, nonatomic) IBInspectable CGFloat dashLinePatternValue1;
-@property (assign, nonatomic) IBInspectable CGFloat dashLinePatternValue2;
+@property (nonatomic) IBInspectable CGFloat dashLinePatternValue1;
+@property (nonatomic) IBInspectable CGFloat dashLinePatternValue2;
 
 // Draw 1 pixel line
-@property (assign, nonatomic) IBInspectable BOOL onePixel;
+@property (nonatomic) IBInspectable BOOL onePixel;
 @end

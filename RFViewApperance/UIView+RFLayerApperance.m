@@ -21,7 +21,9 @@
 }
 
 - (UIColor *)borderColor {
-    return [UIColor colorWithCGColor:self.layer.borderColor];
+    CGColorRef clRef = self.layer.borderColor;
+    if (!clRef) return nil;
+    return [UIColor colorWithCGColor:clRef];
 }
 
 - (void)setBorderColor:(UIColor *)borderColor {

@@ -32,7 +32,21 @@ RFInitializingRootForUIView
 }
 
 - (NSString *)debugDescription {
-    return [NSString stringWithFormat:@"<%@: %p; frame = %@; contentOffset = %@; contentSize = %@; zoomScale = %f; maximumZoomScale = %f; minimumZoomScale = %f; imageSize = %@; cropSize = %@; sourceImage = %@; maxPixelZoomRatio = %f; scrollView frame = %@>", self.class, self, NSStringFromCGRect(self.frame), NSStringFromCGPoint(self.scrollView.contentOffset), NSStringFromCGSize(self.scrollView.contentSize), self.scrollView.zoomScale, self.scrollView.maximumZoomScale, self.scrollView.minimumZoomScale, NSStringFromCGSize(self.imageSize), NSStringFromCGSize(self.cropSize), self.sourceImage, self.maxPixelZoomRatio, NSStringFromCGRect(self.scrollView.frame)];
+    return [NSString stringWithFormat:@"<%@: %p; frame = %@; contentOffset = %@; contentSize = %@; zoomScale = %f; maximumZoomScale = %f; minimumZoomScale = %f; imageSize = %@; cropSize = %@; sourceImage = %@; maxPixelZoomRatio = %f; scrollView frame = %@>",
+            self.class,
+            (void *)self,
+            NSStringFromCGRect(self.frame),
+            NSStringFromCGPoint(self.scrollView.contentOffset),
+            NSStringFromCGSize(self.scrollView.contentSize),
+            self.scrollView.zoomScale,
+            self.scrollView.maximumZoomScale,
+            self.scrollView.minimumZoomScale,
+            NSStringFromCGSize(self.imageSize),
+            NSStringFromCGSize(self.cropSize),
+            self.sourceImage,
+            self.maxPixelZoomRatio,
+            NSStringFromCGRect(self.scrollView.frame)
+            ];
 }
 
 - (UIImage *)croppedImage {
@@ -203,8 +217,6 @@ RFInitializingRootForUIView
 - (void)scrollViewDidZoom:(UIScrollView *)scrollView {
     CGFloat zoom = self.scrollView.zoomScale;
     CGFloat minScale = self.scrollView.minimumZoomScale;
-    _dout_float(zoom)
-    _dout_float(minScale)
 
     if (zoom < minScale) {
         scrollView.size = CGSizeScaled(self.cropSize, zoom/minScale);
@@ -219,7 +231,6 @@ RFInitializingRootForUIView
 - (void)scrollViewDidEndZooming:(UIScrollView *)scrollView withView:(UIView *)view atScale:(CGFloat)scale {
     [UIView animateWithDuration:0.1 animations:^{
         [self updateLayout];
-        dout_size(self.scrollView.contentSize)
     }];
 }
 

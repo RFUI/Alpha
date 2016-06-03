@@ -2,7 +2,7 @@
 #import "RFContainerView.h"
 
 @interface RFContainerView ()
-@property (strong, nullable, nonatomic) id embedViewController;
+@property (readwrite, strong, nullable, nonatomic) id embedViewController;
 @property (readwrite, nonatomic) BOOL embedViewControllerLoaded;
 @end
 
@@ -22,7 +22,7 @@ RFInitializingRootForUIView
     }
 }
 
-#if TARGET_INTERFACE_BUILDER
+#if defined(TARGET_INTERFACE_BUILDER) && TARGET_INTERFACE_BUILDER
 - (void)drawRect:(CGRect)rect {
     CGRect frame = self.bounds;
 
@@ -68,7 +68,7 @@ RFInitializingRootForUIView
     }
 }
 
-- (void)loadEmbedViewController {
+- (void)loadEmbedViewControllerWithPrepareBlock:(void (^ __nullable)(id __nonnull viewController, RFContainerView * __nonnull container))prepareBlock {
     if (self.embedViewControllerLoaded) return;
 
     UIViewController *parentViewController = self.parentViewController?: self.viewController;
@@ -77,18 +77,25 @@ RFInitializingRootForUIView
 
     UIViewController *vc = self.embedViewController;
     if (!vc) {
-        UIStoryboard *sb = self.storyboardName?  [UIStoryboard storyboardWithName:self.storyboardName bundle:nil] : parentViewController.storyboard;
-        vc = self.instantiationIdentifier? [sb instantiateViewControllerWithIdentifier:self.instantiationIdentifier] : [sb instantiateInitialViewController];
+        UIStoryboard *sb = self.storyboardName? [UIStoryboard storyboardWithName:(id)self.storyboardName bundle:nil] : parentViewController.storyboard;
+        vc = self.instantiationIdentifier? [sb instantiateViewControllerWithIdentifier:(id)self.instantiationIdentifier] : [sb instantiateInitialViewController];
         self.embedViewController = vc;
     }
 
     if (vc) {
-        self.embedViewControllerLoaded = YES;
+        if (prepareBlock) {
+            prepareBlock(vc, self);
+        }
         [parentViewController addChildViewController:vc];
         vc.view.autoresizingMask = UIViewAutoresizingFlexibleSize;
         [self addSubview:vc.view resizeOption:RFViewResizeOptionFill];
         [vc didMoveToParentViewController:parentViewController];
+        self.embedViewControllerLoaded = YES;
     }
+}
+
+- (void)loadEmbedViewController {
+    [self loadEmbedViewControllerWithPrepareBlock:nil];
 }
 
 - (void)unloadEmbedViewController:(BOOL)shouldReleaseEmbedViewController {

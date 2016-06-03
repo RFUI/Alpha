@@ -19,7 +19,7 @@
 @interface RFImageGallery : UIScrollView
 <UIScrollViewDelegate>
 
-@property (RF_WEAK, nonatomic) IBOutlet id<RFImageGalleryDataSource> dataSource;
+@property (weak, nonatomic) IBOutlet id<RFImageGalleryDataSource> dataSource;
 - (void)reloadData;
 
 @property (assign, nonatomic) NSUInteger index;
@@ -27,13 +27,13 @@
 /// 动画还不支持
 - (void)scrollToIndex:(NSUInteger)toIndex animated:(BOOL)animated;
 
-@property (RF_STRONG, nonatomic) IBOutlet RFImageGalleryScrollContainer *scrollContainer;
+@property (strong, nonatomic) IBOutlet RFImageGalleryScrollContainer *scrollContainer;
 @end
 
 
 /// 
 @interface RFImageGalleryScrollContainer : UIView
-@property (RF_WEAK, nonatomic) IBOutlet RFImageGallery *master;
+@property (weak, nonatomic) IBOutlet RFImageGallery *master;
 - (id)initWithMaster:(RFImageGallery *)master;
 
 @property (RF_STRONG, nonatomic) IBOutlet RFImageGalleryCell *lCell;  // Left

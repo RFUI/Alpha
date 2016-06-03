@@ -4,9 +4,9 @@
 
 @interface RFSlideNavigationController ()
 @property (assign, nonatomic) CGFloat stackViewsWidthSum;
-@property (RF_WEAK, readwrite, nonatomic) UIScrollView *container;
-@property (RF_STRONG, nonatomic) NSMutableArray *viewControllers;
-@property (RF_STRONG, nonatomic) NSMutableArray *viewControllerWidths;
+@property (weak, readwrite, nonatomic) UIScrollView *container;
+@property (strong, nonatomic) NSMutableArray *viewControllers;
+@property (strong, nonatomic) NSMutableArray *viewControllerWidths;
 @end
 
 @implementation RFSlideNavigationController

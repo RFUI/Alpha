@@ -1,8 +1,11 @@
 
 #import "RFCheckbox.h"
 
-CGFloat RFCheckBoxNoImageDisableAlpha = 0.5002;
+CGFloat RFCheckBoxNoImageDisableAlpha = 0.5;
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wcast-qual"
 static void *const RFCheckBoxKVOContext = (void *)&RFCheckBoxKVOContext;
+#pragma clang diagnostic pop
 
 @interface RFCheckbox ()
 @property (assign, nonatomic) BOOL needsUpdateCheckboxImageView;
@@ -21,6 +24,18 @@ static void *const RFCheckBoxKVOContext = (void *)&RFCheckBoxKVOContext;
     
     [self addTarget:self action:@selector(_onTouchUpInside) forControlEvents:UIControlEventTouchUpInside];
     _needsUpdateCheckboxImageView = NO;
+}
+
+- (void)awakeFromNib {
+    [super awakeFromNib];
+    if (self.checkBoxImageView.image
+        && !self.offImage) {
+        self.offImage = self.checkBoxImageView.image;
+    }
+    if (self.checkBoxImageView.highlightedImage
+        && !self.onImage) {
+        self.onImage = self.checkBoxImageView.highlightedImage;
+    }
 }
 
 - (void)afterInit {

@@ -10,10 +10,10 @@
 @interface RFStatusBarNotificationWindow : UIWindow
 
 /// If you want to display your customized view, add them to viewHolder.
-@property (RF_STRONG, nonatomic) UIView *viewHolder;
+@property (strong, nonatomic) UIView *viewHolder;
 
 /// By default, we offer a label to display a text.
-@property (RF_STRONG, nonatomic) UILabel *messageLabel;
+@property (strong, nonatomic) UILabel *messageLabel;
 
 @property (assign, nonatomic) CGFloat barWidth;
 

@@ -9,10 +9,12 @@
 
 @protocol RFSlideNavigationControllerDelegate;
 
-@interface RFSlideNavigationController : UIViewController
-<UIScrollViewDelegate, RFNotSupportLoadFromNib, RFSupportIOS5_0>
+@interface RFSlideNavigationController : UIViewController <
+    UIScrollViewDelegate,
+    RFNotSupportLoadFromNib
+>
 
-@property (RF_WEAK, readonly, nonatomic) UIScrollView *container;
+@property (weak, readonly, nonatomic) UIScrollView *container;
 
 - (id)init;
 //- (id)initWithRootViewController:(UIViewController *)rootViewController;

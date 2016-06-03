@@ -55,9 +55,9 @@
 
 #define NormaliseNil(v) (v == [NSNull null] ? nil : v)
 
-const char *RFKVOControllerClassIsSwizzledKey = "RFKVOControllerClassIsSwizzledKey";
-const NSString *RFKVOControllerClassIsSwizzledLockKey = @"RFKVOControllerClassIsSwizzledLockKey";
-const char *RFKVOControllerObjectObserversKey = "RFKVOControllerObjectObserversKey";
+static const char *RFKVOControllerClassIsSwizzledKey = "RFKVOControllerClassIsSwizzledKey";
+static const NSString *RFKVOControllerClassIsSwizzledLockKey = @"RFKVOControllerClassIsSwizzledLockKey";
+static const char *RFKVOControllerObjectObserversKey = "RFKVOControllerObjectObserversKey";
 
 @interface RFKVOController ()
 @property (strong, nonatomic) NSOperationQueue *queue;
@@ -306,7 +306,7 @@ const char *RFKVOControllerObjectObserversKey = "RFKVOControllerObjectObserversK
     return info;
 }
 
-- (BOOL)RFRemoveObserverWithIdentifier:(RFKVOController *)trampoline {
+- (BOOL)RFRemoveObserverWithIdentifier:(id)trampoline {
     if ([trampoline respondsToSelector:@selector(invalidate)]) {
         [trampoline invalidate];
         return YES;

@@ -2,7 +2,7 @@
     RFAPIDefineManager
     RFAPI
 
-    Copyright (c) 2014-2015 BB9z
+    Copyright (c) 2014-2016 BB9z
     https://github.com/RFUI/Alpha
 
     The MIT License (MIT)
@@ -12,10 +12,10 @@
  */
 #import "RFAPIDefine.h"
 #import "RFInitializing.h"
-#import "AFURLRequestSerialization.h"
-#import "AFURLResponseSerialization.h"
 
 @class RFAPI;
+@protocol AFURLRequestSerialization;
+@protocol AFURLResponseSerialization;
 
 @interface RFAPIDefineManager : NSObject <RFInitializing>
 @property (weak, nonatomic) RFAPI *master;

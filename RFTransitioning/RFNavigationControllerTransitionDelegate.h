@@ -2,7 +2,7 @@
     RFNavigationControllerTransitionDelegate
     RFTransitioning
 
-    Copyright (c) 2014 BB9z
+    Copyright (c) 2014, 2016 BB9z
     https://github.com/RFUI/Alpha
 
     The MIT License (MIT)
@@ -28,6 +28,6 @@ NS_CLASS_AVAILABLE_IOS(7_0) @interface RFNavigationControllerTransitionDelegate 
 
 @protocol RFNavigationControllerAppearanceUpdating <NSObject>
 @optional
-- (void)updateNavigationAppearanceWithViewController:(id)viewController animated:(BOOL)animated;
+- (void)updateNavigationAppearanceWithViewController:(__kindof UIViewController *)viewController animated:(BOOL)animated;
 
 @end

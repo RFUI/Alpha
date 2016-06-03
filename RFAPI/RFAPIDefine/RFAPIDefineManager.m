@@ -3,6 +3,9 @@
 #import "RFAPI.h"
 #import "RFAPIDefineConfigFileKeys.h"
 
+#import "AFURLRequestSerialization.h"
+#import "AFURLResponseSerialization.h"
+
 @interface RFAPIDefineManager ()
 @property (strong, nonatomic) NSCache *defineCache;
 
@@ -130,7 +133,7 @@ RFInitializingRootForNSObject
 
         id parameter = parameters[key];
         if (parameter) {
-            NSString *encodedParameter = [[parameter description] stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
+            NSString *encodedParameter = [[parameter description] stringByAddingPercentEncodingWithAllowedCharacters:[NSCharacterSet URLQueryAllowedCharacterSet]];
             [path replaceCharactersInRange:match.range withString:encodedParameter];
             [parameters removeObjectForKey:key];
         }
@@ -288,7 +291,9 @@ RFInitializingRootForNSObject
         RFAPIDefineConfigFileValue_(RFAPIDefineResponseTypeKey) {
             self.responseExpectType = [value intValue];
         }
-
+        RFAPIDefineConfigFileValue_(RFAPIDefineResponseAcceptNullKey) {
+            self.responseAcceptNull = [value boolValue];
+        }
         RFAPIDefineConfigFileClassProperty_(responseSerializerClass, RFAPIDefineResponseSerializerKey)
 
         RFAPIDefineConfigFileClassProperty_(responseClass, RFAPIDefineResponseClassKey)

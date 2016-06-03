@@ -1,60 +1,48 @@
 #import "RFGridView.h"
 
-CGSize DEFAULT_RFGridViewCellSize = {20, 20};
-
 @implementation RFGridView
-@synthesize cellSize, cellMargin, containerPadding;
-@synthesize padding;
-@synthesize cellLayoutAlignment;
-@synthesize layoutOrientation;
-@synthesize layoutAnimated;
-@synthesize container = _container;
+RFInitializingRootForUIView
+
+- (void)onInit {
+    self.clipsToBounds = YES;
+    self.cellSize = (CGSize){20, 20};
+    self.layoutOrientation = RFUIOrientationVertical;
+    self.padding = RFEdgeMake(0, 0, 0, 0);
+}
+
+- (void)afterInit {
+}
+
+- (void)awakeFromNib {
+    [super awakeFromNib];
+    if (RFEdgeEqualToEdge(self.padding, RFEdgeZero) && self.container != nil) {
+        self.padding = RFEdgeMakeWithRects(self.bounds, self.container.frame);
+    }
+}
 
 - (NSString *)description {
     return [NSString stringWithFormat:@"<%@: %p; contentOffset:%@; contentSize:%@; layoutOrientation:%@; cellSize:%@>",
             NSStringFromClass([self class]),
-            self,
+            (void *)self,
             NSStringFromCGPoint(self.contentOffset),
             NSStringFromCGSize(self.contentSize),
             ((self.layoutOrientation == RFUIOrientationHorizontal)? @"RFUIOrientationHorizontal": @"RFUIOrientationVertical"),
             NSStringFromCGSize(self.cellSize)];
 }
 
-- (void)setupView {
-	self.clipsToBounds = YES;
+@synthesize container = _container;
+
+- (RFGridViewCellContainer *)container {
+    if (_container) return _container;
+    _container = [[RFGridViewCellContainer alloc] initWithFrame:self.bounds];
+    _container.autoresizingMask = UIViewAutoresizingFlexibleHeight|UIViewAutoresizingFlexibleWidth;
+    [self addSubview:_container];
+    return _container;
 }
 
-- (void)applyDefaultSettings {    
-    if (self.container == nil) {
-        _douts(@"new container creat")
-        self.container = [[RFGridViewCellContainer alloc] initWithFrame:self.bounds];
-        _container.autoresizingMask = UIViewAutoresizingFlexibleHeight | UIViewAutoresizingFlexibleWidth;
-        [self addSubview:_container];
-        _container.backgroundColor = [UIColor clearColor];
-        
-        self.padding = RFPaddingMake(0, 0, 0, 0);
-    }
-    self.container.master = self;
-    
-    self.cellSize = DEFAULT_RFGridViewCellSize;
-    self.layoutOrientation = RFUIOrientationVertical;
-    self.layoutAnimated = YES;
-}
-
-- (id)initWithFrame:(CGRect)aRect {
-	self = [super initWithFrame:aRect];
-	if (self) {
-		[self setupView];
-        [self applyDefaultSettings];
-	}
-	return self;
-}
-
-- (void)awakeFromNib {
-    if (RFPaddingEqualToPadding(self.padding, RFPaddingZero) && self.container != nil) {
-        self.padding = RFPaddingMakeWithRects(self.bounds, self.container.frame);
-    }
-    [self applyDefaultSettings];
+- (void)setContainer:(RFGridViewCellContainer *)container {
+    _container = container;
+    container.master = self;
 }
 
 - (void)setNeedsLayout {
@@ -66,47 +54,46 @@ CGSize DEFAULT_RFGridViewCellSize = {20, 20};
 
 
 #pragma mark - RFGridViewCellContainer
+
 @interface RFGridViewCellContainer () {
     NSUInteger lastRowCount;
 }
 @end
 
 @implementation RFGridViewCellContainer
-@synthesize master = _master;
 
 - (void)layoutSubviews {
-    _doutwork()
-    BOOL _layoutAnimated = self.master.layoutAnimated;
+    RFGridView *master = self.master;
+    if (!master) {
+        [super layoutSubviews];
+        return;
+    }
+
+    BOOL _layoutAnimated = master.layoutAnimated;
     if (_layoutAnimated) {
         [UIView beginAnimations:@"RFGridViewLayoutAnimation" context:nil];
         [UIView setAnimationDuration:0.5];
     }
-    
-    RFGridView *master = self.master;
-    _douto(master)
-    _dout_point(master.contentOffset)
-    
+
     CGFloat wCell = master.cellSize.width;
     CGFloat hCell = master.cellSize.height;
     
     if (!!!(wCell > 0 && hCell > 0)) {
-        NSLog(@"Warning: RFGridView >> invaild cell size, use default size instead.");
-        wCell = DEFAULT_RFGridViewCellSize.width;
-        hCell = DEFAULT_RFGridViewCellSize.height;
+        dout_warning(@"RFGridView >> invaild cell size, use default size instead.")
+        wCell = 20;
+        hCell = 20;
     }
     
-    RFMargin margin = master.cellMargin;
-    RFPadding padding = master.containerPadding;
+    RFEdge margin = master.cellMargin;
+    RFEdge padding = master.containerPadding;
     
     // Cell margin may bigger than container padding
-    RFPadding trueEdge = RFPaddingMake(MAX(margin.top, padding.top), MAX(margin.right, padding.right), MAX(margin.bottom, padding.bottom), MAX(margin.left, padding.left));
+    RFEdge trueEdge = RFEdgeMake(MAX(margin.top, padding.top), MAX(margin.right, padding.right), MAX(margin.bottom, padding.bottom), MAX(margin.left, padding.left));
     
     CGSize masterSize = master.bounds.size;
-    _dout_rect(master.bounds);
     CGRect containerFrameWillBe = CGRectMake(master.padding.left, master.padding.top, masterSize.width-master.padding.left-master.padding.right, masterSize.height-master.padding.top-master.padding.bottom);
-    _dout_rect(containerFrameWillBe);
     
-    CGPoint offset = self.master.contentOffset;
+    CGPoint offset = master.contentOffset;
     
     // For cell layout not box model content
     // Cell 本身能处的范围，不含边距
@@ -121,9 +108,7 @@ CGSize DEFAULT_RFGridViewCellSize = {20, 20};
     NSUInteger ixRow = 0;
     
     UIView *tmp_view;
-    if (self.master.layoutOrientation == RFUIOrientationVertical) {
-        _douts(@"is RFUIOrientationVertical")
-        
+    if (master.layoutOrientation == RFUIOrientationVertical) {
         NSUInteger nWidth = (contentBox.size.width + xMMargin) / (wCell + xMMargin);
         if (nWidth == 0) {
             nWidth = 1;
@@ -139,22 +124,18 @@ CGSize DEFAULT_RFGridViewCellSize = {20, 20};
             ixCol = i%nWidth;
             ixRow = i/nWidth;
             tmp_view.frame = CGRectMake(basePoint.x + ixCol*(wCell+xMMargin), basePoint.y + ixRow*(hCell+yMMargin), wCell, hCell);
-            _dout_rect(tmp_view.frame)
         }
-        
-        _dout_rect(self.frame)
-        self.master.contentSize = CGSizeMake(CGRectGetMaxX(self.frame), CGRectGetMaxY(self.frame) + master.padding.bottom);
+
+        master.contentSize = CGSizeMake(CGRectGetMaxX(self.frame), CGRectGetMaxY(self.frame) + master.padding.bottom);
         offset.y = offset.y * lastRowCount / nWidth;
         lastRowCount = nWidth;
     }
     else {
         NSUInteger nHeight = (contentBox.size.height + yMMargin) / (hCell + yMMargin);
         if (nHeight == 0) nHeight = 1;
-        
-        _dout_rect(master.bounds)
+
         containerFrameWillBe.size.width = ceilf((float)nCount/(float)nHeight)*(wCell+xMMargin)-xMMargin + trueEdge.left + trueEdge.right;
         self.frame = containerFrameWillBe;
-        _dout_rect(self.frame)
         
         basePoint.y += (contentBox.size.height - (nHeight-1)*(hCell+yMMargin) - hCell)/2;
         
@@ -163,16 +144,13 @@ CGSize DEFAULT_RFGridViewCellSize = {20, 20};
             ixRow = i%nHeight;
             ixCol = i/nHeight;
             tmp_view.frame = CGRectMake(basePoint.x + ixCol*(wCell+xMMargin), basePoint.y + ixRow*(hCell+yMMargin), wCell, hCell);
-            _dout_rect(tmp_view.frame)
         }
 
         master.contentSize = CGSizeMake(CGRectGetMaxX(self.frame) + master.padding.right, CGRectGetMaxY(self.frame));
-        _douto(self.master)
         offset.x = offset.x * lastRowCount / nHeight;
         lastRowCount = nHeight;
     }
     master.contentOffset = offset;
-    _dout_point(master.contentOffset);
     
     if (_layoutAnimated) {
         [UIView commitAnimations];

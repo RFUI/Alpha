@@ -5,6 +5,8 @@
 @dynamic delegate;
 
 - (BOOL)respondsToSelector:(SEL)aSelector {
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wpartial-availability"
     _RFDelegateChainHasBlockPropertyRespondsToSelector(shouldSelectItem, collectionView:shouldSelectItemAtIndexPath:)
     _RFDelegateChainHasBlockPropertyRespondsToSelector(shouldDeselectItem, collectionView:shouldDeselectItemAtIndexPath:)
     _RFDelegateChainHasBlockPropertyRespondsToSelector(didSelectItem, collectionView:didSelectItemAtIndexPath:)
@@ -20,6 +22,7 @@
     _RFDelegateChainHasBlockPropertyRespondsToSelector(shouldShowMenuForItem, collectionView:shouldShowMenuForItemAtIndexPath:)
     _RFDelegateChainHasBlockPropertyRespondsToSelector(canPerformAction, collectionView:canPerformAction:forItemAtIndexPath:withSender:)
     _RFDelegateChainHasBlockPropertyRespondsToSelector(performAction, collectionView:performAction:forItemAtIndexPath:withSender:)
+#pragma clang diagnostic pop
     return [super respondsToSelector:aSelector];
 }
 
@@ -83,19 +86,25 @@
 #pragma mark -
 
 - (void)collectionView:(UICollectionView *)collectionView willDisplayCell:(UICollectionViewCell *)cell forItemAtIndexPath:(NSIndexPath *)indexPath {
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wpartial-availability"
     if (self.willDisplayCell) {
         self.willDisplayCell(collectionView, cell, indexPath, self.delegate);
         return;
     }
     [self.delegate collectionView:collectionView willDisplayCell:cell forItemAtIndexPath:indexPath];
+#pragma clang diagnostic pop
 }
 
 - (void)collectionView:(UICollectionView *)collectionView willDisplaySupplementaryView:(UICollectionReusableView *)view forElementKind:(NSString *)elementKind atIndexPath:(NSIndexPath *)indexPath {
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wpartial-availability"
     if (self.willDisplaySupplementaryView) {
         self.willDisplaySupplementaryView(collectionView, view, elementKind, indexPath, self.delegate);
         return;
     }
     [self.delegate collectionView:collectionView willDisplaySupplementaryView:view forElementKind:elementKind atIndexPath:indexPath];
+#pragma clang diagnostic pop
 }
 
 - (void)collectionView:(UICollectionView *)collectionView didEndDisplayingCell:(UICollectionViewCell *)cell forItemAtIndexPath:(NSIndexPath *)indexPath {
@@ -120,7 +129,7 @@
     if (self.transitionLayout) {
         return self.transitionLayout(collectionView, fromLayout, toLayout, self.delegate);
     }
-    return [self.delegate collectionView:collectionView transitionLayoutForOldLayout:fromLayout newLayout:toLayout];
+    return (UICollectionViewTransitionLayout *_Nonnull)[self.delegate collectionView:collectionView transitionLayoutForOldLayout:fromLayout newLayout:toLayout];
 }
 
 #pragma mark -

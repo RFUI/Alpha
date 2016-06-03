@@ -1,7 +1,10 @@
 
 #import "RFRefreshButton.h"
 
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wcast-qual"
 static void *const RFRefreshButtonKVOContext = (void *)&RFRefreshButtonKVOContext;
+#pragma clang diagnostic pop
 
 @interface RFRefreshButton ()
 @property (readwrite, nonatomic) BOOL observing;

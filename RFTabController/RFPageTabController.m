@@ -2,6 +2,35 @@
 #import "RFPageTabController.h"
 #import "RFDataSourceArray.h"
 
+@interface _RFTab_UIPageViewController : UIPageViewController
+@end
+
+@implementation _RFTab_UIPageViewController
+
+//! Try fix No view controller managing visible view
+//! http://stackoverflow.com/q/14220289
+- (void)setViewControllers:(NSArray*)viewControllers direction:(UIPageViewControllerNavigationDirection)direction animated:(BOOL)animated completion:(void (^)(BOOL))completion {
+    if (!animated) {
+        [super setViewControllers:viewControllers direction:direction animated:NO completion:completion];
+        return;
+    }
+
+    [super setViewControllers:viewControllers direction:direction animated:YES completion:^(BOOL finished){
+        if (finished) {
+            dispatch_async(dispatch_get_main_queue(), ^{
+                [super setViewControllers:viewControllers direction:direction animated:NO completion:completion];
+            });
+        }
+        else {
+            if (completion) {
+                completion(finished);
+            }
+        }
+    }];
+}
+
+@end
+
 @interface RFTabController (Private)
 @property (assign, nonatomic) NSUInteger _selectedIndex;
 @property (strong, nonatomic) RFDataSourceArray *viewControllerStore;
@@ -29,7 +58,7 @@
 - (void)onInit {
     [super onInit];
 
-    UIPageViewController *pc = [[UIPageViewController alloc] initWithTransitionStyle:UIPageViewControllerTransitionStyleScroll navigationOrientation:UIPageViewControllerNavigationOrientationHorizontal options:nil];
+    UIPageViewController *pc = [[_RFTab_UIPageViewController alloc] initWithTransitionStyle:UIPageViewControllerTransitionStyleScroll navigationOrientation:UIPageViewControllerNavigationOrientationHorizontal options:nil];
     pc.dataSource = self;
     pc.delegate = self;
     [self addChildViewController:pc];
@@ -60,11 +89,10 @@
         if (noticeDelegate) {
             [self noticeDelegateWillSelectViewController:selectedViewController atIndex:index];
         }
-        @weakify(self);
+        __strong RFPageTabController *this = self;
         [self.pageViewController setViewControllers:@[ selectedViewController ] direction:UIPageViewControllerNavigationDirectionForward animated:NO completion:^(BOOL finished) {
-            @strongify(self);
             if (noticeDelegate) {
-                [self noticeDelegateDidSelectViewController:selectedViewController atIndex:index];
+                [this noticeDelegateDidSelectViewController:selectedViewController atIndex:index];
             }
         }];
     }
@@ -116,12 +144,11 @@
     if (noticeDelegate) {
         [self noticeDelegateWillSelectViewController:svc atIndex:newSelectedIndex];
     }
-    @weakify(self);
+    __strong RFPageTabController *this = self;
     [self.pageViewController setViewControllers:@[ svc ] direction:direction animated:animated completion:^(BOOL finished) {
-        @strongify(self);
         tabContainer.userInteractionEnabled = YES;
         if (noticeDelegate) {
-            [self noticeDelegateDidSelectViewController:svc atIndex:newSelectedIndex];
+            [this noticeDelegateDidSelectViewController:svc atIndex:newSelectedIndex];
         }
         if (completion) completion(finished);
     }];

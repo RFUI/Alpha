@@ -2,7 +2,7 @@
     RFCheckBox
     RFUI
 
-    Copyright (c) 2013-2014 BB9z
+    Copyright (c) 2013-2016 BB9z
     https://github.com/RFUI/Alpha
 
     The MIT License (MIT)

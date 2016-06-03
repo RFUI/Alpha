@@ -388,8 +388,8 @@
     [super observeValueForKeyPath:keyPath ofObject:object change:change context:context];
 }
 
-- (void)scrollViewDidEndZooming:(UIScrollView *)scrollView withView:(UIView *)view atScale:(float)scale {
-    dout_float(scale)
+- (void)scrollViewDidEndZooming:(UIScrollView *)scrollView withView:(UIView *)view atScale:(CGFloat)scale {
+    _dout_float(scale)
 }
 
 - (UIView *)viewForZoomingInScrollView:(UIScrollView *)scrollView {

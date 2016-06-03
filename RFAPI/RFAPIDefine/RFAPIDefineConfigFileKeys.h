@@ -31,6 +31,7 @@ extern NSString *const RFAPIDefineOfflinePolicyKey;         /// Offline Policy
 
 extern NSString *const RFAPIDefineResponseSerializerKey;    /// Response Serializer
 extern NSString *const RFAPIDefineResponseTypeKey;          /// Response Type
+extern NSString *const RFAPIDefineResponseAcceptNullKey;    /// Response Accept Null
 extern NSString *const RFAPIDefineResponseClassKey;         /// Response Class
 
 extern NSString *const RFAPIDefineUserInfoKey;              /// User Info

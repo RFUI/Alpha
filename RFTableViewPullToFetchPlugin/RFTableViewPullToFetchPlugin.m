@@ -316,7 +316,7 @@ static NSTimeInterval RFPullToFetchAnimateTimeInterval = .2;
     [UIView animateWithDuration:RFPullToFetchAnimateTimeInterval delay:0 options:UIViewAnimationOptionBeginFromCurrentState animated:animated beforeAnimations:nil animations:^{
         [self updateFooterLayout];
 
-        UITableView *tb = self.tableView;
+        __strong UITableView *tb = self.tableView;
         if (!tb || !tb.window) return;
 
         UIEdgeInsets edge = tb.contentInset;

@@ -5,7 +5,7 @@
 @implementation RFAPIDefine
 
 - (NSString *)description {
-    return [NSString stringWithFormat:@"<%@: %p, name = %@, path = %@>", self.class, self, self.name, self.path];
+    return [NSString stringWithFormat:@"<%@: %p, name = %@, path = %@>", self.class, (void *)self, self.name, self.path];
 }
 
 - (NSString *)debugDescription {
@@ -24,15 +24,16 @@
             "\t offlinePolicy = %d,\n"
             "\t responseSerializerClass = %@,\n"
             "\t responseExpectType = %@,\n"
+            "\t responseAcceptNull = %@,\n"
             "\t responseClass = %@,\n"
             "\t userInfo = %@\n"
             "\t notes = %@\n"
-            ">", self.class, self, self.name,
+            ">", self.class, (void *)self, self.name,
             self.baseURL, self.pathPrefix, self.path, self.method,
             self.HTTPRequestHeaders, self.defaultParameters, @(self.needsAuthorization),
             self.responseSerializerClass,
             self.cachePolicy, self.expire, self.offlinePolicy,
-            self.responseSerializerClass, @(self.responseExpectType), self.responseClass,
+            self.responseSerializerClass, @(self.responseExpectType), @(self.responseAcceptNull), self.responseClass,
             self.userInfo, self.notes];
 }
 
@@ -80,13 +81,14 @@
     self.HTTPRequestHeaders = [decoder decodeObjectOfClass:[NSDictionary class] forKey:@keypath(self, HTTPRequestHeaders)];
     self.defaultParameters = [decoder decodeObjectOfClass:[NSDictionary class] forKey:@keypath(self, defaultParameters)];
     self.needsAuthorization = [[decoder decodeObjectOfClass:[NSNumber class] forKey:@keypath(self, needsAuthorization)] boolValue];
-    self.requestSerializerClass = NSClassFromString([decoder decodeObjectOfClass:[NSString class] forKey:@keypath(self, requestSerializerClass)]);
+    self.requestSerializerClass = NSClassFromString((id)[decoder decodeObjectOfClass:[NSString class] forKey:@keypath(self, requestSerializerClass)]);
     self.cachePolicy = [[decoder decodeObjectOfClass:[NSNumber class] forKey:@keypath(self, cachePolicy)] shortValue];
     self.expire = [[decoder decodeObjectOfClass:[NSNumber class] forKey:@keypath(self, expire)] doubleValue];
     self.offlinePolicy = [[decoder decodeObjectOfClass:[NSNumber class] forKey:@keypath(self, offlinePolicy)] shortValue];
-    self.responseSerializerClass = NSClassFromString([decoder decodeObjectOfClass:[NSString class] forKey:@keypath(self, responseSerializerClass)]);
+    self.responseSerializerClass = NSClassFromString((id)[decoder decodeObjectOfClass:[NSString class] forKey:@keypath(self, responseSerializerClass)]);
     self.responseExpectType = [[decoder decodeObjectOfClass:[NSNumber class] forKey:@keypath(self, responseExpectType)] shortValue];
-    self.responseClass = NSClassFromString([decoder decodeObjectOfClass:[NSString class] forKey:@keypath(self, responseClass)]);
+    self.responseAcceptNull = [[decoder decodeObjectOfClass:[NSNumber class] forKey:@keypath(self, responseExpectType)] boolValue];
+    self.responseClass = NSClassFromString((id)[decoder decodeObjectOfClass:[NSString class] forKey:@keypath(self, responseClass)]);
     self.userInfo = [decoder decodeObjectOfClass:[NSDictionary class] forKey:@keypath(self, userInfo)];
     self.notes = [decoder decodeObjectOfClass:[NSString class] forKey:@keypath(self, notes)];
 
@@ -108,6 +110,7 @@
     [aCoder encodeObject:@(self.offlinePolicy) forKey:@keypath(self, offlinePolicy)];
     [aCoder encodeObject:NSStringFromClass(self.responseSerializerClass) forKey:@keypath(self, responseSerializerClass)];
     [aCoder encodeObject:@(self.responseExpectType) forKey:@keypath(self, responseExpectType)];
+    [aCoder encodeObject:@(self.responseAcceptNull) forKey:@keypath(self, responseAcceptNull)];
     [aCoder encodeObject:NSStringFromClass(self.responseClass) forKey:@keypath(self, responseClass)];
     [aCoder encodeObject:self.userInfo forKey:@keypath(self, userInfo)];
     [aCoder encodeObject:self.notes forKey:@keypath(self, notes)];
@@ -137,6 +140,7 @@
 
     clone.responseSerializerClass = self.responseSerializerClass;
     clone.responseExpectType = self.responseExpectType;
+    clone.responseAcceptNull = self.responseAcceptNull;
     clone.responseClass = self.responseClass;
 
     clone.userInfo = self.userInfo;

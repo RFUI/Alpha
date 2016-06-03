@@ -1,7 +1,7 @@
 /*!
     RFAPI
 
-    Copyright (c) 2014-2015 BB9z
+    Copyright (c) 2014-2016 BB9z
     https://github.com/RFUI/Alpha
 
     The MIT License (MIT)
@@ -13,37 +13,46 @@
 #import "RFAPIDefine.h"
 #import "RFAPIDefineManager.h"
 #import "RFAPICacheManager.h"
-#import "AFNetworkReachabilityManager.h"
-#import "JSONModel.h"
-#import "AFSecurityPolicy.h"
+
+@class AFNetworkReachabilityManager;
+@class AFSecurityPolicy;
+@protocol AFMultipartFormData;
 
 @class RFMessageManager, RFNetworkActivityIndicatorMessage, AFHTTPRequestOperation;
 @class RFAPIControl, RFHTTPRequestFormData;
+
 
 @interface RFAPI : NSOperationQueue <
     RFInitializing
 >
 
-+ (instancetype)sharedInstance;
++ (nonnull instancetype)sharedInstance;
 
-@property (readonly, nonatomic) AFNetworkReachabilityManager *reachabilityManager;
-@property (readonly, nonatomic) RFAPICacheManager *cacheManager;
+/**
+ Defult shared manager
+ */
+@property (nonnull, readonly) AFNetworkReachabilityManager *reachabilityManager;
+
+/**
+ @bug RFAPI cache management only works on iOS 7.
+ */
+@property (nonnull, readonly) RFAPICacheManager *cacheManager;
 
 #pragma mark - Define
 
-@property (readonly, nonatomic) RFAPIDefineManager *defineManager;
+@property (nonnull, readonly) RFAPIDefineManager *defineManager;
 
 #pragma mark - Request management
 
-- (NSArray *)operationsWithIdentifier:(NSString *)identifier;
-- (NSArray *)operationsWithGroupIdentifier:(NSString *)identifier;
+- (nonnull NSArray<AFHTTPRequestOperation *> *)operationsWithIdentifier:(nullable NSString *)identifier;
+- (nonnull NSArray<AFHTTPRequestOperation *> *)operationsWithGroupIdentifier:(nullable NSString *)identifier;
 
-- (void)cancelOperationWithIdentifier:(NSString *)identifier;
-- (void)cancelOperationsWithGroupIdentifier:(NSString *)identifier;
+- (void)cancelOperationWithIdentifier:(nullable NSString *)identifier;
+- (void)cancelOperationsWithGroupIdentifier:(nullable NSString *)identifier;
 
 #pragma mark - Activity Indicator
 
-@property (strong, nonatomic) RFMessageManager *networkActivityIndicatorManager;
+@property (nullable, strong) RFMessageManager *networkActivityIndicatorManager;
 
 #pragma mark - Request
 
@@ -61,64 +70,73 @@
  @param failure     请求失败回调的 block，可为空。为空时将用默认的方法显示错误信息
  @param completion  请求完成回掉的 block，必定会被调用（即使请求创建失败），会在 success 和 failure 回调后执行。被设计用来执行通用的清理。可为空。
  */
-- (AFHTTPRequestOperation *)requestWithName:(NSString *)APIName
-     parameters:(NSDictionary *)parameters
-    controlInfo:(RFAPIControl *)controlInfo
-        success:(void (^)(AFHTTPRequestOperation *operation, id responseObject))success
-        failure:(void (^)(AFHTTPRequestOperation *operation, NSError *error))failure
-     completion:(void (^)(AFHTTPRequestOperation *operation))completion;
+- (nullable AFHTTPRequestOperation *)requestWithName:(nonnull NSString *)APIName
+     parameters:(nullable NSDictionary *)parameters
+    controlInfo:(nullable RFAPIControl *)controlInfo
+        success:(void (^_Nullable)(AFHTTPRequestOperation *_Nullable operation, id _Nullable responseObject))success
+        failure:(void (^_Nullable)(AFHTTPRequestOperation *_Nullable operation, NSError *_Nonnull error))failure
+     completion:(void (^_Nullable)(AFHTTPRequestOperation *_Nullable operation))completion;
 
 /**
  上传文件
 
  @param arrayContainsFormDataObj 包含 RFHTTPRequestFormData 对象的数组
  */
-- (AFHTTPRequestOperation *)requestWithName:(NSString *)APIName
-     parameters:(NSDictionary *)parameters
-       formData:(NSArray *)arrayContainsFormDataObj
-    controlInfo:(RFAPIControl *)controlInfo
- uploadProgress:(void (^)(NSUInteger bytesWritten, long long totalBytesWritten, long long totalBytesExpectedToWrite))progress
-        success:(void (^)(AFHTTPRequestOperation *operation, id responseObject))success
-        failure:(void (^)(AFHTTPRequestOperation *operation, NSError *error))failure
-     completion:(void (^)(AFHTTPRequestOperation *operation))completion;
+- (nullable AFHTTPRequestOperation *)requestWithName:(nonnull NSString *)APIName
+     parameters:(nullable NSDictionary *)parameters
+       formData:(nullable NSArray<RFHTTPRequestFormData *> *)arrayContainsFormDataObj
+    controlInfo:(nullable RFAPIControl *)controlInfo
+ uploadProgress:(void (^_Nullable)(NSUInteger bytesWritten, long long totalBytesWritten, long long totalBytesExpectedToWrite))progress
+        success:(void (^_Nullable)(AFHTTPRequestOperation *_Nullable operation, id _Nullable responseObject))success
+        failure:(void (^_Nullable)(AFHTTPRequestOperation *_Nullable operation, NSError *_Nonnull error))failure
+     completion:(void (^_Nullable)(AFHTTPRequestOperation *_Nullable operation))completion;
 
 /**
  Creat a mutable URLRequest with special info.
  */
-- (NSMutableURLRequest *)URLRequestWithDefine:(RFAPIDefine *)define parameters:(NSDictionary *)parameters formData:(NSArray *)RFFormData controlInfo:(RFAPIControl *)controlInfo error:(NSError *__autoreleasing *)error;
+- (nullable NSMutableURLRequest *)URLRequestWithDefine:(nonnull RFAPIDefine *)define parameters:(nullable NSDictionary *)parameters formData:(nullable NSArray *)RFFormData controlInfo:(nullable RFAPIControl *)controlInfo error:(NSError *_Nullable __autoreleasing *_Nullable)error;
 
 #pragma mark - Response
 
-- (void)invalidateCacheWithName:(NSString *)APIName parameters:(NSDictionary *)parameters;
+/**
+ If `NULL` (default), the main queue will be used.
+ */
+@property (nonatomic, null_resettable, strong) dispatch_queue_t responseProcessingQueue;
+
+- (void)invalidateCacheWithName:(nullable NSString *)APIName parameters:(nullable NSDictionary *)parameters;
 
 #pragma mark - Methods for overwrite
 
 /**
  Default implementation first add parameters from APIDefine then add parameters from define manager.
  */
-- (void)preprocessingRequestParameters:(NSMutableDictionary **)requestParameters HTTPHeaders:(NSMutableDictionary **)requestHeaders withParameters:(NSDictionary *)parameters define:(RFAPIDefine *)define controlInfo:(RFAPIControl *)controlInfo;
+- (void)preprocessingRequestParameters:(NSMutableDictionary *_Nullable *_Nonnull)requestParameters HTTPHeaders:(NSMutableDictionary *_Nullable *_Nonnull)requestHeaders withParameters:(nullable NSDictionary *)parameters define:(nonnull RFAPIDefine *)define controlInfo:(nullable RFAPIControl *)controlInfo;
 
 /**
  Default implementation execute RFAPIControl’s requestCustomization.
  */
-- (NSMutableURLRequest *)finalizeSerializedRequest:(NSMutableURLRequest *)request withDefine:(RFAPIDefine *)define controlInfo:(RFAPIControl *)controlInfo;
+- (nullable NSMutableURLRequest *)finalizeSerializedRequest:(nonnull NSMutableURLRequest *)request withDefine:(nonnull RFAPIDefine *)define controlInfo:(nullable RFAPIControl *)controlInfo;
 
 /**
  默认实现返回 YES
+ 
+ This method is called on the main queue.
 
  @return 返回 YES 将继续错误的处理继续交由请求的回调处理，NO 处理结束
  */
-- (BOOL)generalHandlerForError:(NSError *)error withDefine:(RFAPIDefine *)define controlInfo:(RFAPIControl *)controlInfo requestOperation:(AFHTTPRequestOperation *)operation operationFailureCallback:(void (^)(AFHTTPRequestOperation *, NSError *))operationFailureCallback;
+- (BOOL)generalHandlerForError:(nonnull NSError *)error withDefine:(nonnull RFAPIDefine *)define controlInfo:(nullable RFAPIControl *)controlInfo requestOperation:(nullable AFHTTPRequestOperation *)operation operationFailureCallback:(void (^_Nullable)(AFHTTPRequestOperation *_Nullable, NSError *_Nonnull))operationFailureCallback;
 
 /**
  判断响应是否是成功的结果
  
  Default implementation just return YES.
  
+ This method is called on responseProcessingQueue.
+ 
  @param responseObjectRef 可以用来修改返回值
  @param error 可选的错误信息
  */
-- (BOOL)isSuccessResponse:(id *)responseObjectRef error:(NSError *__autoreleasing *)error;
+- (BOOL)isSuccessResponse:(id _Nullable __strong *_Nonnull)responseObjectRef error:(NSError *_Nullable __autoreleasing *_Nullable)error;
 
 #pragma mark - Credentials & Security
 
@@ -127,85 +145,84 @@
 
  @see AFURLConnectionOperation -shouldUseCredentialStorage
  */
-@property (nonatomic, assign) BOOL shouldUseCredentialStorage;
+@property BOOL shouldUseCredentialStorage;
 
 /**
  The credential used by request operations for authentication challenges.
 
  @see AFURLConnectionOperation -credential
  */
-@property (nonatomic, strong) NSURLCredential *credential;
+@property (nullable, strong) NSURLCredential *credential;
 
 /**
  The security policy used by created request operations to evaluate server trust for secure connections. `RFAPI` uses the `defaultPolicy` unless otherwise specified.
  */
-@property (nonatomic, strong) AFSecurityPolicy *securityPolicy;
+@property (nonnull, strong) AFSecurityPolicy *securityPolicy;
 
 @end
 
-extern NSString *const RFAPIRequestArrayParameterKey;
+extern NSString *_Nonnull const RFAPIRequestArrayParameterKey;
+extern NSString *_Nonnull const RFAPIErrorDomain;
 
-extern NSString *const RFAPIErrorDomain;
-
-extern NSString *const RFAPIMessageControlKey;
-extern NSString *const RFAPIIdentifierControlKey;
-extern NSString *const RFAPIGroupIdentifierControlKey;
-extern NSString *const RFAPIBackgroundTaskControlKey;
-extern NSString *const RFAPIRequestCustomizationControlKey;
+extern NSString *_Nonnull const RFAPIMessageControlKey;
+extern NSString *_Nonnull const RFAPIIdentifierControlKey;
+extern NSString *_Nonnull const RFAPIGroupIdentifierControlKey;
+extern NSString *_Nonnull const RFAPIBackgroundTaskControlKey;
+extern NSString *_Nonnull const RFAPIRequestCustomizationControlKey;
 
 @interface RFAPIControl : NSObject
 /** Activity message.
  请求开始前，自动进入消息显示队列。结束时自动从队列中清除。
 */
-@property (strong, nonatomic) RFNetworkActivityIndicatorMessage *message;
+@property (nullable, strong) RFNetworkActivityIndicatorMessage *message;
 
 /// Identifier for request.
-@property (strong, nonatomic) NSString *identifier;
+@property (nullable, copy) NSString *identifier;
 
 /// Group identifier for request.
-@property (strong, nonatomic) NSString *groupIdentifier;
+@property (nullable, copy) NSString *groupIdentifier;
 
 // No implementation
-@property (assign, nonatomic) BOOL backgroundTask;
+@property BOOL backgroundTask;
 
 /// Ignore cache policy, force current request load from server.
-@property (assign, nonatomic) BOOL forceLoad;
+@property BOOL forceLoad;
 
 /// Customization URL request object
-@property (copy, nonatomic) NSMutableURLRequest * (^requestCustomization)(NSMutableURLRequest *request);
+@property (nullable, copy) NSMutableURLRequest *_Nullable (^requestCustomization)(NSMutableURLRequest *_Nonnull request);
 
-- (id)initWithDictionary:(NSDictionary *)info;
-- (id)initWithIdentifier:(NSString *)identifier loadingMessage:(NSString *)message;
+- (nonnull id)initWithDictionary:(nonnull NSDictionary *)info;
+- (nonnull id)initWithIdentifier:(nonnull NSString *)identifier loadingMessage:(nullable NSString *)message;
 @end
 
 
 @interface RFHTTPRequestFormData : NSObject
 /// The name to be associated with the specified data. This property must be set.
-@property (copy, nonatomic) NSString *name;
+@property (nonnull, copy) NSString *name;
 
 // No implementation
-@property (copy, nonatomic) NSString *fileName;
+@property (nullable, copy) NSString *fileName;
 
 // No implementation
-@property (copy, nonatomic) NSString *mimeType;
+@property (nullable, copy) NSString *mimeType;
 
 /// The URL corresponding to the form content
-@property (strong, nonatomic) NSURL *fileURL;
+@property (nullable, copy) NSURL *fileURL;
 
 // No implementation
-@property (strong, nonatomic) NSInputStream *inputStream;
+@property (nullable, strong) NSInputStream *inputStream;
 
 /// The data to be encoded and appended to the form data.
-@property (strong, nonatomic) NSData *data;
+@property (nullable, strong) NSData *data;
 
 /**
  @param fileURL The URL corresponding to the file whose content will be appended to the form. This parameter must not be `nil`.
  @param name The name to be associated with the specified data. This parameter must not be `nil`.
  */
-+ (instancetype)formDataWithFileURL:(NSURL *)fileURL name:(NSString *)name;
++ (nonnull instancetype)formDataWithFileURL:(nonnull NSURL *)fileURL name:(nonnull NSString *)name;
 
-+ (instancetype)formDataWithData:(NSData *)data name:(NSString *)name;
-+ (instancetype)formDataWithData:(NSData *)data name:(NSString *)name fileName:(NSString *)fileName mimeType:(NSString *)mimeType;
++ (nonnull instancetype)formDataWithData:(nonnull NSData *)data name:(nonnull NSString *)name;
++ (nonnull instancetype)formDataWithData:(nonnull NSData *)data name:(nonnull NSString *)name fileName:(nullable NSString *)fileName mimeType:(nullable NSString *)mimeType;
 
-- (void)buildFormData:(id<AFMultipartFormData>)formData error:(NSError * __autoreleasing *)error;
+- (void)buildFormData:(nonnull id<AFMultipartFormData>)formData error:(NSError *_Nullable __autoreleasing *_Nullable)error;
 @end

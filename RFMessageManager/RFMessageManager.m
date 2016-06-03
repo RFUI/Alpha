@@ -17,7 +17,7 @@ RFInitializingRootForNSObject
 }
 
 - (NSString *)description {
-    return [NSString stringWithFormat:@"<%@: %p; displayingMessage = %@; messageQueue = %@>", self.class, self, self.displayingMessage, self.messageQueue];
+    return [NSString stringWithFormat:@"<%@: %p; displayingMessage = %@; messageQueue = %@>", self.class, (void *)self, self.displayingMessage, self.messageQueue];
 }
 
 - (void)hideWithGroupIdentifier:(NSString *)identifier {
@@ -121,7 +121,7 @@ RFInitializingRootForNSObject
 @implementation RFNetworkActivityIndicatorMessage
 
 - (NSString *)description {
-    return [NSString stringWithFormat:@"<%@: %p; title = %@; message = %@; identifier = %@; priority = %d>", self.class, self, self.title, self.message, self.identifier, (int)self.priority];
+    return [NSString stringWithFormat:@"<%@: %p; title = %@; message = %@; identifier = %@; priority = %d>", self.class, (void *)self, self.title, self.message, self.identifier, (int)self.priority];
 }
 
 - (instancetype)init {

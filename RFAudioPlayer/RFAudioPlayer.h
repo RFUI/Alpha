@@ -1,13 +1,24 @@
-// Pre TEST
-// Work best with KVO
+/*!
+    RFAudioPlayer
+    RFUI
 
-#import <Foundation/Foundation.h>
+    Copyright (c) 2013-2014, 2016 BB9z
+    https://github.com/RFUI/Alpha
+
+    The MIT License (MIT)
+    http://www.opensource.org/licenses/mit-license.php
+
+    TEST
+ */
+
 #import <AVFoundation/AVFoundation.h>
 
-/***/
+/**
+ Work best with KVO
+ */
 @interface RFAudioPlayer : NSObject
 
-+ (instancetype)sharedInstance;
++ (instancetype _Nonnull)sharedInstance;
 
 /**
  Play a single audiovisual resource referenced by a given URL. This method can be called many time in a short period and only the last item will be accepted.
@@ -18,16 +29,16 @@
  
  @param callback A block called on main queue when the receiver just before play the media or this url is skiped. May be nil.
  */
-- (void)playURL:(NSURL *)url ready:(void (^)(BOOL creat))callback;
+- (void)playURL:(NSURL *_Nonnull)url ready:(void (^_Nullable)(BOOL creat))callback;
 
 #pragma mark - Player stautes
-@property (readonly, nonatomic) AVPlayer *player;
-@property (readonly, copy, nonatomic) NSURL *currentPlayItemURL;
-@property (readonly, nonatomic) NSTimeInterval duration;
+@property (nonatomic, nullable, readonly) AVPlayer *player;
+@property (nonatomic, nullable, readonly, copy) NSURL *currentPlayItemURL;
+@property (nonatomic, readonly) NSTimeInterval duration;
 @property (nonatomic) NSTimeInterval currentTime; // KVO not supported
 
 // You can use this property to pause/play audio playback.
-@property (getter = isPlaying, nonatomic) BOOL playing;
+@property (nonatomic, getter = isPlaying) BOOL playing;
 
 - (BOOL)play;
 - (BOOL)pause;

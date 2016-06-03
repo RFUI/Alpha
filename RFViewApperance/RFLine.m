@@ -19,12 +19,17 @@
     CGFloat pixelOffsetY = 0;
     CGFloat pixelScale = (self.window.screen)? self.window.screen.scale : [UIApplication sharedApplication].keyWindow.screen.scale;
     if (self.onePixel) {
-        CGFloat pixelOffset = 1 / pixelScale / 2;
+        CGFloat pixelAdjust = 1. / pixelScale / 2.;
         if (isDrawingVertically) {
-            pixelOffsetX = (ABS(self.x) > ABS(self.rightMargin))? pixelOffset : - pixelOffset;
+            // Sign notes
+            //     ┌──┬──┐
+            //  -  │ +  ┊  - │ +
+            //     └──┴──┘
+            //     0          right
+            pixelOffsetX = (self.x < 0 || (self.x > self.rightMargin && self.rightMargin >= 0))? pixelAdjust : -pixelAdjust;
         }
         else {
-            pixelOffsetY = (ABS(self.y) > ABS(self.bottomMargin))? pixelOffset : -pixelOffset;
+            pixelOffsetY = (self.y < 0 || (self.y > self.bottomMargin && self.bottomMargin >=0))? pixelAdjust : -pixelAdjust;
         }
     }
 

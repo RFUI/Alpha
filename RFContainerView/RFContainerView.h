@@ -1,13 +1,13 @@
 /*!
     RFContainerView
 
-    Copyright (c) 2015 BB9z
+    Copyright (c) 2015-2016 BB9z
     https://github.com/RFUI/Alpha
 
     The MIT License (MIT)
     http://www.opensource.org/licenses/mit-license.php
 
-    TEST
+    Alpha
  */
 #import "RFUI.h"
 
@@ -39,11 +39,17 @@ IB_DESIGNABLE
 
 
 @property (readonly, nonatomic) BOOL embedViewControllerLoaded;
+@property (readonly, nullable, nonatomic) id embedViewController;
 
 /**
  加载并嵌入 view controller 到所属 view controller
  */
 - (void)loadEmbedViewController;
+
+/**
+ @param prepareBlock This block called before the embed view controller added into the parent view controller.
+ */
+- (void)loadEmbedViewControllerWithPrepareBlock:(void (^ __nullable)(id __nonnull viewController, RFContainerView * __nonnull container))prepareBlock;
 
 /**
  */

@@ -18,15 +18,21 @@
 /**
  
  */
-NS_CLASS_AVAILABLE_IOS(7_0) @interface RFNavigationController : UINavigationController <
+NS_CLASS_AVAILABLE_IOS(7_0)
+@interface RFNavigationController : UINavigationController <
     RFInitializing,
     RFNavigationControllerAppearanceUpdating
 >
 
 /**
- Generally, the first navigation controller instance will become the globalNavigationController.
+ The first navigation controller instance will become the globalNavigationController automatically.
  */
-+ (instancetype)globalNavigationController;
++ (nullable instancetype)globalNavigationController;
+
+/**
+ Sets the default global navigation controller to the given instance.
+ */
++ (void)setGlobalNavigationController:(nullable __kindof RFNavigationController *)navigationController;
 
 /**
  Call this method to update the reciver's status, such as navigationBar/bottomBar hidden/unhidden.

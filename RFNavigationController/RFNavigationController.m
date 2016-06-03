@@ -29,8 +29,10 @@ RFInitializingRootForUIViewController
     self.forwardDelegate = [RFNavigationControllerTransitionDelegate new];
     self.delegate = self.forwardDelegate;
 
-    if (!RFNavigationControllerGlobalInstance) {
-        RFNavigationControllerGlobalInstance = self;
+    @synchronized([RFNavigationController class]) {
+        if (!RFNavigationControllerGlobalInstance) {
+            RFNavigationControllerGlobalInstance = self;
+        }
     }
 }
 
@@ -45,6 +47,12 @@ RFInitializingRootForUIViewController
 
 + (instancetype)globalNavigationController {
     return RFNavigationControllerGlobalInstance;
+}
+
++ (void)setGlobalNavigationController:(__kindof RFNavigationController *)navigationController {
+    @synchronized([RFNavigationController class]) {
+        RFNavigationControllerGlobalInstance = navigationController;
+    }
 }
 
 - (void)viewDidLoad {

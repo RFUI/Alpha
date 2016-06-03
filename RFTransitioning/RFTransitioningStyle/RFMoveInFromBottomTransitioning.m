@@ -10,7 +10,7 @@
 
 - (void)onInit {
     self.duration = 0.3f;
-//    self.interactionControllerType = NSStringFromClass([RFPullDownToPopInteractionController class]);
+    self.interactionControllerType = NSStringFromClass([RFPullDownToPopInteractionController class]);
 }
 
 - (void)animateTransition:(id<UIViewControllerContextTransitioning>)transitionContext fromVC:(UIViewController *)fromVC toVC:(UIViewController *)toVC fromView:(UIView *)fromView toView:(UIView *)toView {

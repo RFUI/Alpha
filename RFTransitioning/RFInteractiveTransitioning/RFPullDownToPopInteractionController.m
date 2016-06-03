@@ -47,7 +47,8 @@
                 [self updateInteractiveTransition:percentComplete];
             }
             else {
-                if (translation > 0) {
+                // Only trigger when user pull down certain distance
+                if (percentComplete > 0.1) {
                     self.interactionInProgress = YES;
                     [self.viewController.navigationController popViewControllerAnimated:YES];
                 }

@@ -161,45 +161,7 @@ RFInitializingRootForUIViewController
 
 #pragma mark - Appearance update
 
-- (void)updateNavigationAppearanceWithViewController:(UIViewController *)viewController animated:(BOOL)animated {
-    BOOL shouldHide = self.preferredNavigationBarHidden;
-    if (viewController.navigationController == self) {
-#pragma clang diagnostic push
-#pragma clang diagnostic ignored "-Wdeprecated-declarations"
-        if ([viewController respondsToSelector:@selector(prefersNavigationBarHiddenForNavigationController:)]) {
-            shouldHide = [(id<RFNavigationBehaving>)viewController prefersNavigationBarHiddenForNavigationController:self];
-        }
-#pragma clang diagnostic pop
-        if ([viewController respondsToSelector:@selector(prefersNavigationBarHidden)]) {
-            shouldHide = [(id<RFNavigationBehaving>)viewController prefersNavigationBarHidden];
-        }
-
-        if (self.navigationBarHidden != shouldHide) {
-            [self setNavigationBarHidden:shouldHide animated:animated];
-        }
-    }
-
-    // Handel bottom bar appearance
-    shouldHide = YES;
-    if (viewController.navigationController == self) {
-        if ([viewController respondsToSelector:@selector(prefersBottomBarShown)]) {
-            shouldHide = ![(id)viewController prefersBottomBarShown];
-        }
-
-        if (viewController.navigationController == self
-            && self.bottomBarHidden != shouldHide) {
-            // If is interactive transitioning, use transitionDuration.
-            NSTimeInterval transitionDuration = self.transitionCoordinator.isInteractive? self.transitionCoordinator.transitionDuration : 0.35;
-
-            // Show, no animation for better visual effect if bottom bar is not translucent.
-            BOOL shouldAnimatd = (!shouldHide && !self.translucentBottomBar)? NO : animated;
-            [UIView animateWithDuration:transitionDuration delay:0 options:UIViewAnimationOptionBeginFromCurrentState animated:shouldAnimatd beforeAnimations:^{
-            } animations:^{
-                self.bottomBarHidden = shouldHide;
-            } completion:nil];
-        }
-    }
-
+- (void)updateNavigationAppearanceWithViewController:(UIViewController<RFNavigationBehaving> *)viewController animated:(BOOL)animated {
     // Handel status bar appearance
     if (self.handelViewControllerBasedStatusBarAppearance) {
         BOOL shouldStatusBarHidden = self.prefersStatusBarHidden;
@@ -226,6 +188,58 @@ RFInitializingRootForUIViewController
             [[UIApplication sharedApplication] setStatusBarStyle:preferredStatusBarStyle animated:animated];
         }
     }
+
+    if (viewController.navigationController == self) {
+        BOOL shouldHide = self.preferredNavigationBarHidden;
+
+        if ([viewController respondsToSelector:@selector(prefersNavigationBarHidden)]) {
+            shouldHide = [(id<RFNavigationBehaving>)viewController prefersNavigationBarHidden];
+        }
+
+        if (self.navigationBarHidden != shouldHide) {
+            [self setNavigationBarHidden:shouldHide animated:animated];
+        }
+
+        // Handel bottom bar appearance
+        shouldHide = YES;
+        if ([viewController respondsToSelector:@selector(prefersBottomBarShown)]) {
+            shouldHide = ![(id)viewController prefersBottomBarShown];
+        }
+
+        // If is interactive transitioning, use transitionDuration.
+        NSTimeInterval transitionDuration = self.transitionCoordinator.isInteractive? self.transitionCoordinator.transitionDuration : 0.35;
+        if (self.bottomBarHidden != shouldHide) {
+            // Show, no animation for better visual effect if bottom bar is not translucent.
+            BOOL shouldAnimatd = (!shouldHide && !self.translucentBottomBar)? NO : animated;
+            [UIView animateWithDuration:transitionDuration delay:0 options:UIViewAnimationOptionBeginFromCurrentState animated:shouldAnimatd beforeAnimations:^{
+            } animations:^{
+                self.bottomBarHidden = shouldHide;
+            } completion:nil];
+        }
+
+        [UIView animateWithDuration:transitionDuration delay:0 options:UIViewAnimationOptionBeginFromCurrentState animated:animated beforeAnimations:^{
+        } animations:^{
+
+            UINavigationBar *bar = self.navigationBar;
+            if ([viewController respondsToSelector:@selector(preferredNavigationBarTintColor)]) {
+                UIColor *barColor = [viewController preferredNavigationBarTintColor];
+
+                bar.barTintColor = barColor;
+            }
+            if ([viewController respondsToSelector:@selector(preferredNavigationBarItemColor)]) {
+                UIColor *itemColor = [viewController preferredNavigationBarItemColor];
+                bar.tintColor = itemColor;
+            }
+            if ([viewController respondsToSelector:@selector(preferredNavigationBarTitleTextAttributes)]) {
+                NSDictionary *ta = [viewController preferredNavigationBarTitleTextAttributes];
+                bar.titleTextAttributes = ta;
+            }
+        } completion:nil];
+    }
+
+
+
+    doutwork()
 }
 
 

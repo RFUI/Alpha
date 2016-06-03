@@ -37,14 +37,14 @@ NS_CLASS_AVAILABLE_IOS(7_0)
 /**
  Call this method to update the reciver's status, such as navigationBar/bottomBar hidden/unhidden.
  */
-- (void)updateNavigationAppearanceWithViewController:(__kindof UIViewController *)viewController animated:(BOOL)animated;
+- (void)updateNavigationAppearanceWithViewController:(nullable __kindof UIViewController *)viewController animated:(BOOL)animated;
 
 /**
  Determine navigaiton bar should hidden or not by default.
 
  If the reciver is load from nib, this property will be set with storyboard setting.
  */
-@property (assign, nonatomic) IBInspectable BOOL preferredNavigationBarHidden;
+@property (nonatomic) IBInspectable BOOL preferredNavigationBarHidden;
 
 #pragma mark - Bottom Bar
 
@@ -53,26 +53,26 @@ NS_CLASS_AVAILABLE_IOS(7_0)
  
  This bottom bar is a custom view, not the same with navigation controller’s toolbar.
  */
-@property (assign, nonatomic) BOOL bottomBarHidden;
+@property (nonatomic) BOOL bottomBarHidden;
 
 /**
  Changes the visibility of the navigation controller’s built-in bottom bar.
  */
 - (void)setBottomBarHidden:(BOOL)hidden animated:(BOOL)animated;
 
-@property (strong, nonatomic) IBOutlet UIView *bottomBar;
+@property (nonatomic, nullable, strong) IBOutlet UIView *bottomBar;
 
 /**
  A Boolean value indicating whether the bottom bar is translucent (YES) or not (NO).
  
  If the bottom bar is translucent, layout will be extended includes opaque bars.
  */
-@property (assign, nonatomic) IBInspectable BOOL translucentBottomBar;
+@property (nonatomic) IBInspectable BOOL translucentBottomBar;
 
 /**
  A Boolean value indicating whether the bottom bar fades in and out as it is shown or hidden, respectively.
  */
-@property (assign, nonatomic) IBInspectable BOOL bottomBarFadeAnimation;
+@property (nonatomic) IBInspectable BOOL bottomBarFadeAnimation;
 
 #pragma mark - Status Bar
 
@@ -83,19 +83,21 @@ NS_CLASS_AVAILABLE_IOS(7_0)
 
  Default No.
  */
-@property (assign, nonatomic) IBInspectable BOOL handelViewControllerBasedStatusBarAppearance;
+@property (nonatomic) IBInspectable BOOL handelViewControllerBasedStatusBarAppearance;
 
 /// Default `NO`.
-@property (assign, nonatomic) IBInspectable BOOL prefersStatusBarHidden;
+@property (nonatomic) IBInspectable BOOL prefersStatusBarHidden;
 
 /// Default `UIStatusBarStyleDefault`.
-@property (assign, nonatomic) UIStatusBarStyle preferredStatusBarStyle;
+@property (nonatomic) UIStatusBarStyle preferredStatusBarStyle;
 
 /// Default `UIStatusBarAnimationFade`.
-@property (assign, nonatomic) UIStatusBarAnimation preferredStatusBarUpdateAnimation;
+@property (nonatomic) UIStatusBarAnimation preferredStatusBarUpdateAnimation;
 
 #pragma mark - Delegate
-@property (strong, nonatomic) IBOutlet RFNavigationControllerTransitionDelegate *forwardDelegate;
+
+///
+@property (nonatomic, nullable, strong) IBOutlet RFNavigationControllerTransitionDelegate *forwardDelegate;
 
 @end
 
@@ -109,14 +111,21 @@ NS_CLASS_AVAILABLE_IOS(7_0)
  */
 - (BOOL)prefersNavigationBarHidden;
 
-- (BOOL)prefersNavigationBarHiddenForNavigationController:(RFNavigationController *)navigation  DEPRECATED_ATTRIBUTE;
+//
+- (nullable UIColor *)preferredNavigationBarTintColor;
+
+//
+- (nullable UIColor *)preferredNavigationBarItemColor;
+
+//
+- (nullable NSDictionary <NSString *,id> *)preferredNavigationBarTitleTextAttributes;
 
 /**
  Ask current view controller whether should pop or not when user tap the back button.
 
  @return Return NO to cancel pop.
  */
-- (BOOL)shouldPopOnBackButtonTappedForNavigationController:(RFNavigationController *)navigation;
+- (BOOL)shouldPopOnBackButtonTappedForNavigationController:(nonnull RFNavigationController *)navigation;
 
 /**
  Specifies whether the view controller prefers the bottom bar to be hidden or shown.
@@ -124,6 +133,22 @@ NS_CLASS_AVAILABLE_IOS(7_0)
  @return A Boolean value of YES specifies the bottom bar should be visiable. Default value is NO.
  */
 - (BOOL)prefersBottomBarShown;
+
+/**
+ Specifies whether the view controller prefers the status bar to be hidden or shown
+ */
+- (BOOL)prefersStatusBarHidden;
+
+/**
+ The preferred status bar style for the view controller.
+ */
+- (UIStatusBarStyle)preferredStatusBarStyle;
+
+/**
+ Specifies the animation style to use for hiding and showing the status bar for the view controller.
+ */
+- (UIStatusBarAnimation)preferredStatusBarUpdateAnimation;
+
 
 @end
 

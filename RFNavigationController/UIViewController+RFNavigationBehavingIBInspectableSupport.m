@@ -1,0 +1,19 @@
+
+#import "UIViewController+RFNavigationBehavingIBInspectableSupport.h"
+#import "RFSynthesizeCategoryProperty.h"
+
+@implementation UIViewController (RFNavigationBehavingIBInspectableSupport)
+
+RFSynthesizeCategoryBoolProperty(prefersNavigationBarHidden, setPrefersNavigationBarHidden)
+RFSynthesizeCategoryObjectProperty(preferredNavigationBarTintColor, setPreferredNavigationBarTintColor, UIColor *, OBJC_ASSOCIATION_COPY_NONATOMIC)
+
+RFSynthesizeCategoryBoolProperty(prefersBottomBarShown, setPrefersBottomBarShown)
+
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wobjc-protocol-method-implementation"
+RFSynthesizeCategoryBoolProperty(prefersStatusBarHidden, setPrefersStatusBarHidden)
+#pragma clang diagnostic pop
+
+RFSynthesizeCategoryScalarValueProperty(prepreferredStatusBarStylefer, setPreferredStatusBarStyle, UIStatusBarStyle, integerValue)
+
+@end

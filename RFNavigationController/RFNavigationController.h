@@ -36,6 +36,8 @@ NS_CLASS_AVAILABLE_IOS(7_0)
 
 /**
  Call this method to update the reciver's status, such as navigationBar/bottomBar hidden/unhidden.
+ 
+ @param viewController If the view controller is not managed by the reciver, only status bar appearance will change.
  */
 - (void)updateNavigationAppearanceWithViewController:(nullable __kindof UIViewController *)viewController animated:(BOOL)animated;
 

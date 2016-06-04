@@ -13,8 +13,9 @@ static RFNavigationController *RFNavigationControllerGlobalInstance;
 @interface RFNavigationController () <
     UIGestureRecognizerDelegate
 >
-@property (strong, nonatomic) RFNavigationBottomBar *bottomBarHolder;
-@property (weak, nonatomic) UIView *transitionView;
+@property (nonatomic, strong) RFNavigationBottomBar *bottomBarHolder;
+@property (nonatomic, weak) UIView *transitionView;
+@property (nonatomic, weak) UIViewController *statusBarHideChangeDelayViewController;
 
 @property (readwrite, weak, nonatomic) RFNavigationPopInteractionController *currentPopInteractionController;
 @property (readwrite, weak, nonatomic) UIGestureRecognizer *currentPopInteractionGestureRecognizer;
@@ -80,13 +81,13 @@ RFInitializingRootForUIViewController
 
 - (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
-    [self updateNavigationAppearanceWithViewController:self.topViewController animated:animated];
+    [self updateCurrentNavigationAppearanceAnimated:animated];
 }
 
 - (void)setPreferredNavigationBarHidden:(BOOL)preferredNavigationBarHidden {
     if (_preferredNavigationBarHidden != preferredNavigationBarHidden) {
         _preferredNavigationBarHidden = preferredNavigationBarHidden;
-        [self updateNavigationAppearanceWithViewController:self.topViewController animated:NO];
+        [self updateCurrentNavigationAppearanceAnimated:NO];
     }
 }
 
@@ -165,55 +166,27 @@ RFInitializingRootForUIViewController
 #pragma mark - Appearance update
 
 - (void)updateNavigationAppearanceWithViewController:(UIViewController<RFNavigationBehaving> *)viewController animated:(BOOL)animated {
-    // Handel status bar appearance
-    if (self.handelViewControllerBasedStatusBarAppearance) {
-        BOOL shouldStatusBarHidden = self.prefersStatusBarHidden;
-        if ([viewController respondsToSelector:@selector(prefersStatusBarHidden)]) {
-            shouldStatusBarHidden = [viewController prefersStatusBarHidden];
-        }
+    [self _updateNavigationAppearanceWithViewController:viewController animated:animated allEffectTakeImmediately:YES];
+}
 
-        if (shouldStatusBarHidden != [UIApplication sharedApplication].statusBarHidden) {
-            UIStatusBarAnimation preferredStatusBarUpdateAnimation = self.preferredStatusBarUpdateAnimation;
-            if ([viewController respondsToSelector:@selector(preferredStatusBarUpdateAnimation)]) {
-                preferredStatusBarUpdateAnimation = [viewController preferredStatusBarUpdateAnimation];
-            }
-#pragma clang diagnostic push
-#pragma clang diagnostic ignored "-Wdeprecated-declarations"
-            [[UIApplication sharedApplication] setStatusBarHidden:shouldStatusBarHidden withAnimation:animated? preferredStatusBarUpdateAnimation : UIStatusBarAnimationNone];
-#pragma clang diagnostic pop
-        }
+- (void)_updateNavigationAppearanceWithViewController:(UIViewController<RFNavigationBehaving> *)viewController animated:(BOOL)animated allEffectTakeImmediately:(BOOL)immediately {
 
-        UIStatusBarStyle preferredStatusBarStyle = self.preferredStatusBarStyle;
-        if ([viewController respondsToSelector:@selector(preferredStatusBarStyle)]) {
-            UIStatusBarStyle vcStyle = [viewController preferredStatusBarStyle];
-            if (vcStyle != UIStatusBarStyleDefault) {
-                preferredStatusBarStyle = vcStyle;
-            }
-        }
-        
-        if (preferredStatusBarStyle != [UIApplication sharedApplication].statusBarStyle) {
-#pragma clang diagnostic push
-#pragma clang diagnostic ignored "-Wdeprecated-declarations"
-            [[UIApplication sharedApplication] setStatusBarStyle:preferredStatusBarStyle animated:animated];
-#pragma clang diagnostic pop
-        }
-    }
-
+    BOOL navigationBarHiddenChanged = NO;
     if (viewController.navigationController == self) {
         BOOL shouldHide = self.preferredNavigationBarHidden;
 
         if ([viewController respondsToSelector:@selector(prefersNavigationBarHidden)]) {
-            shouldHide = [(id<RFNavigationBehaving>)viewController prefersNavigationBarHidden];
+            shouldHide = [viewController prefersNavigationBarHidden];
         }
-
         if (self.navigationBarHidden != shouldHide) {
+            navigationBarHiddenChanged = YES;
             [self setNavigationBarHidden:shouldHide animated:animated];
         }
 
         // Handel bottom bar appearance
         shouldHide = YES;
         if ([viewController respondsToSelector:@selector(prefersBottomBarShown)]) {
-            shouldHide = ![(id)viewController prefersBottomBarShown];
+            shouldHide = ![viewController prefersBottomBarShown];
         }
 
         // If is interactive transitioning, use transitionDuration.
@@ -229,29 +202,75 @@ RFInitializingRootForUIViewController
 
         [UIView animateWithDuration:transitionDuration delay:0 options:UIViewAnimationOptionBeginFromCurrentState animated:animated beforeAnimations:^{
         } animations:^{
-
             UINavigationBar *bar = self.navigationBar;
             if ([viewController respondsToSelector:@selector(preferredNavigationBarTintColor)]) {
                 UIColor *barColor = [viewController preferredNavigationBarTintColor];
-
-                bar.barTintColor = barColor;
+                if (![bar.barTintColor isEqual:barColor]) {
+                    bar.barTintColor = barColor;
+                }
             }
             if ([viewController respondsToSelector:@selector(preferredNavigationBarItemColor)]) {
                 UIColor *itemColor = [viewController preferredNavigationBarItemColor];
-                bar.tintColor = itemColor;
+                if (![bar.tintColor isEqual:itemColor]) {
+                    bar.tintColor = itemColor;
+                }
             }
             if ([viewController respondsToSelector:@selector(preferredNavigationBarTitleTextAttributes)]) {
                 NSDictionary *ta = [viewController preferredNavigationBarTitleTextAttributes];
-                bar.titleTextAttributes = ta;
+                if (![bar.titleTextAttributes isEqualToDictionary:ta]) {
+                    bar.titleTextAttributes = ta;
+                }
             }
         } completion:nil];
     }
 
+    // Handel status bar appearance
+    if (self.handelViewControllerBasedStatusBarAppearance) {
+        BOOL shouldStatusBarHidden = self.prefersStatusBarHidden;
+        if ([viewController respondsToSelector:@selector(prefersStatusBarHidden)]) {
+            shouldStatusBarHidden = [viewController prefersStatusBarHidden];
+        }
 
+        if (shouldStatusBarHidden != [UIApplication sharedApplication].statusBarHidden) {
+            if (animated
+                && !immediately
+                && (!self.navigationBarHidden || (shouldStatusBarHidden && navigationBarHiddenChanged && self.navigationBarHidden))) {
+                // If status bar hidden changed and navigationBar keep showing, it will result in a awful animation.
+                // Change status bar animation later to avoid this.
+                self.statusBarHideChangeDelayViewController = viewController;
+            }
+            else {
+                UIStatusBarAnimation preferredStatusBarUpdateAnimation = self.preferredStatusBarUpdateAnimation;
+                if ([viewController respondsToSelector:@selector(preferredStatusBarUpdateAnimation)]) {
+                    preferredStatusBarUpdateAnimation = [viewController preferredStatusBarUpdateAnimation];
+                }
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wdeprecated-declarations"
+                [[UIApplication sharedApplication] setStatusBarHidden:shouldStatusBarHidden withAnimation:animated? preferredStatusBarUpdateAnimation : UIStatusBarAnimationNone];
+#pragma clang diagnostic pop
+            }
+        }
 
-    doutwork()
+        UIStatusBarStyle preferredStatusBarStyle = self.preferredStatusBarStyle;
+        if ([viewController respondsToSelector:@selector(preferredStatusBarStyle)]) {
+            UIStatusBarStyle vcStyle = [viewController preferredStatusBarStyle];
+            if (vcStyle != UIStatusBarStyleDefault) {
+                preferredStatusBarStyle = vcStyle;
+            }
+        }
+
+        if (preferredStatusBarStyle != [UIApplication sharedApplication].statusBarStyle) {
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wdeprecated-declarations"
+            [[UIApplication sharedApplication] setStatusBarStyle:preferredStatusBarStyle animated:animated];
+#pragma clang diagnostic pop
+        }
+    }
 }
 
+- (void)updateCurrentNavigationAppearanceAnimated:(BOOL)animated {
+    [self _updateNavigationAppearanceWithViewController:(id)self.topViewController animated:animated allEffectTakeImmediately:YES];
+}
 
 #pragma mark - Back button
 
@@ -296,10 +315,10 @@ RFInitializingRootForUIViewController
 - (void)navigationController:(UINavigationController *)navigationController willShowViewController:(UIViewController *)viewController animated:(BOOL)animated {
     if (navigationController != self) return;
 
-    [self updateNavigationAppearanceWithViewController:viewController animated:animated];
+    [self _updateNavigationAppearanceWithViewController:(id)viewController animated:animated allEffectTakeImmediately:NO];
     [self.transitionCoordinator animateAlongsideTransition:nil completion:^(id<UIViewControllerTransitionCoordinatorContext> context) {
         if (context.isCancelled) {
-            [self updateNavigationAppearanceWithViewController:self.topViewController animated:context.isAnimated];
+            [self updateCurrentNavigationAppearanceAnimated:context.isAnimated];
         }
     }];
 
@@ -323,6 +342,13 @@ RFInitializingRootForUIViewController
 
     self.currentPopInteractionController = (id)viewController.RFTransitioningInteractionController;
     self.interactivePopGestureRecognizer.enabled = (!self.currentPopInteractionController && self.viewControllers.count > 1);
+
+    if (self.statusBarHideChangeDelayViewController) {
+        if (self.statusBarHideChangeDelayViewController == self.topViewController) {
+            [self updateCurrentNavigationAppearanceAnimated:animated];
+        }
+        self.statusBarHideChangeDelayViewController = nil;
+    }
 
     if (self.didShowViewControllerBlock) {
         self.didShowViewControllerBlock(self, viewController, animated);

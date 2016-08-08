@@ -14,6 +14,6 @@ RFSynthesizeCategoryBoolProperty(prefersBottomBarShown, setPrefersBottomBarShown
 RFSynthesizeCategoryBoolProperty(prefersStatusBarHidden, setPrefersStatusBarHidden)
 #pragma clang diagnostic pop
 
-RFSynthesizeCategoryScalarValueProperty(prepreferredStatusBarStylefer, setPreferredStatusBarStyle, UIStatusBarStyle, integerValue)
+RFSynthesizeCategoryScalarValueProperty(preferredStatusBarStyle, setPreferredStatusBarStyle, UIStatusBarStyle, integerValue)
 
 @end

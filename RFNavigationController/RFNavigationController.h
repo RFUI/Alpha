@@ -41,12 +41,29 @@ NS_CLASS_AVAILABLE_IOS(7_0)
  */
 - (void)updateNavigationAppearanceWithViewController:(nullable __kindof UIViewController *)viewController animated:(BOOL)animated;
 
+#pragma mark - Navigation Bar Style
+
 /**
  Determine navigaiton bar should hidden or not by default.
 
- If the reciver is load from nib, this property will be set with storyboard setting.
+ If the reciver is load from nib, this property will be set with nib setting.
  */
 @property (nonatomic) IBInspectable BOOL preferredNavigationBarHidden;
+
+/**
+ If the reciver is load from nib, this property will be set with nib setting.
+ */
+@property (nonatomic, nullable, strong) IBInspectable UIColor *preferredNavigationBarTintColor;
+
+/**
+ If the reciver is load from nib, this property will be set with nib setting.
+ */
+@property (nonatomic, nullable, strong) IBInspectable UIColor *preferredNavigationBarItemColor;
+
+/**
+ If the reciver is load from nib, this property will be set with nib setting.
+ */
+@property (nonatomic, nullable, strong) NSDictionary <NSString *,id> *preferredNavigationBarTitleTextAttributes;
 
 #pragma mark - Bottom Bar
 
@@ -117,6 +134,13 @@ NS_CLASS_AVAILABLE_IOS(7_0)
 @optional
 
 /**
+ Ask current view controller whether should pop or not when user tap the back button.
+
+ @return Return NO to cancel pop.
+ */
+- (BOOL)shouldPopOnBackButtonTappedForNavigationController:(nonnull RFNavigationController *)navigation;
+
+/**
  Specifies whether the view controller prefers the navigation bar to be hidden or shown.
 
  @return A Boolean value of YES specifies the navigation bar should be hidden. Default value is NO.
@@ -131,13 +155,6 @@ NS_CLASS_AVAILABLE_IOS(7_0)
 
 //
 - (nullable NSDictionary <NSString *,id> *)preferredNavigationBarTitleTextAttributes;
-
-/**
- Ask current view controller whether should pop or not when user tap the back button.
-
- @return Return NO to cancel pop.
- */
-- (BOOL)shouldPopOnBackButtonTappedForNavigationController:(nonnull RFNavigationController *)navigation;
 
 /**
  Specifies whether the view controller prefers the bottom bar to be hidden or shown.

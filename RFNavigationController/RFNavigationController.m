@@ -43,6 +43,9 @@ RFInitializingRootForUIViewController
 - (void)awakeFromNib {
     [super awakeFromNib];
     self.preferredNavigationBarHidden = self.navigationBarHidden;
+    self.preferredNavigationBarTintColor = self.navigationBar.barTintColor;
+    self.preferredNavigationBarItemColor = self.navigationBar.tintColor;
+    self.preferredNavigationBarTitleTextAttributes = self.navigationBar.titleTextAttributes;
 }
 
 - (void)afterInit {
@@ -200,27 +203,26 @@ RFInitializingRootForUIViewController
             } completion:nil];
         }
 
-        [UIView animateWithDuration:transitionDuration delay:0 options:UIViewAnimationOptionBeginFromCurrentState animated:animated beforeAnimations:^{
+        [UIView animateWithDuration:transitionDuration delay:0 options:UIViewAnimationOptionCurveEaseInOut animated:animated beforeAnimations:^{
+            [self.navigationBar layoutIfNeeded];
         } animations:^{
             UINavigationBar *bar = self.navigationBar;
-            if ([viewController respondsToSelector:@selector(preferredNavigationBarTintColor)]) {
-                UIColor *barColor = [viewController preferredNavigationBarTintColor];
-                if (![bar.barTintColor isEqual:barColor]) {
-                    bar.barTintColor = barColor;
-                }
+            id value = nil;
+#define RFNavigationController_styleElement(SET_EXPRESSION, METHOD) \
+            value = self.METHOD;\
+            if ([viewController respondsToSelector:@selector(METHOD)]) {\
+                id vcValue = [viewController METHOD];\
+                if (vcValue) {\
+                    value = vcValue;\
+                }\
+            }\
+            if (![SET_EXPRESSION isEqual:value]) {\
+                SET_EXPRESSION = value;\
             }
-            if ([viewController respondsToSelector:@selector(preferredNavigationBarItemColor)]) {
-                UIColor *itemColor = [viewController preferredNavigationBarItemColor];
-                if (![bar.tintColor isEqual:itemColor]) {
-                    bar.tintColor = itemColor;
-                }
-            }
-            if ([viewController respondsToSelector:@selector(preferredNavigationBarTitleTextAttributes)]) {
-                NSDictionary *ta = [viewController preferredNavigationBarTitleTextAttributes];
-                if (![bar.titleTextAttributes isEqualToDictionary:ta]) {
-                    bar.titleTextAttributes = ta;
-                }
-            }
+
+            RFNavigationController_styleElement(bar.barTintColor, preferredNavigationBarTintColor);
+            RFNavigationController_styleElement(bar.tintColor, preferredNavigationBarItemColor);
+            RFNavigationController_styleElement(bar.titleTextAttributes, preferredNavigationBarTitleTextAttributes);
         } completion:nil];
     }
 

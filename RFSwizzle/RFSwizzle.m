@@ -5,6 +5,7 @@
 
 //! REF: http://nshipster.com/method-swizzling/
 //! REF: https://github.com/rentzsch/jrswizzle
+//! REF: http://defagos.github.io/yet_another_article_about_method_swizzling/
 bool RFSwizzleInstanceMethod(Class cls, SEL originalSelector, SEL swizzledSelector) {
     Method originalMethod = class_getInstanceMethod(cls, originalSelector);
     if (!originalMethod) {

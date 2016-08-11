@@ -264,7 +264,8 @@ RFInitializingRootForNSObject
     NSMutableURLRequest *r;
     AFHTTPRequestSerializer *s = [self.defineManager requestSerializerForDefine:define];
     if (RFFormData.count) {
-        r = [s multipartFormRequestWithMethod:define.method URLString:[url absoluteString] parameters:requestParameters constructingBodyWithBlock:^(id<AFMultipartFormData> formData) {
+        NSString *urlString = url.absoluteString;
+        r = [s multipartFormRequestWithMethod:define.method URLString:urlString parameters:requestParameters constructingBodyWithBlock:^(id<AFMultipartFormData> formData) {
             for (RFHTTPRequestFormData *file in RFFormData) {
                 NSError __autoreleasing *f_e = nil;
                 [file buildFormData:formData error:&f_e];

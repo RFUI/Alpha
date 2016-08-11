@@ -126,6 +126,8 @@ NS_CLASS_AVAILABLE_IOS(7_0)
 
 /**
  Appearance attributes of current view controller.
+ 
+ If attribute accepts non NSNumber kind of value, you can pass NSNull to reset.
 
  @return An NSDictionary object containing appearance attributes.
  */
@@ -153,15 +155,15 @@ NS_ASSUME_NONNULL_BEGIN
 /// indicating the navigation bar should to be hidden or shown.
 UIKIT_EXTERN NSString *const RFViewControllerPrefersNavigationBarHiddenAttribute;
 
-/// The value of this attribute is an UIColor object.
+/// The value of this attribute is an UIColor or NSNull object.
 /// Use this attribute to specify the tint color to apply to the navigation bar background.
 UIKIT_EXTERN NSString *const RFViewControllerPreferredNavigationBarTintColorAttribute;
 
-/// The value of this attribute is an UIColor object.
+/// The value of this attribute is an UIColor or NSNull object.
 /// Use this attribute to specify the tint color to apply to the navigation items and bar button items.
 UIKIT_EXTERN NSString *const RFViewControllerPreferredNavigationBarItemColorAttribute;
 
-/// The value of this attribute is an NSDictionary object containing text attributes.
+/// The value of this attribute is an NSDictionary or NSNull object containing text attributes.
 /// Use this attribute to specify display attributes for the bar’s title text.
 UIKIT_EXTERN NSString *const RFViewControllerPreferredNavigationBarTitleTextAttributes;
 

@@ -157,9 +157,9 @@ RFInitializingRootForUIViewController
     UINavigationBar *nb = self.navigationBar;
     NSMutableDictionary *dic = [NSMutableDictionary dictionaryWithCapacity:10];
     dic[RFViewControllerPrefersNavigationBarHiddenAttribute] = @(self.navigationBarHidden);
-    [dic rf_setObject:nb.barTintColor forKey:RFViewControllerPreferredNavigationBarTintColorAttribute];
-    [dic rf_setObject:nb.tintColor forKey:RFViewControllerPreferredNavigationBarItemColorAttribute];
-    [dic rf_setObject:nb.titleTextAttributes forKey:RFViewControllerPreferredNavigationBarTitleTextAttributes];
+    dic[RFViewControllerPreferredNavigationBarTintColorAttribute] = nb.barTintColor?: [NSNull null];
+    dic[RFViewControllerPreferredNavigationBarItemColorAttribute] = nb.tintColor?: [NSNull null];
+    dic[RFViewControllerPreferredNavigationBarTitleTextAttributes] = nb.titleTextAttributes?: [NSNull null];
     dic[RFViewControllerPrefersBottomBarShownAttribute] = @(!self.bottomBarHidden);
     dic[RFViewControllerPrefersStatusBarHiddenAttribute] = @([UIApplication sharedApplication].statusBarHidden);
     dic[RFViewControllerPreferredStatusBarUpdateAnimationAttribute] = @(UIStatusBarAnimationFade);
@@ -181,7 +181,8 @@ RFInitializingRootForUIViewController
 
 static BOOL _attributeCheck(NSDictionary *dic, NSString *key, Class kind, NSError **outError) {
     id value = dic[key];
-    if (!value) {
+    if (!value
+        || (value == [NSNull null] && ![kind isSubclassOfClass:[NSNumber class]])) {
         return YES;
     }
 
@@ -211,6 +212,10 @@ static BOOL _attributeCheck(NSDictionary *dic, NSString *key, Class kind, NSErro
     return YES;
 }
 
+static bool rf_isNull(id value) {
+    return !value || value == [NSNull null];
+}
+
 - (void)updateNavigationAppearanceWithAppearanceAttributes:(NSDictionary<NSString *, id> *)attributes  animationDuration:(NSTimeInterval)animationDuration animated:(BOOL)animated {
     id value = nil;
     if ((value = attributes[RFViewControllerPrefersNavigationBarHiddenAttribute])) {
@@ -220,13 +225,13 @@ static BOOL _attributeCheck(NSDictionary *dic, NSString *key, Class kind, NSErro
         }
     }
     if ((value = attributes[RFViewControllerPreferredNavigationBarTintColorAttribute])) {
-        self.navigationBar.barTintColor = value;
+        self.navigationBar.barTintColor = rf_isNull(value)? nil : value;
     }
     if ((value = attributes[RFViewControllerPreferredNavigationBarItemColorAttribute])) {
-        self.navigationBar.tintColor = value;
+        self.navigationBar.tintColor = rf_isNull(value)? nil : value;;
     }
     if ((value = attributes[RFViewControllerPreferredNavigationBarTitleTextAttributes])) {
-        self.navigationBar.titleTextAttributes = value;
+        self.navigationBar.titleTextAttributes = rf_isNull(value)? nil : value;
     }
 
     if ((value = attributes[RFViewControllerPrefersBottomBarShownAttribute])) {

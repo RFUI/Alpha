@@ -292,6 +292,17 @@ static bool rf_isNull(id value) {
     }
 
     NSMutableDictionary *attributes = [self.defaultAppearanceAttributes mutableCopy];
+    
+    id value = nil;
+    if ((value = vcAttributes[RFViewControllerPrefersNavigationBarHiddenAttribute])) {
+        BOOL shouldHide = [value boolValue];
+        if (shouldHide) {
+            [attributes removeObjectForKey:RFViewControllerPreferredNavigationBarTintColorAttribute];
+            [attributes removeObjectForKey:RFViewControllerPreferredNavigationBarItemColorAttribute];
+            [attributes removeObjectForKey:RFViewControllerPreferredNavigationBarTitleTextAttributes];
+        }
+    }
+    
     [attributes addEntriesFromDictionary:vcAttributes];
 
     if (viewController.navigationController != self) {

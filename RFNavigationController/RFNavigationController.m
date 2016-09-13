@@ -297,6 +297,7 @@ static bool rf_isNull(id value) {
     if ((value = vcAttributes[RFViewControllerPrefersNavigationBarHiddenAttribute])) {
         BOOL shouldHide = [value boolValue];
         if (shouldHide) {
+            // Prevent set navigation bar style to the default if navigation bar will be hidden.
             [attributes removeObjectForKey:RFViewControllerPreferredNavigationBarTintColorAttribute];
             [attributes removeObjectForKey:RFViewControllerPreferredNavigationBarItemColorAttribute];
             [attributes removeObjectForKey:RFViewControllerPreferredNavigationBarTitleTextAttributes];

@@ -5,8 +5,6 @@
 #import "UIView+RFAnimate.h"
 #import "RFAnimationTransitioning.h"
 
-static RFNavigationController *RFNavigationControllerGlobalInstance;
-
 @interface RFNavigationBottomBar : UIView
 @end
 
@@ -28,26 +26,10 @@ RFInitializingRootForUIViewController
 
 - (void)onInit {
     [super setDelegate:self];
-
-    @synchronized([RFNavigationController class]) {
-        if (!RFNavigationControllerGlobalInstance) {
-            RFNavigationControllerGlobalInstance = self;
-        }
-    }
 }
 
 - (void)afterInit {
     self.interactivePopGestureRecognizer.delegate = self;
-}
-
-+ (instancetype)globalNavigationController {
-    return RFNavigationControllerGlobalInstance;
-}
-
-+ (void)setGlobalNavigationController:(__kindof RFNavigationController *)navigationController {
-    @synchronized([RFNavigationController class]) {
-        RFNavigationControllerGlobalInstance = navigationController;
-    }
 }
 
 - (void)viewDidLoad {

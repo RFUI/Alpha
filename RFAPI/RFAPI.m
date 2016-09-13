@@ -25,15 +25,6 @@ NSString *const RFAPIRequestArrayParameterKey = @"_RFArray_";
 @implementation RFAPI
 RFInitializingRootForNSObject
 
-+ (instancetype)sharedInstance {
-	static RFAPI *sharedInstance = nil;
-    static dispatch_once_t oncePredicate;
-    dispatch_once(&oncePredicate, ^{
-        sharedInstance = [[self alloc] init];
-    });
-	return sharedInstance;
-}
-
 - (void)onInit {
     self.reachabilityManager = [AFNetworkReachabilityManager sharedManager];
     self.maxConcurrentOperationCount = 5;

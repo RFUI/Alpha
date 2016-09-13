@@ -26,8 +26,6 @@
     RFInitializing
 >
 
-+ (nonnull instancetype)sharedInstance;
-
 /**
  Defult shared manager
  */

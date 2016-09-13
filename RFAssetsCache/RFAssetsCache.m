@@ -45,15 +45,6 @@ RFInitializingRootForNSObject
     // Nothing
 }
 
-+ (instancetype)sharedInstance {
-	static RFAssetsCache *sharedInstance = nil;
-    static dispatch_once_t oncePredicate;
-    dispatch_once(&oncePredicate, ^{
-        sharedInstance = [[self alloc] init];
-    });
-	return sharedInstance;
-}
-
 - (void)setupContext {
     NSURL *modelURL = [[NSBundle mainBundle] URLForResource:@"RFAssetsCache" withExtension:@"mom" subdirectory:@"RFAssetsCache.momd"];
     RFAssert(modelURL, nil);

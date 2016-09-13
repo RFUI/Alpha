@@ -17,8 +17,6 @@
 
 @property (assign, nonatomic) CGFloat barWidth;
 
-
-+ (RFStatusBarNotificationWindow *)sharedInstance;
 - (RFStatusBarNotificationWindow *)initWithBarWidth:(CGFloat)width;
 
 /// After you initialize, call this to make bar visible.

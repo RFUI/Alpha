@@ -1,13 +1,11 @@
 /*!
     RFAsynchronousSegue
 
-    Copyright (c) 2014 BB9z
+    Copyright (c) 2014, 2016 BB9z
     https://github.com/RFUI/Alpha
 
     The MIT License (MIT)
     http://www.opensource.org/licenses/mit-license.php
-
-    TEST
  */
 #import "RFSegue.h"
 
@@ -18,15 +16,19 @@
  
  Set this property or overwrite RFPerform.
  */
-@property (copy, nonatomic) void (^performBlcok)(id segue);
+@property (nullable) void (^performBlcok)(__kindof RFAsynchronousSegue *__nonnull segue);
 
 /**
  Performs the reciver.
+ 
+ @return NO if segue is canceled or has performed.
  */
-- (void)fire;
+- (BOOL)fire;
 
 /**
  Mark the reciver wont perform and then release it.
+ 
+ @return NO if segue is canceled or has performed.
  */
-- (void)cancel;
+- (BOOL)cancel;
 @end

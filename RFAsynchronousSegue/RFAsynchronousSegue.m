@@ -1,17 +1,20 @@
 
 #import "RFAsynchronousSegue.h"
-#import "RFPerformance.h"
 
 @interface RFAsynchronousSegue ()
-@property (strong, nonatomic) void (^selfRetain)(void);
+@property BOOL _RFAsynchronousSegue_executed;
+@property void (^_RFAsynchronousSegue_selfRetain)(void);
 @end
 
 @implementation RFAsynchronousSegue
-_RFAlloctionLog
 
 - (void)perform {
+    if (self._RFAsynchronousSegue_executed) {
+        return;
+    }
+
     _doutwork()
-    self.selfRetain = ^(void){
+    self._RFAsynchronousSegue_selfRetain = ^(void){
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Warc-retain-cycles"
         __strong __unused id obj = self;
@@ -19,16 +22,20 @@ _RFAlloctionLog
     };
 
     if (![self shouldPerform]) {
-        dout_debug(@"Should not perform")
+        _dout_debug(@"Should not perform")
         [self cancel];
     }
 }
 
 - (void)RFPerform {
-    RFAssert(false, @"You should subclass RFAsynchronousSegue and override RFPerform.");
+    [NSException raise:NSGenericException format:@"You should subclass RFAsynchronousSegue and override RFPerform or set performBlcok property."];
 }
 
-- (void)fire {
+- (BOOL)fire {
+    if (self._RFAsynchronousSegue_executed) {
+        return NO;
+    }
+    self._RFAsynchronousSegue_executed = YES;
     _doutwork()
     if (self.performBlcok) {
         dout_debug(@"Perform Segue Blcok")
@@ -37,14 +44,18 @@ _RFAlloctionLog
     else {
         [self RFPerform];
     }
-
-    self.selfRetain = nil;
+    self._RFAsynchronousSegue_selfRetain = nil;
+    return YES;
 }
 
-- (void)cancel {
-    _doutwork()
+- (BOOL)cancel {
+    if (self._RFAsynchronousSegue_executed) {
+        return NO;
+    }
+    self._RFAsynchronousSegue_executed = YES;
     self.performBlcok = nil;
-    self.selfRetain = nil;
+    self._RFAsynchronousSegue_selfRetain = nil;
+    return YES;
 }
 
 @end

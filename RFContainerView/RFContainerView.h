@@ -25,21 +25,23 @@ IB_DESIGNABLE
 
  nil 为当前 Storyboard
  */
-@property (copy, nullable, nonatomic) IBInspectable NSString *storyboardName;
+@property (nonatomic, nullable, copy) IBInspectable NSString *storyboardName;
 
 /**
  嵌入 view controller 的 Storyboard ID，为空使用 Storyboard 的初始视图
  */
-@property (copy, nullable, nonatomic) IBInspectable NSString *instantiationIdentifier;
+@property (nonatomic, nullable, copy) IBInspectable NSString *instantiationIdentifier;
 
 /**
  YES 时不自动载入子 view controller
  */
-@property (assign, nonatomic) IBInspectable BOOL lazyLoad;
+@property IBInspectable BOOL lazyLoad;
 
+///
+@property (readonly) BOOL embedViewControllerLoaded;
 
-@property (readonly, nonatomic) BOOL embedViewControllerLoaded;
-@property (readonly, nullable, nonatomic) id embedViewController;
+/// 
+@property (nonatomic, nullable, readonly) __kindof UIViewController *embedViewController;
 
 /**
  加载并嵌入 view controller 到所属 view controller
@@ -49,7 +51,7 @@ IB_DESIGNABLE
 /**
  @param prepareBlock This block called before the embed view controller added into the parent view controller.
  */
-- (void)loadEmbedViewControllerWithPrepareBlock:(void (^ __nullable)(id __nonnull viewController, RFContainerView * __nonnull container))prepareBlock;
+- (void)loadEmbedViewControllerWithPrepareBlock:(RF_NOESCAPE void (^__nullable)(__kindof UIViewController *__nonnull viewController, RFContainerView *__nonnull container))prepareBlock;
 
 /**
  */
@@ -58,6 +60,6 @@ IB_DESIGNABLE
 /**
  设置 parentViewController 时会自动执行 loadEmbedViewController
  */
-@property (weak, nullable, nonatomic) IBOutlet UIViewController *parentViewController;
+@property (nonatomic, nullable, weak) IBOutlet UIViewController *parentViewController;
 
 @end

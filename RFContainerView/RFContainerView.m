@@ -2,8 +2,8 @@
 #import "RFContainerView.h"
 
 @interface RFContainerView ()
-@property (readwrite, strong, nullable, nonatomic) id embedViewController;
-@property (readwrite, nonatomic) BOOL embedViewControllerLoaded;
+@property (readwrite, strong, nullable, nonatomic) __kindof UIViewController *embedViewController;
+@property (readwrite) BOOL embedViewControllerLoaded;
 @end
 
 @implementation RFContainerView
@@ -17,7 +17,8 @@ RFInitializingRootForUIView
 
 - (void)awakeFromNib {
     [super awakeFromNib];
-    if (!self.lazyLoad && !self.embedViewControllerLoaded) {
+    if (!self.lazyLoad
+        && !self.embedViewControllerLoaded) {
         [self loadEmbedViewController];
     }
 }
@@ -54,6 +55,7 @@ RFInitializingRootForUIView
 #endif
 
 - (void)didMoveToSuperview {
+    [super didMoveToSuperview];
     dispatch_after_seconds(0, ^{
         if (!self.lazyLoad && !self.embedViewControllerLoaded) {
             [self loadEmbedViewController];
@@ -68,7 +70,7 @@ RFInitializingRootForUIView
     }
 }
 
-- (void)loadEmbedViewControllerWithPrepareBlock:(void (^ __nullable)(id __nonnull viewController, RFContainerView * __nonnull container))prepareBlock {
+- (void)loadEmbedViewControllerWithPrepareBlock:(void (^ __nullable)(__kindof UIViewController *__nonnull viewController, RFContainerView * __nonnull container))prepareBlock {
     if (self.embedViewControllerLoaded) return;
 
     UIViewController *parentViewController = self.parentViewController?: self.viewController;

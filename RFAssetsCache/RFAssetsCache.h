@@ -19,7 +19,6 @@ typedef NS_ENUM(short, RFAssetsCacheStatus) {
 @interface RFAssetsCache : NSObject <
     RFInitializing
 >
-+ (instancetype)sharedInstance;
 - (instancetype)initWithCacheFileName:(NSString *)cacheFileName;
 
 @property (strong, readonly, nonatomic) NSOperationQueue *operationQueue;

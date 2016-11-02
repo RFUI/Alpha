@@ -18,15 +18,6 @@ static void *const RFAudioPlayerKVOContext = (void *)&RFAudioPlayerKVOContext;
 @dynamic duration;
 @dynamic playing;
 
-+ (instancetype)sharedInstance {
-	static RFAudioPlayer *sharedInstance = nil;
-    static dispatch_once_t oncePredicate;
-    dispatch_once(&oncePredicate, ^{
-        sharedInstance = [[self alloc] init];
-    });
-	return sharedInstance;
-}
-
 - (id)init {
     self = [super init];
     if (self) {

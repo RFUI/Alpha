@@ -24,16 +24,6 @@ NS_CLASS_AVAILABLE_IOS(7_0)
     UINavigationControllerDelegate
 >
 
-/**
- The first navigation controller instance will become the globalNavigationController automatically.
- */
-+ (nullable instancetype)globalNavigationController;
-
-/**
- Sets the default global navigation controller to the given instance.
- */
-+ (void)setGlobalNavigationController:(nullable __kindof RFNavigationController *)navigationController;
-
 #pragma mark - Navigation Bar Style
 
 /**

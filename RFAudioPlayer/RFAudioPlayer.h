@@ -18,8 +18,6 @@
  */
 @interface RFAudioPlayer : NSObject
 
-+ (instancetype _Nonnull)sharedInstance;
-
 /**
  Play a single audiovisual resource referenced by a given URL. This method can be called many time in a short period and only the last item will be accepted.
  

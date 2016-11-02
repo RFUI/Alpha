@@ -8,19 +8,6 @@ CGFloat RFStatusBarNotificationWindowDefauleBarWidth = 200.f;
 @synthesize viewHolder;
 @synthesize messageLabel;
 
-+ (RFStatusBarNotificationWindow *)sharedInstance {
-	static RFStatusBarNotificationWindow *sharedInstance = nil;
-	
-	if (sharedInstance == nil) {
-		@synchronized(self) {
-			if (sharedInstance == nil) {
-				sharedInstance = [[self alloc] initWithBarWidth:RFStatusBarNotificationWindowDefauleBarWidth];
-			}
-		}
-	}
-	return sharedInstance;
-}
-
 - (RFStatusBarNotificationWindow *)initWithFrame:(CGRect)frame {
 	douts(@"Warning: frame will be ignored, you can call  initWithBarWidth: instead");
 	return [[RFStatusBarNotificationWindow alloc] initWithBarWidth:RFStatusBarNotificationWindowDefauleBarWidth];

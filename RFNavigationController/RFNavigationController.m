@@ -5,8 +5,6 @@
 #import "UIView+RFAnimate.h"
 #import "RFAnimationTransitioning.h"
 
-static RFNavigationController *RFNavigationControllerGlobalInstance;
-
 @interface RFNavigationBottomBar : UIView
 @end
 
@@ -28,26 +26,10 @@ RFInitializingRootForUIViewController
 
 - (void)onInit {
     [super setDelegate:self];
-
-    @synchronized([RFNavigationController class]) {
-        if (!RFNavigationControllerGlobalInstance) {
-            RFNavigationControllerGlobalInstance = self;
-        }
-    }
 }
 
 - (void)afterInit {
     self.interactivePopGestureRecognizer.delegate = self;
-}
-
-+ (instancetype)globalNavigationController {
-    return RFNavigationControllerGlobalInstance;
-}
-
-+ (void)setGlobalNavigationController:(__kindof RFNavigationController *)navigationController {
-    @synchronized([RFNavigationController class]) {
-        RFNavigationControllerGlobalInstance = navigationController;
-    }
 }
 
 - (void)viewDidLoad {
@@ -297,6 +279,7 @@ static bool rf_isNull(id value) {
     if ((value = vcAttributes[RFViewControllerPrefersNavigationBarHiddenAttribute])) {
         BOOL shouldHide = [value boolValue];
         if (shouldHide) {
+            // Prevent set navigation bar style to the default if navigation bar will be hidden.
             [attributes removeObjectForKey:RFViewControllerPreferredNavigationBarTintColorAttribute];
             [attributes removeObjectForKey:RFViewControllerPreferredNavigationBarItemColorAttribute];
             [attributes removeObjectForKey:RFViewControllerPreferredNavigationBarTitleTextAttributes];

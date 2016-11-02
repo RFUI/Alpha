@@ -78,7 +78,14 @@ RFInitializingRootForUIView
     }
     else {
         if (self.autoScrollAllowReverse) {
-            [self setCurrentPage:0 animated:YES];
+            // Keep scroll direction from left to right on last page.
+            CATransition *scrollAnimation =[CATransition animation];
+            scrollAnimation.duration = 0.35;
+            scrollAnimation.type = kCATransitionPush;
+            scrollAnimation.subtype = kCATransitionFromRight;
+            [self.layer addAnimation:scrollAnimation forKey:nil];
+            
+            [self setCurrentPage:0 animated:NO];
         }
         else {
             [self invalidateAutoScrollTimer];

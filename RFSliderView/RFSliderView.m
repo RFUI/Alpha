@@ -64,20 +64,7 @@ RFInitializingRootForUIView
 - (void)setCurrentPage:(NSInteger)currentPage animated:(BOOL)animated {
     CGPoint offset = self.contentOffset;
     offset.x = currentPage * self.width;
-    
-    if (self.currentPage == (self.totalPage - 1) && animated) {
-        // 由最后一页滑到第一页时使用动画，保证轮播方向的一致性。
-        CATransition *scrollAnimation =[CATransition animation];
-        scrollAnimation.duration = 0.35;
-        scrollAnimation.type = kCATransitionPush;
-        scrollAnimation.subtype = kCATransitionFromRight;
-        [self.layer addAnimation:scrollAnimation forKey:nil];
-        
-        [self setContentOffset:offset animated:NO];
-    }
-    else {
-        [self setContentOffset:offset animated:animated];
-    }
+    [self setContentOffset:offset animated:animated];
 }
 
 - (NSInteger)totalPage {
@@ -91,7 +78,14 @@ RFInitializingRootForUIView
     }
     else {
         if (self.autoScrollAllowReverse) {
-            [self setCurrentPage:0 animated:YES];
+            // 由最后一页滑到第一页时使用动画，保证轮播方向的一致性。
+            CATransition *scrollAnimation =[CATransition animation];
+            scrollAnimation.duration = 0.35;
+            scrollAnimation.type = kCATransitionPush;
+            scrollAnimation.subtype = kCATransitionFromRight;
+            [self.layer addAnimation:scrollAnimation forKey:nil];
+            
+            [self setCurrentPage:0 animated:NO];
         }
         else {
             [self invalidateAutoScrollTimer];

@@ -78,7 +78,7 @@ RFInitializingRootForUIView
     }
     else {
         if (self.autoScrollAllowReverse) {
-            // 由最后一页滑到第一页时使用动画，保证轮播方向的一致性。
+            // Keep scroll direction from left to right on last page.
             CATransition *scrollAnimation =[CATransition animation];
             scrollAnimation.duration = 0.35;
             scrollAnimation.type = kCATransitionPush;

@@ -1,7 +1,7 @@
 /*!
     RFSliderView
 
-    Copyright (c) 2014, 2016 BB9z
+    Copyright (c) 2014, 2016-2017 BB9z
     https://github.com/RFUI/Alpha
 
     The MIT License (MIT)
@@ -15,9 +15,16 @@
 
 #pragma mark - Page
 
+/**
+ Will be -1 when view width is zero.
+ */
 @property (nonatomic) IBInspectable NSInteger currentPage;
+
 - (void)setCurrentPage:(NSInteger)currentPage animated:(BOOL)animated;
 
+/**
+ Will be -1 when view width is zero.
+ */
 @property (nonatomic, readonly) NSInteger totalPage;
 
 #pragma mark - Auto Scroll
@@ -31,7 +38,7 @@
 /**
  If `YES`, will scroll to first page if the reciver reach end. Otherwise stop auto scroll.
  */
-@property (nonatomic) IBInspectable BOOL autoScrollAllowReverse;
+@property IBInspectable BOOL autoScrollAllowReverse;
 @end
 
 @interface RFSliderViewSimpleImageCell : UICollectionViewCell

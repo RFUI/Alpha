@@ -69,7 +69,11 @@ RFInitializingRootForUIView
 }
 
 - (NSInteger)totalPage {
-    return self.contentSize.width / self.width;
+    CGFloat width = CGRectGetWidth(self.bounds);
+    if (width > 0) {
+        return self.contentSize.width / width;
+    }
+    return -1;
 }
 
 - (void)_RFSliderView_scrollToNextPage:(BOOL)allowInverted {
@@ -101,6 +105,10 @@ RFInitializingRootForUIView
     [super willMoveToWindow:newWindow];
     if (self.autoScrollEnable) {
         self.timer.suspended = !newWindow;
+        NSInteger page = self.currentPage;
+        if (page >= 0) {
+            [self setCurrentPage:page animated:NO];
+        }
     }
 }
 

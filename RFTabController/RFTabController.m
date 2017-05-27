@@ -162,6 +162,10 @@ RFInitializingRootForUIViewController
     [self setSelectedIndex:newSelectedIndex animated:NO completion:nil];
 }
 
+- (void)resetSelectedIndex {
+    __selectedIndex = NSNotFound;
+}
+
 - (void)setSelectedIndex:(NSUInteger)newSelectedIndex animated:(BOOL)animated completion:(void (^)(BOOL finished))completion {
     if (newSelectedIndex >= self.viewControllerStore.count) {
         RFAssert(false, @"View controller index out of bounds");

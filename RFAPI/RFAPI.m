@@ -15,6 +15,8 @@
 RFDefineConstString(RFAPIErrorDomain);
 static NSString *RFAPIOperationUIkControl = @"RFAPIOperationUIkControl";
 NSString *const RFAPIRequestArrayParameterKey = @"_RFArray_";
+NSString *const RFAPIRequestForceQuryStringParametersKey = @"RFAPIRequestForceQuryStringParametersKey";
+
 
 @interface RFAPI ()
 @property (strong, readwrite) AFNetworkReachabilityManager *reachabilityManager;

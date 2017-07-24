@@ -37,7 +37,7 @@ RFInitializingRootForNSObject
     self.shouldUseCredentialStorage = YES;
 
     // As most request are API reqest, we dont need too much space
-    self.cacheManager = [[RFAPICacheManager alloc] initWithMemoryCapacity:10 * 1000 diskCapacity:500 * 1000 diskPath:@"com.github.RFUI.RFAPICache"];
+    self.cacheManager = [[RFAPICacheManager alloc] initWithMemoryCapacity:500 * 1000 diskCapacity:10 * 1000 * 1000 diskPath:@"com.github.RFUI.RFAPICache"];
     self.cacheManager.reachabilityManager = self.reachabilityManager;
 }
 

@@ -340,21 +340,21 @@ RFInitializingRootForNSObject
     NSError *error = nil;
     switch (define.responseExpectType) {
         case RFAPIDefineResponseExpectObject: {
-            RFAPICompletionCallback_ProccessError(![responseObject isKindOfClass:[NSDictionary class]], @"期望的数据类型是字典，而实际是 %@\n请先确认一下代码，如果服务器没按要求返回请联系后台人员", [responseObject class], @"返回数据异常", @"可能服务器正在升级或者维护，也可能是应用bug", @"建议稍后重试，如果持续报告这个错误请检查应用是否有新版本");
+            RFAPICompletionCallback_ProccessError(![responseObject isKindOfClass:[NSDictionary class]], @"期望的数据类型是字典，而实际是 %@\n请先确认一下代码，如果服务器没按要求返回请联系后台人员", [responseObject class], @"返回数据异常", @"可能服务器正在升级或者维护，也可能是应用bug", @"建议稍后重试，如果持续报告这个错误请检查AppStore是否有新版本");
 
             NSError __autoreleasing *e = nil;
             id JSONModelObject = [[expectClass alloc] initWithDictionary:responseObject error:&e];
-            RFAPICompletionCallback_ProccessError(!JSONModelObject, @"不能将返回内容转换为Model：%@\n请先确认一下代码，如果服务器没按要求返回请联系后台人员", e, @"返回数据异常", @"可能服务器正在升级或者维护，也可能是应用bug", @"建议稍后重试，如果持续报告这个错误请检查应用是否有新版本");
+            RFAPICompletionCallback_ProccessError(!JSONModelObject, @"不能将返回内容转换为Model：%@\n请先确认一下代码，如果服务器没按要求返回请联系后台人员", e, @"返回数据异常", @"可能服务器正在升级或者维护，也可能是应用bug", @"建议稍后重试，如果持续报告这个错误请检查AppStore是否有新版本");
             responseObject = JSONModelObject;
             break;
         }
         case RFAPIDefineResponseExpectObjects: {
-            RFAPICompletionCallback_ProccessError(![responseObject isKindOfClass:[NSArray class]], @"期望的数据类型是数组，而实际是 %@\n", [responseObject class], @"返回数据异常", @"可能服务器正在升级或者维护，也可能是应用bug", @"建议稍后重试，如果持续报告这个错误请检查应用是否有新版本");
+            RFAPICompletionCallback_ProccessError(![responseObject isKindOfClass:[NSArray class]], @"期望的数据类型是数组，而实际是 %@\n", [responseObject class], @"返回数据异常", @"可能服务器正在升级或者维护，也可能是应用bug", @"建议稍后重试，如果持续报告这个错误请检查AppStore是否有新版本");
 
             NSMutableArray *objects = [NSMutableArray arrayWithCapacity:[responseObject count]];
             for (NSDictionary *info in responseObject) {
                 id obj = [[expectClass alloc] initWithDictionary:info error:&error];
-                RFAPICompletionCallback_ProccessError(!obj, @"不能将数组中的元素转换为Model %@\n请先确认一下代码，如果服务器没按要求返回请联系后台人员", error, @"返回数据异常", @"可能服务器正在升级或者维护，也可能是应用bug", @"建议稍后重试，如果持续报告这个错误请检查应用是否有新版本")
+                RFAPICompletionCallback_ProccessError(!obj, @"不能将数组中的元素转换为Model %@\n请先确认一下代码，如果服务器没按要求返回请联系后台人员", error, @"返回数据异常", @"可能服务器正在升级或者维护，也可能是应用bug", @"建议稍后重试，如果持续报告这个错误请检查AppStore是否有新版本")
                 else {
                     [objects addObject:obj];
                 }

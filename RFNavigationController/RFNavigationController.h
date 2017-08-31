@@ -173,5 +173,9 @@ UIKIT_EXTERN NSString *const RFViewControllerPreferredStatusBarUpdateAnimationAt
 /// indicating the preferred status bar style for the view controller.
 UIKIT_EXTERN NSString *const RFViewControllerPreferredStatusBarStyleAttribute;
 
+/// The value of this attribute is an float NSNumber object (0-1)
+/// indicating the navigation bar backgroundImage alpha.
+UIKIT_EXTERN NSString *const RFViewControllerPreferredNavigationBarBackgroundAlphaAttributes;
+
 NS_ASSUME_NONNULL_END
 

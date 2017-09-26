@@ -14,7 +14,6 @@
 /**
  Embed view controller into another view controller.
  */
-IB_DESIGNABLE
 @interface RFContainerView : UIView <
     RFInitializing
 >

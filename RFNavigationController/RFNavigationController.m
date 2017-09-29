@@ -147,6 +147,7 @@ RFInitializingRootForUIViewController
     dic[RFViewControllerPreferredStatusBarUpdateAnimationAttribute] = @(UIStatusBarAnimationFade);
     dic[RFViewControllerPreferredStatusBarStyleAttribute] = @([UIApplication sharedApplication].statusBarStyle);
     dic[RFViewControllerPreferredNavigationBarBackgroundAlphaAttributes] = @1;
+    dic[RFViewControllerPreferredNavigationBackImageAttributes] = [NSNull null];
 
     _defaultAppearanceAttributes = dic.copy;
     return _defaultAppearanceAttributes;
@@ -229,6 +230,14 @@ static bool rf_isNull(id value) {
         }
     }
     
+    value = attributes[RFViewControllerPreferredNavigationBackImageAttributes];
+    if ([value isKindOfClass:[UIImage class]]) {
+        [self.navigationBar setBackgroundImage:(UIImage *)value forBarMetrics:UIBarMetricsDefault];
+    }
+    else {
+        [self.navigationBar setBackgroundImage:nil forBarMetrics:UIBarMetricsDefault];
+    }
+    
     if ((value = attributes[RFViewControllerPreferredNavigationBarBackgroundAlphaAttributes])) {
         UIImageView *iv = self.navigationBar.subviews.firstObject;
         iv.alpha = rf_isNull(value)? 1 : [value floatValue];
@@ -291,6 +300,7 @@ static bool rf_isNull(id value) {
             [attributes removeObjectForKey:RFViewControllerPreferredNavigationBarItemColorAttribute];
             [attributes removeObjectForKey:RFViewControllerPreferredNavigationBarTitleTextAttributes];
             [attributes removeObjectForKey:RFViewControllerPreferredNavigationBarBackgroundAlphaAttributes];
+            [attributes removeObjectForKey:RFViewControllerPreferredNavigationBackImageAttributes];
         }
     }
     
@@ -302,12 +312,15 @@ static bool rf_isNull(id value) {
         [attributes removeObjectForKey:RFViewControllerPreferredNavigationBarItemColorAttribute];
         [attributes removeObjectForKey:RFViewControllerPreferredNavigationBarTitleTextAttributes];
         [attributes removeObjectForKey:RFViewControllerPreferredNavigationBarBackgroundAlphaAttributes];
+        [attributes removeObjectForKey:RFViewControllerPreferredNavigationBackImageAttributes];
+
     }
     if (!self.handelViewControllerBasedStatusBarAppearance) {
         [attributes removeObjectForKey:RFViewControllerPrefersStatusBarHiddenAttribute];
         [attributes removeObjectForKey:RFViewControllerPreferredStatusBarUpdateAnimationAttribute];
         [attributes removeObjectForKey:RFViewControllerPreferredStatusBarStyleAttribute];
         [attributes removeObjectForKey:RFViewControllerPreferredNavigationBarBackgroundAlphaAttributes];
+        [attributes removeObjectForKey:RFViewControllerPreferredNavigationBackImageAttributes];
     }
 
     BOOL navigationBarHiddenChanged = NO;
@@ -548,3 +561,4 @@ RFDefineConstString(RFViewControllerPrefersStatusBarHiddenAttribute);
 RFDefineConstString(RFViewControllerPreferredStatusBarUpdateAnimationAttribute);
 RFDefineConstString(RFViewControllerPreferredStatusBarStyleAttribute);
 RFDefineConstString(RFViewControllerPreferredNavigationBarBackgroundAlphaAttributes);
+RFDefineConstString(RFViewControllerPreferredNavigationBackImageAttributes);

@@ -177,5 +177,7 @@ UIKIT_EXTERN NSString *const RFViewControllerPreferredStatusBarStyleAttribute;
 /// indicating the navigation bar backgroundImage alpha.
 UIKIT_EXTERN NSString *const RFViewControllerPreferredNavigationBarBackgroundAlphaAttributes;
 
+/// The value of this attribute is navigation backgroundImage
+UIKIT_EXTERN NSString *const RFViewControllerPreferredNavigationBackImageAttributes;
 NS_ASSUME_NONNULL_END
 

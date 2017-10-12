@@ -214,6 +214,7 @@ static NSTimeInterval RFPullToFetchAnimateTimeInterval = .2;
     else {
         [self updateFooterDisplay:YES];
     }
+    [self onDistanceBetweenContentAndBottomChanged];
 }
 
 - (void)footerProcessFinshed {

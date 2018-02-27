@@ -50,7 +50,7 @@
 /**
  @param prepareBlock This block called before the embed view controller added into the parent view controller.
  */
-- (void)loadEmbedViewControllerWithPrepareBlock:(RF_NOESCAPE void (^__nullable)(__kindof UIViewController *__nonnull viewController, RFContainerView *__nonnull container))prepareBlock;
+- (void)loadEmbedViewControllerWithPrepareBlock:(NS_NOESCAPE void (^__nullable)(__kindof UIViewController *__nonnull viewController, RFContainerView *__nonnull container))prepareBlock;
 
 /**
  */

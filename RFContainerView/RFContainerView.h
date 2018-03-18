@@ -1,7 +1,7 @@
 /*!
     RFContainerView
 
-    Copyright (c) 2015-2016 BB9z
+    Copyright (c) 2015-2016, 2018 BB9z
     https://github.com/RFUI/Alpha
 
     The MIT License (MIT)
@@ -18,18 +18,17 @@
     RFInitializing
 >
 
-
 /**
  用于指定嵌入 view controller 所在的 Storyboard
 
  nil 为当前 Storyboard
  */
-@property (nonatomic, nullable, copy) IBInspectable NSString *storyboardName;
+@property (nullable) IBInspectable NSString *storyboardName;
 
 /**
  嵌入 view controller 的 Storyboard ID，为空使用 Storyboard 的初始视图
  */
-@property (nonatomic, nullable, copy) IBInspectable NSString *instantiationIdentifier;
+@property (nullable) IBInspectable NSString *instantiationIdentifier;
 
 /**
  YES 时不自动载入子 view controller
@@ -40,7 +39,7 @@
 @property (readonly) BOOL embedViewControllerLoaded;
 
 /// 
-@property (nonatomic, nullable, readonly) __kindof UIViewController *embedViewController;
+@property (nullable, readonly) __kindof UIViewController *embedViewController;
 
 /**
  加载并嵌入 view controller 到所属 view controller

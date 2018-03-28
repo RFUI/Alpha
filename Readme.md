@@ -5,6 +5,7 @@ Demos: https://github.com/RFUI/RFUI
 ## 移出的组件
 
 * [RFAsynchronousSegue](https://github.com/RFUI/RFSegue)
+* [RFMessageManager](https://github.com/RFUI/RFMessageManager)
 
 ## Components List
 
@@ -55,10 +56,6 @@ Demos: https://github.com/RFUI/RFUI
 ### RFImageGallery
 
 状态：待评估，可能需要重写
-
-### RFMessageManager
-
-状态：正常
 
 ### RFNoticeView
 

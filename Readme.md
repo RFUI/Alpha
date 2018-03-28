@@ -4,14 +4,11 @@ Demos: https://github.com/RFUI/RFUI
 
 ## 移出的组件
 
+* [RFAPI](https://github.com/RFUI/RFAPI)
 * [RFAsynchronousSegue](https://github.com/RFUI/RFSegue)
 * [RFMessageManager](https://github.com/RFUI/RFMessageManager)
 
 ## Components List
-
-### RFAPI
-
-状态：正常，核心组件，有改进计划
 
 ### RFAssetsCache
 

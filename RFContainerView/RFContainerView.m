@@ -2,8 +2,8 @@
 #import "RFContainerView.h"
 
 @interface RFContainerView ()
-@property (readwrite, strong, nullable, nonatomic) id embedViewController;
-@property (readwrite, nonatomic) BOOL embedViewControllerLoaded;
+@property (nullable) __kindof UIViewController *embedViewController;
+@property BOOL embedViewControllerLoaded;
 @end
 
 @implementation RFContainerView
@@ -17,7 +17,8 @@ RFInitializingRootForUIView
 
 - (void)awakeFromNib {
     [super awakeFromNib];
-    if (!self.lazyLoad && !self.embedViewControllerLoaded) {
+    if (!self.lazyLoad
+        && !self.embedViewControllerLoaded) {
         [self loadEmbedViewController];
     }
 }
@@ -54,10 +55,17 @@ RFInitializingRootForUIView
 #endif
 
 - (void)didMoveToSuperview {
+    [super didMoveToSuperview];
+    if (self.lazyLoad
+        || self.embedViewControllerLoaded
+        || !self.superview) return;
+
+    @weakify(self);
     dispatch_after_seconds(0, ^{
-        if (!self.lazyLoad && !self.embedViewControllerLoaded) {
-            [self loadEmbedViewController];
-        }
+        @strongify(self);
+        if (!self
+            || self.lazyLoad) return;
+        [self loadEmbedViewController];
     });
 }
 
@@ -68,17 +76,19 @@ RFInitializingRootForUIView
     }
 }
 
-- (void)loadEmbedViewControllerWithPrepareBlock:(void (^ __nullable)(id __nonnull viewController, RFContainerView * __nonnull container))prepareBlock {
+- (void)loadEmbedViewControllerWithPrepareBlock:(void (^ __nullable)(__kindof UIViewController *__nonnull viewController, RFContainerView * __nonnull container))prepareBlock {
     if (self.embedViewControllerLoaded) return;
 
     UIViewController *parentViewController = self.parentViewController?: self.viewController;
     RFAssert(parentViewController, @"Cannot load embed view controller, no parent view controller");
-    RFAssert(self.storyboardName || self.instantiationIdentifier, @"Either storyboardName or instantiationIdentifier set");
+    NSString *storyboardName = self.storyboardName;
+    NSString *vcIdentifier = self.instantiationIdentifier;
+    RFAssert(storyboardName || vcIdentifier, @"Either storyboardName or instantiationIdentifier set");
 
     UIViewController *vc = self.embedViewController;
     if (!vc) {
-        UIStoryboard *sb = self.storyboardName? [UIStoryboard storyboardWithName:(id)self.storyboardName bundle:nil] : parentViewController.storyboard;
-        vc = self.instantiationIdentifier? [sb instantiateViewControllerWithIdentifier:(id)self.instantiationIdentifier] : [sb instantiateInitialViewController];
+        UIStoryboard *sb = storyboardName? [UIStoryboard storyboardWithName:storyboardName bundle:nil] : parentViewController.storyboard;
+        vc = vcIdentifier? [sb instantiateViewControllerWithIdentifier:vcIdentifier] : [sb instantiateInitialViewController];
         self.embedViewController = vc;
     }
 

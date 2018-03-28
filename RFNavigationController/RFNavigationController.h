@@ -24,27 +24,29 @@ NS_CLASS_AVAILABLE_IOS(7_0)
     UINavigationControllerDelegate
 >
 
-/**
- The first navigation controller instance will become the globalNavigationController automatically.
- */
-+ (nullable instancetype)globalNavigationController;
+#pragma mark - Navigation Bar Style
 
 /**
- Sets the default global navigation controller to the given instance.
+ If any attribute’s kind is mismatched, an NSRangeException is raised.
  */
-+ (void)setGlobalNavigationController:(nullable __kindof RFNavigationController *)navigationController;
+@property (nonatomic, null_resettable, copy) NSDictionary<NSString *, id> *defaultAppearanceAttributes;
+
+/**
+ Subclasses may override this method to support additional attributes or change the default behaviors.
+ */
+- (void)updateNavigationAppearanceWithAppearanceAttributes:(nonnull NSDictionary<NSString *, id> *)attributes animationDuration:(NSTimeInterval)animationDuration animated:(BOOL)animated;
 
 /**
  Call this method to update the reciver's status, such as navigationBar/bottomBar hidden/unhidden.
+
+ @param viewController If the view controller is not managed by the reciver, only status bar appearance will change.
  */
 - (void)updateNavigationAppearanceWithViewController:(nullable __kindof UIViewController *)viewController animated:(BOOL)animated;
 
 /**
- Determine navigaiton bar should hidden or not by default.
-
- If the reciver is load from nib, this property will be set with storyboard setting.
+ Update appearance with attributes specified by the top view controller.
  */
-@property (nonatomic) IBInspectable BOOL preferredNavigationBarHidden;
+- (void)updateCurrentNavigationAppearanceAnimated:(BOOL)animated;
 
 #pragma mark - Bottom Bar
 
@@ -85,15 +87,6 @@ NS_CLASS_AVAILABLE_IOS(7_0)
  */
 @property (nonatomic) IBInspectable BOOL handelViewControllerBasedStatusBarAppearance;
 
-/// Default `NO`.
-@property (nonatomic) IBInspectable BOOL prefersStatusBarHidden;
-
-/// Default `UIStatusBarStyleDefault`.
-@property (nonatomic) UIStatusBarStyle preferredStatusBarStyle;
-
-/// Default `UIStatusBarAnimationFade`.
-@property (nonatomic) UIStatusBarAnimation preferredStatusBarUpdateAnimation;
-
 #pragma mark - Delegate
 
 - (void)setDelegate:(nullable id<UINavigationControllerDelegate>)delegate __attribute__((unavailable("You can’t change RFNavigationController’s delegtae")));
@@ -115,22 +108,6 @@ NS_CLASS_AVAILABLE_IOS(7_0)
 @optional
 
 /**
- Specifies whether the view controller prefers the navigation bar to be hidden or shown.
-
- @return A Boolean value of YES specifies the navigation bar should be hidden. Default value is NO.
- */
-- (BOOL)prefersNavigationBarHidden;
-
-//
-- (nullable UIColor *)preferredNavigationBarTintColor;
-
-//
-- (nullable UIColor *)preferredNavigationBarItemColor;
-
-//
-- (nullable NSDictionary <NSString *,id> *)preferredNavigationBarTitleTextAttributes;
-
-/**
  Ask current view controller whether should pop or not when user tap the back button.
 
  @return Return NO to cancel pop.
@@ -138,27 +115,13 @@ NS_CLASS_AVAILABLE_IOS(7_0)
 - (BOOL)shouldPopOnBackButtonTappedForNavigationController:(nonnull RFNavigationController *)navigation;
 
 /**
- Specifies whether the view controller prefers the bottom bar to be hidden or shown.
+ Appearance attributes of current view controller.
+ 
+ If attribute accepts non NSNumber kind of value, you can pass NSNull to reset.
 
- @return A Boolean value of YES specifies the bottom bar should be visiable. Default value is NO.
+ @return An NSDictionary object containing appearance attributes.
  */
-- (BOOL)prefersBottomBarShown;
-
-/**
- Specifies whether the view controller prefers the status bar to be hidden or shown
- */
-- (BOOL)prefersStatusBarHidden;
-
-/**
- The preferred status bar style for the view controller.
- */
-- (UIStatusBarStyle)preferredStatusBarStyle;
-
-/**
- Specifies the animation style to use for hiding and showing the status bar for the view controller.
- */
-- (UIStatusBarAnimation)preferredStatusBarUpdateAnimation;
-
+- (nullable NSDictionary<NSString *, id> *)RFNavigationAppearanceAttributes;
 
 @end
 
@@ -173,3 +136,48 @@ NS_CLASS_AVAILABLE_IOS(7_0)
 - (void)updateNavigationAppearanceAnimated:(BOOL)animated;
 
 @end
+
+#pragma mark - View controller-based appearance attributes
+
+NS_ASSUME_NONNULL_BEGIN
+
+/// The value of this attribute is an NSNumber object containing a boolean value
+/// indicating the navigation bar should to be hidden or shown.
+UIKIT_EXTERN NSString *const RFViewControllerPrefersNavigationBarHiddenAttribute;
+
+/// The value of this attribute is an UIColor or NSNull object.
+/// Use this attribute to specify the tint color to apply to the navigation bar background.
+UIKIT_EXTERN NSString *const RFViewControllerPreferredNavigationBarTintColorAttribute;
+
+/// The value of this attribute is an UIColor or NSNull object.
+/// Use this attribute to specify the tint color to apply to the navigation items and bar button items.
+UIKIT_EXTERN NSString *const RFViewControllerPreferredNavigationBarItemColorAttribute;
+
+/// The value of this attribute is an NSDictionary or NSNull object containing text attributes.
+/// Use this attribute to specify display attributes for the bar’s title text.
+UIKIT_EXTERN NSString *const RFViewControllerPreferredNavigationBarTitleTextAttributes;
+
+/// The value of this attribute is an NSNumber object containing a boolean value
+/// indicating the bottom bar should to be hidden or shown.
+UIKIT_EXTERN NSString *const RFViewControllerPrefersBottomBarShownAttribute;
+
+/// The value of this attribute is an NSNumber object containing a boolean value
+/// indicating the status bar should to be hidden or shown.
+UIKIT_EXTERN NSString *const RFViewControllerPrefersStatusBarHiddenAttribute;
+
+/// The value of this attribute is an NSNumber object containing an UIStatusBarAnimation value
+/// indicating the animation style to use for hiding and showing the status bar for the view controller.
+UIKIT_EXTERN NSString *const RFViewControllerPreferredStatusBarUpdateAnimationAttribute;
+
+/// The value of this attribute is an NSNumber object containing an UIStatusBarStyle value
+/// indicating the preferred status bar style for the view controller.
+UIKIT_EXTERN NSString *const RFViewControllerPreferredStatusBarStyleAttribute;
+
+/// The value of this attribute is an float NSNumber object (0-1)
+/// indicating the navigation bar backgroundImage alpha.
+UIKIT_EXTERN NSString *const RFViewControllerPreferredNavigationBarBackgroundAlphaAttributes;
+
+/// The value of this attribute is navigation backgroundImage
+UIKIT_EXTERN NSString *const RFViewControllerPreferredNavigationBackImageAttributes;
+NS_ASSUME_NONNULL_END
+

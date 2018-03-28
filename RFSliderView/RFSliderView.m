@@ -1,8 +1,8 @@
 
 #import "RFSliderView.h"
 #import "RFFullSizeCollectionViewFlowLayout.h"
-#import "UIView+RFAnimate.h"
 #import "RFTimer.h"
+#import "UIView+RFAnimate.h"
 
 @interface RFSliderView ()
 @property (strong, nonatomic) RFTimer *timer;
@@ -20,13 +20,14 @@ RFInitializingRootForUIView
     }
 
     self.scrollsToTop = NO;
+    self.clipsToBounds = YES;
     self.pagingEnabled = YES;
     self.showsHorizontalScrollIndicator = NO;
     self.showsVerticalScrollIndicator = NO;
 }
 
 - (void)afterInit {
-    [self setupBuildInGestureRecognizer];
+    [self _RFSliderView_setupBuildInGestureRecognizer];
 }
 
 - (void)setBounds:(CGRect)bounds {
@@ -68,20 +69,32 @@ RFInitializingRootForUIView
 }
 
 - (NSInteger)totalPage {
-    return self.contentSize.width / self.width;
+    CGFloat width = CGRectGetWidth(self.bounds);
+    if (width > 0) {
+        return self.contentSize.width / width;
+    }
+    return -1;
 }
 
-- (void)scrollToNextPage:(BOOL)allowInverted {
+- (void)_RFSliderView_scrollToNextPage:(BOOL)allowInverted {
+    if (self.totalPage < 2) return;
     NSInteger page = self.currentPage + 1;
     if (page < self.totalPage) {
         [self setCurrentPage:page animated:YES];
     }
-    else {
+    else if (allowInverted) {
         if (self.autoScrollAllowReverse) {
-            [self setCurrentPage:0 animated:YES];
+            // Keep scroll direction from left to right on last page.
+            CATransition *scrollAnimation = [CATransition animation];
+            scrollAnimation.duration = 0.35;
+            scrollAnimation.type = kCATransitionPush;
+            scrollAnimation.subtype = kCATransitionFromRight;
+            [self.layer addAnimation:scrollAnimation forKey:nil];
+            
+            [self setCurrentPage:0 animated:NO];
         }
         else {
-            [self invalidateAutoScrollTimer];
+            self.autoScrollEnable = NO;
         }
     }
 }
@@ -92,10 +105,14 @@ RFInitializingRootForUIView
     [super willMoveToWindow:newWindow];
     if (self.autoScrollEnable) {
         self.timer.suspended = !newWindow;
+        NSInteger page = self.currentPage;
+        if (page >= 0) {
+            [self setCurrentPage:page animated:NO];
+        }
     }
 }
 
-- (void)setupBuildInGestureRecognizer {
+- (void)_RFSliderView_setupBuildInGestureRecognizer {
     __block UIPanGestureRecognizer *gr;
     [self.gestureRecognizers enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop) {
         if ([obj isKindOfClass:[UIPanGestureRecognizer class]]) {
@@ -104,10 +121,10 @@ RFInitializingRootForUIView
         }
     }];
 
-    [gr addTarget:self action:@selector(onPanInSelf:)];
+    [gr addTarget:self action:@selector(_RFSliderView_onPanInSelf:)];
 }
 
-- (void)onPanInSelf:(UIPanGestureRecognizer *)gestureRecognizer {
+- (void)_RFSliderView_onPanInSelf:(UIPanGestureRecognizer *)gestureRecognizer {
     switch (gestureRecognizer.state) {
         case UIGestureRecognizerStateBegan:
             self.timer.suspended = YES;
@@ -125,36 +142,30 @@ RFInitializingRootForUIView
 
 - (void)setAutoScrollEnable:(BOOL)autoScrollEnable {
     if (_autoScrollEnable != autoScrollEnable) {
+        if (_autoScrollEnable) {
+            if (self.timer) {
+                [self.timer invalidate];
+                self.timer = nil;
+            }
+        }
         _autoScrollEnable = autoScrollEnable;
-
-        if (!autoScrollEnable) {
-            [self invalidateAutoScrollTimer];
-            return;
+        if (autoScrollEnable) {
+            if (self.timer) {
+                [self.timer scheduleInRunLoop:nil forMode:nil];
+            }
+            else {
+                @weakify(self);
+                RFTimer *tm = [RFTimer scheduledTimerWithTimeInterval:self.autoScrollTimeInterval repeats:YES fireBlock:^(RFTimer *timer, NSUInteger repeatCount) {
+                    @strongify(self);
+                    if (!self) {
+                        _douts(@"Timer no self")
+                        [timer invalidate];
+                    }
+                    [self _RFSliderView_scrollToNextPage:YES];
+                }];
+                self.timer = tm;
+            }
         }
-
-        if (self.timer) {
-            [self.timer scheduleInRunLoop:nil forMode:nil];
-        }
-        else {
-            @weakify(self);
-            RFTimer *tm = [RFTimer scheduledTimerWithTimeInterval:self.autoScrollTimeInterval repeats:YES fireBlock:^(RFTimer *timer, NSUInteger repeatCount) {
-                @strongify(self);
-                if (!self) {
-                    _douts(@"Timer no self")
-                    [timer invalidate];
-                }
-
-                [self scrollToNextPage:YES];
-            }];
-            self.timer = tm;
-        }
-    }
-}
-
-- (void)invalidateAutoScrollTimer {
-    if (self.timer) {
-        [self.timer invalidate];
-        self.timer = nil;
     }
 }
 
@@ -164,7 +175,7 @@ RFInitializingRootForUIView
 }
 
 - (void)dealloc {
-    [self invalidateAutoScrollTimer];
+    self.autoScrollEnable = NO;
 }
 
 @end

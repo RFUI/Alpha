@@ -26,8 +26,6 @@
     RFInitializing
 >
 
-+ (nonnull instancetype)sharedInstance;
-
 /**
  Defult shared manager
  */
@@ -162,6 +160,7 @@
 @end
 
 extern NSString *_Nonnull const RFAPIRequestArrayParameterKey;
+extern NSString *_Nonnull const RFAPIRequestForceQuryStringParametersKey;
 extern NSString *_Nonnull const RFAPIErrorDomain;
 
 extern NSString *_Nonnull const RFAPIMessageControlKey;

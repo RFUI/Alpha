@@ -1,12 +1,12 @@
-RFUI Alpha
-============
+# RFUI Alpha
 
-Demo: https://github.com/RFUI/RFUI
+Demos: https://github.com/RFUI/RFUI
 
+## 移出的组件
 
+* [RFAsynchronousSegue](https://github.com/RFUI/RFSegue)
 
-Components List
------
+## Components List
 
 ### RFAPI
 
@@ -15,10 +15,6 @@ Components List
 ### RFAssetsCache
 
 状态：待评估
-
-### RFAsynchronousSegue
-
-状态：良好，达到预期
 
 ### RFAudioPlayer
 

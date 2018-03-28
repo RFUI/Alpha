@@ -8,11 +8,11 @@
 @interface RFImageCropperView () <
     UIScrollViewDelegate
 >
-@property (strong, nonatomic) RFImageCropperScrollView *scrollView;
-@property (strong, nonatomic) UIImageView *imageView;
-@property (assign, nonatomic) CGSize imageSize;
-@property (assign, nonatomic) CGFloat frameScale;
-@property (assign, nonatomic) BOOL scaleFixLock;
+@property (nonatomic) RFImageCropperScrollView *scrollView;
+@property (nonatomic) UIImageView *imageView;
+@property (nonatomic) CGSize imageSize;
+@property (nonatomic) CGFloat frameScale;
+@property (nonatomic) BOOL scaleFixLock;
 @end
 
 @implementation RFImageCropperView
@@ -32,20 +32,21 @@ RFInitializingRootForUIView
 }
 
 - (NSString *)debugDescription {
+    UIScrollView *sv = self.scrollView;
     return [NSString stringWithFormat:@"<%@: %p; frame = %@; contentOffset = %@; contentSize = %@; zoomScale = %f; maximumZoomScale = %f; minimumZoomScale = %f; imageSize = %@; cropSize = %@; sourceImage = %@; maxPixelZoomRatio = %f; scrollView frame = %@>",
             self.class,
             (void *)self,
             NSStringFromCGRect(self.frame),
-            NSStringFromCGPoint(self.scrollView.contentOffset),
-            NSStringFromCGSize(self.scrollView.contentSize),
-            self.scrollView.zoomScale,
-            self.scrollView.maximumZoomScale,
-            self.scrollView.minimumZoomScale,
+            NSStringFromCGPoint(sv.contentOffset),
+            NSStringFromCGSize(sv.contentSize),
+            sv.zoomScale,
+            sv.maximumZoomScale,
+            sv.minimumZoomScale,
             NSStringFromCGSize(self.imageSize),
             NSStringFromCGSize(self.cropSize),
             self.sourceImage,
             self.maxPixelZoomRatio,
-            NSStringFromCGRect(self.scrollView.frame)
+            NSStringFromCGRect(sv.frame)
             ];
 }
 
@@ -252,7 +253,6 @@ RFInitializingRootForUIView
 }
 
 - (void)afterInit {
-    // Nothing
 }
 
 - (void)drawRect:(CGRect)rect {

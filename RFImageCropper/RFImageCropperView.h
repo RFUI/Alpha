@@ -7,7 +7,7 @@
     The MIT License (MIT)
     http://www.opensource.org/licenses/mit-license.php
 
-    Alpha
+    BETA
  */
 
 #import "RFUI.h"
@@ -29,30 +29,30 @@ self.cropView.transform = CGAffineTransformMakeScale(0.5, 0.5);
 @interface RFImageCropperView : UIView <
     RFInitializing
 >
-@property (strong, nonatomic) RFImageCropperFrameView *frameView;
+@property (nonatomic, nonnull) RFImageCropperFrameView *frameView;
 
-@property (strong, nonatomic) IBInspectable UIImage *sourceImage;
+@property (nonatomic, nullable) IBInspectable UIImage *sourceImage;
 
 /// Default (100, 100)
-@property (assign, nonatomic) IBInspectable CGSize cropSize;
-- (UIImage *)croppedImage;
+@property (nonatomic) IBInspectable CGSize cropSize;
+- (nullable UIImage *)croppedImage;
 
 /// Default 1
-@property (assign, nonatomic) IBInspectable CGFloat maxPixelZoomRatio;
+@property (nonatomic) IBInspectable CGFloat maxPixelZoomRatio;
 
 @end
 
 @interface RFImageCropperFrameView : UIView <
     RFInitializing
 >
-@property (strong, nonatomic) IBInspectable UIColor *borderColor;
-@property (strong, nonatomic) IBInspectable UIColor *overlayColor;
-@property (strong, nonatomic) IBInspectable UIColor *maskColor;
+@property (nonatomic, null_resettable) IBInspectable UIColor *borderColor;
+@property (nonatomic, null_resettable) IBInspectable UIColor *overlayColor;
+@property (nonatomic, null_resettable) IBInspectable UIColor *maskColor;
 
-@property (assign, nonatomic) IBInspectable CGSize frameSize;
+@property (nonatomic) IBInspectable CGSize frameSize;
 
 // No implementation
 /// Default 10.f
-@property (assign, nonatomic) CGFloat frameMargin;
+@property (nonatomic) CGFloat frameMargin;
 @end
 

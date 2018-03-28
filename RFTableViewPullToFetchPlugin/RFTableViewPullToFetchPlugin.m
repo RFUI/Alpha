@@ -214,6 +214,7 @@ static NSTimeInterval RFPullToFetchAnimateTimeInterval = .2;
     else {
         [self updateFooterDisplay:YES];
     }
+    [self onDistanceBetweenContentAndBottomChanged];
 }
 
 - (void)footerProcessFinshed {
@@ -222,10 +223,13 @@ static NSTimeInterval RFPullToFetchAnimateTimeInterval = .2;
     if (self.shouldScrollToLastVisibleRowBeforeTriggeAfterFooterProccessFinished && self.lastVisibleRowBeforeTriggeIndexPath) {
         [self.tableView scrollToRowAtIndexPath:self.lastVisibleRowBeforeTriggeIndexPath atScrollPosition:UITableViewScrollPositionTop animated:YES];
     }
-
     self.footerProcessing = NO;
     [self updateFooterDisplay:YES];
     [self setNeedsDisplayHeader];
+    
+    if (self.autoFetchWhenScroll) {
+        [self onDistanceBetweenContentAndBottomChanged];
+    }
 }
 
 #pragma mark - Display

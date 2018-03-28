@@ -5,7 +5,7 @@
 
 - (id)rf_dequeueReusableCellWithIdentifier:(NSString *)identifier {
     UITableViewCell *cell = [self dequeueReusableCellWithIdentifier:identifier];
-    CGFloat tableWidth = CGRectGetWidth(cell.bounds);
+    CGFloat tableWidth = CGRectGetWidth(self.bounds);
     CGRect cellBounds = cell.bounds;
     if (cellBounds.size.width != tableWidth) {
         cellBounds.size.width = tableWidth;

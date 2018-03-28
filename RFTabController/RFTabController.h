@@ -36,6 +36,11 @@
 @property (weak, nonatomic) UIViewController *selectedViewController;
 @property (assign, nonatomic) NSUInteger selectedIndex;
 
+/**
+ Reset selectedIndex to NSNotFound.
+ */
+- (void)resetSelectedIndex;
+
 - (void)setSelectedIndex:(NSUInteger)index animated:(BOOL)animated completion:(void (^)(BOOL finished))completion;
 - (void)setSelectedViewController:(UIViewController *)viewController animated:(BOOL)animated completion:(void (^)(BOOL finished))completion;
 

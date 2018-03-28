@@ -1,6 +1,5 @@
 
 #import "RFPullDownToPopInteractionController.h"
-#import "RFPerformance.h"
 #import "UIView+RFAnimate.h"
 
 @interface RFPullDownToPopInteractionController ()

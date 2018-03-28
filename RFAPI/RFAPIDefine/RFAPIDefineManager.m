@@ -141,7 +141,7 @@ RFInitializingRootForNSObject
             [path replaceCharactersInRange:match.range withString:@""];
         }
     }
-
+    
     NSURL *url;
     if ([path hasPrefix:@"http://"] || [path hasPrefix:@"https://"]) {
         url = [NSURL URLWithString:path];
@@ -150,6 +150,7 @@ RFInitializingRootForNSObject
         NSString *URLString = define.pathPrefix? [define.pathPrefix stringByAppendingString:path] : path;
         url = [NSURL URLWithString:URLString relativeToURL:define.baseURL];
     }
+    
     if (!url) {
 #if RFDEBUG
         dout_error(@"无法拼接路径 %@ 到 %@\n请检查接口定义", path, define.baseURL);
@@ -163,6 +164,18 @@ RFInitializingRootForNSObject
         }
         return nil;
     }
+    
+    if (parameters[RFAPIRequestForceQuryStringParametersKey]) {
+        NSDictionary *forceQuryStringParameters = parameters[RFAPIRequestForceQuryStringParametersKey];
+        [parameters removeObjectForKey:RFAPIRequestForceQuryStringParametersKey];
+        NSMutableArray *queryStringPair = [NSMutableArray array];
+        for (NSString *key in forceQuryStringParameters.allKeys) {
+            [queryStringPair addObject:[NSString stringWithFormat:@"%@=%@", key, forceQuryStringParameters[key]]];
+        }
+        NSString *query = [queryStringPair componentsJoinedByString:@"&"];
+        url = [NSURL URLWithString:[url.absoluteString stringByAppendingFormat:url.query.length ? @"&%@" : @"?%@", query]];
+    }
+    
     return url;
 }
 

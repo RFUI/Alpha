@@ -11,12 +11,12 @@
 
 @implementation RFSlideNavigationController
 
-#define _RFSlideNavigationControllerSendWillShowDelegete(v, a) \
+#define _rf_sendWillShowDelegete(v, a) \
     if (self.delegate && [self.delegate respondsToSelector:@selector(RFSlideNavigationController:willShowViewController:animated:)]) {\
         [self.delegate RFSlideNavigationController:self willShowViewController:v animated:a];\
     }
 
-#define _RFSlideNavigationControllerSendDidShowDelegete(v, a) \
+#define _rf_sendDidShowDelegete(v, a) \
     if (self.delegate && [self.delegate respondsToSelector:@selector(RFSlideNavigationController:didShowViewController:animated:)]) {\
         [self.delegate RFSlideNavigationController:self didShowViewController:v animated:a];\
     }
@@ -39,7 +39,7 @@
 
 #pragma mark -
 - (NSString *)description {
-    return [NSString stringWithFormat:@"<%@:%p viewControllers:%lu %f>", NSStringFromClass([self class]), self, self.viewControllers.count, self.stackViewsWidthSum];
+    return [NSString stringWithFormat:@"<%@:%p viewControllers:%lu %f>", NSStringFromClass([self class]), (void *)self, self.viewControllers.count, self.stackViewsWidthSum];
 }
 
 - (id)init {
@@ -65,7 +65,7 @@
         [viewController viewWidthForRFSlideNavigationController:self] : view.bounds.size.width;
     [_viewControllerWidths addObject:@(width)];
     
-    _RFSlideNavigationControllerSendWillShowDelegete(viewController, animated)
+    _rf_sendWillShowDelegete(viewController, animated)
     CGFloat xFinal = _stackViewsWidthSum;
     CGFloat xBeforeAnimate = xFinal - view.bounds.size.width -50;
     _stackViewsWidthSum += width-1;
@@ -96,12 +96,12 @@
             } completion:^(BOOL finished) {
                 layer.shadowOpacity = 0.f;
                 layer.shouldRasterize = NO;
-                _RFSlideNavigationControllerSendDidShowDelegete(viewController, YES);
+                _rf_sendDidShowDelegete(viewController, YES);
             }];
         }];
     }
     else {
-        _RFSlideNavigationControllerSendDidShowDelegete(viewController, NO);
+        _rf_sendDidShowDelegete(viewController, NO);
     }
 }
 
@@ -119,25 +119,25 @@
     CGFloat width = [[_viewControllerWidths lastObject] floatValue];
     self.stackViewsWidthSum -= width;
 	
-    _RFSlideNavigationControllerSendWillShowDelegete(viewControllerWillShow, animated)
+    _rf_sendWillShowDelegete(viewControllerWillShow, animated)
 	if (animated) {
 		[UIView animateWithDuration:0.2 delay:0 options:UIViewAnimationOptionCurveEaseOut animations:^{
 			[viewWillPop moveX:-100 Y:0];
             viewWillPop.alpha = 0.f;
-			self.container.contentSize = CGSizeMake(_stackViewsWidthSum, 0);
+			self.container.contentSize = CGSizeMake(self.stackViewsWidthSum, 0);
 		} completion:^(BOOL finished) {
 			viewWillPop.hidden = YES;
             viewWillPop.alpha = 1.f;
 			[viewWillPop removeFromSuperview];
             [viewControllerWillRemove removeFromParentViewController];
-            _RFSlideNavigationControllerSendDidShowDelegete(viewControllerWillShow, YES);
+            _rf_sendDidShowDelegete(viewControllerWillShow, YES);
 		}];
 	}
 	else {
 		[viewWillPop removeFromSuperview];
-		self.container.contentSize = CGSizeMake(_stackViewsWidthSum, 0);
+		self.container.contentSize = CGSizeMake(self.stackViewsWidthSum, 0);
         [viewControllerWillRemove removeFromParentViewController];
-        _RFSlideNavigationControllerSendDidShowDelegete(viewControllerWillShow, NO);
+        _rf_sendDidShowDelegete(viewControllerWillShow, NO);
 	}
     return viewControllerWillRemove;
 }
@@ -146,7 +146,7 @@
 	CGFloat tmp_delay = 0.f;
 	CGFloat animationDelayIncrease = 0.2f;
 	
-    _RFSlideNavigationControllerSendWillShowDelegete(nil, animated)
+    _rf_sendWillShowDelegete(nil, animated)
 	if (animated) {
         UIView *view;
 		for (UIViewController *viewController in [self.viewControllers reverseObjectEnumerator]) {
@@ -163,12 +163,12 @@
 		}
         dispatch_time_t popTime = dispatch_time(DISPATCH_TIME_NOW, tmp_delay * NSEC_PER_SEC);
         dispatch_after(popTime, dispatch_get_main_queue(), ^(void){
-            _RFSlideNavigationControllerSendDidShowDelegete(nil, YES);
+            _rf_sendDidShowDelegete(nil, YES);
         });
 	}
 	else {
 		self.container.contentSize = CGSizeZero;
-        _RFSlideNavigationControllerSendDidShowDelegete(nil, NO);
+        _rf_sendDidShowDelegete(nil, NO);
 	}
     
     // reset

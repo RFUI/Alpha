@@ -2,7 +2,7 @@
     RFLine
     RFUI
 
-    Copyright (c) 2014-2015 BB9z
+    Copyright (c) 2014-2015, 2018 BB9z
     https://github.com/RFUI/Alpha
 
     The MIT License (MIT)
@@ -20,9 +20,10 @@
  */
 @interface RFLine : RFDrawView
 
-@property (nonatomic) IBInspectable CGFloat dashLinePatternValue1;
-@property (nonatomic) IBInspectable CGFloat dashLinePatternValue2;
+@property IBInspectable CGFloat dashLinePatternValue1;
+@property IBInspectable CGFloat dashLinePatternValue2;
+@property CGLineCap lineCapStyle;
 
 // Draw 1 pixel line
-@property (nonatomic) IBInspectable BOOL onePixel;
+@property IBInspectable BOOL onePixel;
 @end

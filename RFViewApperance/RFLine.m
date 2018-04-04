@@ -43,6 +43,7 @@
         CGFloat dashPattern[] = {self.dashLinePatternValue1, self.dashLinePatternValue2};
         [bezierPath setLineDash:dashPattern count:2 phase:0];
     }
+    bezierPath.lineCapStyle = self.lineCapStyle;
 
     CGFloat lineWidth = 1;
     if (self.onePixel) {

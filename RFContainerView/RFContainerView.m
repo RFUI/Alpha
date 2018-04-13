@@ -96,9 +96,9 @@ RFInitializingRootForUIView
         if (prepareBlock) {
             prepareBlock(vc, self);
         }
+        [parentViewController addChildViewController:vc];
         vc.view.autoresizingMask = UIViewAutoresizingFlexibleSize;
         [self addSubview:vc.view resizeOption:RFViewResizeOptionFill];
-        [parentViewController addChildViewController:vc];
         [vc didMoveToParentViewController:parentViewController];
         self.embedViewControllerLoaded = YES;
     }

@@ -10,7 +10,7 @@
     BETA
  */
 
-#import "RFUI.h"
+#import <RFKit/RFRuntime.h>
 
 @class RFImageCropperFrameView;
 

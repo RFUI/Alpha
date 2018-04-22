@@ -1,6 +1,6 @@
 // TEST
 
-#import "RFUI.h"
+#import <RFKit/RFRuntime.h>
 
 typedef NS_ENUM(short, RFRefreshControlStatus) {
     RFRefreshControlStatusWaiting = 0,

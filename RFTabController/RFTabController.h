@@ -9,7 +9,8 @@
 
     TEST
  */
-#import "RFUI.h"
+#import <RFInitializing/RFInitializing.h>
+#import <RFKit/RFRuntime.h>
 
 @protocol RFTabControllerDelegate, RFTabControllerDataSource;
 

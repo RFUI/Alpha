@@ -1,6 +1,8 @@
 
 #import "RFPageTabController.h"
 #import "RFDataSourceArray.h"
+#import <RFKit/NSArray+RFKit.h>
+#import <RFKit/UIView+RFKit.h>
 
 @interface _RFTab_UIPageViewController : UIPageViewController
 @end

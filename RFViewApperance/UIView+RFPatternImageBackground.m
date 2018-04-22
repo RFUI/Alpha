@@ -1,6 +1,7 @@
 
 #import "UIView+RFPatternImageBackground.h"
 #import <objc/runtime.h>
+#import <RFKit/UIColor+RFKit.h>
 
 static char UIViewBackgroundColorPatternImageNameCateogryProperty;
 

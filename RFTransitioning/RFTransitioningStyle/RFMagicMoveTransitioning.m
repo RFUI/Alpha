@@ -1,6 +1,8 @@
 
 #import "RFMagicMoveTransitioning.h"
-#import "UIView+RFAnimate.h"
+#import <RFKit/UIView+RFAnimate.h>
+#import <RFKit/UIView+RFKit.h>
+
 
 @interface RFMagicMoveTransitioningBinding : NSObject
 @property (strong, nonatomic) UIView *fromView;

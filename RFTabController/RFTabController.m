@@ -1,7 +1,8 @@
 
 #import "RFTabController.h"
 #import "RFDataSourceArray.h"
-
+#import <RFKit/NSArray+RFKit.h>
+#import <RFKit/UIView+RFKit.h>
 
 @interface RFTabController () <
     RFDataSourceArrayDataSource

@@ -1,5 +1,7 @@
 
 #import "RFContainerView.h"
+#import <RFKit/UIView+RFKit.h>
+#import <RFKit/UIViewController+RFKit.h>
 
 @interface RFContainerView ()
 @property (nullable) __kindof UIViewController *embedViewController;

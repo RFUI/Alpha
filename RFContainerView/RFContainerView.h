@@ -9,7 +9,8 @@
 
     Alpha
  */
-#import "RFUI.h"
+#import <RFInitializing/RFInitializing.h>
+#import <RFKit/RFRuntime.h>
 
 /**
  Embed view controller into another view controller.

@@ -1,7 +1,8 @@
 
 #import "RFTableViewPullToFetchPlugin.h"
 #import "UIScrollView+RFScrollViewContentDistance.h"
-#import "UIView+RFAnimate.h"
+#import <RFKit/UIView+RFAnimate.h>
+#import <RFKit/UIView+RFKit.h>
 #import "RFKVOWrapper.h"
 
 #undef RFDebugLevel

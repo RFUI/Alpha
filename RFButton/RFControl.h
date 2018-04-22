@@ -11,7 +11,7 @@
     Alpha
  */
 
-#import "RFUI.h"
+#import <RFKit/RFRuntime.h>
 #import "RFInitializing.h"
 
 @interface RFControl : UIControl

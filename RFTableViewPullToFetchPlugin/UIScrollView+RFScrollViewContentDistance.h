@@ -1,5 +1,5 @@
 
-#import "RFUI.h"
+#import <RFKit/RFRuntime.h>
 
 @interface UIScrollView (RFScrollViewContentDistance)
 @property (assign, nonatomic) CGFloat distanceBetweenContentAndBottom;

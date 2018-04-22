@@ -10,8 +10,8 @@
 
     Alpha
  */
-
-#import "RFUI.h"
+#import <RFInitializing/RFInitializing.h>
+#import <RFKit/RFRuntime.h>
 
 @interface RFRefreshButton : UIButton <
     RFInitializing

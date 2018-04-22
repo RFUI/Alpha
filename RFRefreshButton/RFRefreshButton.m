@@ -1,5 +1,6 @@
 
 #import "RFRefreshButton.h"
+#import <RFKit/UIView+RFKit.h>
 
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Wcast-qual"

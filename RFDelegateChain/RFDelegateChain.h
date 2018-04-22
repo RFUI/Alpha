@@ -9,7 +9,8 @@
 
     BETA
  */
-#import "RFUI.h"
+#import <RFInitializing/RFInitializing.h>
+#import <RFKit/RFRuntime.h>
 
 @interface RFDelegateChain : NSObject <
     RFInitializing

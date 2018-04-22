@@ -2,8 +2,11 @@
 #import "RFNavigationController.h"
 #import "UIViewController+RFTransitioning.h"
 #import "RFDelegateChain.h"
-#import "UIView+RFAnimate.h"
 #import "RFAnimationTransitioning.h"
+#import <RFKit/NSError+RFKit.h>
+#import <RFKit/UIView+RFAnimate.h>
+#import <RFKit/UIView+RFKit.h>
+#import <RFKit/UIViewController+RFInterfaceOrientation.h>
 
 @interface RFNavigationBottomBar : UIView
 @end

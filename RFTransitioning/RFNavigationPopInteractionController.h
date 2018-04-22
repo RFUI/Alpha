@@ -10,7 +10,8 @@
 
     TEST
  */
-#import "RFUI.h"
+#import <RFInitializing/RFInitializing.h>
+#import <RFKit/RFRuntime.h>
 
 @interface RFNavigationPopInteractionController : UIPercentDrivenInteractiveTransition <
     RFInitializing

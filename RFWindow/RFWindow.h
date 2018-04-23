@@ -10,7 +10,9 @@
 
     TEST
  */
-#import <RFKit/RFRuntime.h>
+#import <UIKit/UIKit.h>
+#import <RFInitializing/RFInitializing.h>
+
 
 /**
  This window should be full screen all the time.

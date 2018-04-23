@@ -1,7 +1,7 @@
 
 #import "RFTableViewCellHeightDelegate.h"
-#import "dout.h"
-#import "UIView+RFAnimate.h"
+#import <RFKit/RFRuntime.h>
+#import <RFKit/UIView+RFAnimate.h>
 
 @interface RFTableViewCellHeightDelegate () <
     UITableViewDelegate

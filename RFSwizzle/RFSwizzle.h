@@ -9,7 +9,7 @@
 
     TEST
  */
-#import <Foundation/Foundation.h>
+#import <RFKit/RFRuntime.h>
 
 /**
  @return true if operation succeeded.

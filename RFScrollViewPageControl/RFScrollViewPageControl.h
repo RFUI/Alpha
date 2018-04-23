@@ -11,8 +11,8 @@
     Alpha
  */
 
-#import "RFUI.h"
-#import "RFInitializing.h"
+#import <RFKit/RFRuntime.h>
+#import <RFInitializing/RFInitializing.h>
 
 /**
  Usage: Just set scrollView property, no more step.

@@ -11,10 +11,10 @@
     Alpha
  */
 
+#import <RFInitializing/RFInitializing.h>
 #import <RFKit/RFRuntime.h>
-#import "RFInitializing.h"
 
-@interface RFControl : UIControl
-<RFInitializing>
-
+@interface RFControl : UIControl <
+    RFInitializing
+>
 @end

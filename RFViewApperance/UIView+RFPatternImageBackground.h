@@ -11,7 +11,7 @@
     BETA
  */
 
-#import <RFKit/RFRuntime.h>
+#import <UIKit/UIKit.h>
 
 /**
  @category UIView (RFApperancePatternImageBackground)

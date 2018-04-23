@@ -1,8 +1,7 @@
 
 #import "UIButton+RFResizableBackgroundImage.h"
-#import "RFRuntime.h"
 #import <objc/runtime.h>
-#import "UIDevice+RFKit.h"
+#import <RFKit/UIDevice+RFKit.h>
 
 static char UIButtonBackgroundImageResizingCapInsetsCateogryProperty;
 static char UIButtonBackgroundImageResizingCapInsets2xCateogryProperty;

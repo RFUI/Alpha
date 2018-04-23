@@ -1,6 +1,6 @@
 
 #import "RFLine.h"
-#import "UIView+RFAnimate.h"
+#import <RFKit/UIView+RFAnimate.h>
 
 @implementation RFLine
 

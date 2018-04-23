@@ -11,7 +11,7 @@
     Alpha
  */
 
-#import <RFKit/RFRuntime.h>
+#import <UIKit/UIKit.h>
 
 @interface UIView (RFLayerApperance)
 @property (nonatomic) IBInspectable CGFloat cornerRadius;

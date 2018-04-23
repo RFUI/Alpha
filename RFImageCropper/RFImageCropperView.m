@@ -1,6 +1,9 @@
 
 #import "RFImageCropperView.h"
-#import "UIView+RFAnimate.h"
+#import <RFKit/UIColor+RFKit.h>
+#import <RFKit/UIImage+RFKit.h>
+#import <RFKit/UIView+RFAnimate.h>
+#import <RFKit/UIView+RFKit.h>
 
 @interface RFImageCropperScrollView : UIScrollView
 @end

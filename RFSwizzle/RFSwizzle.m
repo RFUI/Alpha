@@ -1,7 +1,6 @@
 
 #import "RFSwizzle.h"
 #import <objc/runtime.h>
-#import "dout.h"
 
 //! REF: http://nshipster.com/method-swizzling/
 //! REF: https://github.com/rentzsch/jrswizzle

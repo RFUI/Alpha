@@ -1,6 +1,6 @@
 Pod::Spec.new do |ss|
   ss.name       = 'RFAlpha'
-  ss.version    = '0.1.0'
+  ss.version    = '0.2.0'
   ss.summary    = 'RFUI: Alpha components.'
   ss.homepage   = 'https://github.com/RFUI/Alpha'
   ss.license    = { :type => 'MIT' }
@@ -201,6 +201,15 @@ Pod::Spec.new do |ss|
     s.dependency 'RFInitializing', '>=1.1'
     s.source_files = 'RFRefreshButton/*.{h,m}'
     s.public_header_files = 'RFRefreshButton/*.h'
+  end
+
+  ss.subspec 'RFRefreshControl' do |s|
+    s.ios.deployment_target = '6.0'
+    s.tvos.deployment_target = '9.0'
+
+    s.dependency 'RFKit/Runtime', '>=1.7.1'
+    s.source_files = 'RFRefreshControl/*.{h,m}'
+    s.public_header_files = 'RFRefreshControl/*.h'
   end
 
   ss.subspec 'RFScrollViewPageControl' do |s|

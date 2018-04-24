@@ -1,5 +1,8 @@
 # RFUI Alpha
 
+[![Build Status](https://img.shields.io/travis/RFUI/Alpha.svg?style=flat-square&colorA=333333&colorB=6600cc)](https://travis-ci.org/RFUI/Alpha)
+[![CocoaPods](https://img.shields.io/cocoapods/v/RFAlpha.svg?style=flat-square&colorA=333333&colorB=6600cc)](https://cocoapods.org/pods/RFAlpha)
+
 Demos: https://github.com/RFUI/RFUI
 
 ## 移出的组件

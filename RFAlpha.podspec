@@ -1,6 +1,6 @@
 Pod::Spec.new do |ss|
   ss.name       = 'RFAlpha'
-  ss.version    = '0.2.0'
+  ss.version    = '0.3.0'
   ss.summary    = 'RFUI: Alpha components.'
   ss.homepage   = 'https://github.com/RFUI/Alpha'
   ss.license    = { :type => 'MIT' }
@@ -389,13 +389,6 @@ Pod::Spec.new do |ss|
       ss.dependency 'RFAlpha/RFViewApperance/RFDrawView'
       ss.source_files = 'RFViewApperance/RFRoundingCornersView.{h,m}'
       ss.public_header_files = 'RFViewApperance/RFRoundingCornersView.h'
-    end
-
-    s.subspec 'RFResizableBackgroundImage' do |ss|
-      ss.dependency 'RFKit/Runtime', '>=1.7.1'
-      ss.dependency 'RFKit/Category/UIDevice'
-      ss.source_files = 'RFViewApperance/UIButton+RFResizableBackgroundImage.{h,m}'
-      ss.public_header_files = 'RFViewApperance/UIButton+RFResizableBackgroundImage.h'
     end
 
     s.subspec 'RFLayerApperance' do |ss|

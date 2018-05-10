@@ -43,6 +43,13 @@ Pod::Spec.new do |ss|
     s.public_header_files = 'RFButton/*.h'
   end
 
+  ss.subspec 'RFCallbackControl' do |s|
+    s.dependency 'RFKit/Runtime', '>=1.7.1'
+    s.dependency 'RFKit/Category/NSArray'
+    s.source_files = 'RFCallbackControl/*.{h,m}'
+    s.public_header_files = 'RFCallbackControl/*.h'
+  end
+
   ss.subspec 'RFCheckbox' do |s|
     s.ios.deployment_target = '6.0'
     s.tvos.deployment_target = '9.0'

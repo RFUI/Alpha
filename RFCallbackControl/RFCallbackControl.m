@@ -95,15 +95,22 @@
     id target = self.target;
     SEL aSelector = self.selector;
     if (target && aSelector) {
-        [UIApplication.sharedApplication sendAction:aSelector to:target from:source forEvent:nil];
-        return YES;
+        [target performSelector:aSelector withObject:source];
+        return [self _updateLiveCounter];
     }
     id cb = self.block;
     if (cb) {
         [self perfromBlock:cb source:source];
-        return YES;
+        return [self _updateLiveCounter];
     }
     return NO;
+}
+
+- (BOOL)_updateLiveCounter {
+    int c = self.liveCounter;
+    if (c == 0) return YES;
+    self.liveCounter = c - 1;
+    return c > 1;
 }
 
 - (void)perfromBlock:(id)block source:(id)source {

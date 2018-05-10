@@ -55,6 +55,11 @@
 @property (nullable) id block;
 
 /**
+ 可选调用多少次后失效被移除。默认 0，不会失效
+ */
+@property int liveCounter;
+
+/**
  子类重写
  
  因为回调 block 参数是可变的，如何传参只能看具体业务，默认无参数

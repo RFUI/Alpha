@@ -50,14 +50,6 @@ RFInitializingRootForUIViewController
     }
 }
 
-- (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation {
-    // Only rotate if all child view controllers agree on the new orientation.
-    for (UIViewController *viewController in self.viewControllerStore) {
-        if (![viewController shouldAutorotateToInterfaceOrientation:interfaceOrientation]) return NO;
-    }
-    return YES;
-}
-
 - (void)didReceiveMemoryWarning {
     [super didReceiveMemoryWarning];
 

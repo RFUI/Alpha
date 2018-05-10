@@ -52,8 +52,5 @@ self.cropView.transform = CGAffineTransformMakeScale(0.5, 0.5);
 
 @property (nonatomic) IBInspectable CGSize frameSize;
 
-// No implementation
-/// Default 10.f
-@property (nonatomic) CGFloat frameMargin;
 @end
 

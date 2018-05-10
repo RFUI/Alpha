@@ -95,7 +95,10 @@
     id target = self.target;
     SEL aSelector = self.selector;
     if (target && aSelector) {
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Warc-performSelector-leaks"
         [target performSelector:aSelector withObject:source];
+#pragma clang diagnostic pop
         return [self _updateLiveCounter];
     }
     id cb = self.block;

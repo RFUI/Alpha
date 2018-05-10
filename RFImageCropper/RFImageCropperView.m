@@ -243,19 +243,34 @@ RFInitializingRootForUIView
 @implementation RFImageCropperFrameView
 RFInitializingRootForUIView
 
-- (void)onInit {
-    // Default vaule
-    self.maskColor = [UIColor colorWithRGBHex:0x000000 alpha:0.5];
-    self.overlayColor = [UIColor clearColor];
-    self.borderColor = [UIColor colorWithRGBHex:0x005555 alpha:1];
-    self.frameMargin = 10.f;
-    
+- (void)onInit {    
     self.opaque = NO;
     self.contentMode = UIViewContentModeRedraw;
     self.userInteractionEnabled = NO;
 }
 
 - (void)afterInit {
+}
+
+- (UIColor *)borderColor {
+    if (!_borderColor) {
+        _borderColor = [UIColor colorWithRGBHex:0x005555 alpha:1];
+    }
+    return _borderColor;
+}
+
+- (UIColor *)overlayColor {
+    if (!_overlayColor) {
+        _overlayColor = UIColor.clearColor;
+    }
+    return _overlayColor;
+}
+
+- (UIColor *)maskColor {
+    if (!_maskColor) {
+        _maskColor = [UIColor colorWithRGBHex:0x000000 alpha:0.5];
+    }
+    return _maskColor;
 }
 
 - (void)drawRect:(CGRect)rect {

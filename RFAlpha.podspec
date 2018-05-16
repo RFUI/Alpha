@@ -152,6 +152,16 @@ Pod::Spec.new do |ss|
     end
   end # RFDelegateChain
 
+  ss.subspec 'RFDispatchTimer' do |s|
+    s.ios.deployment_target = '6.0'
+    s.osx.deployment_target = '10.8'
+    s.watchos.deployment_target = '2.0'
+    s.tvos.deployment_target = '9.0'
+
+    s.source_files = 'RFDispatchTimer/*.{h,m}'
+    s.public_header_files = 'RFDispatchTimer/*.h'
+  end
+
   ss.subspec 'RFDrawImage' do |s|
     s.ios.deployment_target = '6.0'
     s.watchos.deployment_target = '2.0'
@@ -229,6 +239,17 @@ Pod::Spec.new do |ss|
     s.dependency 'RFAlpha/RFKVOWrapper'
     s.source_files = 'RFScrollViewPageControl/*.{h,m}'
     s.public_header_files = 'RFScrollViewPageControl/*.h'
+  end
+
+  ss.subspec 'RFSerialTaskOperationController' do |s|
+    s.ios.deployment_target = '6.0'
+    s.osx.deployment_target = '10.8'
+    s.watchos.deployment_target = '2.0'
+    s.tvos.deployment_target = '9.0'
+
+    s.dependency 'RFKit/Runtime', '>=1.7.1'
+    s.source_files = 'RFSerialTaskOperationController/*.{h,m}'
+    s.public_header_files = 'RFSerialTaskOperationController/*.h'
   end
 
   ss.subspec 'RFSound' do |s|

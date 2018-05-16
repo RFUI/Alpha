@@ -41,6 +41,10 @@ Demos: https://github.com/RFUI/RFUI
 
 状态：良好，达到预期，核心组件
 
+### RFDispatchTimer
+
+状态：待评估
+
 ### RFDrawImage
 
 状态：良好
@@ -65,6 +69,10 @@ Demos: https://github.com/RFUI/RFUI
 
 状态：核心组件，可能不再需要
 
+### RFRealmChangeNotificationController
+
+状态：待评估
+
 ### RFRefreshButton
 
 状态：正常
@@ -80,6 +88,10 @@ Demos: https://github.com/RFUI/RFUI
 ### RFScrollViewPageControl
 
 状态：良好，达到预期
+
+### RFSerialTaskOperationController
+
+状态：待评估
 
 ### RFSidePanel
 

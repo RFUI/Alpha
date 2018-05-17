@@ -2,7 +2,6 @@
 #import "RFControl.h"
 
 @implementation RFControl
-
 RFInitializingRootForUIView
 
 - (void)onInit {

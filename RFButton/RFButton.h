@@ -1,28 +1,26 @@
 /*!
-    RFButton
-    RFUI
-
-    Copyright (c) 2012-2013 BB9z
-    https://github.com/RFUI/Alpha
-
-    The MIT License (MIT)
-    http://www.opensource.org/licenses/mit-license.php
+ RFButton
+ RFUI
  
-    BETA
+ Copyright (c) 2012-2013, 2018 BB9z
+ https://github.com/RFUI/Alpha
+ 
+ The MIT License (MIT)
+ http://www.opensource.org/licenses/mit-license.php
  */
 
 #import "RFControl.h"
 
 @interface RFButton : RFControl
-@property (weak, nonatomic) IBOutlet UIImageView *icon;
-@property (weak, nonatomic) IBOutlet UILabel *titleLabel;
+@property (weak, nullable, nonatomic) IBOutlet UIImageView *icon;
+@property (weak, nullable, nonatomic) IBOutlet UILabel *titleLabel;
 
-@property (copy, nonatomic) void (^highlightEffectBlock)(RFButton *sender);
-@property (copy, nonatomic) void (^unhighlightEffectBlock)(RFButton *sender);
-@property (copy, nonatomic) void (^selecteEffectBlock)(RFButton *sender);
-@property (copy, nonatomic) void (^unselecteEffectBlock)(RFButton *sender);
+@property (nullable, nonatomic) void (^highlightEffectBlock)(__kindof RFButton *__nonnull sender);
+@property (nullable, nonatomic) void (^unhighlightEffectBlock)(__kindof RFButton *__nonnull sender);
+@property (nullable, nonatomic) void (^selecteEffectBlock)(__kindof RFButton *__nonnull sender);
+@property (nullable, nonatomic) void (^unselecteEffectBlock)(__kindof RFButton *__nonnull sender);
 
 
-@property (weak, nonatomic) IBOutlet UIButton *agentButton;
-@property (copy, nonatomic) void (^touchUpInsideCallback)(RFButton *sender);
+@property (weak, nullable, nonatomic) IBOutlet UIButton *agentButton;
+@property (nullable, nonatomic) void (^touchUpInsideCallback)(__kindof RFButton *__nonnull sender);
 @end

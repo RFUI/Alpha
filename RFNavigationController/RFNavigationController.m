@@ -14,13 +14,13 @@
 @interface RFNavigationController () <
     UIGestureRecognizerDelegate
 >
-@property (nonatomic, strong) RFNavigationBottomBar *bottomBarHolder;
-@property (nonatomic, weak) UIView *transitionView;
+@property (nonatomic) RFNavigationBottomBar *bottomBarHolder;
+@property (weak) UIView *_RFNavigationController_transitionView;
 @property (nonatomic, weak) UIViewController *statusBarHideChangeDelayViewController;
 
-@property (readwrite, weak, nonatomic) RFNavigationPopInteractionController *currentPopInteractionController;
-@property (readwrite, weak, nonatomic) UIGestureRecognizer *currentPopInteractionGestureRecognizer;
-@property (assign, nonatomic) BOOL gestureRecognizerEnabled;
+@property (nonatomic, weak) RFNavigationPopInteractionController *currentPopInteractionController;
+@property (nonatomic, weak) UIGestureRecognizer *currentPopInteractionGestureRecognizer;
+@property BOOL _RFNavigationController_buidlinGestureRecognizerEnabled;
 @end
 
 @implementation RFNavigationController
@@ -38,21 +38,8 @@ RFInitializingRootForUIViewController
 - (void)viewDidLoad {
     [super viewDidLoad];
 
-    self.transitionView = self.view.subviews.firstObject;
-
-    self.bottomBarHolder.frame = self.view.bounds;
-    [self.view addSubview:self.bottomBarHolder];
-
-    UIView *bottomBar = self.bottomBar;
-    if (bottomBar) {
-        self.bottomBarHolder.height = bottomBar.height;
-        [self.bottomBarHolder addSubview:bottomBar resizeOption:RFViewResizeOptionFill];
-
-        NSDictionary *dic = NSDictionaryOfVariableBindings(bottomBar);
-        bottomBar.translatesAutoresizingMaskIntoConstraints = NO;
-        [self.bottomBarHolder addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"|-0-[bottomBar]-0-|" options:0 metrics:nil views:dic]];
-        [self.bottomBarHolder addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"V:|-0-[bottomBar]-0-|" options:0 metrics:nil views:dic]];
-    }
+    self._RFNavigationController_transitionView = self.view.subviews.firstObject;
+    [self _RFNavigationController_setupBottomBarLayoutIfNeeded];
 }
 
 - (void)viewWillAppear:(BOOL)animated {
@@ -62,7 +49,7 @@ RFInitializingRootForUIViewController
 
 //! REF: http://stackoverflow.com/a/20923477
 - (BOOL)gestureRecognizerShouldBegin:(UIGestureRecognizer *)gestureRecognizer {
-    if ([self.transitionCoordinator isAnimated]) {
+    if (self.transitionCoordinator.isAnimated) {
         return NO;
     }
 
@@ -83,10 +70,11 @@ RFInitializingRootForUIViewController
 
 - (void)setBottomBarHidden:(BOOL)bottomBarHidden {
     _bottomBarHidden = bottomBarHidden;
-
+    if (!self.isViewLoaded) return;
+    
     UIView *bottomBarHolder = self.bottomBarHolder;
     CGFloat barHeight = bottomBarHolder.height;
-    UIView *transitionView = self.transitionView;
+    UIView *transitionView = self._RFNavigationController_transitionView;
 
     bottomBarHolder.y = self.view.height - (bottomBarHidden? 0 : barHeight);
     if (self.bottomBarFadeAnimation) {
@@ -112,23 +100,33 @@ RFInitializingRootForUIViewController
 }
 
 - (void)setBottomBar:(UIView *)bottomBar {
-    if (_bottomBar != bottomBar) {
-        if (_bottomBar.superview == self.bottomBarHolder) {
-            [_bottomBar removeFromSuperview];
-        }
+    if (_bottomBar == bottomBar) return;
+    if (_bottomBar.superview == self.bottomBarHolder) {
+        [_bottomBar removeFromSuperview];
+    }
+    [self _RFNavigationController_setupBottomBarLayoutIfNeeded];
+    _bottomBar = bottomBar;
+    self.bottomBarHidden = self.bottomBarHidden;
+}
 
-        if (bottomBar && self.isViewLoaded) {
-            self.bottomBarHolder.height = bottomBar.height;
-            [self.bottomBarHolder addSubview:bottomBar resizeOption:RFViewResizeOptionFill];
-
-            NSDictionary *dic = NSDictionaryOfVariableBindings(bottomBar);
-            bottomBar.translatesAutoresizingMaskIntoConstraints = NO;
-            [self.bottomBarHolder addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"|-0-[bottomBar]-0-|" options:0 metrics:nil views:dic]];
-            [self.bottomBarHolder addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"V:|-0-[bottomBar]-0-|" options:0 metrics:nil views:dic]];
-        }
-
-        _bottomBar = bottomBar;
-        self.bottomBarHidden = self.bottomBarHidden;
+- (void)_RFNavigationController_setupBottomBarLayoutIfNeeded {
+    UIView *bottomBar = self.bottomBar;
+    if (!bottomBar || !self.isViewLoaded) return;
+    
+    UIView *holder = self.bottomBarHolder;
+    if (!holder.superview) {
+        holder.frame = self.view.bounds;
+        [self.view addSubview:holder];
+    }
+    [holder resizeWidth:RFMathNotChange height:bottomBar.height resizeAnchor:RFResizeAnchorBottom];
+    
+    if (bottomBar.superview != holder) {
+        [holder addSubview:bottomBar resizeOption:RFViewResizeOptionFill];
+        
+        NSDictionary *dic = NSDictionaryOfVariableBindings(bottomBar);
+        bottomBar.translatesAutoresizingMaskIntoConstraints = NO;
+        [holder addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"|-0-[bottomBar]-0-|" options:0 metrics:nil views:dic]];
+        [holder addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"V:|-0-[bottomBar]-0-|" options:0 metrics:nil views:dic]];
     }
 }
 
@@ -368,9 +366,12 @@ static bool rf_isNull(id value) {
 
 	BOOL shouldPop = YES;
 	UIViewController<RFNavigationBehaving>* vc = (id)[self topViewController];
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wdeprecated-declarations"
 	if([vc respondsToSelector:@selector(shouldPopOnBackButtonTappedForNavigationController:)]) {
 		shouldPop = [vc shouldPopOnBackButtonTappedForNavigationController:self];
 	}
+#pragma clang diagnostic pop
 
 	if (shouldPop) {
 		dispatch_async(dispatch_get_main_queue(), ^{
@@ -409,7 +410,7 @@ static bool rf_isNull(id value) {
 
     UIGestureRecognizer *gr = self.currentPopInteractionGestureRecognizer;
     if (gr.state == UIGestureRecognizerStatePossible) {
-        self.gestureRecognizerEnabled = gr.enabled;
+        self._RFNavigationController_buidlinGestureRecognizerEnabled = gr.enabled;
         gr.enabled = NO;
     }
 
@@ -421,7 +422,7 @@ static bool rf_isNull(id value) {
 - (void)navigationController:(UINavigationController *)navigationController didShowViewController:(UIViewController *)viewController animated:(BOOL)animated {
     if (navigationController != self) return;
 
-    if (self.currentPopInteractionGestureRecognizer && self.gestureRecognizerEnabled) {
+    if (self.currentPopInteractionGestureRecognizer && self._RFNavigationController_buidlinGestureRecognizerEnabled) {
         self.currentPopInteractionGestureRecognizer.enabled = YES;
     }
 

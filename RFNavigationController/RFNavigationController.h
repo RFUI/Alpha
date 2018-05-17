@@ -2,7 +2,7 @@
     RFNavigationController
     RFUI
 
-    Copyright (c) 2014-2016 BB9z
+    Copyright (c) 2014-2016, 2018 BB9z
     https://github.com/RFUI/Alpha
 
     The MIT License (MIT)
@@ -26,7 +26,7 @@ NS_CLASS_AVAILABLE_IOS(7_0)
     UINavigationControllerDelegate
 >
 
-#pragma mark - Navigation Bar Style
+#pragma mark - Appearance Control
 
 /**
  If any attribute’s kind is mismatched, an NSRangeException is raised.
@@ -64,19 +64,19 @@ NS_CLASS_AVAILABLE_IOS(7_0)
  */
 - (void)setBottomBarHidden:(BOOL)hidden animated:(BOOL)animated;
 
-@property (nonatomic, nullable, strong) IBOutlet UIView *bottomBar;
+@property (nonatomic, nullable) IBOutlet UIView *bottomBar;
 
 /**
  A Boolean value indicating whether the bottom bar is translucent (YES) or not (NO).
  
  If the bottom bar is translucent, layout will be extended includes opaque bars.
  */
-@property (nonatomic) IBInspectable BOOL translucentBottomBar;
+@property IBInspectable BOOL translucentBottomBar;
 
 /**
  A Boolean value indicating whether the bottom bar fades in and out as it is shown or hidden, respectively.
  */
-@property (nonatomic) IBInspectable BOOL bottomBarFadeAnimation;
+@property IBInspectable BOOL bottomBarFadeAnimation;
 
 #pragma mark - Status Bar
 
@@ -87,19 +87,19 @@ NS_CLASS_AVAILABLE_IOS(7_0)
 
  Default No.
  */
-@property (nonatomic) IBInspectable BOOL handelViewControllerBasedStatusBarAppearance;
+@property IBInspectable BOOL handelViewControllerBasedStatusBarAppearance;
 
 #pragma mark - Delegate
 
 - (void)setDelegate:(nullable id<UINavigationControllerDelegate>)delegate __attribute__((unavailable("You can’t change RFNavigationController’s delegtae")));
 
-@property (nonatomic, nullable, copy) void (^willShowViewControllerBlock)(UINavigationController *__nonnull navigationController, UIViewController *__nonnull viewController, BOOL animated);
-@property (nonatomic, nullable, copy) void (^didShowViewControllerBlock)(UINavigationController *__nonnull navigationController, UIViewController *__nonnull viewController, BOOL animated);
+@property (nullable) void (^willShowViewControllerBlock)(UINavigationController *__nonnull navigationController, UIViewController *__nonnull viewController, BOOL animated);
+@property (nullable) void (^didShowViewControllerBlock)(UINavigationController *__nonnull navigationController, UIViewController *__nonnull viewController, BOOL animated);
 
 #pragma mark - Transitioning
 
 /// Default NO
-@property (nonatomic) BOOL preferSourceViewControllerTransitionStyle;
+@property BOOL preferSourceViewControllerTransitionStyle;
 
 @property (nonatomic, nullable, weak, readonly) RFNavigationPopInteractionController *currentPopInteractionController;
 @property (nonatomic, nullable, weak, readonly) UIGestureRecognizer *currentPopInteractionGestureRecognizer;
@@ -114,7 +114,7 @@ NS_CLASS_AVAILABLE_IOS(7_0)
 
  @return Return NO to cancel pop.
  */
-- (BOOL)shouldPopOnBackButtonTappedForNavigationController:(nonnull RFNavigationController *)navigation;
+- (BOOL)shouldPopOnBackButtonTappedForNavigationController:(nonnull RFNavigationController *)navigation DEPRECATED_ATTRIBUTE;
 
 /**
  Appearance attributes of current view controller.

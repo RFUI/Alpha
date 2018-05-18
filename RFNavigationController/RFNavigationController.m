@@ -15,6 +15,7 @@
     UIGestureRecognizerDelegate
 >
 @property (nonatomic) RFNavigationBottomBar *bottomBarHolder;
+@property (weak) NSLayoutConstraint *_RFNavigationController_bottomHeightConstraint;
 @property (weak) UIView *_RFNavigationController_transitionView;
 @property (nonatomic, weak) UIViewController *statusBarHideChangeDelayViewController;
 
@@ -93,7 +94,7 @@ RFInitializingRootForUIViewController
 - (RFNavigationBottomBar *)bottomBarHolder {
     if (!_bottomBarHolder) {
         RFNavigationBottomBar *bar = [RFNavigationBottomBar new];
-        bar.autoresizingMask = UIViewAutoresizingFlexibleTopMargin|UIViewAutoresizingFlexibleWidth;
+        bar.translatesAutoresizingMaskIntoConstraints = NO;
         _bottomBarHolder = bar;
     }
     return _bottomBarHolder;
@@ -116,17 +117,41 @@ RFInitializingRootForUIViewController
     UIView *holder = self.bottomBarHolder;
     if (!holder.superview) {
         holder.frame = self.view.bounds;
+        [holder resizeWidth:RFMathNotChange height:self.bottomBarHeight + self.bottomLayoutGuide.length resizeAnchor:RFResizeAnchorBottom];
         [self.view addSubview:holder];
+        NSLayoutConstraint *top = [NSLayoutConstraint constraintWithItem:holder attribute:NSLayoutAttributeTop relatedBy:NSLayoutRelationEqual toItem:self.bottomLayoutGuide attribute:NSLayoutAttributeTop multiplier:1 constant:-self.bottomBarHeight];
+        self._RFNavigationController_bottomHeightConstraint = top;
+        [self.view addConstraints:@[
+            top,
+            [NSLayoutConstraint constraintWithItem:holder attribute:NSLayoutAttributeLeft relatedBy:NSLayoutRelationEqual toItem:self.view attribute:NSLayoutAttributeLeft multiplier:1 constant:0],
+            [NSLayoutConstraint constraintWithItem:holder attribute:NSLayoutAttributeRight relatedBy:NSLayoutRelationEqual toItem:self.view attribute:NSLayoutAttributeRight multiplier:1 constant:0],
+            [NSLayoutConstraint constraintWithItem:holder attribute:NSLayoutAttributeBottom relatedBy:NSLayoutRelationEqual toItem:self.view attribute:NSLayoutAttributeBottom multiplier:1 constant:0]
+        ]];
     }
-    [holder resizeWidth:RFMathNotChange height:bottomBar.height resizeAnchor:RFResizeAnchorBottom];
     
     if (bottomBar.superview != holder) {
         [holder addSubview:bottomBar resizeOption:RFViewResizeOptionFill];
-        
-        NSDictionary *dic = NSDictionaryOfVariableBindings(bottomBar);
-        bottomBar.translatesAutoresizingMaskIntoConstraints = NO;
-        [holder addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"|-0-[bottomBar]-0-|" options:0 metrics:nil views:dic]];
-        [holder addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"V:|-0-[bottomBar]-0-|" options:0 metrics:nil views:dic]];
+        bottomBar.autoresizingMask = UIViewAutoresizingFlexibleSize;
+        bottomBar.translatesAutoresizingMaskIntoConstraints = YES;
+    }
+}
+
+@synthesize bottomBarHeight = _bottomBarHeight;
+- (CGFloat)bottomBarHeight {
+    if (_bottomBarHeight == 0) {
+        if (self.bottomBar) {
+            _bottomBarHeight = self.bottomBar.height;
+        }
+        else {
+            _bottomBarHeight = 48;
+        }
+    }
+    return _bottomBarHeight;
+}
+- (void)setBottomBarHeight:(CGFloat)bottomBarHeight {
+    _bottomBarHeight = bottomBarHeight;
+    if (self._RFNavigationController_bottomHeightConstraint && bottomBarHeight != 0) {
+        self._RFNavigationController_bottomHeightConstraint.constant = bottomBarHeight;
     }
 }
 

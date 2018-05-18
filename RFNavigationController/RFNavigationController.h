@@ -60,6 +60,11 @@ NS_CLASS_AVAILABLE_IOS(7_0)
 @property (nonatomic) BOOL bottomBarHidden;
 
 /**
+ The value cann't be 0.
+ */
+@property (nonatomic) IBInspectable CGFloat bottomBarHeight;
+
+/**
  Changes the visibility of the navigation controller’s built-in bottom bar.
  */
 - (void)setBottomBarHidden:(BOOL)hidden animated:(BOOL)animated;

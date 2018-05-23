@@ -2,7 +2,8 @@
 #import "RFSliderView.h"
 #import "RFFullSizeCollectionViewFlowLayout.h"
 #import "RFTimer.h"
-#import "UIView+RFAnimate.h"
+#import <RFKit/UIView+RFKit.h>
+#import <RFKit/UIView+RFAnimate.h>
 
 @interface RFSliderView ()
 @property (strong, nonatomic) RFTimer *timer;

@@ -1,14 +1,19 @@
 /*!
-    RFSliderView
-
-    Copyright (c) 2014, 2016-2017 BB9z
-    https://github.com/RFUI/Alpha
-
-    The MIT License (MIT)
-    http://www.opensource.org/licenses/mit-license.php
+ RFSliderView
+ RFUI
+ 
+ Copyright (c) 2014, 2016-2018 BB9z
+ https://github.com/RFUI/Alpha
+ 
+ The MIT License (MIT)
+ http://www.opensource.org/licenses/mit-license.php
  */
-#import "RFUI.h"
+#import <RFKit/RFRuntime.h>
+#import <RFInitializing/RFInitializing.h>
 
+/**
+ Banner view
+ */
 @interface RFSliderView : UICollectionView <
     RFInitializing
 >

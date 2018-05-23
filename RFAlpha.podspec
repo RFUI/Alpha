@@ -1,6 +1,6 @@
 Pod::Spec.new do |ss|
   ss.name       = 'RFAlpha'
-  ss.version    = '0.3.0'
+  ss.version    = '0.4.0'
   ss.summary    = 'RFUI: Alpha components.'
   ss.homepage   = 'https://github.com/RFUI/Alpha'
   ss.license    = { :type => 'MIT' }
@@ -48,6 +48,19 @@ Pod::Spec.new do |ss|
     s.dependency 'RFKit/Category/NSArray'
     s.source_files = 'RFCallbackControl/*.{h,m}'
     s.public_header_files = 'RFCallbackControl/*.h'
+  end
+
+  ss.subspec 'RFCarouselView' do |s|
+    s.ios.deployment_target = '6.0'
+    s.tvos.deployment_target = '9.0'
+
+    s.dependency 'RFAlpha/RFTimer'
+    s.dependency 'RFInitializing', '>=1.1'
+    s.dependency 'RFKit/Runtime', '>=1.7.1'
+    s.dependency 'RFKit/Category/UIView+RFAnimate'
+    s.dependency 'RFKit/Category/UIView'
+    s.source_files = 'RFCarouselView/*.{h,m}'
+    s.public_header_files = 'RFCarouselView/*.h'
   end
 
   ss.subspec 'RFCheckbox' do |s|
@@ -250,6 +263,18 @@ Pod::Spec.new do |ss|
     s.dependency 'RFKit/Runtime', '>=1.7.1'
     s.source_files = 'RFSerialTaskOperationController/*.{h,m}'
     s.public_header_files = 'RFSerialTaskOperationController/*.h'
+  end
+
+  ss.subspec 'RFSliderView' do |s|
+    s.ios.deployment_target = '6.0'
+
+    s.dependency 'RFAlpha/RFTimer'
+    s.dependency 'RFInitializing', '>=1.1'
+    s.dependency 'RFKit/Runtime', '>=1.7.1'
+    s.dependency 'RFKit/Category/UIView+RFAnimate'
+    s.dependency 'RFKit/Category/UIView'
+    s.source_files = 'RFSliderView/*.{h,m}'
+    s.public_header_files = 'RFSliderView/*.h'
   end
 
   ss.subspec 'RFSound' do |s|

@@ -73,15 +73,14 @@ RFInitializingRootForUIViewController
     _bottomBarHidden = bottomBarHidden;
     if (!self.isViewLoaded) return;
     
-    UIView *bottomBarHolder = self.bottomBarHolder;
-    CGFloat barHeight = bottomBarHolder.height;
+    CGFloat barHeight = self.bottomBarHeight;
     UIView *transitionView = self._RFNavigationController_transitionView;
 
-    bottomBarHolder.y = self.view.height - (bottomBarHidden? 0 : barHeight);
+    self._RFNavigationController_bottomHeightConstraint.constant = bottomBarHidden? 0 : self.bottomBarHeight;
     if (self.bottomBarFadeAnimation) {
-        bottomBarHolder.alpha = bottomBarHidden? 0 : 1;
+        self.bottomBarHolder.alpha = bottomBarHidden? 0 : 1;
     }
-    transitionView.height = self.view.height - transitionView.y - ((!bottomBarHidden && !self.translucentBottomBar)? barHeight: 0);
+    transitionView.height = self.view.height - transitionView.y - ((!bottomBarHidden && !self.translucentBottomBar)? barHeight : 0);
 }
 
 - (void)setBottomBarHidden:(BOOL)hidden animated:(BOOL)animated {
@@ -119,13 +118,15 @@ RFInitializingRootForUIViewController
         holder.frame = self.view.bounds;
         [holder resizeWidth:RFMathNotChange height:self.bottomBarHeight + self.bottomLayoutGuide.length resizeAnchor:RFResizeAnchorBottom];
         [self.view addSubview:holder];
-        NSLayoutConstraint *top = [NSLayoutConstraint constraintWithItem:holder attribute:NSLayoutAttributeTop relatedBy:NSLayoutRelationEqual toItem:self.bottomLayoutGuide attribute:NSLayoutAttributeTop multiplier:1 constant:-self.bottomBarHeight];
+        NSLayoutConstraint *top = [NSLayoutConstraint constraintWithItem:self.bottomLayoutGuide attribute:NSLayoutAttributeTop relatedBy:NSLayoutRelationEqual toItem:holder attribute:NSLayoutAttributeTop multiplier:1 constant:self.bottomBarHeight];
         self._RFNavigationController_bottomHeightConstraint = top;
+        NSLayoutConstraint *bottom = [NSLayoutConstraint constraintWithItem:holder attribute:NSLayoutAttributeBottom relatedBy:NSLayoutRelationEqual toItem:self.view attribute:NSLayoutAttributeBottom multiplier:1 constant:0];;
+        bottom.priority = 999;
         [self.view addConstraints:@[
             top,
             [NSLayoutConstraint constraintWithItem:holder attribute:NSLayoutAttributeLeft relatedBy:NSLayoutRelationEqual toItem:self.view attribute:NSLayoutAttributeLeft multiplier:1 constant:0],
             [NSLayoutConstraint constraintWithItem:holder attribute:NSLayoutAttributeRight relatedBy:NSLayoutRelationEqual toItem:self.view attribute:NSLayoutAttributeRight multiplier:1 constant:0],
-            [NSLayoutConstraint constraintWithItem:holder attribute:NSLayoutAttributeBottom relatedBy:NSLayoutRelationEqual toItem:self.view attribute:NSLayoutAttributeBottom multiplier:1 constant:0]
+            bottom
         ]];
     }
     

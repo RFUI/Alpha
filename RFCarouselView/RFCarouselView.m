@@ -38,6 +38,17 @@ RFInitializingRootForUIView
     }
 }
 
+- (void)willMoveToWindow:(UIWindow *)newWindow {
+    if (newWindow) {
+        if (self.animating) {
+            self.RFCarouselView_animationTimer.suspended = NO;
+        }
+    }
+    else {
+        _RFCarouselView_animationTimer.suspended = YES;
+    }
+}
+
 - (RFTimer *)RFCarouselView_animationTimer {
     if (!_RFCarouselView_animationTimer) {
         @weakify(self);

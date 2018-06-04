@@ -75,12 +75,12 @@ RFInitializingRootForUIViewController
     
     CGFloat barHeight = self.bottomBarHeight;
     UIView *transitionView = self._RFNavigationController_transitionView;
-
-    self._RFNavigationController_bottomHeightConstraint.constant = bottomBarHidden? 0 : self.bottomBarHeight;
+    
+    self._RFNavigationController_bottomHeightConstraint.constant = bottomBarHidden? -self.bottomLayoutGuide.length : barHeight;
     if (self.bottomBarFadeAnimation) {
         self.bottomBarHolder.alpha = bottomBarHidden? 0 : 1;
     }
-    transitionView.height = self.view.height - transitionView.y - ((!bottomBarHidden && !self.translucentBottomBar)? barHeight : 0);
+    transitionView.height = self.view.height - transitionView.y - ((!bottomBarHidden && !self.translucentBottomBar)? barHeight - self.bottomLayoutGuide.length : 0);
 }
 
 - (void)setBottomBarHidden:(BOOL)hidden animated:(BOOL)animated {

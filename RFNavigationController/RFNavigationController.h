@@ -60,7 +60,9 @@ NS_CLASS_AVAILABLE_IOS(7_0)
 @property (nonatomic) BOOL bottomBarHidden;
 
 /**
- The value cann't be 0.
+ Height relative to the bottomLayoutGuide.
+ 
+ The value cann't be 0. Default height is 48.
  */
 @property (nonatomic) IBInspectable CGFloat bottomBarHeight;
 

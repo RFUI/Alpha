@@ -22,9 +22,9 @@
 
 - (nullable ObjectType)addCallbackWithTarget:(nonnull id)target selector:(nonnull SEL)selector refrenceObject:(nonnull id)object;
 
-- (nullable ObjectType)addCallback:(nonnull id)callback refrenceObject:(nonnull id)object;
+- (nullable ObjectType)addCallback:(nonnull id)callbackBlock refrenceObject:(nonnull id)object;
 
-- (void)removeCallback:(nullable ObjectType)callbackRefrence;
+- (void)removeCallback:(nullable ObjectType)callbackObject;
 - (void)removeCallbackOfRefrenceObject:(nullable id)object;
 - (void)removeAllCallbacks;
 

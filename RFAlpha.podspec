@@ -1,6 +1,6 @@
 Pod::Spec.new do |ss|
   ss.name       = 'RFAlpha'
-  ss.version    = '0.4.0'
+  ss.version    = '0.4.1'
   ss.summary    = 'RFUI: Alpha components.'
   ss.homepage   = 'https://github.com/RFUI/Alpha'
   ss.license    = { :type => 'MIT' }

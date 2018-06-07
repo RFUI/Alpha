@@ -1,4 +1,13 @@
-// TEST
+/*!
+ RFTableViewPullToFetchPlugin
+ RFAlpha
+ 
+ Copyright © 2014-2015, 2017-2018 RFUI.
+ https://github.com/RFUI/RFAlpha
+ 
+ Apache License, Version 2.0
+ http://www.apache.org/licenses/LICENSE-2.0
+ */
 
 #import "RFDelegateChain.h"
 
@@ -15,89 +24,90 @@ typedef NS_ENUM(short, RFPullToFetchIndicatorStatus) {
     RFPullToFetchIndicatorStatusDragging,
     RFPullToFetchIndicatorStatusDecelerating,
     RFPullToFetchIndicatorStatusProcessing,
+    
+    /// Keeps visable, unable to trigger process
     RFPullToFetchIndicatorStatusFrozen
 };
 
 @class RFTableViewPullToFetchPlugin;
 
-typedef void (^RFPullToFetchIndicatorStatusChangeBlock)(RFTableViewPullToFetchPlugin *control, id indicatorView, RFPullToFetchIndicatorStatus status, CGFloat visibleHeight, UITableView *tableView);
+typedef void (^RFPullToFetchIndicatorStatusChangeBlock)(RFTableViewPullToFetchPlugin *__nonnull control, id __nonnull indicatorView, RFPullToFetchIndicatorStatus status, CGFloat visibleHeight, UITableView *__nonnull tableView);
 
 @interface RFTableViewPullToFetchPlugin : RFDelegateChain <
     UITableViewDelegate
 >
 
-@property (weak, nonatomic) IBOutlet UITableView *tableView;
-@property (weak, nonatomic) IBOutlet id<UITableViewDelegate> delegate;
+@property (weak, nullable, nonatomic) IBOutlet UITableView *tableView;
+@property (weak, nullable, nonatomic) IBOutlet id<UITableViewDelegate> delegate;
 
 #pragma mark - Status
 
-@property(readonly, getter = isFetching, nonatomic) BOOL fetching;
-@property(readonly, getter = isHeaderProcessing, nonatomic) BOOL headerProcessing;
-@property(readonly, getter = isFooterProcessing, nonatomic) BOOL footerProcessing;
+@property (readonly, getter = isFetching) BOOL fetching;
+@property (readonly, getter = isHeaderProcessing) BOOL headerProcessing;
+@property (readonly, getter = isFooterProcessing) BOOL footerProcessing;
 
-
-// Default YES.
-@property(assign, nonatomic, getter = isHeaderFetchingEnabled) IBInspectable BOOL headerFetchingEnabled;
-@property(assign, nonatomic, getter = isFooterFetchingEnabled) IBInspectable BOOL footerFetchingEnabled;
+/// Default YES.
+@property (nonatomic, getter = isHeaderFetchingEnabled) IBInspectable BOOL headerFetchingEnabled;
+@property (nonatomic, getter = isFooterFetchingEnabled) IBInspectable BOOL footerFetchingEnabled;
 
 /**
  Default, a fetch will be triggered only when user end dragging the table view.
  Set this property to `YES` will make the table view auto fetching near bottom.
  Default vaule is `NO`.
  */
-@property (assign, nonatomic) IBInspectable BOOL autoFetchWhenScroll;
-@property (assign, nonatomic) IBInspectable CGFloat autoFetchTolerateDistance;
+@property IBInspectable BOOL autoFetchWhenScroll;
+@property IBInspectable CGFloat autoFetchTolerateDistance;
 
 #pragma mark - Layout
 
-@property(strong, nonatomic) UIView *headerContainer;
-@property(strong, nonatomic) UIView *footerContainer;
+@property (nullable) UIView *headerContainer;
+@property (nullable) UIView *footerContainer;
 
-//@property(assign, nonatomic) RFPullToFetchTableIndicatorLayoutType headerStyle;
-//@property(assign, nonatomic) RFPullToFetchTableIndicatorLayoutType footerStyle;
+//@property RFPullToFetchTableIndicatorLayoutType headerStyle;
+//@property RFPullToFetchTableIndicatorLayoutType footerStyle;
 
-@property(copy, nonatomic) RFPullToFetchIndicatorStatusChangeBlock headerStatusChangeBlock;
-@property (readonly, nonatomic) RFPullToFetchIndicatorStatus headerStatus;
-- (void)setHeaderStatusChangeBlock:(void (^)(RFTableViewPullToFetchPlugin *control, id indicatorView, RFPullToFetchIndicatorStatus status, CGFloat visibleHeight, UITableView *tableView))headerStatusChangeBlock;
+@property (nullable) RFPullToFetchIndicatorStatusChangeBlock headerStatusChangeBlock;
+@property (readonly) RFPullToFetchIndicatorStatus headerStatus;
 
-@property(copy, nonatomic) RFPullToFetchIndicatorStatusChangeBlock footerStatusChangeBlock;
-@property (readonly, nonatomic) RFPullToFetchIndicatorStatus footerStatus;
-- (void)setFooterStatusChangeBlock:(void (^)(RFTableViewPullToFetchPlugin *control, id indicatorView, RFPullToFetchIndicatorStatus status, CGFloat visibleHeight, UITableView *tableView))footerStatusChangeBlock;
+@property(nullable) RFPullToFetchIndicatorStatusChangeBlock footerStatusChangeBlock;
+@property (readonly) RFPullToFetchIndicatorStatus footerStatus;
 
 - (void)setNeedsDisplayHeader;
 - (void)setNeedsDisplayFooter;
 
 #pragma mark - Event
 
-@property(copy, nonatomic) void (^headerProcessBlock)(void);
-@property(copy, nonatomic) void (^footerProcessBlock)(void);
+@property (nullable) void (^headerProcessBlock)(void);
+@property (nullable) void (^footerProcessBlock)(void);
 
-// Call them method to notice proccess is finished.
+/// Call them method to notice proccess is finished.
 - (void)markProcessFinshed;
 - (void)headerProcessFinshed;
 - (void)footerProcessFinshed;
 
-// For manually trigger.
+/// For manually trigger.
 - (void)triggerHeaderProcess;
 - (void)triggerFooterProcess;
 
 #pragma mark - Control
 
-// Default `YES`.
-@property (assign, nonatomic) IBInspectable BOOL shouldHideHeaderWhenFooterProcessing;
-@property (assign, nonatomic) IBInspectable BOOL shouldHideFooterWhenHeaderProcessing;
+/// Default `YES`.
+@property IBInspectable BOOL shouldHideHeaderWhenFooterProcessing;
+@property IBInspectable BOOL shouldHideFooterWhenHeaderProcessing;
 
+/**
+ If set `YES`, footer proccess will not be proccessed and `footerContainer` will be visiable.
+ Usually for noticing user there are no more data. Header proccess will reset this property.
+ */
+@property (nonatomic) BOOL footerReachEnd;
 
-// If set `YES`, footer proccess will not be proccessed and `footerContainer` will be visiable. Usually for noticing user there are no more data. Header proccess will reset this property.
-@property(assign, nonatomic) BOOL footerReachEnd;
+/// Default `NO`
+@property IBInspectable BOOL shouldScrollToTopWhenHeaderEventTrigged;
 
-// Default `NO`
-@property(assign, nonatomic) IBInspectable BOOL shouldScrollToTopWhenHeaderEventTrigged;
+/// Default `NO`, not work rightnow.
+@property IBInspectable BOOL shouldScrollToLastVisibleRowBeforeTriggeAfterFooterProccessFinished;
 
-// Default `NO`, not work rightnow.
-@property(assign, nonatomic) IBInspectable BOOL shouldScrollToLastVisibleRowBeforeTriggeAfterFooterProccessFinished;
-
-// Default `NO`
-//@property (assign, nonatomic) BOOL shouldScrollToBottomWhenFooterEventTrigged;
+/// Default `NO`
+//@property BOOL shouldScrollToBottomWhenFooterEventTrigged;
 
 @end

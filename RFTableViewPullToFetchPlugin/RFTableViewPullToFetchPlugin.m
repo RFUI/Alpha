@@ -11,18 +11,20 @@
 static NSTimeInterval RFPullToFetchAnimateTimeInterval = .2;
 
 @interface RFTableViewPullToFetchPlugin ()
-@property (readwrite, nonatomic) BOOL headerProcessing;
-@property (readwrite, nonatomic) BOOL footerProcessing;
-@property (assign, nonatomic) BOOL needsDisplayHeader;
-@property (assign, nonatomic) BOOL needsDisplayFooter;
+@property (nonatomic) BOOL headerProcessing;
+@property (nonatomic) BOOL footerProcessing;
+@property (nonatomic) BOOL needsDisplayHeader;
+@property (nonatomic) BOOL needsDisplayFooter;
 
-@property (strong, nonatomic) NSIndexPath *lastVisibleRowBeforeTriggeIndexPath;
-@property (assign, nonatomic) CGPoint draggingTrackPoint;
+@property (nonatomic) NSIndexPath *lastVisibleRowBeforeTriggeIndexPath;
+@property CGPoint _RFTableViewPullToFetchPlugin_draggingTrackPoint;
 
-@property (assign, nonatomic) BOOL animating;
-@property (strong, nonatomic) id contentSizeChangedObserver;
+@property BOOL _RFTableViewPullToFetchPlugin_animating;
+@property id _RFTableViewPullToFetchPlugin_contentSizeChangedObserver;
 
-@property (assign, nonatomic) BOOL hasFetched;
+@property BOOL _RFTableViewPullToFetchPlugin_hasFetched;
+// Stop footer keeps visable after fetch end. Set YES in footerProcessFinshed, release in begin dragging.
+@property BOOL _RFTableViewPullToFetchPlugin_fetchEndHiddenFlag;
 @end
 
 @implementation RFTableViewPullToFetchPlugin
@@ -56,11 +58,11 @@ static NSTimeInterval RFPullToFetchAnimateTimeInterval = .2;
         }
         tableView.delegate = self;
 
-        self.hasFetched = NO;
+        self._RFTableViewPullToFetchPlugin_hasFetched = NO;
         self.footerContainer.hidden = YES;
 
         @weakify(self);
-        self.contentSizeChangedObserver = [tableView RFAddObserver:self forKeyPath:@keypath(tableView, contentSize) options:(NSKeyValueObservingOptions)(NSKeyValueObservingOptionInitial|NSKeyValueObservingOptionNew) queue:nil block:^(id observer, NSDictionary *change) {
+        self._RFTableViewPullToFetchPlugin_contentSizeChangedObserver = [tableView RFAddObserver:self forKeyPath:@keypath(tableView, contentSize) options:(NSKeyValueObservingOptions)(NSKeyValueObservingOptionInitial|NSKeyValueObservingOptionNew) queue:nil block:^(id observer, NSDictionary *change) {
             @strongify(self);
             [self updateFooterLayout];
         }];
@@ -162,8 +164,9 @@ static NSTimeInterval RFPullToFetchAnimateTimeInterval = .2;
         CGPoint conentOffset = self.tableView.contentOffset;
         conentOffset.y = animate? -self.headerContainer.height : 0;
         [UIView animateWithDuration:RFPullToFetchAnimateTimeInterval animations:^{
-            if (self.animating) {
+            if (self._RFTableViewPullToFetchPlugin_animating) {
                 self.tableView.contentOffset = conentOffset;
+                dout_point(self.tableView.contentOffset)
             }
         } completion:nil];
     }
@@ -205,11 +208,23 @@ static NSTimeInterval RFPullToFetchAnimateTimeInterval = .2;
 - (void)headerProcessFinshed {
     _doutwork()
     self.headerProcessing = NO;
+    self._RFTableViewPullToFetchPlugin_fetchEndHiddenFlag = YES;
     [self updateHeaderDisplay:YES];
+    
+    if (self.shouldScrollToTopWhenHeaderEventTrigged) {
+        CGPoint conentOffset = self.tableView.contentOffset;
+        if (conentOffset.y < 0) {
+            [UIView animateWithDuration:RFPullToFetchAnimateTimeInterval animations:^{
+                if (self._RFTableViewPullToFetchPlugin_animating) {
+                    self.tableView.contentOffset = CGPointZero;
+                }
+            } completion:nil];
+        }
+    }
 
     // If there are few cell to show after fetching, footer should be hidden.
     if (self.tableView.distanceBetweenContentAndBottom > 0 && !self.footerReachEnd) {
-        self.hasFetched = NO;
+        self._RFTableViewPullToFetchPlugin_hasFetched = NO;
         self.footerContainer.hidden = YES;
     }
     else {
@@ -225,6 +240,7 @@ static NSTimeInterval RFPullToFetchAnimateTimeInterval = .2;
         [self.tableView scrollToRowAtIndexPath:self.lastVisibleRowBeforeTriggeIndexPath atScrollPosition:UITableViewScrollPositionTop animated:YES];
     }
     self.footerProcessing = NO;
+    self._RFTableViewPullToFetchPlugin_fetchEndHiddenFlag = YES;
     [self updateFooterDisplay:YES];
     [self setNeedsDisplayHeader];
     
@@ -283,11 +299,11 @@ static NSTimeInterval RFPullToFetchAnimateTimeInterval = .2;
     dout_debug(@"Update header display%@", animated? @" animated!" : @".");
     [self updateHeaderVisable];
 
-    if (self.animating) {
+    if (self._RFTableViewPullToFetchPlugin_animating) {
         animated = YES;
     }
     if (animated) {
-        self.animating = YES;
+        self._RFTableViewPullToFetchPlugin_animating = YES;
     }
     [UIView animateWithDuration:RFPullToFetchAnimateTimeInterval delay:0 options:UIViewAnimationOptionBeginFromCurrentState animated:animated beforeAnimations:nil animations:^{
         [self updateHeaderLayout];
@@ -300,7 +316,7 @@ static NSTimeInterval RFPullToFetchAnimateTimeInterval = .2;
         tb.contentInset = edge;
     } completion:^(BOOL finished) {
         if (finished) {
-            self.animating = NO;
+            self._RFTableViewPullToFetchPlugin_animating = NO;
         }
     }];
 
@@ -312,11 +328,11 @@ static NSTimeInterval RFPullToFetchAnimateTimeInterval = .2;
     dout_debug(@"Update footer display%@", animated? @" animated!" : @".");
     [self updateFooterVisable];
 
-    if (self.animating) {
+    if (self._RFTableViewPullToFetchPlugin_animating) {
         animated = YES;
     }
     if (animated) {
-        self.animating = YES;
+        self._RFTableViewPullToFetchPlugin_animating = YES;
     }
     [UIView animateWithDuration:RFPullToFetchAnimateTimeInterval delay:0 options:UIViewAnimationOptionBeginFromCurrentState animated:animated beforeAnimations:nil animations:^{
         [self updateFooterLayout];
@@ -332,7 +348,7 @@ static NSTimeInterval RFPullToFetchAnimateTimeInterval = .2;
         }
     } completion:^(BOOL finished) {
         if (finished) {
-            self.animating = NO;
+            self._RFTableViewPullToFetchPlugin_animating = NO;
         }
     }];
 
@@ -384,7 +400,8 @@ static NSTimeInterval RFPullToFetchAnimateTimeInterval = .2;
     }
     else if ((self.shouldHideFooterWhenHeaderProcessing && self.headerProcessing)
         || distance <= 0
-        || (self.tableView.distanceBetweenContentAndTop > 0 && !self.footerReachEnd)) {
+        || (self.tableView.distanceBetweenContentAndTop > 0 && !self.footerReachEnd)
+        || (self._RFTableViewPullToFetchPlugin_fetchEndHiddenFlag && !self.footerReachEnd)) {
         footer.hidden = YES;
     }
     else {
@@ -431,9 +448,9 @@ static NSTimeInterval RFPullToFetchAnimateTimeInterval = .2;
         [self.delegate scrollViewDidScroll:scrollView];
     }
 
-    if (!self.hasFetched) {
+    if (!self._RFTableViewPullToFetchPlugin_hasFetched) {
         [self updateFooterDisplay:NO];
-        self.hasFetched = YES;
+        self._RFTableViewPullToFetchPlugin_hasFetched = YES;
     }
 
     [self onDistanceBetweenContentAndTopChanged];
@@ -446,7 +463,8 @@ static NSTimeInterval RFPullToFetchAnimateTimeInterval = .2;
     }
     dout_debug(@"TableView Will BeginDragging");
 
-    self.draggingTrackPoint = scrollView.contentOffset;
+    self._RFTableViewPullToFetchPlugin_draggingTrackPoint = scrollView.contentOffset;
+    self._RFTableViewPullToFetchPlugin_fetchEndHiddenFlag = NO;
 }
 
 - (void)scrollViewDidEndDragging:(UIScrollView *)scrollView willDecelerate:(BOOL)decelerate {
@@ -462,7 +480,7 @@ static NSTimeInterval RFPullToFetchAnimateTimeInterval = .2;
     dout_debug(@"footerContainer = %@", self.footerContainer)
     dout_debug(@"contentInset = %@", NSStringFromUIEdgeInsets(scrollView.contentInset))
 
-    if (scrollView.contentOffset.y < self.draggingTrackPoint.y) {
+    if (scrollView.contentOffset.y < self._RFTableViewPullToFetchPlugin_draggingTrackPoint.y) {
         dout_debug(@"Drag down");
         if (!self.headerFetchingEnabled) return;
 
@@ -472,7 +490,7 @@ static NSTimeInterval RFPullToFetchAnimateTimeInterval = .2;
         }
     }
 
-    if (scrollView.contentOffset.y > self.draggingTrackPoint.y) {
+    if (scrollView.contentOffset.y > self._RFTableViewPullToFetchPlugin_draggingTrackPoint.y) {
         dout_debug(@"Drag up");
         if (!self.footerFetchingEnabled || self.footerReachEnd) return;
 

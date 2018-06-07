@@ -166,7 +166,6 @@ static NSTimeInterval RFPullToFetchAnimateTimeInterval = .2;
         [UIView animateWithDuration:RFPullToFetchAnimateTimeInterval animations:^{
             if (self._RFTableViewPullToFetchPlugin_animating) {
                 self.tableView.contentOffset = conentOffset;
-                dout_point(self.tableView.contentOffset)
             }
         } completion:nil];
     }

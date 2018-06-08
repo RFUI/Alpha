@@ -1,13 +1,11 @@
 /*!
-    RFDataSourceArray
-
-    Copyright (c) 2015 BB9z
-    https://github.com/RFUI/Alpha
-
-    The MIT License (MIT)
-    http://www.opensource.org/licenses/mit-license.php
-
-    TEST
+ RFDataSourceArray
+ 
+ Copyright © 2015, 2018 BB9z
+ https://github.com/RFUI/Alpha
+ 
+ The MIT License (MIT)
+ http://www.opensource.org/licenses/mit-license.php
  */
 #import <Foundation/Foundation.h>
 
@@ -16,22 +14,36 @@
 /**
  If dataSource not set, this class behave just like an normal NSArray object.
  */
-@interface RFDataSourceArray : NSArray
+@interface RFDataSourceArray<__covariant ObjectType> : NSArray
 
-- (void)setArray:(NSArray *)otherArray;
+- (void)setArray:(nullable NSArray<ObjectType> *)otherArray;
 
 #pragma mark - Data Source mode
 
-@property (weak, nonatomic) id<RFDataSourceArrayDataSource> dataSource;
+@property (weak, nullable, nonatomic) id<RFDataSourceArrayDataSource> dataSource;
+
+/**
+ If contents for the dataSource changed, you may call this method to refresh.
+ */
 - (void)reloadData;
-- (void)removeObjectsAtIndexes:(NSIndexSet *)indexes;
+
+/**
+ Removes the objects at the specified indexes from the array.
+ 
+ @param indexes Must not be `nil`, or an exception raises.
+ */
+- (void)removeObjectsAtIndexes:(nonnull NSIndexSet *)indexes;
 
 @end
 
 @protocol RFDataSourceArrayDataSource <NSObject>
 @required
 
-- (NSUInteger)numberOfObjectInDataSourceArray:(RFDataSourceArray *)array;
-- (id)dataSourceArray:(RFDataSourceArray *)array objectAtIndex:(NSUInteger)index;
+- (NSUInteger)numberOfObjectInDataSourceArray:(nonnull RFDataSourceArray *)array;
+
+/**
+ @return The object located at index, must not be nil.
+ */
+- (nonnull id)dataSourceArray:(nonnull RFDataSourceArray *)array objectAtIndex:(NSUInteger)index;
 
 @end

@@ -1,12 +1,11 @@
 
 #import "RFFullSizeCollectionViewFlowLayout.h"
 
-@interface RFFullSizeCollectionViewFlowLayout ()
-@end
-
 @implementation RFFullSizeCollectionViewFlowLayout
 
 - (void)prepareLayout {
+    // Must call super first, otherwise the layout is abnormal after screen rotates.
+    [super prepareLayout];
     self.sectionInset = UIEdgeInsetsZero;
     self.minimumInteritemSpacing = 0;
     self.minimumLineSpacing = 0;
@@ -18,7 +17,6 @@
     else {
         self.itemSize = CGSizeMake(1, 1);
     }
-    [super prepareLayout];
 }
 
 - (BOOL)shouldInvalidateLayoutForBoundsChange:(CGRect)newBounds {

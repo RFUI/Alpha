@@ -179,7 +179,9 @@ UIKIT_EXTERN RFViewControllerAppearanceAttributeKey const RFViewControllerPrefer
 UIKIT_EXTERN RFViewControllerAppearanceAttributeKey const RFViewControllerPreferredNavigationBarBackgroundAlphaAttributes;
 
 /// The value of this attribute is navigation backgroundImage
-UIKIT_EXTERN RFViewControllerAppearanceAttributeKey const RFViewControllerPreferredNavigationBackImageAttributes;
+UIKIT_EXTERN RFViewControllerAppearanceAttributeKey const RFViewControllerPreferredNavigationBarBackgroundImageAttribute;
+
+UIKIT_EXTERN RFViewControllerAppearanceAttributeKey const RFViewControllerPreferredNavigationBackImageAttributes DEPRECATED_MSG_ATTRIBUTE("Use .preferredNavigationBarBackgroundImageAttribute instead");
 
 /// Status bar appearance attributes are deprecated.
 /// @see handelViewControllerBasedStatusBarAppearance

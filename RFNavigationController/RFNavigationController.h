@@ -15,6 +15,8 @@
 @protocol RFNavigationBehaving;
 @class RFNavigationPopInteractionController;
 
+typedef NSString* RFViewControllerAppearanceAttributeKey NS_STRING_ENUM;
+
 /**
  
  */
@@ -29,12 +31,12 @@ NS_CLASS_AVAILABLE_IOS(7_0)
 /**
  If any attribute’s kind is mismatched, an NSRangeException is raised.
  */
-@property (nonatomic, null_resettable, copy) NSDictionary<NSString *, id> *defaultAppearanceAttributes;
+@property (copy, null_resettable, nonatomic) NSDictionary<RFViewControllerAppearanceAttributeKey, id> *defaultAppearanceAttributes;
 
 /**
  Subclasses may override this method to support additional attributes or change the default behaviors.
  */
-- (void)updateNavigationAppearanceWithAppearanceAttributes:(nonnull NSDictionary<NSString *, id> *)attributes animationDuration:(NSTimeInterval)animationDuration animated:(BOOL)animated;
+- (void)updateNavigationAppearanceWithAppearanceAttributes:(nonnull NSDictionary<RFViewControllerAppearanceAttributeKey, id> *)attributes animationDuration:(NSTimeInterval)animationDuration animated:(BOOL)animated;
 
 /**
  Call this method to update the reciver's status, such as navigationBar/bottomBar hidden/unhidden.
@@ -69,7 +71,7 @@ NS_CLASS_AVAILABLE_IOS(7_0)
  */
 - (void)setBottomBarHidden:(BOOL)hidden animated:(BOOL)animated;
 
-@property (nonatomic, nullable) IBOutlet UIView *bottomBar;
+@property (nullable, nonatomic) IBOutlet UIView *bottomBar;
 
 /**
  A Boolean value indicating whether the bottom bar is translucent (YES) or not (NO).
@@ -110,8 +112,8 @@ NS_CLASS_AVAILABLE_IOS(7_0)
 /// Default NO
 @property BOOL preferSourceViewControllerTransitionStyle;
 
-@property (nonatomic, nullable, weak, readonly) RFNavigationPopInteractionController *currentPopInteractionController;
-@property (nonatomic, nullable, weak, readonly) UIGestureRecognizer *currentPopInteractionGestureRecognizer;
+@property (readonly, weak, nullable, nonatomic) RFNavigationPopInteractionController *currentPopInteractionController;
+@property (readonly, weak, nullable, nonatomic) UIGestureRecognizer *currentPopInteractionGestureRecognizer;
 
 @end
 
@@ -132,7 +134,7 @@ NS_CLASS_AVAILABLE_IOS(7_0)
 
  @return An NSDictionary object containing appearance attributes.
  */
-- (nullable NSDictionary<NSString *, id> *)RFNavigationAppearanceAttributes;
+- (nullable NSDictionary<RFViewControllerAppearanceAttributeKey, id> *)RFNavigationAppearanceAttributes;
 
 @end
 
@@ -154,45 +156,45 @@ NS_ASSUME_NONNULL_BEGIN
 
 /// The value of this attribute is an NSNumber object containing a boolean value
 /// indicating the navigation bar should to be hidden or shown.
-UIKIT_EXTERN NSString *const RFViewControllerPrefersNavigationBarHiddenAttribute;
+UIKIT_EXTERN RFViewControllerAppearanceAttributeKey const RFViewControllerPrefersNavigationBarHiddenAttribute;
 
 /// The value of this attribute is an UIColor or NSNull object.
 /// Use this attribute to specify the tint color to apply to the navigation bar background.
-UIKIT_EXTERN NSString *const RFViewControllerPreferredNavigationBarTintColorAttribute;
+UIKIT_EXTERN RFViewControllerAppearanceAttributeKey const RFViewControllerPreferredNavigationBarTintColorAttribute;
 
 /// The value of this attribute is an UIColor or NSNull object.
 /// Use this attribute to specify the tint color to apply to the navigation items and bar button items.
-UIKIT_EXTERN NSString *const RFViewControllerPreferredNavigationBarItemColorAttribute;
+UIKIT_EXTERN RFViewControllerAppearanceAttributeKey const RFViewControllerPreferredNavigationBarItemColorAttribute;
 
 /// The value of this attribute is an NSDictionary or NSNull object containing text attributes.
 /// Use this attribute to specify display attributes for the bar’s title text.
-UIKIT_EXTERN NSString *const RFViewControllerPreferredNavigationBarTitleTextAttributes;
+UIKIT_EXTERN RFViewControllerAppearanceAttributeKey const RFViewControllerPreferredNavigationBarTitleTextAttributes;
 
 /// The value of this attribute is an NSNumber object containing a boolean value
 /// indicating the bottom bar should to be hidden or shown.
-UIKIT_EXTERN NSString *const RFViewControllerPrefersBottomBarShownAttribute;
+UIKIT_EXTERN RFViewControllerAppearanceAttributeKey const RFViewControllerPrefersBottomBarShownAttribute;
 
 /// The value of this attribute is an float NSNumber object (0-1)
 /// indicating the navigation bar backgroundImage alpha.
-UIKIT_EXTERN NSString *const RFViewControllerPreferredNavigationBarBackgroundAlphaAttributes;
+UIKIT_EXTERN RFViewControllerAppearanceAttributeKey const RFViewControllerPreferredNavigationBarBackgroundAlphaAttributes;
 
 /// The value of this attribute is navigation backgroundImage
-UIKIT_EXTERN NSString *const RFViewControllerPreferredNavigationBackImageAttributes;
+UIKIT_EXTERN RFViewControllerAppearanceAttributeKey const RFViewControllerPreferredNavigationBackImageAttributes;
 
 /// Status bar appearance attributes are deprecated.
 /// @see handelViewControllerBasedStatusBarAppearance
 
 // The value of this attribute is an NSNumber object containing a boolean value
 // indicating the status bar should to be hidden or shown.
-UIKIT_EXTERN NSString *const RFViewControllerPrefersStatusBarHiddenAttribute DEPRECATED_ATTRIBUTE;
+UIKIT_EXTERN RFViewControllerAppearanceAttributeKey const RFViewControllerPrefersStatusBarHiddenAttribute DEPRECATED_ATTRIBUTE;
 
 // The value of this attribute is an NSNumber object containing an UIStatusBarAnimation value
 // indicating the animation style to use for hiding and showing the status bar for the view controller.
-UIKIT_EXTERN NSString *const RFViewControllerPreferredStatusBarUpdateAnimationAttribute DEPRECATED_ATTRIBUTE;
+UIKIT_EXTERN RFViewControllerAppearanceAttributeKey const RFViewControllerPreferredStatusBarUpdateAnimationAttribute DEPRECATED_ATTRIBUTE;
 
 // The value of this attribute is an NSNumber object containing an UIStatusBarStyle value
 // indicating the preferred status bar style for the view controller.
-UIKIT_EXTERN NSString *const RFViewControllerPreferredStatusBarStyleAttribute DEPRECATED_ATTRIBUTE;
+UIKIT_EXTERN RFViewControllerAppearanceAttributeKey const RFViewControllerPreferredStatusBarStyleAttribute DEPRECATED_ATTRIBUTE;
 
 NS_ASSUME_NONNULL_END
 

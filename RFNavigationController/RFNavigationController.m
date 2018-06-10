@@ -17,10 +17,10 @@
 @property (nonatomic) RFNavigationBottomBar *bottomBarHolder;
 @property (weak) NSLayoutConstraint *_RFNavigationController_bottomHeightConstraint;
 @property (weak) UIView *_RFNavigationController_transitionView;
-@property (nonatomic, weak) UIViewController *statusBarHideChangeDelayViewController;
+@property (weak, nonatomic) UIViewController *statusBarHideChangeDelayViewController;
 
-@property (nonatomic, weak) RFNavigationPopInteractionController *currentPopInteractionController;
-@property (nonatomic, weak) UIGestureRecognizer *currentPopInteractionGestureRecognizer;
+@property (weak, nonatomic) RFNavigationPopInteractionController *currentPopInteractionController;
+@property (weak, nonatomic) UIGestureRecognizer *currentPopInteractionGestureRecognizer;
 @property BOOL _RFNavigationController_buidlinGestureRecognizerEnabled;
 @end
 
@@ -163,27 +163,27 @@ RFInitializingRootForUIViewController
 
 @synthesize defaultAppearanceAttributes = _defaultAppearanceAttributes;
 
-- (NSDictionary<NSString *,id> *)defaultAppearanceAttributes {
+- (NSDictionary<RFViewControllerAppearanceAttributeKey,id> *)defaultAppearanceAttributes {
     if (_defaultAppearanceAttributes) return _defaultAppearanceAttributes;
 
     UINavigationBar *nb = self.navigationBar;
     NSMutableDictionary *dic = [NSMutableDictionary dictionaryWithCapacity:10];
     dic[RFViewControllerPrefersNavigationBarHiddenAttribute] = @(self.navigationBarHidden);
-    dic[RFViewControllerPreferredNavigationBarTintColorAttribute] = nb.barTintColor?: [NSNull null];
-    dic[RFViewControllerPreferredNavigationBarItemColorAttribute] = nb.tintColor?: [NSNull null];
-    dic[RFViewControllerPreferredNavigationBarTitleTextAttributes] = nb.titleTextAttributes?: [NSNull null];
+    dic[RFViewControllerPreferredNavigationBarTintColorAttribute] = nb.barTintColor?: NSNull.null;
+    dic[RFViewControllerPreferredNavigationBarItemColorAttribute] = nb.tintColor?: NSNull.null;
+    dic[RFViewControllerPreferredNavigationBarTitleTextAttributes] = nb.titleTextAttributes?: NSNull.null;
     dic[RFViewControllerPrefersBottomBarShownAttribute] = @(!self.bottomBarHidden);
-    dic[RFViewControllerPrefersStatusBarHiddenAttribute] = @([UIApplication sharedApplication].statusBarHidden);
+    dic[RFViewControllerPrefersStatusBarHiddenAttribute] = @(UIApplication.sharedApplication.statusBarHidden);
     dic[RFViewControllerPreferredStatusBarUpdateAnimationAttribute] = @(UIStatusBarAnimationFade);
-    dic[RFViewControllerPreferredStatusBarStyleAttribute] = @([UIApplication sharedApplication].statusBarStyle);
+    dic[RFViewControllerPreferredStatusBarStyleAttribute] = @(UIApplication.sharedApplication.statusBarStyle);
     dic[RFViewControllerPreferredNavigationBarBackgroundAlphaAttributes] = @1;
-    dic[RFViewControllerPreferredNavigationBackImageAttributes] = [NSNull null];
+    dic[RFViewControllerPreferredNavigationBackImageAttributes] = NSNull.null;
 
     _defaultAppearanceAttributes = dic.copy;
     return _defaultAppearanceAttributes;
 }
 
-- (void)setDefaultAppearanceAttributes:(NSDictionary<NSString *,id> *)defaultAppearanceAttributes {
+- (void)setDefaultAppearanceAttributes:(NSDictionary<RFViewControllerAppearanceAttributeKey, id> *)defaultAppearanceAttributes {
     NSError __autoreleasing *e = nil;
     if ([self validateAppearanceAttributes:defaultAppearanceAttributes error:&e]) {
         _defaultAppearanceAttributes = defaultAppearanceAttributes;
@@ -196,7 +196,7 @@ RFInitializingRootForUIViewController
 static BOOL _attributeCheck(NSDictionary *dic, NSString *key, Class kind, NSError **outError) {
     id value = dic[key];
     if (!value
-        || (value == [NSNull null] && ![kind isSubclassOfClass:[NSNumber class]])) {
+        || (value == NSNull.null && ![kind isSubclassOfClass:NSNumber.class])) {
         return YES;
     }
 
@@ -209,7 +209,7 @@ static BOOL _attributeCheck(NSDictionary *dic, NSString *key, Class kind, NSErro
     return YES;
 }
 
-- (BOOL)validateAppearanceAttributes:(NSDictionary<NSString *,id> *)attributes error:(out NSError *_Nullable *)error {
+- (BOOL)validateAppearanceAttributes:(NSDictionary<RFViewControllerAppearanceAttributeKey, id> *)attributes error:(out NSError *_Nullable *)error {
 #define _expect_kind(KEY, CLASS)\
     if (!_attributeCheck(attributes, KEY, [CLASS class], error)) {\
         return NO;\
@@ -228,7 +228,7 @@ static BOOL _attributeCheck(NSDictionary *dic, NSString *key, Class kind, NSErro
 }
 
 static bool rf_isNull(id value) {
-    return !value || value == [NSNull null];
+    return !value || value == NSNull.null;
 }
 
 - (void)updateNavigationAppearanceWithAppearanceAttributes:(NSDictionary<NSString *, id> *)attributes  animationDuration:(NSTimeInterval)animationDuration animated:(BOOL)animated {
@@ -261,7 +261,7 @@ static bool rf_isNull(id value) {
     }
     
     value = attributes[RFViewControllerPreferredNavigationBackImageAttributes];
-    if ([value isKindOfClass:[UIImage class]]) {
+    if ([value isKindOfClass:UIImage.class]) {
         [self.navigationBar setBackgroundImage:(UIImage *)value forBarMetrics:UIBarMetricsDefault];
     }
     else {
@@ -276,7 +276,7 @@ static bool rf_isNull(id value) {
     if (!self.handelViewControllerBasedStatusBarAppearance) return;
     if ((value = attributes[RFViewControllerPrefersStatusBarHiddenAttribute])) {
         BOOL shouldStatusBarHidden = [value boolValue];
-        if (shouldStatusBarHidden != [UIApplication sharedApplication].statusBarHidden) {
+        if (shouldStatusBarHidden != UIApplication.sharedApplication.statusBarHidden) {
             UIStatusBarAnimation preferredStatusBarUpdateAnimation = UIStatusBarAnimationNone;
             if (animated
                 && attributes[RFViewControllerPrefersStatusBarHiddenAttribute]) {
@@ -284,17 +284,17 @@ static bool rf_isNull(id value) {
             }
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Wdeprecated-declarations"
-            [[UIApplication sharedApplication] setStatusBarHidden:shouldStatusBarHidden withAnimation:animated? preferredStatusBarUpdateAnimation : UIStatusBarAnimationNone];
+            [UIApplication.sharedApplication setStatusBarHidden:shouldStatusBarHidden withAnimation:animated? preferredStatusBarUpdateAnimation : UIStatusBarAnimationNone];
 #pragma clang diagnostic pop
         }
     }
 
     if ((value = attributes[RFViewControllerPreferredStatusBarStyleAttribute])) {
         UIStatusBarStyle preferredStatusBarStyle = [value integerValue];
-        if (preferredStatusBarStyle != [UIApplication sharedApplication].statusBarStyle) {
+        if (preferredStatusBarStyle != UIApplication.sharedApplication.statusBarStyle) {
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Wdeprecated-declarations"
-            [[UIApplication sharedApplication] setStatusBarStyle:preferredStatusBarStyle animated:animated];
+            [UIApplication.sharedApplication setStatusBarStyle:preferredStatusBarStyle animated:animated];
 #pragma clang diagnostic pop
         }
     }
@@ -319,7 +319,7 @@ static bool rf_isNull(id value) {
         return;
     }
 
-    NSMutableDictionary *attributes = [self.defaultAppearanceAttributes mutableCopy];
+    NSMutableDictionary *attributes = self.defaultAppearanceAttributes.mutableCopy;
     
     id value = nil;
     if ((value = vcAttributes[RFViewControllerPrefersNavigationBarHiddenAttribute])) {
@@ -359,7 +359,7 @@ static bool rf_isNull(id value) {
         navigationBarHiddenChanged = YES;
     }
 
-    BOOL shouldStatusBarHidden = [UIApplication sharedApplication].statusBarHidden;
+    BOOL shouldStatusBarHidden = UIApplication.sharedApplication.statusBarHidden;
     if (attributes[RFViewControllerPrefersStatusBarHiddenAttribute]) {
         shouldStatusBarHidden = [attributes[RFViewControllerPrefersStatusBarHiddenAttribute] boolValue];
     }
@@ -396,7 +396,7 @@ static bool rf_isNull(id value) {
 	}
 
 	BOOL shouldPop = YES;
-	UIViewController<RFNavigationBehaving>* vc = (id)[self topViewController];
+	UIViewController<RFNavigationBehaving>* vc = (id)self.topViewController;
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Wdeprecated-declarations"
 	if([vc respondsToSelector:@selector(shouldPopOnBackButtonTappedForNavigationController:)]) {
@@ -493,11 +493,11 @@ static bool rf_isNull(id value) {
     // Check class
     Class transitionClass = NSClassFromString(transitionClassName);
     if (!transitionClass
-        || ![transitionClass isSubclassOfClass:[RFAnimationTransitioning class]]) {
+        || ![transitionClass isSubclassOfClass:RFAnimationTransitioning.class]) {
         return nil;
     }
 
-    RFAnimationTransitioning *animationController = [transitionClass new];
+    RFAnimationTransitioning *animationController = transitionClass.new;
     if (!animationController) {
         return nil;
     }
@@ -553,13 +553,13 @@ static bool rf_isNull(id value) {
 
 - (void)setCurrentPopInteractionController:(RFNavigationPopInteractionController *)currentPopInteractionController {
     if (_currentPopInteractionController != currentPopInteractionController) {
-        if ([_currentPopInteractionController isKindOfClass:[RFNavigationPopInteractionController class]]) {
+        if ([_currentPopInteractionController isKindOfClass:RFNavigationPopInteractionController.class]) {
             [_currentPopInteractionController uninstallGestureRecognizer];
         }
 
         _currentPopInteractionController = currentPopInteractionController;
 
-        if ([currentPopInteractionController isKindOfClass:[RFNavigationPopInteractionController class]]) {
+        if ([currentPopInteractionController isKindOfClass:RFNavigationPopInteractionController.class]) {
             [currentPopInteractionController installGestureRecognizer];
             self.currentPopInteractionGestureRecognizer = currentPopInteractionController.gestureRecognizer;
         }

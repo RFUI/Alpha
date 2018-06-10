@@ -158,6 +158,9 @@ RFInitializingRootForUIViewController
 
 #pragma mark - Appearance update
 
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wdeprecated-declarations"
+
 @synthesize defaultAppearanceAttributes = _defaultAppearanceAttributes;
 
 - (NSDictionary<NSString *,id> *)defaultAppearanceAttributes {
@@ -380,6 +383,8 @@ static bool rf_isNull(id value) {
 - (void)updateCurrentNavigationAppearanceAnimated:(BOOL)animated {
     [self _updateNavigationAppearanceWithViewController:(id)self.topViewController animated:animated allEffectTakeImmediately:YES];
 }
+
+#pragma clang diagnostic pop // Appearance update
 
 #pragma mark - Back button
 

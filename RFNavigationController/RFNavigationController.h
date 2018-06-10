@@ -1,14 +1,12 @@
 /*!
-    RFNavigationController
-    RFUI
-
-    Copyright (c) 2014-2016, 2018 BB9z
-    https://github.com/RFUI/Alpha
-
-    The MIT License (MIT)
-    http://www.opensource.org/licenses/mit-license.php
-
-    BETA
+ RFNavigationController
+ RFUI
+ 
+ Copyright (c) 2014-2016, 2018 BB9z
+ https://github.com/RFUI/Alpha
+ 
+ The MIT License (MIT)
+ http://www.opensource.org/licenses/mit-license.php
  */
 #import <RFInitializing/RFInitializing.h>
 #import <RFKit/RFRuntime.h>
@@ -93,8 +91,12 @@ NS_CLASS_AVAILABLE_IOS(7_0)
  Set YES will let the reciver ask current view controller for status bar appearance and then update.
 
  Default No.
+ 
+ iOS introduce a build-in mechanism after iOS 7 and works fine. This leaves for legacy usages and will be removed at year 2019.
+ 
+ @bug It works fine at most of time, but using it may lead the navigation bar to an abnormal status and can't be restored. It happens rarely and randomly, and can not be reproduced.
  */
-@property IBInspectable BOOL handelViewControllerBasedStatusBarAppearance;
+@property IBInspectable BOOL handelViewControllerBasedStatusBarAppearance DEPRECATED_ATTRIBUTE;
 
 #pragma mark - Delegate
 
@@ -170,23 +172,27 @@ UIKIT_EXTERN NSString *const RFViewControllerPreferredNavigationBarTitleTextAttr
 /// indicating the bottom bar should to be hidden or shown.
 UIKIT_EXTERN NSString *const RFViewControllerPrefersBottomBarShownAttribute;
 
-/// The value of this attribute is an NSNumber object containing a boolean value
-/// indicating the status bar should to be hidden or shown.
-UIKIT_EXTERN NSString *const RFViewControllerPrefersStatusBarHiddenAttribute;
-
-/// The value of this attribute is an NSNumber object containing an UIStatusBarAnimation value
-/// indicating the animation style to use for hiding and showing the status bar for the view controller.
-UIKIT_EXTERN NSString *const RFViewControllerPreferredStatusBarUpdateAnimationAttribute;
-
-/// The value of this attribute is an NSNumber object containing an UIStatusBarStyle value
-/// indicating the preferred status bar style for the view controller.
-UIKIT_EXTERN NSString *const RFViewControllerPreferredStatusBarStyleAttribute;
-
 /// The value of this attribute is an float NSNumber object (0-1)
 /// indicating the navigation bar backgroundImage alpha.
 UIKIT_EXTERN NSString *const RFViewControllerPreferredNavigationBarBackgroundAlphaAttributes;
 
 /// The value of this attribute is navigation backgroundImage
 UIKIT_EXTERN NSString *const RFViewControllerPreferredNavigationBackImageAttributes;
+
+/// Status bar appearance attributes are deprecated.
+/// @see handelViewControllerBasedStatusBarAppearance
+
+// The value of this attribute is an NSNumber object containing a boolean value
+// indicating the status bar should to be hidden or shown.
+UIKIT_EXTERN NSString *const RFViewControllerPrefersStatusBarHiddenAttribute DEPRECATED_ATTRIBUTE;
+
+// The value of this attribute is an NSNumber object containing an UIStatusBarAnimation value
+// indicating the animation style to use for hiding and showing the status bar for the view controller.
+UIKIT_EXTERN NSString *const RFViewControllerPreferredStatusBarUpdateAnimationAttribute DEPRECATED_ATTRIBUTE;
+
+// The value of this attribute is an NSNumber object containing an UIStatusBarStyle value
+// indicating the preferred status bar style for the view controller.
+UIKIT_EXTERN NSString *const RFViewControllerPreferredStatusBarStyleAttribute DEPRECATED_ATTRIBUTE;
+
 NS_ASSUME_NONNULL_END
 

@@ -178,7 +178,8 @@ UIKIT_EXTERN RFViewControllerAppearanceAttributeKey const RFViewControllerPrefer
 /// indicating the navigation bar backgroundImage alpha.
 UIKIT_EXTERN RFViewControllerAppearanceAttributeKey const RFViewControllerPreferredNavigationBarBackgroundAlphaAttributes;
 
-/// The value of this attribute is navigation backgroundImage
+/// The value of this attribute is an UIImage object
+/// indicating the navigation bar backgroundImage.
 UIKIT_EXTERN RFViewControllerAppearanceAttributeKey const RFViewControllerPreferredNavigationBarBackgroundImageAttribute;
 
 UIKIT_EXTERN RFViewControllerAppearanceAttributeKey const RFViewControllerPreferredNavigationBackImageAttributes DEPRECATED_MSG_ATTRIBUTE("Use .preferredNavigationBarBackgroundImageAttribute instead");

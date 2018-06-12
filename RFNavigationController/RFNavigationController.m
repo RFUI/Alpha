@@ -67,20 +67,20 @@ RFInitializingRootForUIViewController
     return YES;
 }
 
+- (void)viewWillLayoutSubviews {
+    [super viewWillLayoutSubviews];
+    [self _RFNavigationController_updateBottomBarLayoutIfNeeded];
+}
+
 #pragma mark - Bottom bar
 
 - (void)setBottomBarHidden:(BOOL)bottomBarHidden {
     _bottomBarHidden = bottomBarHidden;
     if (!self.isViewLoaded) return;
-    
-    CGFloat barHeight = self.bottomBarHeight;
-    UIView *transitionView = self._RFNavigationController_transitionView;
-    
-    self._RFNavigationController_bottomHeightConstraint.constant = bottomBarHidden? -self.bottomLayoutGuide.length : barHeight;
     if (self.bottomBarFadeAnimation) {
         self.bottomBarHolder.alpha = bottomBarHidden? 0 : 1;
     }
-    transitionView.height = self.view.height - transitionView.y - ((!bottomBarHidden && !self.translucentBottomBar)? barHeight - self.bottomLayoutGuide.length : 0);
+    [self _RFNavigationController_updateBottomBarLayoutIfNeeded];
 }
 
 - (void)setBottomBarHidden:(BOOL)hidden animated:(BOOL)animated {
@@ -107,6 +107,27 @@ RFInitializingRootForUIViewController
     [self _RFNavigationController_setupBottomBarLayoutIfNeeded];
     _bottomBar = bottomBar;
     self.bottomBarHidden = self.bottomBarHidden;
+}
+
+- (void)_RFNavigationController_updateBottomBarLayoutIfNeeded {
+    BOOL barHidden = self.bottomBarHidden;
+    CGFloat barHeight = self.bottomBar? self.bottomBarHeight : 0;
+    
+    NSLayoutConstraint *layoutConstraint = self._RFNavigationController_bottomHeightConstraint;
+    if (layoutConstraint) {
+        CGFloat bottomConstant = barHidden? -self.bottomLayoutGuide.length : barHeight;
+        if (layoutConstraint.constant != bottomConstant) {
+            layoutConstraint.constant = bottomConstant;
+        }
+    }
+    
+    UIView *transitionView = self._RFNavigationController_transitionView;
+    if (self.bottomBar && transitionView) {
+        CGFloat height = self.view.height - transitionView.y - ((!barHidden && !self.translucentBottomBar)? barHeight + self.bottomLayoutGuide.length : 0);
+        if (transitionView.height != height) {
+            transitionView.height = height;
+        }
+    }
 }
 
 - (void)_RFNavigationController_setupBottomBarLayoutIfNeeded {

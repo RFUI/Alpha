@@ -23,23 +23,39 @@ Demos: https://github.com/RFUI/RFUI
 
 ### RFAutoLayout
 
-状态：测试
+状态：意义有限，废弃
 
 ### RFButton
 
-状态：正常，可能有改进计划
+状态：良好
+
+### RFCallbackControl
+
+状态：测试，准核心组件
+
+### RFCarouselView
+
+状态：测试
 
 ### RFCheckbox
 
 状态：正常
 
+### RFContainerView
+
+状态：良好
+
 ### RFCoreData
 
-状态：正常，达到预期
+状态：正常，过时的组件
+
+### RFDataSourceArray
+
+状态：良好
 
 ### RFDelegateChain
 
-状态：良好，达到预期，核心组件
+状态：良好，核心组件
 
 ### RFDispatchTimer
 
@@ -60,6 +76,14 @@ Demos: https://github.com/RFUI/RFUI
 ### RFImageGallery
 
 状态：待评估，可能需要重写
+
+### RFKVOWrapper
+
+状态：良好
+
+### RFNavigationController
+
+状态：正常，核心组件
 
 ### RFNoticeView
 
@@ -109,6 +133,14 @@ Demos: https://github.com/RFUI/RFUI
 
 状态：待评估
 
+### RFSwizzle
+
+状态：正常，核心组件
+
+### RFSynthesize
+
+状态：正常，核心组件
+
 ### RFStatusBarNotificationController
 
 状态：停止维护
@@ -147,7 +179,7 @@ Core Data 数据获取插件
 
 ### RFWebView
 
-状态：待评估，作为项目级别组件可能更合适
+状态：停止维护
 
 ### RFWindow
 

@@ -49,9 +49,10 @@
     UIPageViewControllerDataSource,
     UIPageViewControllerDelegate
 >
-@property (strong, readwrite, nonatomic) UIPageViewController *pageViewController;
-@property (assign, nonatomic) BOOL pageScrollViewScrollEnabledNeedsResetAfterViewLoadded;
+@property (readwrite, nonatomic) UIPageViewController *pageViewController;
+@property BOOL _pageScrollViewScrollEnabledNeedsResetAfterViewLoadded;
 @property (weak, nonatomic) UIScrollView *pageScrollView;
+@property id _RFPageTabController_transitionVC;
 @end
 
 @implementation RFPageTabController
@@ -74,7 +75,7 @@
 
     [super viewDidLoad];
 
-    if (self.pageScrollViewScrollEnabledNeedsResetAfterViewLoadded) {
+    if (self._pageScrollViewScrollEnabledNeedsResetAfterViewLoadded) {
         self.scrollEnabled = _scrollEnabled;
     }
 }
@@ -111,6 +112,10 @@
     }
 }
 
+- (BOOL)isTransitioning {
+    return self._RFPageTabController_transitionVC != nil;
+}
+
 - (void)setSelectedIndex:(NSUInteger)newSelectedIndex animated:(BOOL)animated completion:(void (^)(BOOL))completion {
     if (self._selectedIndex == newSelectedIndex) {
         if (completion) completion(NO);
@@ -143,14 +148,22 @@
 
     __weak UIView *tabContainer = self.tabButtonsContainerView;
     tabContainer.userInteractionEnabled = NO;
+    _dout(@">>>> %ld %@", newSelectedIndex, self.isTransitioning? @"bad" : @"ok")
+    if (self.isTransitioning) {
+        animated = NO;
+    }
+    self._RFPageTabController_transitionVC = svc;
     if (noticeDelegate) {
         [self noticeDelegateWillSelectViewController:svc atIndex:newSelectedIndex];
     }
     __strong RFPageTabController *this = self;
     [self.pageViewController setViewControllers:@[ svc ] direction:direction animated:animated completion:^(BOOL finished) {
+        this._RFPageTabController_transitionVC = nil;
+        _dout(@"<<<< %ld %ld", newSelectedIndex, this.selectedIndex)
         tabContainer.userInteractionEnabled = YES;
         if (noticeDelegate) {
-            [this noticeDelegateDidSelectViewController:svc atIndex:newSelectedIndex];
+            // Don't use input parameters.
+            [this noticeDelegateDidSelectViewController:this._RFPageTabController_transitionVC atIndex:this.selectedIndex];
         }
         if (completion) completion(finished);
     }];
@@ -162,7 +175,7 @@
     if (_pageScrollView) return _pageScrollView;
 
     for (UIScrollView *v in self.pageViewController.view.subviews) {
-        if ([v isKindOfClass:[UIScrollView class]]) {
+        if ([v isKindOfClass:UIScrollView.class]) {
             _pageScrollView = v;
             break;
         }
@@ -171,14 +184,14 @@
 }
 
 - (BOOL)scrollEnabled {
-    if (![self.pageViewController isViewLoaded]) return _scrollEnabled;
+    if (!self.pageViewController.isViewLoaded) return _scrollEnabled;
     return self.pageScrollView.scrollEnabled;
 }
 
 - (void)setScrollEnabled:(BOOL)scrollEnabled {
     _scrollEnabled = scrollEnabled;
-    if (![self.pageViewController isViewLoaded]) {
-        self.pageScrollViewScrollEnabledNeedsResetAfterViewLoadded = YES;
+    if (!self.pageViewController.isViewLoaded) {
+        self._pageScrollViewScrollEnabledNeedsResetAfterViewLoadded = YES;
         return;
     }
     self.pageScrollView.scrollEnabled = scrollEnabled;

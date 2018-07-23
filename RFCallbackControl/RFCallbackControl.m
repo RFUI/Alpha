@@ -57,7 +57,7 @@
     if (!object) return;
     @synchronized(self) {
         [self._RFCallbackControl_callbacks removeObjectsPassingTest:^BOOL(RFCallback *obj, NSUInteger idx, BOOL * _Nonnull stop) {
-            return obj.refrenceObject == obj;
+            return obj.refrenceObject == object;
         }];
     }
 }

@@ -1,25 +1,23 @@
 /*!
-    RFDrawImage
-    RFUI
-
-    Copyright (c) 2014 BB9z
-    https://github.com/RFUI/Alpha
-
-    The MIT License (MIT)
-    http://www.opensource.org/licenses/mit-license.php
-
-    BETA
+ RFDrawImage
+ RFUI
+ 
+ Copyright (c) 2014, 2018 BB9z
+ https://github.com/RFUI/Alpha
+ 
+ The MIT License (MIT)
+ http://www.opensource.org/licenses/mit-license.php
  */
 #import <RFKit/RFRuntime.h>
 
 @interface RFDrawImage : NSObject
 
-+ (UIImage *)imageWithSizeColor:(CGSize)imageSize fillColor:(UIColor *)color;
++ (nonnull UIImage *)imageWithSizeColor:(CGSize)imageSize fillColor:(nonnull UIColor *)color;
 
-+ (UIImage *)imageWithRoundingCorners:(UIEdgeInsets)cornerRadius
++ (nonnull UIImage *)imageWithRoundingCorners:(UIEdgeInsets)cornerRadius
                                  size:(CGSize)imageSize
-                            fillColor:(UIColor *)fillColor
-                          strokeColor:(UIColor *)strokeColor
+                            fillColor:(nonnull UIColor *)fillColor
+                          strokeColor:(nullable UIColor *)strokeColor
                           strokeWidth:(CGFloat)strokeWidth
                             boxMargin:(UIEdgeInsets)boxMargin
                    resizableCapInsets:(UIEdgeInsets)resizableCapInset

@@ -4,6 +4,8 @@
 @implementation RFDrawImage
 
 + (UIImage *)imageWithSizeColor:(CGSize)imageSize fillColor:(UIColor *)color {
+    NSParameterAssert(imageSize.width > 0 && imageSize.height > 0);
+
     UIGraphicsBeginImageContextWithOptions(imageSize, NO, 0);
     CGContextRef context = UIGraphicsGetCurrentContext();
 
@@ -16,7 +18,8 @@
 }
 
 + (UIImage *)imageWithRoundingCorners:(UIEdgeInsets)cornerRadius size:(CGSize)imageSize fillColor:(UIColor *)fillColor strokeColor:(UIColor *)strokeColor strokeWidth:(CGFloat)strokeWidth boxMargin:(UIEdgeInsets)margin resizableCapInsets:(UIEdgeInsets)resizableCapInsets scaleFactor:(CGFloat)scaleFactor {
-
+    NSParameterAssert(imageSize.width > 0 && imageSize.height > 0);
+    
     UIGraphicsBeginImageContextWithOptions(imageSize, NO, scaleFactor);
 
     CGFloat r_lt = cornerRadius.top;
@@ -42,12 +45,15 @@
     [path addArcWithCenter:c_rt radius:r_rt startAngle:0 endAngle:M_PI_2 *3 clockwise:NO];
 
     [path closePath];
+    [path addClip];                     // Stop stroke draw outside
     [fillColor setFill];
     [path fill];
 
-    [strokeColor setStroke];
-    path.lineWidth = strokeWidth;
-    [path stroke];
+    if (strokeWidth > 0) {
+        [strokeColor setStroke];
+        path.lineWidth = strokeWidth * 2; // Double due to the chip
+        [path stroke];
+    }
 
 	UIImage *image = UIGraphicsGetImageFromCurrentImageContext();
 	UIGraphicsEndImageContext();

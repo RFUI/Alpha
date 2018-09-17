@@ -68,7 +68,7 @@
     }
 }
 
-- (void)performWithSource:(id)source filter:(BOOL (^)(id _Nonnull, NSUInteger, BOOL * _Nonnull))predicate {
+- (void)performWithSource:(id)source filter:(NS_NOESCAPE BOOL (^)(id _Nonnull, NSUInteger, BOOL * _Nonnull))predicate {
     NSArray *cbs = self._RFCallbackControl_callbacks;
     @synchronized(self) {
         if (predicate) {

@@ -12,10 +12,6 @@ Components Notes
 
 请改用 [RFCoreDataAutoFetchTableViewPlugin](../RFCoreDataAutoFetchTableViewPlugin)
 
-### RFImageTimeTunnel
-
-废弃原因：实验性产物，复用价值有限。
-
 ### RFPullToFetchTableView
 
 请改用 [RFTableViewPullToFetchPlugin](../RFTableViewPullToFetchPlugin)

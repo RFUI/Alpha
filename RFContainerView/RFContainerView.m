@@ -78,7 +78,7 @@ RFInitializingRootForUIView
     }
 }
 
-- (void)loadEmbedViewControllerWithPrepareBlock:(void (^ __nullable)(__kindof UIViewController *__nonnull viewController, RFContainerView * __nonnull container))prepareBlock {
+- (void)loadEmbedViewControllerWithPrepareBlock:(NS_NOESCAPE void (^ __nullable)(__kindof UIViewController *__nonnull viewController, RFContainerView * __nonnull container))prepareBlock {
     if (self.embedViewControllerLoaded) return;
 
     UIViewController *parentViewController = self.parentViewController?: self.viewController;

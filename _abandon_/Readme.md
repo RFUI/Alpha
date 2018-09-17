@@ -1,10 +1,8 @@
-RFUI Alpha Abandoned Components
-=======
+# RFUI Alpha Abandoned Components
 
-Components Notes
------
+## Components Notes
 
-### RFCheckmarkSelectedTableViewCell	
+### RFCheckmarkSelectedTableViewCell
 
 废弃原因：过于简单，复用价值不大。
 
@@ -20,10 +18,6 @@ Components Notes
 
 请改用 [UIButton (RFResizableBackgroundImage)](../RFViewApperance/UIButton+RFResizableBackgroundImage.h)
 
-### RFShare
-
-废弃原因：开发、维护工作量过大，价值不高。
-
 ### RFUITheme
 
 废弃原因：不够优雅，需求不足。
@@ -31,3 +25,8 @@ Components Notes
 ### RFWebViewController
 
 废弃原因：不够优雅。
+
+## Deleted
+
+* RFImageTimeTunnel
+* RFShare

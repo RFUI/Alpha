@@ -18,10 +18,6 @@
 
 请改用 [UIButton (RFResizableBackgroundImage)](../RFViewApperance/UIButton+RFResizableBackgroundImage.h)
 
-### RFUITheme
-
-废弃原因：不够优雅，需求不足。
-
 ### RFWebViewController
 
 废弃原因：不够优雅。
@@ -30,3 +26,4 @@
 
 * RFImageTimeTunnel
 * RFShare
+* RFUITheme

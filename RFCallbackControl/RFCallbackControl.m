@@ -69,18 +69,15 @@
 }
 
 - (void)performWithSource:(id)source filter:(NS_NOESCAPE BOOL (^)(id _Nonnull, NSUInteger, BOOL * _Nonnull))predicate {
-    NSArray *cbs = self._RFCallbackControl_callbacks;
-    @synchronized(self) {
-        if (predicate) {
-            NSIndexSet *is = [cbs indexesOfObjectsPassingTest:predicate];
-            cbs = [cbs objectsAtIndexes:is];
-        }
-        else {
-            cbs = cbs.copy;
-        }
-        
-        for (RFCallback *cb in cbs) {
-            if ([cb _performFrom:source]) continue;
+    NSArray *cbs = self._RFCallbackControl_callbacks.copy;
+    if (predicate) {
+        NSIndexSet *is = [cbs indexesOfObjectsPassingTest:predicate];
+        cbs = [cbs objectsAtIndexes:is];
+    }
+    
+    for (RFCallback *cb in cbs) {
+        if ([cb _performFrom:source]) continue;
+        @synchronized(self) {
             [self._RFCallbackControl_callbacks removeObject:cb];
         }
     }

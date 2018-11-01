@@ -1,13 +1,12 @@
-/*!
-    RFKVOWrapper
-
-    Copyright (c) 2015 BB9z
-    https://github.com/RFUI/Alpha
-
-    The MIT License (MIT)
-    http://www.opensource.org/licenses/mit-license.php
-
-    TEST
+/*
+ RFKVOWrapper
+ RFAlpha
+ 
+ Copyright (c) 2015, 2018 BB9z
+ https://github.com/RFUI/Alpha
+ 
+ The MIT License (MIT)
+ http://www.opensource.org/licenses/mit-license.php
  */
 
 /*!
@@ -41,7 +40,7 @@
 
  @return Returns an identifier that can be used to remove the observer.
  */
-- (id)RFAddObserver:(NSObject *)observer forKeyPath:(NSString *)keyPath options:(NSKeyValueObservingOptions)options queue:(NSOperationQueue *)queue block:(void (^)(id observer, NSDictionary *change))block;
+- (nonnull id)RFAddObserver:(nullable id)observer forKeyPath:(nonnull NSString *)keyPath options:(NSKeyValueObservingOptions)options queue:(nullable NSOperationQueue *)queue block:(nonnull void (^)(id __nullable observer, NSDictionary *__nonnull change))block;
 
 /**
  Remove the observer represented by the identifier.
@@ -50,5 +49,5 @@
  
  @return Whether the removal was successful. The only reason for failure would be if the identifier doesn't represent anything currently being observed by the object, or if the identifier is nil.
  */
-- (BOOL)RFRemoveObserverWithIdentifier:(id)identifier;
+- (BOOL)RFRemoveObserverWithIdentifier:(nullable id)identifier;
 @end

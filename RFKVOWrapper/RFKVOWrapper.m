@@ -87,9 +87,10 @@ static const char *RFKVOControllerObjectObserversKey = "RFKVOControllerObjectObs
     RFKVOController * obj = [self new];
 
     obj.observedObject = observedObject;
-    obj.callbackBlock = callbackBlock;
     obj.keyPath = keyPath;
     obj.options = options;
+    obj.queue = queue;
+    obj.callbackBlock = callbackBlock;
 
     if ([obj observe]) return obj;
     return nil;

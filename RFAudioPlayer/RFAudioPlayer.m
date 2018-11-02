@@ -9,7 +9,6 @@ static NSTimeInterval NSTimeIntervalFromCMTime(CMTime time) {
 
 @interface RFAudioPlayer ()
 @property (nonatomic, nullable, readwrite) AVPlayer *player;
-@property (strong, nonatomic) dispatch_queue_t dispatchQueue;
 @property (copy, nonatomic) NSURL *toBeCreatPlayerURL;
 @property (nonatomic, nullable, readwrite, copy) NSURL *currentPlayItemURL;
 @end
@@ -19,7 +18,6 @@ static NSTimeInterval NSTimeIntervalFromCMTime(CMTime time) {
 - (id)init {
     self = [super init];
     if (self) {
-        self.dispatchQueue = dispatch_queue_create([@"com.github.RFUI.RFAudioPlayer" cStringUsingEncoding:NSUTF8StringEncoding], NULL);
     }
     return self;
 }
@@ -39,7 +37,7 @@ static NSTimeInterval NSTimeIntervalFromCMTime(CMTime time) {
     
     // Creat an AVPlayer will block current thread, we will creat it on our queue.
     self.toBeCreatPlayerURL = url;
-    dispatch_async(self.dispatchQueue, ^{
+    dispatch_async_on_background(^{
         void (^safeCallback)(BOOL) = ^(BOOL ct){
             if (!callback) return;
             dispatch_async_on_main(^{
@@ -63,10 +61,11 @@ static NSTimeInterval NSTimeIntervalFromCMTime(CMTime time) {
         }
         else {
             _dout(@"Player created success: %@", url);
+            self.player = player;
+
             self.currentPlayItemURL = self.toBeCreatPlayerURL;
             self.toBeCreatPlayerURL = nil;
             self.playReachEnd = NO;
-            self.player = player;
             
             safeCallback(YES);
             [self play];
@@ -161,8 +160,9 @@ static NSTimeInterval NSTimeIntervalFromCMTime(CMTime time) {
 #pragma mark -
 
 - (NSTimeInterval)currentTime {
-    if (!self.player) return -1;
-    CMTime time = self.player.currentItem.currentTime;
+    AVPlayerItem *pi = self.player.currentItem;
+    if (!pi || pi.status != AVPlayerItemStatusReadyToPlay) return -1;
+    CMTime time = pi.currentTime;
     NSTimeInterval t = NSTimeIntervalFromCMTime(time);
     return t;
 }
@@ -181,8 +181,9 @@ static NSTimeInterval NSTimeIntervalFromCMTime(CMTime time) {
 
 @dynamic duration;
 - (NSTimeInterval)duration {
-    if (!self.player.currentItem) return -1;
-    CMTime time = self.player.currentItem.asset.duration;
+    AVPlayerItem *pi = self.player.currentItem;
+    if (!pi || pi.status != AVPlayerItemStatusReadyToPlay) return -1;
+    CMTime time = pi.asset.duration;
     NSTimeInterval du = NSTimeIntervalFromCMTime(time);
     return isfinite(du) ? du : -1;
 }

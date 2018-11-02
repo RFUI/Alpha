@@ -1,20 +1,18 @@
-/*!
-    RFAudioPlayer
-    RFUI
-
-    Copyright (c) 2013-2014, 2016 BB9z
-    https://github.com/RFUI/Alpha
-
-    The MIT License (MIT)
-    http://www.opensource.org/licenses/mit-license.php
-
-    TEST
+/*
+ RFAudioPlayer
+ RFAlpha
+ 
+ Copyright (c) 2013-2014, 2016, 2018 BB9z
+ https://github.com/RFUI/Alpha
+ 
+ The MIT License (MIT)
+ http://www.opensource.org/licenses/mit-license.php
  */
 
 #import <AVFoundation/AVFoundation.h>
 
 /**
- Work best with KVO
+ AVAudioPlayer replacement which can play a remote audio file.
  */
 @interface RFAudioPlayer : NSObject
 
@@ -27,15 +25,20 @@
  
  @param callback A block called on main queue when the receiver just before play the media or this url is skiped. May be nil.
  */
-- (void)playURL:(NSURL *_Nonnull)url ready:(void (^_Nullable)(BOOL creat))callback;
+- (void)playURL:(nonnull NSURL *)url ready:(nullable void (^)(BOOL creat))callback;
+
+@property (nullable, readonly, copy) NSURL *currentPlayItemURL;
 
 #pragma mark - Player stautes
 @property (nonatomic, nullable, readonly) AVPlayer *player;
-@property (nonatomic, nullable, readonly, copy) NSURL *currentPlayItemURL;
-@property (nonatomic, readonly) NSTimeInterval duration;
-@property (nonatomic) NSTimeInterval currentTime; // KVO not supported
 
-// You can use this property to pause/play audio playback.
+@property (nonatomic) NSTimeInterval currentTime;
+
+/// @bug SDK API may return a wrong duration for remote files.
+@property (nonatomic, readonly) NSTimeInterval duration;
+@property (getter=isPlayReachEnd) BOOL playReachEnd;
+
+/// You can use this property to pause/play audio playback.
 @property (nonatomic, getter = isPlaying) BOOL playing;
 
 - (BOOL)play;

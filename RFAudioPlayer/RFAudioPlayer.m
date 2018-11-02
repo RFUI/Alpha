@@ -1,11 +1,11 @@
 
 #import "RFAudioPlayer.h"
-#import "dout.h"
+#import <RFKit/dout.h>
 
-#pragma clang diagnostic push
-#pragma clang diagnostic ignored "-Wcast-qual"
-static void *const RFAudioPlayerKVOContext = (void *)&RFAudioPlayerKVOContext;
-#pragma clang diagnostic pop
+static NSTimeInterval NSTimeIntervalFromCMTime(CMTime time) {
+    if (time.flags != kCMTimeFlags_Valid) return NAN;
+    return (double)time.value / time.timescale;
+}
 
 @interface RFAudioPlayer ()
 @property (nonatomic, nullable, readwrite) AVPlayer *player;
@@ -15,8 +15,6 @@ static void *const RFAudioPlayerKVOContext = (void *)&RFAudioPlayerKVOContext;
 @end
 
 @implementation RFAudioPlayer
-@dynamic duration;
-@dynamic playing;
 
 - (id)init {
     self = [super init];
@@ -24,6 +22,10 @@ static void *const RFAudioPlayerKVOContext = (void *)&RFAudioPlayerKVOContext;
         self.dispatchQueue = dispatch_queue_create([@"com.github.RFUI.RFAudioPlayer" cStringUsingEncoding:NSUTF8StringEncoding], NULL);
     }
     return self;
+}
+
+- (void)dealloc {
+    self.player = nil;
 }
 
 - (void)playURL:(NSURL *_Nonnull)url ready:(void (^_Nullable)(BOOL creat))callback {
@@ -52,7 +54,8 @@ static void *const RFAudioPlayerKVOContext = (void *)&RFAudioPlayerKVOContext;
         }
         
         _dout(@"Creating player: %@", url);
-        AVPlayer *player = [AVPlayer playerWithURL:url];
+        AVPlayer *player = [AVPlayer.alloc initWithURL:url];
+        player.allowsExternalPlayback = NO;
         
         if (![url isEqual:self.toBeCreatPlayerURL]) {
             _douto(@"URL changed when creating, abandon this player");
@@ -60,9 +63,10 @@ static void *const RFAudioPlayerKVOContext = (void *)&RFAudioPlayerKVOContext;
         }
         else {
             _dout(@"Player created success: %@", url);
-            self.player = player;
             self.currentPlayItemURL = self.toBeCreatPlayerURL;
             self.toBeCreatPlayerURL = nil;
+            self.playReachEnd = NO;
+            self.player = player;
             
             safeCallback(YES);
             [self play];
@@ -70,40 +74,15 @@ static void *const RFAudioPlayerKVOContext = (void *)&RFAudioPlayerKVOContext;
     });
 }
 
-- (NSTimeInterval)currentTime {
-    if (self.player) {
-        // This value may be negative. CMTimeGetSeconds() is the same.
-        return [RFAudioPlayer timeIntervalFromCMTime:self.player.currentTime];
-    }
-    else {
-        return -1;
-    }
-}
-
-- (void)setCurrentTime:(NSTimeInterval)currentTime {
-    CMTime time = self.player.currentTime;
-    CMTime makeTime = time;
-    makeTime.value = currentTime*time.timescale;
-    [self.player seekToTime:makeTime];
-}
-
-- (NSTimeInterval)duration {
-    if (self.player.currentItem) {
-        CMTime time = self.player.currentItem.duration;
-        return [RFAudioPlayer timeIntervalFromCMTime:time];
-    }
-    return -1;
-}
-
 #pragma mark -
+
+@dynamic playing;
 - (BOOL)isPlaying {
     return [self playing];
 }
 - (BOOL)playing {
-    if (self.player) {
-        return (self.player.rate != 0.0);
-    }
-    return NO;
+    if (!self.player) return NO;
+    return (self.player.rate != 0.0);
 }
 - (void)setPlaying:(BOOL)playing {
     if (playing) {
@@ -112,6 +91,10 @@ static void *const RFAudioPlayerKVOContext = (void *)&RFAudioPlayerKVOContext;
     else {
         [self pause];
     }
+}
+
++ (NSSet *)keyPathsForValuesAffectingPlaying {
+    return [NSSet setWithObjects:@keypathClassInstance(RFAudioPlayer, player.rate), nil];
 }
 
 - (BOOL)play {
@@ -129,7 +112,8 @@ static void *const RFAudioPlayerKVOContext = (void *)&RFAudioPlayerKVOContext;
         if (e) dout_error(@"%@", e);
     }
     
-    if (self.duration > 0 && self.currentTime == self.duration) {
+    if (self.playReachEnd
+        || (self.duration > 0 && ABS(self.duration - self.currentTime) < 1)) {
         _dout_info(@"Restart play at beginning.")
         self.currentTime = 0;
     }
@@ -152,20 +136,55 @@ static void *const RFAudioPlayerKVOContext = (void *)&RFAudioPlayerKVOContext;
     return YES;
 }
 
-// Implement these method so we don´t have to import CoreMedia framework to use CMTimeMakeWithSeconds() and CMTimeGetSeconds().
-+ (NSTimeInterval)timeIntervalFromCMTime:(CMTime)time {
-    if (time.flags == kCMTimeFlags_Valid) {
-        return (float)time.value/time.timescale;
+- (void)setPlayer:(AVPlayer *)player {
+    if (_player == player) return;
+    NSNotificationCenter *nc = [NSNotificationCenter defaultCenter];
+    if (_player) {
+        [nc removeObserver:self name:AVPlayerItemDidPlayToEndTimeNotification object:_player.currentItem];
     }
-    return -1;
+    [self willChangeValueForKey:@"playing"];
+    [self willChangeValueForKey:@"currentTime"];
+    [self willChangeValueForKey:@"duration"];
+    _player = player;
+    [self didChangeValueForKey:@"playing"];
+    [self didChangeValueForKey:@"currentTime"];
+    [self didChangeValueForKey:@"duration"];
+    if (player) {
+        [nc addObserver:self selector:@selector(RFAudioPlayer_handelPlayerItemDidPlayToEndTimeNotification:) name:AVPlayerItemDidPlayToEndTimeNotification object:player.currentItem];
+    }
 }
 
-+ (CMTime)CMTimeFromTimeInterval:(NSTimeInterval)timeInterval timeScale:(CMTimeScale)timeScale {
-    return (CMTime){timeInterval*timeScale, timeScale, kCMTimeFlags_Valid, 0};
+- (void)RFAudioPlayer_handelPlayerItemDidPlayToEndTimeNotification:(NSNotification *)notice {
+    self.playReachEnd = YES;
 }
 
-+ (NSSet *)keyPathsForValuesAffectingPlaying {
-    return [NSSet setWithObjects:@keypathClassInstance(RFAudioPlayer, player), @keypathClassInstance(RFAudioPlayer, player.rate), nil];
+#pragma mark -
+
+- (NSTimeInterval)currentTime {
+    if (!self.player) return -1;
+    CMTime time = self.player.currentItem.currentTime;
+    NSTimeInterval t = NSTimeIntervalFromCMTime(time);
+    return t;
+}
+
+- (void)setCurrentTime:(NSTimeInterval)currentTime {
+    CMTime time = self.player.currentTime;
+    CMTime makeTime = time;
+    makeTime.value = currentTime*time.timescale;
+    self.playReachEnd = NO;
+    [self.player seekToTime:makeTime];
+}
+
++ (NSSet *)keyPathsForValuesAffectingCurrentTime {
+    return [NSSet setWithObject:@keypathClassInstance(RFAudioPlayer, player.currentItem.currentTime)];
+}
+
+@dynamic duration;
+- (NSTimeInterval)duration {
+    if (!self.player.currentItem) return -1;
+    CMTime time = self.player.currentItem.asset.duration;
+    NSTimeInterval du = NSTimeIntervalFromCMTime(time);
+    return isfinite(du) ? du : -1;
 }
 
 + (NSSet *)keyPathsForValuesAffectingDuration {

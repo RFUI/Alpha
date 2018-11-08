@@ -13,6 +13,11 @@
 
 /**
  AVAudioPlayer replacement which can play a remote audio file.
+ 
+ Know iOS bug:
+ 
+ - For m4a files, only local playback is supported.
+ - Some audio files may return wrong duration.
  */
 @interface RFAudioPlayer : NSObject
 
@@ -32,6 +37,7 @@
 #pragma mark - Player stautes
 @property (nonatomic, nullable, readonly) AVPlayer *player;
 
+/// Not support KVO
 @property (nonatomic) NSTimeInterval currentTime;
 
 /// @bug SDK API may return a wrong duration for remote files.
@@ -44,5 +50,10 @@
 - (BOOL)play;
 - (BOOL)pause;
 - (BOOL)stop;
+
+// not working
+@property (nonatomic, readonly, getter=isBuffering) BOOL buffering;
+
+@property (nonatomic, readonly, nullable) NSError *error;
 
 @end

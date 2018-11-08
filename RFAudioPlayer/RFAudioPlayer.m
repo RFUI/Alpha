@@ -22,6 +22,13 @@ static NSTimeInterval NSTimeIntervalFromCMTime(CMTime time) {
     return self;
 }
 
+- (NSString *)debugDescription {
+    return [NSString stringWithFormat:@"<%@: %@, playing url: %@\n\tplayer: %@, status %d, error %@\n\tbuffering: %@>", self.class, (void *)self,
+            self.currentPlayItemURL,
+            self.player, (int)self.player.currentItem.status, self.player.currentItem.error,
+            @(self.isBuffering)];
+}
+
 - (void)dealloc {
     self.player = nil;
 }
@@ -149,6 +156,7 @@ static NSTimeInterval NSTimeIntervalFromCMTime(CMTime time) {
     [self didChangeValueForKey:@"currentTime"];
     [self didChangeValueForKey:@"duration"];
     if (player) {
+        RFAssert(player.currentItem, nil);
         [nc addObserver:self selector:@selector(RFAudioPlayer_handelPlayerItemDidPlayToEndTimeNotification:) name:AVPlayerItemDidPlayToEndTimeNotification object:player.currentItem];
     }
 }
@@ -164,7 +172,7 @@ static NSTimeInterval NSTimeIntervalFromCMTime(CMTime time) {
     if (!pi || pi.status != AVPlayerItemStatusReadyToPlay) return -1;
     CMTime time = pi.currentTime;
     NSTimeInterval t = NSTimeIntervalFromCMTime(time);
-    return t;
+    return isfinite(t) ? t : -1;
 }
 
 - (void)setCurrentTime:(NSTimeInterval)currentTime {
@@ -190,6 +198,32 @@ static NSTimeInterval NSTimeIntervalFromCMTime(CMTime time) {
 
 + (NSSet *)keyPathsForValuesAffectingDuration {
     return [NSSet setWithObject:@keypathClassInstance(RFAudioPlayer, player.currentItem.duration)];
+}
+
+#pragma mark -
+
+- (BOOL)isBuffering {
+    AVPlayerItem *pi = self.player.currentItem;
+    if (!pi) return NO;
+    if (self.isPlaying) return NO;
+    if (pi.isPlaybackBufferEmpty) return YES;
+    return !pi.isPlaybackLikelyToKeepUp;
+}
+
++ (NSSet<NSString *> *)keyPathsForValuesAffectingBuffering {
+    return [NSSet setWithObjects:
+            @keypathClassInstance(RFAudioPlayer, player.currentItem.status),
+            @keypathClassInstance(RFAudioPlayer, player.currentItem.isPlaybackLikelyToKeepUp),
+            @keypathClassInstance(RFAudioPlayer, player.currentItem.isPlaybackBufferEmpty),
+            nil];
+}
+
+- (NSError *)error {
+    return self.player.currentItem.error;
+}
+
++ (NSSet<NSString *> *)keyPathsForValuesAffectingError {
+    return [NSSet setWithObject:@keypathClassInstance(RFAudioPlayer, player.currentItem.status)];
 }
 
 @end

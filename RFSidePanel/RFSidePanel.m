@@ -1,4 +1,5 @@
 #import "RFSidePanel.h"
+#import <RFKit/UIViewController+RFInterfaceOrientation.h>
 
 static const CGFloat RFSidePanelToggleAnimateDurationDefault = 0.5;
 

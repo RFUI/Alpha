@@ -10,7 +10,7 @@
     http://www.opensource.org/licenses/mit-license.php
  */
 
-#import "RFUI.h"
+#import <RFKit/RFKit.h>
 
 @class RFSidePanel;
 

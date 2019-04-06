@@ -6,8 +6,8 @@ RFInitializingRootForUIView
 - (void)onInit {
     self.clipsToBounds = YES;
     self.cellSize = (CGSize){20, 20};
-    self.layoutOrientation = RFUIOrientationVertical;
-    self.padding = RFEdgeMake(0, 0, 0, 0);
+    self.layoutOrientation = UILayoutConstraintAxisVertical;
+    self.padding = UIEdgeInsetsMake(0, 0, 0, 0);
 }
 
 - (void)afterInit {
@@ -15,8 +15,15 @@ RFInitializingRootForUIView
 
 - (void)awakeFromNib {
     [super awakeFromNib];
-    if (RFEdgeEqualToEdge(self.padding, RFEdgeZero) && self.container != nil) {
-        self.padding = RFEdgeMakeWithRects(self.bounds, self.container.frame);
+    
+    if (UIEdgeInsetsEqualToEdgeInsets(self.padding, UIEdgeInsetsZero) && self.container != nil) {
+        CGRect outterRect = self.bounds;
+        CGRect innerRect = self.container.frame;
+        CGFloat top = CGRectGetMinY(innerRect) - CGRectGetMinY(outterRect);
+        CGFloat right = CGRectGetMaxX(outterRect) - CGRectGetMaxX(innerRect);
+        CGFloat bottom = CGRectGetMaxY(outterRect) - CGRectGetMaxY(innerRect);
+        CGFloat left = CGRectGetMinX(innerRect) - CGRectGetMinX(outterRect);
+        self.padding = UIEdgeInsetsMake(top, left, bottom, right);
     }
 }
 
@@ -26,7 +33,7 @@ RFInitializingRootForUIView
             (void *)self,
             NSStringFromCGPoint(self.contentOffset),
             NSStringFromCGSize(self.contentSize),
-            ((self.layoutOrientation == RFUIOrientationHorizontal)? @"RFUIOrientationHorizontal": @"RFUIOrientationVertical"),
+            ((self.layoutOrientation == UILayoutConstraintAxisHorizontal)? @"RFUIOrientationHorizontal": @"RFUIOrientationVertical"),
             NSStringFromCGSize(self.cellSize)];
 }
 
@@ -84,11 +91,11 @@ RFInitializingRootForUIView
         hCell = 20;
     }
     
-    RFEdge margin = master.cellMargin;
-    RFEdge padding = master.containerPadding;
+    UIEdgeInsets margin = master.cellMargin;
+    UIEdgeInsets padding = master.containerPadding;
     
     // Cell margin may bigger than container padding
-    RFEdge trueEdge = RFEdgeMake(MAX(margin.top, padding.top), MAX(margin.right, padding.right), MAX(margin.bottom, padding.bottom), MAX(margin.left, padding.left));
+    UIEdgeInsets trueEdge = UIEdgeInsetsMake(MAX(margin.top, padding.top), MAX(margin.right, padding.right), MAX(margin.bottom, padding.bottom), MAX(margin.left, padding.left));
     
     CGSize masterSize = master.bounds.size;
     CGRect containerFrameWillBe = CGRectMake(master.padding.left, master.padding.top, masterSize.width-master.padding.left-master.padding.right, masterSize.height-master.padding.top-master.padding.bottom);
@@ -108,7 +115,8 @@ RFInitializingRootForUIView
     NSUInteger ixRow = 0;
     
     UIView *tmp_view;
-    if (master.layoutOrientation == RFUIOrientationVertical) {
+    
+    if (master.layoutOrientation == UILayoutConstraintAxisVertical) {
         NSUInteger nWidth = (contentBox.size.width + xMMargin) / (wCell + xMMargin);
         if (nWidth == 0) {
             nWidth = 1;

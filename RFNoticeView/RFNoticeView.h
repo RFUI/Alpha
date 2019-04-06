@@ -11,8 +11,8 @@
     Theory Test
  */
 
-#import "RFUI.h"
-#import "RFInitializing.h"
+#import <RFInitializing/RFInitializing.h>
+#import <RFKit/RFKit.h>
 
 @interface RFNoticeView : UIView <RFInitializing>
 @property (weak, nonatomic) IBOutlet UILabel *textLabel;

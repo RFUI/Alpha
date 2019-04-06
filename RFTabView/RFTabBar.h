@@ -11,7 +11,7 @@
     TEST
  */
 
-#import "RFUI.h"
+#import <RFKit/RFKit.h>
 #import "RFTabBarItem.h"
 #import "RFInitializing.h"
 

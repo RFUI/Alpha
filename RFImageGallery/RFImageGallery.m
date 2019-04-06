@@ -1,5 +1,6 @@
 
 #import "RFImageGallery.h"
+#import <RFKit/UIView+RFKit.h>
 
 @interface RFImageGallery () {
     /// 滚动一页超过百分之多少时认为翻页，这可以避免在硬分界出现的抖动，默认80%
@@ -237,10 +238,6 @@
     
     self = [super initWithFrame:frame];
     if (self) {
-        if (RFUIDebugEnableRandomBackgroundColor) {
-            self.backgroundColor = [UIColor colorWithRGBHex:0xFFFFFF alpha:0.5];
-        }
-        
         [self setupCellFromNib:NO];
     }
     return self;
@@ -270,12 +267,6 @@
     }
     
     if (!isLoadFromNib) {
-        if (RFUIDebugEnableRandomBackgroundColor) {
-            _lCell.backgroundColor = [UIColor randColorWithAlpha:.5];
-            _mCell.backgroundColor = [UIColor randColorWithAlpha:.5];
-            _rCell.backgroundColor = [UIColor randColorWithAlpha:.5];
-        }
-        
         UIViewAutoresizing mask = (UIViewAutoresizing)(UIViewAutoresizingFlexibleHeight | UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleRightMargin | UIViewAutoresizingFlexibleLeftMargin);
         _lCell.autoresizingMask = mask;
         _mCell.autoresizingMask = mask;

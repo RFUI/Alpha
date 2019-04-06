@@ -1,6 +1,6 @@
 // TEST
 
-#import "RFUI.h"
+#import <RFKit/RFRuntime.h>
 
 @protocol RFReusing <NSObject>
 @required

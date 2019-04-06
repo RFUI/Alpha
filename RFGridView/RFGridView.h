@@ -2,13 +2,14 @@
     RFGridView
     RFUI
 
-    Copyright (c) 2012-2013, 2016 BB9z
+    Copyright (c) 2012-2013, 2016, 2019 BB9z
     https://github.com/RFUI/Alpha
 
     The MIT License (MIT)
     http://www.opensource.org/licenses/mit-license.php
  */
-#import "RFUI.h"
+#import <RFInitializing/RFInitializing.h>
+#import <RFKit/RFKit.h>
 
 @class RFGridViewCellContainer;
 
@@ -23,20 +24,20 @@
 @property (nonatomic, strong) IBOutlet RFGridViewCellContainer *container;
 
 /// ScrollView`s scroll direction
-@property (nonatomic) RFUIOrientation layoutOrientation;
+@property (nonatomic) UILayoutConstraintAxis layoutOrientation;
 @property (nonatomic) IBInspectable BOOL layoutAnimated;
 
 /// Default {20, 20}
 @property (nonatomic) IBInspectable CGSize cellSize;
-@property (nonatomic) RFEdge cellMargin;
-@property (nonatomic) RFEdge containerPadding;
+@property (nonatomic) UIEdgeInsets cellMargin;
+@property (nonatomic) UIEdgeInsets containerPadding;
 
 /**
  ScrollView padding
 
  If you load RFGridView from a nib, it will set according to container`s frame when awakeFromNib called.
  */
-@property (nonatomic) RFEdge padding;
+@property (nonatomic) UIEdgeInsets padding;
 
 /// Leave for future use.
 /// Current is center.

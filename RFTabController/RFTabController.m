@@ -7,15 +7,14 @@
 @interface RFTabController () <
     RFDataSourceArrayDataSource
 >
-@property (assign, nonatomic) NSUInteger _selectedIndex;
-@property (strong, nonatomic) RFDataSourceArray *viewControllerStore;
+@property (nonatomic) NSUInteger _selectedIndex;
+@property (nonatomic) RFDataSourceArray *viewControllerStore;
 @end
 
 
 @implementation RFTabController {
     BOOL _transitingViewController;
 }
-@dynamic selectedIndex;
 RFInitializingRootForUIViewController
 
 - (void)onInit {
@@ -147,10 +146,10 @@ RFInitializingRootForUIViewController
 
 #pragma mark -
 
+@dynamic selectedIndex;
 - (NSUInteger)selectedIndex {
     return __selectedIndex;
 }
-
 - (void)setSelectedIndex:(NSUInteger)newSelectedIndex {
     [self setSelectedIndex:newSelectedIndex animated:NO completion:nil];
 }
@@ -239,10 +238,10 @@ RFInitializingRootForUIViewController
     }];
 }
 
+@dynamic selectedViewController;
 - (UIViewController *)selectedViewController {
     return [self.viewControllerStore rf_objectAtIndex:self.selectedIndex];
 }
-
 - (void)setSelectedViewController:(UIViewController *)newSelectedViewController {
     [self setSelectedViewController:newSelectedViewController animated:NO completion:nil];
 }

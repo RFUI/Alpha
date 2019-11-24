@@ -426,7 +426,6 @@ Pod::Spec.new do |ss|
 
     s.subspec 'RFLine' do |ss|
       ss.dependency 'RFAlpha/RFViewApperance/RFDrawView'
-      ss.dependency 'RFKit/Category/UIView+RFAnimate'
       ss.source_files = 'RFViewApperance/RFLine.{h,m}'
       ss.public_header_files = 'RFViewApperance/RFLine.h'
     end

@@ -1,6 +1,5 @@
 
 #import "RFLine.h"
-#import <RFKit/UIView+RFAnimate.h>
 
 @implementation RFLine
 
@@ -17,7 +16,8 @@
     BOOL isDrawingVertically = (height > width);
     CGFloat pixelOffsetX = 0;
     CGFloat pixelOffsetY = 0;
-    CGFloat pixelScale = (self.window.screen)? self.window.screen.scale : [UIApplication sharedApplication].keyWindow.screen.scale;
+    UIWindow *window = self.window ?: UIApplication.sharedApplication.keyWindow;
+    CGFloat pixelScale = window.screen.scale;
     if (self.onePixel) {
         CGFloat pixelAdjust = 1. / pixelScale / 2.;
         if (isDrawingVertically) {
@@ -26,10 +26,14 @@
             //  -  │ +  ┊  - │ +
             //     └──┴──┘
             //     0          right
-            pixelOffsetX = (self.x < 0 || (self.x > self.rightMargin && self.rightMargin >= 0))? pixelAdjust : -pixelAdjust;
+            CGFloat x = frame.origin.x;
+            CGFloat rightMargin = CGRectGetWidth(self.superview.bounds) - CGRectGetWidth(frame) - x;
+            pixelOffsetX = (x < 0 || (x > rightMargin && rightMargin >= 0))? pixelAdjust : -pixelAdjust;
         }
         else {
-            pixelOffsetY = (self.y < 0 || (self.y > self.bottomMargin && self.bottomMargin >=0))? pixelAdjust : -pixelAdjust;
+            CGFloat y = frame.origin.y;
+            CGFloat bottomMargin = CGRectGetHeight(self.superview.bounds) - CGRectGetHeight(frame) - y;
+            pixelOffsetY = (y < 0 || (y > bottomMargin && bottomMargin >= 0))? pixelAdjust : -pixelAdjust;
         }
     }
 

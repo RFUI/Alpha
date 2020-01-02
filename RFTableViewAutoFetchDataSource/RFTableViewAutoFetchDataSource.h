@@ -20,7 +20,7 @@
  
  */
 
-#import "RFDelegateChain.h"
+#import <RFDelegateChain/RFDelegateChain.h>
 #import <CoreData/CoreData.h>
 
 @class RFTableViewAutoFetchDataSource;

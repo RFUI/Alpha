@@ -1,7 +1,7 @@
 
 #import "RFNavigationController.h"
 #import "UIViewController+RFTransitioning.h"
-#import "RFDelegateChain.h"
+#import <RFDelegateChain/RFDelegateChain.h>
 #import "RFAnimationTransitioning.h"
 #import <RFKit/NSError+RFKit.h>
 #import <RFKit/UIView+RFAnimate.h>

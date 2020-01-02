@@ -9,7 +9,7 @@
  http://www.apache.org/licenses/LICENSE-2.0
  */
 
-#import "RFDelegateChain.h"
+#import <RFDelegateChain/RFDelegateChain.h>
 
 // Only RFPullToFetchTableIndicatorLayoutTypeStatic implemented at this time.
 //typedef enum {

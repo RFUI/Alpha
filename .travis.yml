@@ -12,6 +12,6 @@ matrix:
     - osx_image: xcode11.3
       env: RFCI_TASK="POD_LINT"
 before_install: ./.travis.sh SETUP
-script:         ./.travis.sh MAIN
+script:         travis_wait 20 ./.travis.sh MAIN
 after_success:  ./.travis.sh SUCCESS
 after_failure:  ./.travis.sh FAILURE

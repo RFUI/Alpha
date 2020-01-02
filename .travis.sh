@@ -48,7 +48,7 @@ STAGE_MAIN() {
             logInfo "TRAVIS_BRANCH = $TRAVIS_BRANCH"
 
              # Always allow warnings as alpha.
-            pod lib lint --allow-warnings
+            pod lib lint --fail-fast --allow-warnings
         fi
 
     elif [ "$RFCI_TASK" = "Xcode10" ]; then

@@ -9,6 +9,7 @@ Demos: https://github.com/RFUI/RFUI
 
 * [RFAPI](https://github.com/RFUI/RFAPI)
 * [RFAsynchronousSegue](https://github.com/RFUI/RFSegue)
+* [RFDelegateChain](https://github.com/RFUI/RFDelegateChain)
 * [RFMessageManager](https://github.com/RFUI/RFMessageManager)
 
 ## Components List
@@ -52,10 +53,6 @@ Demos: https://github.com/RFUI/RFUI
 ### RFDataSourceArray
 
 状态：良好
-
-### RFDelegateChain
-
-状态：良好，核心组件
 
 ### RFDispatchTimer
 

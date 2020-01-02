@@ -1,6 +1,6 @@
 Pod::Spec.new do |ss|
   ss.name       = 'RFAlpha'
-  ss.version    = '0.5.0'
+  ss.version    = '0.6.0'
   ss.summary    = 'RFUI: Alpha components.'
   ss.homepage   = 'https://github.com/RFUI/Alpha'
   ss.license    = { :type => 'MIT' }
@@ -88,82 +88,6 @@ Pod::Spec.new do |ss|
     s.source_files = 'RFDataSourceArray/*.{h,m}'
     s.public_header_files = 'RFDataSourceArray/*.h'
   end
-
-  ss.subspec 'RFDelegateChain' do |s|
-    s.subspec 'Chain' do |ss|
-      ss.osx.deployment_target = '10.8'
-      ss.ios.deployment_target = '6.0'
-      ss.tvos.deployment_target = '9.0'
-      ss.watchos.deployment_target = '2.0'
-
-      ss.dependency 'RFKit/Runtime', '>=1.7.1'
-      ss.dependency 'RFInitializing', '>=1.1'
-      ss.source_files = 'RFDelegateChain/*.{h,m}'
-      ss.public_header_files = 'RFDelegateChain/*.h'
-    end
-
-    s.subspec 'UIScrollViewDelegate' do |ss|
-      ss.ios.deployment_target = '6.0'
-      ss.tvos.deployment_target = '9.0'
-      ss.dependency 'RFAlpha/RFDelegateChain/Chain'
-      ss.source_files = 'RFDelegateChain/UIKit/UIScrollViewDelegateChain.{h,m}'
-      ss.public_header_files = 'RFDelegateChain/UIKit/UIScrollViewDelegateChain.h'
-    end
-
-    s.subspec 'UICollectionViewDataSource' do |ss|
-      ss.ios.deployment_target = '6.0'
-      ss.tvos.deployment_target = '9.0'
-      ss.dependency 'RFAlpha/RFDelegateChain/Chain'
-      ss.source_files = 'RFDelegateChain/UIKit/UICollectionViewDataSourceChain.{h,m}'
-      ss.public_header_files = 'RFDelegateChain/UIKit/UICollectionViewDataSourceChain.h'
-    end
-
-    s.subspec 'UICollectionViewDelegate' do |ss|
-      ss.ios.deployment_target = '6.0'
-      ss.tvos.deployment_target = '9.0'
-      ss.dependency 'RFAlpha/RFDelegateChain/UIScrollViewDelegate'
-      ss.source_files = 'RFDelegateChain/UIKit/UICollectionViewDelegateChain.{h,m}'
-      ss.public_header_files = 'RFDelegateChain/UIKit/UICollectionViewDelegateChain.h'
-    end
-
-    s.subspec 'UICollectionViewDelegateFlowLayout' do |ss|
-      ss.ios.deployment_target = '6.0'
-      ss.tvos.deployment_target = '9.0'
-      ss.dependency 'RFAlpha/RFDelegateChain/UICollectionViewDelegate'
-      ss.source_files = 'RFDelegateChain/UIKit/UICollectionViewDelegateFlowLayoutChain.{h,m}'
-      ss.public_header_files = 'RFDelegateChain/UIKit/UICollectionViewDelegateFlowLayoutChain.h'
-    end
-
-    s.subspec 'UISearchBarDelegate' do |ss|
-      ss.ios.deployment_target = '6.0'
-      ss.dependency 'RFAlpha/RFDelegateChain/Chain'
-      ss.source_files = 'RFDelegateChain/UIKit/UISearchBarDelegateChain.{h,m}'
-      ss.public_header_files = 'RFDelegateChain/UIKit/UISearchBarDelegateChain.h'
-    end
-
-    s.subspec 'UITextFieldDelegate' do |ss|
-      ss.ios.deployment_target = '6.0'
-      ss.tvos.deployment_target = '9.0'
-      ss.dependency 'RFAlpha/RFDelegateChain/Chain'
-      ss.source_files = 'RFDelegateChain/UIKit/UITextFiledDelegateChain.{h,m}'
-      ss.public_header_files = 'RFDelegateChain/UIKit/UITextFiledDelegateChain.h'
-    end
-
-    s.subspec 'UITextViewDelegate' do |ss|
-      ss.ios.deployment_target = '6.0'
-      ss.tvos.deployment_target = '9.0'
-      ss.dependency 'RFAlpha/RFDelegateChain/Chain'
-      ss.source_files = 'RFDelegateChain/UIKit/UITextViewDelegateChain.{h,m}'
-      ss.public_header_files = 'RFDelegateChain/UIKit/UITextViewDelegateChain.h'
-    end
-
-    s.subspec 'UIWebViewDelegate' do |ss|
-      ss.ios.deployment_target = '6.0'
-      ss.dependency 'RFAlpha/RFDelegateChain/Chain'
-      ss.source_files = 'RFDelegateChain/UIKit/UIWebViewDelegateChain.{h,m}'
-      ss.public_header_files = 'RFDelegateChain/UIKit/UIWebViewDelegateChain.h'
-    end
-  end # RFDelegateChain
 
   ss.subspec 'RFDispatchTimer' do |s|
     s.ios.deployment_target = '6.0'
@@ -325,7 +249,7 @@ Pod::Spec.new do |ss|
     s.ios.deployment_target = '6.0'
     s.tvos.deployment_target = '9.0'
 
-    s.dependency 'RFAlpha/RFDelegateChain/Chain'
+    s.dependency 'RFDelegateChain/Chain'
     s.source_files = 'RFTableViewAutoFetchDataSource/*.{h,m}'
     s.public_header_files = 'RFTableViewAutoFetchDataSource/*.h'
     s.framework = 'CoreData'
@@ -334,7 +258,7 @@ Pod::Spec.new do |ss|
   ss.subspec 'RFTableViewCellHeightDelegate' do |s|
     s.ios.deployment_target = '6.0'
 
-    s.dependency 'RFAlpha/RFDelegateChain/Chain'
+    s.dependency 'RFDelegateChain/Chain'
     s.dependency 'RFKit/Runtime', '>=1.7.1'
     s.dependency 'RFKit/Category/UIView+RFAnimate'
     s.source_files = 'RFTableViewCellHeightDelegate/*.{h,m}'
@@ -344,7 +268,7 @@ Pod::Spec.new do |ss|
   ss.subspec 'RFTableViewPullToFetchPlugin' do |s|
     s.ios.deployment_target = '6.0'
 
-    s.dependency 'RFAlpha/RFDelegateChain/Chain'
+    s.dependency 'RFDelegateChain/Chain'
     s.dependency 'RFKit/Category/UIView+RFAnimate'
     s.dependency 'RFKit/Category/UIView'
     s.dependency 'RFAlpha/RFKVOWrapper'
@@ -378,7 +302,7 @@ Pod::Spec.new do |ss|
 
     s.subspec 'NavigationControllerTransition' do |ss|
       ss.dependency 'RFAlpha/RFTransitioning/Core'
-      ss.dependency 'RFAlpha/RFDelegateChain/Chain'
+      ss.dependency 'RFDelegateChain/Chain'
       ss.source_files = [
         'RFTransitioning/RFNavigation*.{h,m}',
         'RFTransitioning/UIViewController+RFTransitioning.{h,m}'

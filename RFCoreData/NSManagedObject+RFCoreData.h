@@ -1,40 +1,35 @@
-/*!
-    NSManagedObject (RFCoreData)
-    RFCoreData
+/*
+ NSManagedObject (RFCoreData)
+ RFCoreData
 
-    Copyright (c) 2013 BB9z
-    https://github.com/RFUI/Alpha
+ Copyright (c) 2013 BB9z
+ https://github.com/RFUI/Alpha
 
-    The MIT License (MIT)
-    http://www.opensource.org/licenses/mit-license.php
-
-    Alpha
+ The MIT License (MIT)
+ http://www.opensource.org/licenses/mit-license.php
  */
-
 #import <CoreData/CoreData.h>
 
 @interface NSManagedObject (RFCoreData)
 
-// Use class name by default.
+/// Use class name by default.
 + (NSString *)entityName;
 
-#if __IPHONE_OS_VERSION_MIN_REQUIRED < 100000
-// Create a fecth request based on the class
-+ (NSFetchRequest *)fetchRequest;
-#endif
+/// Create a fecth request based on the class
++ (NSFetchRequest *)rf_fetchRequest;
 
-// Find a object with simple key-value pairs. If there are more than one objects match the key-value pairs, only first will returned.
+/// Find a object with simple key-value pairs. If there are more than one objects match the key-value pairs, only first will returned.
 + (instancetype)objectWithValue:(id)value forKey:(NSString *)key inContext:(NSManagedObjectContext *)context;
 + (instancetype)objectWithValue:(id)value forKey:(NSString *)key inContext:(NSManagedObjectContext *)context creatIfNotExist:(BOOL)creatIfNotExist;
 
 + (NSArray *)objectsWithPredicate:(NSPredicate *)predicate sortDescriptors:(NSArray *)sortDescriptors inContext:(NSManagedObjectContext *)context;
 + (NSArray *)allObjectsInContext:(NSManagedObjectContext *)context;
 
-// The number of objects.
-// Return NSNotFound if an error occurs.
+/// The number of objects.
+/// Return NSNotFound if an error occurs.
 + (NSUInteger)countWithPredicate:(NSPredicate *)predicate inContext:(NSManagedObjectContext *)context;
 
-// Delete an object from its managedObjectContext.
+/// Delete an object from its managedObjectContext.
 - (void)delete;
 
 @end

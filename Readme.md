@@ -16,7 +16,7 @@ Demos: https://github.com/RFUI/RFUI
 
 ### RFAssetsCache
 
-状态：待评估
+状态：废弃，计划下版本移除
 
 ### RFAudioPlayer
 

@@ -1,6 +1,6 @@
 
 #import "NSManagedObject+RFCoreData.h"
-#import "dout.h"
+#import <RFKit/dout.h>
 
 @implementation NSManagedObject (RFCoreData)
 
@@ -8,15 +8,13 @@
     return NSStringFromClass(self);
 }
 
-#if __IPHONE_OS_VERSION_MIN_REQUIRED < 100000
-+ (NSFetchRequest *)fetchRequest {
++ (NSFetchRequest *)rf_fetchRequest {
     return [NSFetchRequest fetchRequestWithEntityName:self.entityName];
 }
-#endif
 
 + (instancetype)objectWithValue:(id)value forKey:(NSString *)key inContext:(NSManagedObjectContext *)context {
     NSPredicate *predicate = [NSPredicate predicateWithFormat:@"%K = %@", key, value];
-    NSFetchRequest *request = self.fetchRequest;
+    NSFetchRequest *request = self.rf_fetchRequest;
     request.fetchLimit = 1;
     request.predicate = predicate;
     
@@ -36,7 +34,7 @@
 }
 
 + (NSArray *)objectsWithPredicate:(NSPredicate *)predicate sortDescriptors:(NSArray *)sortDescriptors inContext:(NSManagedObjectContext *)context {
-    NSFetchRequest *request = self.fetchRequest;
+    NSFetchRequest *request = self.rf_fetchRequest;
     request.sortDescriptors = sortDescriptors;
     request.predicate = predicate;
     
@@ -51,7 +49,7 @@
 }
 
 + (NSUInteger)countWithPredicate:(NSPredicate *)predicate inContext:(NSManagedObjectContext *)context {
-    NSFetchRequest *request = self.fetchRequest;
+    NSFetchRequest *request = self.rf_fetchRequest;
     request.predicate = predicate;
     
     NSError __autoreleasing *e = nil;

@@ -1,7 +1,7 @@
 // TEST
 
-#import "RFKit.h"
-#import "RFInitializing.h"
+#import <RFKit/RFRuntime.h>
+#import <RFInitializing/RFInitializing.h>
 
 /**
 

@@ -5,7 +5,7 @@
 
 Demos: https://github.com/RFUI/RFUI
 
-## 移出的组件
+## 正式发布的组件
 
 * [RFAPI](https://github.com/RFUI/RFAPI)
 * [RFAsynchronousSegue](https://github.com/RFUI/RFSegue)
@@ -14,146 +14,42 @@ Demos: https://github.com/RFUI/RFUI
 
 ## Components List
 
-### RFAssetsCache
-
-状态：废弃，计划下版本移除
-
-### RFAudioPlayer
-
-状态：待评估
-
-### RFButton
-
-状态：良好
-
-### RFCallbackControl
-
-状态：测试，准核心组件
-
-### RFCarouselView
-
-状态：测试
-
-### RFCheckbox
-
-状态：正常
-
-### RFContainerView
-
-状态：良好
-
-### RFCoreData
-
-状态：正常，过时的组件
-
-### RFDataSourceArray
-
-状态：良好
-
-### RFDispatchTimer
-
-状态：待评估
-
-### RFDrawImage
-
-状态：良好
-
-### RFGridView
-
-状态：停止维护
-
-### RFImageGallery
-
-状态：待评估，可能需要重写
-
-### RFKVOWrapper
-
-状态：良好
-
-### RFNavigationController
-
-状态：正常，核心组件
-
-### RFNoticeView
-
-状态：待评估
-
-### RFPlugin
-
-状态：核心组件，可能不再需要
-
-### RFRealmChangeNotificationController
-
-状态：待评估
-
-### RFRefreshButton
-
-状态：正常
-
-### RFRefreshControl
-
-状态：计划阶段
-
-### RFReusing
-
-状态：待评估
-
-### RFScrollViewPageControl
-
-状态：良好，达到预期
-
-### RFSerialTaskOperationController
-
-状态：待评估
-
-### RFSliderView
-
-状态：良好
-
-### RFSound
-
-状态：待评估
-
-### RFSwizzle
-
-状态：正常，核心组件
-
-### RFSynthesize
-
-状态：正常，核心组件
-
-### RFTabController
-
-状态：正常
-
-### RFTableViewAutoFetchDataSource
-
-状态：良好
-
-Core Data 数据获取插件
-
-详见：[RFTableViewAutoFetchDataSource/Readme.md](RFTableViewAutoFetchDataSource/Readme.md)
-
-### RFTableViewCellHeightDelegate
-
-状态：良好，达到预期
-
-### RFTableViewPullToFetchPlugin
-
-状态：正常
-
-### RFTimer
-
-状态：正常
-
-### RFTransitioning
-
-状态：正常
-
-### RFViewApperance
-
-状态：正常
-
-### RFWindow
-
-状态：良好，达到预期
+组件名               | 状态  | 升级可能 | 废弃可能 | 备注
+--------------------|------|---------|---------|----
+RFAssetsCache           | 废弃 | 无   | 下版本移除 |
+RFAudioPlayer           | 正常 | 有   | 低 |
+RFBlockSelectorPerform  | 正常 | 无   | 中 |
+RFButton                | 稳定 | 低   | 无 |
+RFCallbackControl       | 良好 | 有   | 无 | 有拆分计划
+RFCarouselView          | 正常 | 不确定 | 中 | 需求小
+RFCheckbox              | 稳定 | 低   | 低 | 需求小，多数情况 UIButton 够用
+RFContainerView         | 良好 | 无   | 无 |
+RFCoreData              | 过时 | 无   | 高 |
+RFDataSourceArray       | 稳定 | 无   | 低 |
+RFDispatchTimer         | 稳定 | 无   | 高 | 需求小
+RFDrawImage             | 正常 | 有   | 无 |
+RFGridView              | 废弃 | 无   | 下版本移除 |
+RFImageCropper          | 常用 | 有   | 无 |
+RFKVOWrapper            | 良好 | 无   | 无 | 有拆分计划
+RFNavigationController  | 良好 | 高   | 无 | 有拆分计划
+RFNoticeView            | 过时 | 无   | 高 |
+RFPlugin                | 过时 | 无   | 高 |
+RFRealmChangeNotificationController | 停止维护 | 低 | 中 |
+RFRefreshButton         | 正常 | 无   | 低 |
+RFRefreshControl        | 稳定 | 低   | 无 |
+RFReusing               | 过时 | 低   | 中 |
+RFScrollViewPageControl | 正常 | 低   | 无 |
+RFSerialTaskOperationController | 稳定 | 无 | 中 | 需求小
+RFSliderView            | 稳定 | 低   | 低 |
+RFSound                 | 稳定 | 无   | 低 |
+RFSwizzle               | 良好 | 无   | 无 | 有拆分计划
+RFSynthesize            | 正常 | 无   | 无 |
+RFTabController         | 正常 | 低   | 无 |
+RFTableViewAutoFetchDataSource | 过时 | 无 | 低 |
+RFTableViewCellHeightDelegate | 过时 | 无 | 下版本移除 | 虽已达到预期，但目前但目前的系统不再需要
+RFTableViewPullToFetchPlugin | 正常 | 低 | 低 |
+RFTabView               | 不佳 | 无   | 高 |
+RFTimer                 | 良好 | 低   | 无 |
+RFTransitioning         | 正常 | 低   | 无 |
+RFViewApperance         | 正常 | 无   | 无 |
+RFWindow                | 良好 | 无   | 无 |

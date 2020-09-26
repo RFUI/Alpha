@@ -6,8 +6,8 @@ Pod::Spec.new do |ss|
   ss.license    = { :type => 'MIT' }
   ss.authors    = { 'BB9z' => 'BB9z@me.com' }
   ss.source     = {
-    :git => 'https://github.com/RFUI/Alpha.git'
-    # No tag here
+    :git => 'https://github.com/RFUI/Alpha.git',
+    :tag => s.version.to_s
   }
   
   ss.ios.deployment_target = '9.0'
@@ -176,17 +176,6 @@ Pod::Spec.new do |ss|
     s.dependency 'RFAlpha/RFKVOWrapper'
     s.source_files = 'RFScrollViewPageControl/*.{h,m}'
     s.public_header_files = 'RFScrollViewPageControl/*.h'
-  end
-
-  ss.subspec 'RFSerialTaskOperationController' do |s|
-    s.ios.deployment_target = '9.0'
-    s.osx.deployment_target = '10.8'
-    s.watchos.deployment_target = '2.0'
-    s.tvos.deployment_target = '9.0'
-
-    s.dependency 'RFKit/Runtime', '>=1.7.1'
-    s.source_files = 'RFSerialTaskOperationController/*.{h,m}'
-    s.public_header_files = 'RFSerialTaskOperationController/*.h'
   end
 
   ss.subspec 'RFSliderView' do |s|

@@ -1,6 +1,6 @@
 Pod::Spec.new do |ss|
   ss.name       = 'RFAlpha'
-  ss.version    = '0.6.0'
+  ss.version    = '0.7.0'
   ss.summary    = 'RFUI: Alpha components.'
   ss.homepage   = 'https://github.com/RFUI/Alpha'
   ss.license    = { :type => 'MIT' }
@@ -10,7 +10,7 @@ Pod::Spec.new do |ss|
     # No tag here
   }
   
-  ss.ios.deployment_target = '8.0'
+  ss.ios.deployment_target = '9.0'
   ss.osx.deployment_target = '10.8'
   ss.watchos.deployment_target = '2.0'
   ss.tvos.deployment_target = '9.0'
@@ -19,7 +19,7 @@ Pod::Spec.new do |ss|
   ss.requires_arc = true
   
   ss.subspec 'RFAudioPlayer' do |s|
-    s.ios.deployment_target = '8.0'
+    s.ios.deployment_target = '9.0'
 
     s.dependency 'RFKit/Runtime', '>=1.7.1'
     s.source_files = 'RFAudioPlayer/*.{h,m}'
@@ -34,7 +34,7 @@ Pod::Spec.new do |ss|
   end
 
   ss.subspec 'RFButton' do |s|
-    s.ios.deployment_target = '8.0'
+    s.ios.deployment_target = '9.0'
     s.tvos.deployment_target = '9.0'
 
     s.dependency 'RFKit/Runtime', '>=1.7.1'
@@ -51,7 +51,7 @@ Pod::Spec.new do |ss|
   end
 
   ss.subspec 'RFCarouselView' do |s|
-    s.ios.deployment_target = '8.0'
+    s.ios.deployment_target = '9.0'
     s.tvos.deployment_target = '9.0'
 
     s.dependency 'RFAlpha/RFTimer'
@@ -64,7 +64,7 @@ Pod::Spec.new do |ss|
   end
 
   ss.subspec 'RFCheckbox' do |s|
-    s.ios.deployment_target = '8.0'
+    s.ios.deployment_target = '9.0'
     s.tvos.deployment_target = '9.0'
 
     s.dependency 'RFAlpha/RFButton'
@@ -73,7 +73,7 @@ Pod::Spec.new do |ss|
   end
 
   ss.subspec 'RFContainerView' do |s|
-    s.ios.deployment_target = '8.0'
+    s.ios.deployment_target = '9.0'
     s.tvos.deployment_target = '9.0'
 
     s.dependency 'RFKit/Runtime', '>=1.7.1'
@@ -90,7 +90,7 @@ Pod::Spec.new do |ss|
   end
 
   ss.subspec 'RFDispatchTimer' do |s|
-    s.ios.deployment_target = '8.0'
+    s.ios.deployment_target = '9.0'
     s.osx.deployment_target = '10.8'
     s.watchos.deployment_target = '2.0'
     s.tvos.deployment_target = '9.0'
@@ -100,7 +100,7 @@ Pod::Spec.new do |ss|
   end
 
   ss.subspec 'RFDrawImage' do |s|
-    s.ios.deployment_target = '8.0'
+    s.ios.deployment_target = '9.0'
     s.watchos.deployment_target = '2.0'
     s.tvos.deployment_target = '9.0'
 
@@ -110,7 +110,7 @@ Pod::Spec.new do |ss|
   end
 
   ss.subspec 'RFImageCropper' do |s|
-    s.ios.deployment_target = '8.0'
+    s.ios.deployment_target = '9.0'
     # s.tvos.deployment_target = '9.0'
 
     s.dependency 'RFKit/Runtime', '>=1.7.1'
@@ -124,7 +124,7 @@ Pod::Spec.new do |ss|
   end
 
   ss.subspec 'RFKVOWrapper' do |s|
-    s.ios.deployment_target = '8.0'
+    s.ios.deployment_target = '9.0'
     s.osx.deployment_target = '10.8'
     s.watchos.deployment_target = '2.0'
     s.tvos.deployment_target = '9.0'
@@ -135,7 +135,7 @@ Pod::Spec.new do |ss|
   end
 
   ss.subspec 'RFNavigationController' do |s|
-    s.ios.deployment_target = '8.0'
+    s.ios.deployment_target = '9.0'
 
     s.dependency 'RFKit/Runtime', '>=1.7.1'
     s.dependency 'RFKit/Category/NSError'
@@ -148,7 +148,7 @@ Pod::Spec.new do |ss|
   end
 
   ss.subspec 'RFRefreshButton' do |s|
-    s.ios.deployment_target = '8.0'
+    s.ios.deployment_target = '9.0'
     s.tvos.deployment_target = '9.0'
 
     s.dependency 'RFKit/Runtime', '>=1.7.1'
@@ -159,7 +159,7 @@ Pod::Spec.new do |ss|
   end
 
   ss.subspec 'RFRefreshControl' do |s|
-    s.ios.deployment_target = '8.0'
+    s.ios.deployment_target = '9.0'
     s.tvos.deployment_target = '9.0'
 
     s.dependency 'RFKit/Runtime', '>=1.7.1'
@@ -168,7 +168,7 @@ Pod::Spec.new do |ss|
   end
 
   ss.subspec 'RFScrollViewPageControl' do |s|
-    s.ios.deployment_target = '8.0'
+    s.ios.deployment_target = '9.0'
     s.tvos.deployment_target = '9.0'
 
     s.dependency 'RFKit/Runtime', '>=1.7.1'
@@ -179,7 +179,7 @@ Pod::Spec.new do |ss|
   end
 
   ss.subspec 'RFSerialTaskOperationController' do |s|
-    s.ios.deployment_target = '8.0'
+    s.ios.deployment_target = '9.0'
     s.osx.deployment_target = '10.8'
     s.watchos.deployment_target = '2.0'
     s.tvos.deployment_target = '9.0'
@@ -190,7 +190,7 @@ Pod::Spec.new do |ss|
   end
 
   ss.subspec 'RFSliderView' do |s|
-    s.ios.deployment_target = '8.0'
+    s.ios.deployment_target = '9.0'
 
     s.dependency 'RFAlpha/RFTimer'
     s.dependency 'RFInitializing', '>=1.1'
@@ -202,7 +202,7 @@ Pod::Spec.new do |ss|
   end
 
   ss.subspec 'RFSound' do |s|
-    s.ios.deployment_target = '8.0'
+    s.ios.deployment_target = '9.0'
 
     s.dependency 'RFKit/Runtime', '>=1.7.1'
     s.source_files = 'RFSound/*.{h,m}'
@@ -211,7 +211,7 @@ Pod::Spec.new do |ss|
   end
 
   ss.subspec 'RFSwizzle' do |s|
-    s.ios.deployment_target = '8.0'
+    s.ios.deployment_target = '9.0'
     s.osx.deployment_target = '10.8'
     s.watchos.deployment_target = '2.0'
     s.tvos.deployment_target = '9.0'
@@ -222,7 +222,7 @@ Pod::Spec.new do |ss|
   end
 
   ss.subspec 'RFSynthesize' do |s|
-    s.ios.deployment_target = '8.0'
+    s.ios.deployment_target = '9.0'
     s.osx.deployment_target = '10.8'
     s.watchos.deployment_target = '2.0'
     s.tvos.deployment_target = '9.0'
@@ -233,7 +233,7 @@ Pod::Spec.new do |ss|
   end
 
   ss.subspec 'RFTabController' do |s|
-    s.ios.deployment_target = '8.0'
+    s.ios.deployment_target = '9.0'
     s.tvos.deployment_target = '9.0'
 
     s.dependency 'RFKit/Runtime', '>=1.7.1'
@@ -246,7 +246,7 @@ Pod::Spec.new do |ss|
   end
 
   ss.subspec 'RFTableViewAutoFetchDataSource' do |s|
-    s.ios.deployment_target = '8.0'
+    s.ios.deployment_target = '9.0'
     s.tvos.deployment_target = '9.0'
 
     s.dependency 'RFDelegateChain/Chain'
@@ -256,7 +256,7 @@ Pod::Spec.new do |ss|
   end
 
   ss.subspec 'RFTableViewCellHeightDelegate' do |s|
-    s.ios.deployment_target = '8.0'
+    s.ios.deployment_target = '9.0'
 
     s.dependency 'RFDelegateChain/Chain'
     s.dependency 'RFKit/Runtime', '>=1.7.1'
@@ -266,7 +266,7 @@ Pod::Spec.new do |ss|
   end
 
   ss.subspec 'RFTableViewPullToFetchPlugin' do |s|
-    s.ios.deployment_target = '8.0'
+    s.ios.deployment_target = '9.0'
 
     s.dependency 'RFDelegateChain/Chain'
     s.dependency 'RFKit/Category/UIView+RFAnimate'
@@ -277,7 +277,7 @@ Pod::Spec.new do |ss|
   end
 
   ss.subspec 'RFTimer' do |s|
-    s.ios.deployment_target = '8.0'
+    s.ios.deployment_target = '9.0'
     s.osx.deployment_target = '10.8'
     s.watchos.deployment_target = '2.0'
     s.tvos.deployment_target = '9.0'
@@ -287,7 +287,7 @@ Pod::Spec.new do |ss|
   end
 
   ss.subspec 'RFTransitioning' do |s|
-    s.ios.deployment_target = '8.0'
+    s.ios.deployment_target = '9.0'
 
     s.subspec 'Core' do |ss|
       ss.dependency 'RFKit/Runtime', '>=1.7.1'
@@ -338,7 +338,7 @@ Pod::Spec.new do |ss|
   end # RFTransitioning
 
   ss.subspec 'RFViewApperance' do |s|
-    s.ios.deployment_target = '8.0'
+    s.ios.deployment_target = '9.0'
     s.tvos.deployment_target = '9.0'
 
     s.subspec 'RFDrawView' do |ss|
@@ -376,7 +376,7 @@ Pod::Spec.new do |ss|
   end # RFViewApperance
 
   ss.subspec 'RFWindow' do |s|
-    s.ios.deployment_target = '8.0'
+    s.ios.deployment_target = '9.0'
     s.tvos.deployment_target = '9.0'
 
     s.dependency 'RFInitializing', '>=1.1'

@@ -122,10 +122,6 @@ Demos: https://github.com/RFUI/RFUI
 
 状态：待评估
 
-### RFStatusBarNotificationController
-
-状态：停止维护
-
 ### RFSwizzle
 
 状态：正常，核心组件

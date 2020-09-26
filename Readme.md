@@ -114,10 +114,6 @@ Demos: https://github.com/RFUI/RFUI
 
 状态：停止维护
 
-### RFSlideNavigationController
-
-状态：停止维护
-
 ### RFSliderView
 
 状态：良好

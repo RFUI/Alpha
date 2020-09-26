@@ -2,7 +2,7 @@
  RFSoundService
  RFAlpha
  
- Copyright (c) 2012-2013 BB9z
+ Copyright (c) 2012-2013, 2020 BB9z
  https://github.com/RFUI/Alpha
 
  The MIT License (MIT)
@@ -10,22 +10,25 @@
  */
 
 #import <RFKit/RFRuntime.h>
-#import <AudioToolbox/AudioToolbox.h>
-#import <MediaPlayer/MediaPlayer.h>
 
+/**
+ 使用 Audio Services 播放音效
+ */
 @interface RFSoundService : NSObject
 
-+ (instancetype)sharedInstance;
+/// 添加文件注册声音
+/// @return 是否成功
+- (BOOL)addSoundWithURL:(nonnull NSURL *)soundFileURL identifier:(nonnull NSString *)identifier;
 
-- (BOOL)addSoundWithURL:(NSURL *)soundFileURL identifier:(NSString *)identifier;
-- (BOOL)removeSound:(NSString *)soundIdentifier;
-- (BOOL)playSound:(NSString *)soundIdentifier;
+/// 移除声音注册
+/// @return 指定声音不存在返回 NO
+- (BOOL)removeSound:(nonnull NSString *)soundIdentifier;
 
-/// The current volume of application media, in the range of 0.0 to 1.0.
-@property (assign, nonatomic) float volume;
+/// 播放声音
+/// @return 指定声音不存在返回 NO
+- (BOOL)playSound:(nonnull NSString *)soundIdentifier;
 
-@property (assign, nonatomic, getter = isMute) BOOL mute;
-
-/// In the Simulator and on devices with no vibration element, this method does nothing.
+/// 振动设备
+/// 在模拟器及不支持震动的设备上无效果
 - (void)vibrate;
 @end

@@ -207,7 +207,7 @@ Pod::Spec.new do |ss|
     s.dependency 'RFKit/Runtime', '>=1.7.1'
     s.source_files = 'RFSound/*.{h,m}'
     s.public_header_files = 'RFSound/*.h'
-    s.framework = ['AudioToolbox', 'MediaPlayer']
+    s.framework = ['AudioToolbox']
   end
 
   ss.subspec 'RFSwizzle' do |s|

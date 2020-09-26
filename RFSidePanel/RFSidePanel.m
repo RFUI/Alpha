@@ -10,7 +10,6 @@ static const CGFloat RFSidePanelToggleAnimateDurationDefault = 0.5;
 @end
 
 @implementation RFSidePanel
-RFUIInterfaceOrientationSupportAll
 
 - (void)setRootViewController:(UIViewController *)rootViewController {
     _dout_bool([self isViewLoaded])

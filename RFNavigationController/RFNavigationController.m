@@ -221,7 +221,7 @@ static BOOL _attributeCheck(NSDictionary *dic, NSString *key, Class kind, NSErro
         return YES;
     }
 
-    if (![value isKindOfClass:kind]) {
+    if (![(NSObject *)value isKindOfClass:kind]) {
         if (*outError) {
             *outError = [NSError errorWithDomain:@"RFNavigationController" code:2 localizedDescription:[NSString stringWithFormat:@"Expect %@ attribute is kind of %@", key, kind]];
         }
@@ -230,7 +230,7 @@ static BOOL _attributeCheck(NSDictionary *dic, NSString *key, Class kind, NSErro
     return YES;
 }
 
-- (BOOL)validateAppearanceAttributes:(NSDictionary<RFViewControllerAppearanceAttributeKey, id> *)attributes error:(out NSError *_Nullable *)error {
+- (BOOL)validateAppearanceAttributes:(NSDictionary<RFViewControllerAppearanceAttributeKey, id> *)attributes error:(NSError *_Nullable __autoreleasing *)error {
 #define _expect_kind(KEY, CLASS)\
     if (!_attributeCheck(attributes, KEY, [CLASS class], error)) {\
         return NO;\
@@ -255,7 +255,7 @@ static bool rf_isNull(id value) {
 - (void)updateNavigationAppearanceWithAppearanceAttributes:(NSDictionary<NSString *, id> *)attributes  animationDuration:(NSTimeInterval)animationDuration animated:(BOOL)animated {
     id value = nil;
     if ((value = attributes[RFViewControllerPrefersNavigationBarHiddenAttribute])) {
-        BOOL shouldHide = [value boolValue];
+        BOOL shouldHide = [(NSNumber *)value boolValue];
         if (self.navigationBarHidden != shouldHide) {
             [self setNavigationBarHidden:shouldHide animated:animated];
         }
@@ -271,7 +271,7 @@ static bool rf_isNull(id value) {
     }
 
     if ((value = attributes[RFViewControllerPrefersBottomBarShownAttribute])) {
-        BOOL shouldHide = ![value boolValue];
+        BOOL shouldHide = ![(NSNumber *)value boolValue];
         if (self.bottomBarHidden != shouldHide) {
             // Show, no animation for better visual effect if bottom bar is not translucent.
             BOOL shouldAnimatd = (!shouldHide && !self.translucentBottomBar)? NO : animated;
@@ -282,7 +282,7 @@ static bool rf_isNull(id value) {
     }
     
     value = attributes[RFViewControllerPreferredNavigationBarBackgroundImageAttribute];
-    if ([value isKindOfClass:UIImage.class]) {
+    if ([(NSObject *)value isKindOfClass:UIImage.class]) {
         [self.navigationBar setBackgroundImage:(UIImage *)value forBarMetrics:UIBarMetricsDefault];
     }
     else {
@@ -291,17 +291,17 @@ static bool rf_isNull(id value) {
     
     if ((value = attributes[RFViewControllerPreferredNavigationBarBackgroundAlphaAttributes])) {
         UIImageView *iv = self.navigationBar.subviews.firstObject;
-        iv.alpha = rf_isNull(value)? 1 : [value floatValue];
+        iv.alpha = rf_isNull(value)? 1 : [(NSNumber *)value floatValue];
     }
 
     if (!self.handelViewControllerBasedStatusBarAppearance) return;
     if ((value = attributes[RFViewControllerPrefersStatusBarHiddenAttribute])) {
-        BOOL shouldStatusBarHidden = [value boolValue];
+        BOOL shouldStatusBarHidden = [(NSNumber *)value boolValue];
         if (shouldStatusBarHidden != UIApplication.sharedApplication.statusBarHidden) {
             UIStatusBarAnimation preferredStatusBarUpdateAnimation = UIStatusBarAnimationNone;
             if (animated
                 && attributes[RFViewControllerPrefersStatusBarHiddenAttribute]) {
-                preferredStatusBarUpdateAnimation = [attributes[RFViewControllerPrefersStatusBarHiddenAttribute] integerValue];
+                preferredStatusBarUpdateAnimation = [(NSNumber *)attributes[RFViewControllerPrefersStatusBarHiddenAttribute] integerValue];
             }
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Wdeprecated-declarations"
@@ -311,7 +311,7 @@ static bool rf_isNull(id value) {
     }
 
     if ((value = attributes[RFViewControllerPreferredStatusBarStyleAttribute])) {
-        UIStatusBarStyle preferredStatusBarStyle = [value integerValue];
+        UIStatusBarStyle preferredStatusBarStyle = [(NSNumber *)value integerValue];
         if (preferredStatusBarStyle != UIApplication.sharedApplication.statusBarStyle) {
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Wdeprecated-declarations"
@@ -344,7 +344,7 @@ static bool rf_isNull(id value) {
     
     id value = nil;
     if ((value = vcAttributes[RFViewControllerPrefersNavigationBarHiddenAttribute])) {
-        BOOL shouldHide = [value boolValue];
+        BOOL shouldHide = [(NSNumber *)value boolValue];
         if (shouldHide) {
             // Prevent set navigation bar style to the default if navigation bar will be hidden.
             [attributes removeObjectForKey:RFViewControllerPreferredNavigationBarTintColorAttribute];
@@ -376,13 +376,13 @@ static bool rf_isNull(id value) {
 
     BOOL navigationBarHiddenChanged = NO;
     if (attributes[RFViewControllerPrefersNavigationBarHiddenAttribute]
-        && [attributes[RFViewControllerPrefersNavigationBarHiddenAttribute] boolValue] != self.navigationBarHidden) {
+        && [(NSNumber *)attributes[RFViewControllerPrefersNavigationBarHiddenAttribute] boolValue] != self.navigationBarHidden) {
         navigationBarHiddenChanged = YES;
     }
 
     BOOL shouldStatusBarHidden = UIApplication.sharedApplication.statusBarHidden;
     if (attributes[RFViewControllerPrefersStatusBarHiddenAttribute]) {
-        shouldStatusBarHidden = [attributes[RFViewControllerPrefersStatusBarHiddenAttribute] boolValue];
+        shouldStatusBarHidden = [(NSNumber *)attributes[RFViewControllerPrefersStatusBarHiddenAttribute] boolValue];
     }
 
     if (animated

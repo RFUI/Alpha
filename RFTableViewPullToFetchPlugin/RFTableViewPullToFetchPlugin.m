@@ -410,15 +410,19 @@ static NSTimeInterval RFPullToFetchAnimateTimeInterval = .2;
 }
 
 - (void)updateHeaderIndicatorStatus {
-    if (self.headerStatusChangeBlock) {
-        self.headerStatusChangeBlock(self, self.headerContainer, self.headerStatus, self.tableView.distanceBetweenContentAndTop, self.tableView);
-    }
+    if (!self.headerStatusChangeBlock) return;
+    UIView *view = self.headerContainer;
+    UITableView *tb = self.tableView;
+    if (!view || !tb) return;
+    self.headerStatusChangeBlock(self, view, self.headerStatus, self.tableView.distanceBetweenContentAndTop, tb);
 }
 
 - (void)updateFooterIndicatorStatus {
-    if (self.footerStatusChangeBlock) {
-        self.footerStatusChangeBlock(self, self.footerContainer, self.footerStatus, self.tableView.distanceBetweenContentAndBottom, self.tableView);
-    }
+    if (self.footerStatusChangeBlock) return;
+    UIView *view = self.footerContainer;
+    UITableView *tb = self.tableView;
+    if (!view || !tb) return;
+    self.footerStatusChangeBlock(self, view, self.footerStatus, self.tableView.distanceBetweenContentAndBottom, tb);
 }
 
 #pragma mark - Other Status

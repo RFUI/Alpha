@@ -26,7 +26,7 @@ RFInitializingRootForUIView
     [self addObserver:self forKeyPath:@keypath(self, items) options:NSKeyValueObservingOptionNew context:NULL];
     
     [self RFAddObserver:self forKeyPath:@keypath(self, items) options:NSKeyValueObservingOptionNew queue:nil block:^(RFNoticeView *observer, NSDictionary *change) {
-        switch ([change[NSKeyValueChangeKindKey] integerValue]) {
+        switch ([(NSNumber *)change[NSKeyValueChangeKindKey] integerValue]) {
             case NSKeyValueChangeInsertion:
                 [observer onMessageAdded];
                 break;

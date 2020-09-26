@@ -8,9 +8,11 @@
     return NSStringFromClass(self);
 }
 
+#if __IPHONE_OS_VERSION_MIN_REQUIRED < 100000
 + (NSFetchRequest *)fetchRequest {
     return [NSFetchRequest fetchRequestWithEntityName:self.entityName];
 }
+#endif
 
 + (instancetype)objectWithValue:(id)value forKey:(NSString *)key inContext:(NSManagedObjectContext *)context {
     NSPredicate *predicate = [NSPredicate predicateWithFormat:@"%K = %@", key, value];
@@ -25,7 +27,7 @@
 }
 
 + (instancetype)objectWithValue:(id)value forKey:(NSString *)key inContext:(NSManagedObjectContext *)context creatIfNotExist:(BOOL)creatIfNotExist {
-    id object = [self objectWithValue:value forKey:key inContext:context];
+    NSManagedObject *object = [self objectWithValue:value forKey:key inContext:context];
     if (!object) {
         object = [NSEntityDescription insertNewObjectForEntityForName:self.entityName inManagedObjectContext:context];
         [object setValue:value forKey:key];

@@ -81,12 +81,12 @@ RFInitializingRootForUIView
 }
 
 - (void)evaluateEnableStatus {
-    id value = [self.observeTarget valueForKeyPath:self.observeKeypath];
+    id value = [(NSObject *)self.observeTarget valueForKeyPath:self.observeKeypath];
     if (self.evaluateBlock) {
         self.enabled = !self.evaluateBlock(value);
     }
     else {
-        self.enabled = ![value boolValue];
+        self.enabled = ![(NSNumber *)value boolValue];
     }
 }
 
@@ -97,13 +97,13 @@ RFInitializingRootForUIView
     self.evaluateBlock = ifProccessingBlock;
 
     [self evaluateEnableStatus];
-    [self.observeTarget addObserver:self forKeyPath:self.observeKeypath options:(NSKeyValueObservingOptions)(NSKeyValueObservingOptionNew|NSKeyValueObservingOptionInitial) context:RFRefreshButtonKVOContext];
+    [(NSObject *)self.observeTarget addObserver:self forKeyPath:self.observeKeypath options:(NSKeyValueObservingOptions)(NSKeyValueObservingOptionNew|NSKeyValueObservingOptionInitial) context:RFRefreshButtonKVOContext];
     self.observing = YES;
 }
 
 - (void)stopObserve {
     if (self.observing) {
-        [self.observeTarget removeObserver:self forKeyPath:self.observeKeypath context:RFRefreshButtonKVOContext];
+        [(NSObject *)self.observeTarget removeObserver:self forKeyPath:self.observeKeypath context:RFRefreshButtonKVOContext];
         self.observing = NO;
     }
 }

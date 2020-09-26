@@ -1,14 +1,12 @@
-/*!
-    RFSoundService
-    RFUI/Alpha
+/*
+ RFSoundService
+ RFAlpha
  
-    Copyright (c) 2012-2013 BB9z
-    https://github.com/RFUI/Alpha
+ Copyright (c) 2012-2013 BB9z
+ https://github.com/RFUI/Alpha
 
-    The MIT License (MIT)
-    http://www.opensource.org/licenses/mit-license.php
- 
-    Beta
+ The MIT License (MIT)
+ http://www.opensource.org/licenses/mit-license.php
  */
 
 #import <RFKit/RFRuntime.h>
@@ -16,6 +14,7 @@
 #import <MediaPlayer/MediaPlayer.h>
 
 @interface RFSoundService : NSObject
+
 + (instancetype)sharedInstance;
 
 - (BOOL)addSoundWithURL:(NSURL *)soundFileURL identifier:(NSString *)identifier;

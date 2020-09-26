@@ -2,7 +2,7 @@
  RFKVOWrapper
  RFAlpha
  
- Copyright (c) 2015, 2018 BB9z
+ Copyright (c) 2015, 2018, 2020 BB9z
  https://github.com/RFUI/Alpha
  
  The MIT License (MIT)

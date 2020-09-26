@@ -42,7 +42,7 @@ typedef void (^RFPullToFetchIndicatorStatusChangeBlock)(RFTableViewPullToFetchPl
 
 #pragma mark - Status
 
-@property (readonly, getter = isFetching) BOOL fetching;
+@property (readonly, getter = isFetching, nonatomic) BOOL fetching;
 @property (readonly, getter = isHeaderProcessing) BOOL headerProcessing;
 @property (readonly, getter = isFooterProcessing) BOOL footerProcessing;
 
@@ -67,10 +67,10 @@ typedef void (^RFPullToFetchIndicatorStatusChangeBlock)(RFTableViewPullToFetchPl
 //@property RFPullToFetchTableIndicatorLayoutType footerStyle;
 
 @property (nullable) RFPullToFetchIndicatorStatusChangeBlock headerStatusChangeBlock;
-@property (readonly) RFPullToFetchIndicatorStatus headerStatus;
+@property (readonly, nonatomic) RFPullToFetchIndicatorStatus headerStatus;
 
 @property(nullable) RFPullToFetchIndicatorStatusChangeBlock footerStatusChangeBlock;
-@property (readonly) RFPullToFetchIndicatorStatus footerStatus;
+@property (readonly, nonatomic) RFPullToFetchIndicatorStatus footerStatus;
 
 - (void)setNeedsDisplayHeader;
 - (void)setNeedsDisplayFooter;

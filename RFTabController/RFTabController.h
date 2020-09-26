@@ -1,13 +1,11 @@
-/*!
-    RFTabController
+/*
+ RFTabController
 
-    Copyright (c) 2015, 2019 BB9z
-    https://github.com/RFUI/Alpha
-
-    The MIT License (MIT)
-    http://www.opensource.org/licenses/mit-license.php
-
-    TEST
+ Copyright (c) 2015, 2019 BB9z
+ https://github.com/RFUI/Alpha
+ 
+ The MIT License (MIT)
+ http://www.opensource.org/licenses/mit-license.php
  */
 #import <RFInitializing/RFInitializing.h>
 #import <RFKit/RFRuntime.h>

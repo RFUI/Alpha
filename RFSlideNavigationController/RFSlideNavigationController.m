@@ -5,8 +5,8 @@
 @interface RFSlideNavigationController ()
 @property (assign, nonatomic) CGFloat stackViewsWidthSum;
 @property (weak, readwrite, nonatomic) UIScrollView *container;
-@property (strong, nonatomic) NSMutableArray *viewControllers;
-@property (strong, nonatomic) NSMutableArray *viewControllerWidths;
+@property (strong, nonatomic) NSMutableArray<UIViewController *> *viewControllers;
+@property (strong, nonatomic) NSMutableArray<NSNumber *> *viewControllerWidths;
 @end
 
 @implementation RFSlideNavigationController
@@ -116,7 +116,7 @@
     [_viewControllers removeLastObject];
     
 	UIView *viewWillPop = viewControllerWillRemove.view;
-    CGFloat width = [[_viewControllerWidths lastObject] floatValue];
+    CGFloat width = _viewControllerWidths.lastObject.floatValue;
     self.stackViewsWidthSum -= width;
 	
     _rf_sendWillShowDelegete(viewControllerWillShow, animated)
@@ -183,21 +183,11 @@
     if (index < _viewControllers.count) {
         return _viewControllers[index];
     }
-    else
-        return nil;
+    return nil;
 }
 
 - (NSUInteger)indexForViewController:(UIViewController *)viewController {
     return [_viewControllers indexOfObject:viewController];
-}
-
-- (void)willRotateToInterfaceOrientation:(UIInterfaceOrientation)toInterfaceOrientation duration:(NSTimeInterval)duration {
-    doutwork()
-}
-
-#pragma mark UIScrollViewDelegate
-- (void)scrollViewWillBeginDecelerating:(UIScrollView *)scrollView {
-    doutwork()
 }
 
 @end

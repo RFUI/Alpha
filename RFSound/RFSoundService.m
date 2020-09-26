@@ -2,23 +2,18 @@
 #import "RFSoundService.h"
 
 @interface RFSoundService ()
-@property (strong, nonatomic) NSMutableDictionary *soundStack;
-@property (assign, nonatomic) float lastNotZeroVolumn;
-@property (weak, nonatomic) MPMusicPlayerController *applicationMusicPlayer;
+@property NSMutableDictionary<NSString *, NSNumber *> *soundStack;
+@property float lastNotZeroVolumn;
+@property (nonatomic) MPMusicPlayerController *applicationMusicPlayer;
 @end
 
 @implementation RFSoundService
-@dynamic volume, mute;
-@synthesize lastNotZeroVolumn = _lastNotZeroVolumn;
-@synthesize soundStack = _soundStack;
-@synthesize applicationMusicPlayer = _applicationMusicPlayer;
 
-#pragma mark -
 + (instancetype)sharedInstance {
 	static RFSoundService *sharedInstance = nil;
     static dispatch_once_t oncePredicate;
     dispatch_once(&oncePredicate, ^{
-        sharedInstance = [[self alloc] init];
+        sharedInstance = self.new;
     });
 	return sharedInstance;
 }
@@ -48,7 +43,7 @@
 }
 
 - (BOOL)playSound:(NSString *)soundIdentifier {
-    id soundRef = self.soundStack[soundIdentifier];
+    NSNumber *soundRef = self.soundStack[soundIdentifier];
     
     if (!soundRef) {
         return NO;
@@ -64,8 +59,8 @@
 }
 
 - (void)dealloc {
-    for (id soundRefObj in self.soundStack) {
-        AudioServicesDisposeSystemSoundID([soundRefObj intValue]);
+    for (NSNumber *soundRefObj in self.soundStack) {
+        AudioServicesDisposeSystemSoundID(soundRefObj.intValue);
     }
 }
 
@@ -77,6 +72,7 @@
 }
 
 #pragma mark - Volume
+
 + (NSSet *)keyPathsForValuesAffectingVolume {
     RFSoundService *this;
     return [NSSet setWithObject:@keypath(this, applicationMusicPlayer.volume)];

@@ -22,7 +22,7 @@
 #define RFSynthesizeCategoryScalarValueProperty(GETTER, SETTER, TYPE, NUMBER_METHOD) \
     static char _rf_category_##GETTER;\
     - (TYPE)GETTER {\
-        return [objc_getAssociatedObject(self, &_rf_category_##GETTER) NUMBER_METHOD];\
+        return [(NSNumber *)objc_getAssociatedObject(self, &_rf_category_##GETTER) NUMBER_METHOD];\
     }\
     - (void)SETTER:(TYPE)GETTER {\
         objc_setAssociatedObject(self, &_rf_category_##GETTER, @(GETTER), OBJC_ASSOCIATION_ASSIGN);\

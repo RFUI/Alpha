@@ -115,7 +115,7 @@ RFInitializingRootForUIView
 
 - (void)_RFSliderView_setupBuildInGestureRecognizer {
     __block UIPanGestureRecognizer *gr;
-    [self.gestureRecognizers enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop) {
+    [self.gestureRecognizers enumerateObjectsUsingBlock:^(__kindof UIGestureRecognizer *obj, NSUInteger idx, BOOL *stop) {
         if ([obj isKindOfClass:[UIPanGestureRecognizer class]]) {
             gr = obj;
             *stop = YES;

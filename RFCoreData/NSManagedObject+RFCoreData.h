@@ -18,8 +18,10 @@
 // Use class name by default.
 + (NSString *)entityName;
 
+#if __IPHONE_OS_VERSION_MIN_REQUIRED < 100000
 // Create a fecth request based on the class
 + (NSFetchRequest *)fetchRequest;
+#endif
 
 // Find a object with simple key-value pairs. If there are more than one objects match the key-value pairs, only first will returned.
 + (instancetype)objectWithValue:(id)value forKey:(NSString *)key inContext:(NSManagedObjectContext *)context;

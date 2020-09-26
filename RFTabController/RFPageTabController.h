@@ -15,7 +15,7 @@
 /**
  This property don't support KVO.
  */
-@property (readonly) BOOL isTransitioning;
+@property (readonly, nonatomic) BOOL isTransitioning;
 
 /**
  Calling this method does not cause the delegate to receive a RFTabController:didSelectViewController:atIndex: message.

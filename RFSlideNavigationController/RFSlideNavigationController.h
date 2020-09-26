@@ -40,7 +40,7 @@
 /// Scrolling
 //- (void)scrollToViewControllerAtIndex:(NSUInteger)index atScrollPosition:(UITableViewScrollPosition)scrollPosition animated:(BOOL)animated;
 
-@property(nonatomic, assign) id<RFSlideNavigationControllerDelegate> delegate;
+@property (weak, nonatomic) id<RFSlideNavigationControllerDelegate> delegate;
 @end
 
 

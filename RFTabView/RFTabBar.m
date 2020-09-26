@@ -158,7 +158,7 @@ RFInitializingRootForUIView
 }
 
 - (void)setupItemAction:(RFTabBarItem *)item {
-    for (id obj in [item actionsForTarget:self forControlEvent:UIControlEventTouchUpInside]) {
+    for (NSString *obj in [item actionsForTarget:self forControlEvent:UIControlEventTouchUpInside]) {
         if ([obj isEqualToString:NSStringFromSelector(@selector(onTabBarItemTapped:))]) {
             return;
         }

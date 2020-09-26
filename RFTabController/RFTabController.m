@@ -95,8 +95,9 @@ RFInitializingRootForUIViewController
 }
 
 - (id)dataSourceArray:(RFDataSourceArray *)array objectAtIndex:(NSUInteger)index {
-    if (self.dataSource) {
-        return [self.dataSource RFTabController:self viewControllerAtIndex:index];
+    id<RFTabControllerDataSource> ds = self.dataSource;
+    if (ds) {
+        return [ds RFTabController:self viewControllerAtIndex:index];
     }
     return self.viewControllers[index];
 }

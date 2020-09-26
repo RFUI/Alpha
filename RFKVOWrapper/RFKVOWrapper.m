@@ -103,7 +103,7 @@ static const char *RFKVOControllerObjectObserversKey = "RFKVOControllerObjectObs
     observation.callbackBlock = ^(RFKVOController *observation, NSDictionary *changeDictionary) {
         @strongify(boundObject);
         id val = changeDictionary[NSKeyValueChangeNewKey];
-        [boundObject setValue:NormaliseNil(val) forKeyPath:boundObjectKeyPath];
+        [(NSObject *)boundObject setValue:NormaliseNil(val) forKeyPath:boundObjectKeyPath];
     };
 
     if ([observation observe]) return observation;
@@ -131,7 +131,7 @@ static const char *RFKVOControllerObjectObserversKey = "RFKVOControllerObjectObs
         if (bindingUpdateInProgress) return;
         bindingUpdateInProgress = YES;
         id val = changeDictionary[NSKeyValueChangeNewKey];
-        [objectB setValue:NormaliseNil(val) forKeyPath:keypathB];
+        [(NSObject *)objectB setValue:NormaliseNil(val) forKeyPath:keypathB];
         bindingUpdateInProgress = NO;
     };
 
@@ -141,7 +141,7 @@ static const char *RFKVOControllerObjectObserversKey = "RFKVOControllerObjectObs
         if (bindingUpdateInProgress) return;
         bindingUpdateInProgress = YES;
         id val = changeDictionary[NSKeyValueChangeNewKey];
-        [objectA setValue:NormaliseNil(val) forKeyPath:keypathA];
+        [(NSObject *)objectA setValue:NormaliseNil(val) forKeyPath:keypathA];
         bindingUpdateInProgress = NO;
     };
 
@@ -170,7 +170,7 @@ static const char *RFKVOControllerObjectObserversKey = "RFKVOControllerObjectObs
 }
 
 - (void)_prepareObservedObjectAndClass {
-    Class class = [self.observedObject class];
+    Class class = [(NSObject *)self.observedObject class];
 
     @synchronized(RFKVOControllerClassIsSwizzledLockKey) {
         NSNumber *classIsSwizzled = objc_getAssociatedObject(class, RFKVOControllerClassIsSwizzledKey);
@@ -180,7 +180,7 @@ static const char *RFKVOControllerObjectObserversKey = "RFKVOControllerObjectObs
 
         // create the NSHashTable if needed - NSHashTable (when created as below) is bascially an NSMutableSet with weak references (doesn't require ARC)
         if (!objc_getAssociatedObject(self.observedObject, RFKVOControllerObjectObserversKey)) {
-            NSHashTable * observeeObserverTrackingHashTable = [NSHashTable hashTableWithOptions:NSPointerFunctionsStrongMemory];
+            NSHashTable * observeeObserverTrackingHashTable = [NSHashTable weakObjectsHashTable];
             objc_setAssociatedObject(self.observedObject, RFKVOControllerObjectObserversKey, observeeObserverTrackingHashTable, OBJC_ASSOCIATION_RETAIN);
         }
     }
@@ -223,7 +223,7 @@ static const char *RFKVOControllerObjectObserversKey = "RFKVOControllerObjectObs
     // is its own responsibility
     [self _prepareObservedObjectAndClass];
     
-    [self.observedObject addObserver:self forKeyPath:_keyPath options:_options context:NULL];
+    [(NSObject *)self.observedObject addObserver:self forKeyPath:_keyPath options:_options context:NULL];
     
     NSHashTable *observeeObserverTrackingHashTable = objc_getAssociatedObject(self.observedObject, RFKVOControllerObjectObserversKey);
     @synchronized(observeeObserverTrackingHashTable) {
@@ -239,8 +239,8 @@ static const char *RFKVOControllerObjectObserversKey = "RFKVOControllerObjectObs
 
 - (void)_invalidateObservedObject:(id)obj andRemoveTargetAssociations:(BOOL)removeTargetAssociations {
     if (!self.isValid) return;
-    [self setIsValid:NO];
-    [obj removeObserver:self forKeyPath:self.keyPath];
+    self.isValid = NO;
+    [(NSObject *)obj removeObserver:self forKeyPath:self.keyPath];
 
     if (removeTargetAssociations) {
         NSHashTable * observeeObserverTrackingHashTable = objc_getAssociatedObject(obj, RFKVOControllerObjectObserversKey);
@@ -291,8 +291,8 @@ static const char *RFKVOControllerObjectObserversKey = "RFKVOControllerObjectObs
 }
 
 - (BOOL)RFRemoveObserverWithIdentifier:(id)trampoline {
-    if ([trampoline respondsToSelector:@selector(invalidate)]) {
-        [trampoline invalidate];
+    if ([(RFKVOController *)trampoline respondsToSelector:@selector(invalidate)]) {
+        [(RFKVOController *)trampoline invalidate];
         return YES;
     }
     return NO;

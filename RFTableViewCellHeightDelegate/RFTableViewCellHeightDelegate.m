@@ -120,7 +120,7 @@
     BOOL suportCache = [tableView.dataSource respondsToSelector:@selector(tableView:cellReuseIdentifierForRowAtIndexPath:)];
     NSString *cellReuseIdentifier;
     if (suportCache) {
-        cellReuseIdentifier = [(id)tableView.dataSource tableView:tableView cellReuseIdentifierForRowAtIndexPath:indexPath];
+        cellReuseIdentifier = [(id<RFTableViewCellHeightDataSource>)tableView.dataSource tableView:tableView cellReuseIdentifierForRowAtIndexPath:indexPath];
         if (cellReuseIdentifier) {
             cell = [self.offscreenCellCache objectForKey:cellReuseIdentifier];
             [cell prepareForReuse];
@@ -186,7 +186,7 @@
         UITableViewCell *cell = [self tableView:tableView offscreenCellForRowAtIndexPath:indexPath];
         RFAssert(cell, @"Cannot get a cached cell or an new one.");
 
-        [(id)tableView.dataSource tableView:tableView configureCell:cell forIndexPath:indexPath offscreenRendering:YES];
+        [(id<RFTableViewCellHeightDataSource>)tableView.dataSource tableView:tableView configureCell:cell forIndexPath:indexPath offscreenRendering:YES];
         CGFloat height = [self calculateCellHeightWithCell:cell tableView:tableView atIndexPath:indexPath];
         if (self.cellHeightCacheEnabled) {
             [self.cellHeightCache setObject:@(height) forKey:indexPath];

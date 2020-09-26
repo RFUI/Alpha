@@ -106,10 +106,6 @@ Demos: https://github.com/RFUI/RFUI
 
 状态：待评估
 
-### RFSidePanel
-
-状态：停止维护
-
 ### RFSliderView
 
 状态：良好

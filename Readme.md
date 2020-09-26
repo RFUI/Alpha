@@ -62,10 +62,6 @@ Demos: https://github.com/RFUI/RFUI
 
 状态：停止维护
 
-### RFImageCropper
-
-状态：正常，需要改进
-
 ### RFImageGallery
 
 状态：待评估，可能需要重写

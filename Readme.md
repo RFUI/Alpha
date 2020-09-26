@@ -126,6 +126,10 @@ Demos: https://github.com/RFUI/RFUI
 
 状态：待评估
 
+### RFStatusBarNotificationController
+
+状态：停止维护
+
 ### RFSwizzle
 
 状态：正常，核心组件
@@ -134,13 +138,9 @@ Demos: https://github.com/RFUI/RFUI
 
 状态：正常，核心组件
 
-### RFStatusBarNotificationController
+### RFTabController
 
-状态：停止维护
-
-### RFTabView
-
-状态：待评估
+状态：正常
 
 ### RFTableViewAutoFetchDataSource
 
@@ -169,10 +169,6 @@ Core Data 数据获取插件
 ### RFViewApperance
 
 状态：正常
-
-### RFWebView
-
-状态：停止维护
 
 ### RFWindow
 

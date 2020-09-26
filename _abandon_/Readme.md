@@ -1,14 +1,12 @@
 # RFUI Alpha Abandoned Components
 
-## Components Notes
+## 可替换的组件
 
-### RFCheckmarkSelectedTableViewCell
-
-废弃原因：过于简单，复用价值不大。
+其他废弃组件不再额外说明。
 
 ### RFFetchedResultsTableView
 
-请改用 [RFCoreDataAutoFetchTableViewPlugin](../RFCoreDataAutoFetchTableViewPlugin)
+请改用 [RFTableViewAutoFetchDataSource](../RFTableViewAutoFetchDataSource)
 
 ### RFPullToFetchTableView
 
@@ -17,13 +15,3 @@
 ### RFResizableBackgroundImageButton
 
 请改用 [UIButton (RFResizableBackgroundImage)](../RFViewApperance/UIButton+RFResizableBackgroundImage.h)
-
-### RFWebViewController
-
-废弃原因：不够优雅。
-
-## Deleted
-
-* RFImageTimeTunnel
-* RFShare
-* RFUITheme

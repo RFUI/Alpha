@@ -7,7 +7,7 @@ Pod::Spec.new do |ss|
   ss.authors    = { 'BB9z' => 'BB9z@me.com' }
   ss.source     = {
     :git => 'https://github.com/RFUI/Alpha.git',
-    :tag => s.version.to_s
+    :tag => ss.version.to_s
   }
   
   ss.ios.deployment_target = '9.0'

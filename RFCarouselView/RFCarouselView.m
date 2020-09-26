@@ -1,6 +1,6 @@
 
 #import "RFCarouselView.h"
-#import <RFAlpha/RFTimer.h>
+#import "RFTimer.h"
 #import <RFKit/UIView+RFKit.h>
 #import <RFKit/UIView+RFAnimate.h>
 
@@ -62,8 +62,9 @@ RFInitializingRootForUIView
 
 - (void)setIndex:(NSInteger)index {
     _index = index % self.count;
-    if (self.setupContentViewAtIndex && self.contentView) {
-        self.setupContentViewAtIndex(self.index, self.contentView);
+    UIView *content = self.contentView;
+    if (self.setupContentViewAtIndex && content) {
+        self.setupContentViewAtIndex(self.index, content);
     }
 }
 

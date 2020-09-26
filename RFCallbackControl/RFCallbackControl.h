@@ -17,7 +17,7 @@
  */
 @interface RFCallbackControl<__covariant ObjectType>: NSObject
 
-@property (readonly) BOOL hasCallback;
+@property (readonly, nonatomic) BOOL hasCallback;
 @property (nonnull) Class objectClass;
 
 - (nullable ObjectType)addCallbackWithTarget:(nonnull id)target selector:(nonnull SEL)selector refrenceObject:(nonnull id)object;

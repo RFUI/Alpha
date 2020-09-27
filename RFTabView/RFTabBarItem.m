@@ -8,7 +8,11 @@
 }
 
 - (id)reusingCopy {
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wdeprecated-declarations"
+    // No longer maintained, just ignore it
     return [NSKeyedUnarchiver unarchiveObjectWithData:[NSKeyedArchiver archivedDataWithRootObject:self]];
+#pragma clang diagnostic pop
 }
 
 - (void)encodeWithCoder:(NSCoder *)aCoder {

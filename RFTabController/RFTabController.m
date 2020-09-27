@@ -99,7 +99,7 @@ RFInitializingRootForUIViewController
     if (ds) {
         return [ds RFTabController:self viewControllerAtIndex:index];
     }
-    return self.viewControllers[index];
+    return (id)[self.viewControllers rf_objectAtIndex:index];
 }
 
 - (void)setViewControllers:(NSArray *)newViewControllers {

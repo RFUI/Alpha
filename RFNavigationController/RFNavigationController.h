@@ -1,8 +1,8 @@
-/*!
+/*
  RFNavigationController
  RFUI
  
- Copyright (c) 2014-2016, 2018 BB9z
+ Copyright (c) 2014-2016, 2018, 2020 BB9z
  https://github.com/RFUI/Alpha
  
  The MIT License (MIT)
@@ -20,7 +20,6 @@ typedef NSString* RFViewControllerAppearanceAttributeKey NS_STRING_ENUM;
 /**
  
  */
-NS_CLASS_AVAILABLE_IOS(7_0)
 @interface RFNavigationController : UINavigationController <
     RFInitializing,
     UINavigationControllerDelegate
@@ -85,21 +84,6 @@ NS_CLASS_AVAILABLE_IOS(7_0)
  */
 @property IBInspectable BOOL bottomBarFadeAnimation;
 
-#pragma mark - Status Bar
-
-/**
- If you want modify staus bar manually through UIApplication, you need set UIViewControllerBasedStatusBarAppearance to NO in application’s info.plist.
- 
- Set YES will let the reciver ask current view controller for status bar appearance and then update.
-
- Default No.
- 
- iOS introduce a build-in mechanism after iOS 7 and works fine. This leaves for legacy usages and will be removed at year 2019.
- 
- @bug It works fine at most of time, but using it may lead the navigation bar to an abnormal status and can't be restored. It happens rarely and randomly, and can not be reproduced.
- */
-@property IBInspectable BOOL handelViewControllerBasedStatusBarAppearance DEPRECATED_ATTRIBUTE;
-
 #pragma mark - Delegate
 
 - (void)setDelegate:(nullable id<UINavigationControllerDelegate>)delegate __attribute__((unavailable("You can’t change RFNavigationController’s delegtae")));
@@ -119,13 +103,6 @@ NS_CLASS_AVAILABLE_IOS(7_0)
 
 @protocol RFNavigationBehaving <NSObject>
 @optional
-
-/**
- Ask current view controller whether should pop or not when user tap the back button.
-
- @return Return NO to cancel pop.
- */
-- (BOOL)shouldPopOnBackButtonTappedForNavigationController:(nonnull RFNavigationController *)navigation DEPRECATED_ATTRIBUTE;
 
 /**
  Appearance attributes of current view controller.
@@ -181,23 +158,6 @@ UIKIT_EXTERN RFViewControllerAppearanceAttributeKey const RFViewControllerPrefer
 /// The value of this attribute is an UIImage object
 /// indicating the navigation bar backgroundImage.
 UIKIT_EXTERN RFViewControllerAppearanceAttributeKey const RFViewControllerPreferredNavigationBarBackgroundImageAttribute;
-
-UIKIT_EXTERN RFViewControllerAppearanceAttributeKey const RFViewControllerPreferredNavigationBackImageAttributes DEPRECATED_MSG_ATTRIBUTE("Use .preferredNavigationBarBackgroundImageAttribute instead");
-
-/// Status bar appearance attributes are deprecated.
-/// @see handelViewControllerBasedStatusBarAppearance
-
-// The value of this attribute is an NSNumber object containing a boolean value
-// indicating the status bar should to be hidden or shown.
-UIKIT_EXTERN RFViewControllerAppearanceAttributeKey const RFViewControllerPrefersStatusBarHiddenAttribute DEPRECATED_ATTRIBUTE;
-
-// The value of this attribute is an NSNumber object containing an UIStatusBarAnimation value
-// indicating the animation style to use for hiding and showing the status bar for the view controller.
-UIKIT_EXTERN RFViewControllerAppearanceAttributeKey const RFViewControllerPreferredStatusBarUpdateAnimationAttribute DEPRECATED_ATTRIBUTE;
-
-// The value of this attribute is an NSNumber object containing an UIStatusBarStyle value
-// indicating the preferred status bar style for the view controller.
-UIKIT_EXTERN RFViewControllerAppearanceAttributeKey const RFViewControllerPreferredStatusBarStyleAttribute DEPRECATED_ATTRIBUTE;
 
 NS_ASSUME_NONNULL_END
 

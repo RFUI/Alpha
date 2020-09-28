@@ -20,7 +20,7 @@
     SystemSoundID sound;
     OSStatus result = AudioServicesCreateSystemSoundID((__bridge CFURLRef)soundFileURL, &sound);
     if (result != kAudioServicesNoError) {
-        dout_error(@"添加声音失败 %d", result)
+        dout_error(@"添加声音失败 %d", (int)result)
         return NO;
     }
     [self.soundStack setObject:@(sound) forKey:identifier];

@@ -47,10 +47,9 @@
     if (self.realTimer) return;
 
     NSTimer *tm = [NSTimer timerWithTimeInterval:self.timeInterval target:self selector:@selector(scheduledFire) userInfo:nil repeats:self.repeating];
-    if ([tm respondsToSelector:@selector(setTolerance:)]) {
+    if (@available(iOS 7.0, macOS 10.9, *)) {
         tm.tolerance = self.tolerance;
     }
-
     NSRunLoop *runLoop = self.runLoop?: [NSRunLoop mainRunLoop];
     NSString *mode = self.runLoopMode?: NSDefaultRunLoopMode;
     [runLoop addTimer:tm forMode:mode];

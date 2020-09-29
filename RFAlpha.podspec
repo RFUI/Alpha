@@ -3,7 +3,7 @@ Pod::Spec.new do |ss|
   ss.version    = '0.7.0'
   ss.summary    = 'RFUI: Alpha components.'
   ss.homepage   = 'https://github.com/RFUI/Alpha'
-  ss.license    = { :type => 'MIT' }
+  ss.license    = { :type => 'MIT', :file => 'LICENSE' }
   ss.authors    = { 'BB9z' => 'BB9z@me.com' }
   ss.source     = {
     :git => 'https://github.com/RFUI/Alpha.git',

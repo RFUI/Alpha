@@ -3,6 +3,13 @@
 
 @implementation RFRoundingCornersView
 
+- (CGRect)_cornerRadius {
+    return [NSValue valueWithUIEdgeInsets:self.cornerRadius].CGRectValue;
+}
+- (void)set_cornerRadius:(CGRect)_cornerRadius {
+    self.cornerRadius = [NSValue valueWithCGRect:_cornerRadius].UIEdgeInsetsValue;
+}
+
 - (void)drawRect:(CGRect)rect {
 
     UIEdgeInsets cr = self.cornerRadius;

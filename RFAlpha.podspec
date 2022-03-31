@@ -141,7 +141,6 @@ Pod::Spec.new do |ss|
     s.dependency 'RFKit/Category/NSError'
     s.dependency 'RFKit/Category/UIView'
     s.dependency 'RFKit/Category/UIView+RFAnimate'
-    s.dependency 'RFKit/Category/UIViewController+RFInterfaceOrientation'
     s.dependency 'RFAlpha/RFTransitioning/NavigationControllerTransition'
     s.source_files = 'RFNavigationController/*.{h,m}'
     s.public_header_files = 'RFNavigationController/*.h'

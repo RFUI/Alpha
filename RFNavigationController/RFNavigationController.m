@@ -5,7 +5,6 @@
 #import <RFKit/NSError+RFKit.h>
 #import <RFKit/UIView+RFAnimate.h>
 #import <RFKit/UIView+RFKit.h>
-#import <RFKit/UIViewController+RFInterfaceOrientation.h>
 
 @interface RFNavigationBottomBar : UIView
 @end
@@ -24,7 +23,6 @@
 @end
 
 @implementation RFNavigationController
-RFUIInterfaceOrientationSupportNavigation
 RFInitializingRootForUIViewController
 
 - (void)onInit {
@@ -69,6 +67,14 @@ RFInitializingRootForUIViewController
 - (void)viewWillLayoutSubviews {
     [super viewWillLayoutSubviews];
     [self _RFNavigationController_updateBottomBarLayoutIfNeeded];
+}
+
+- (BOOL)shouldAutorotate {
+    return self.topViewController.shouldAutorotate;
+}
+
+- (UIInterfaceOrientationMask)supportedInterfaceOrientations {
+    return self.topViewController.supportedInterfaceOrientations;
 }
 
 #pragma mark - Bottom bar
@@ -280,7 +286,16 @@ static bool rf_isNull(id value) {
         }
     }
     if ((value = attributes[RFViewControllerPreferredNavigationBarTintColorAttribute])) {
-        self.navigationBar.barTintColor = rf_isNull(value)? nil : value;
+        UIColor *color = rf_isNull(value)? nil : value;
+        self.navigationBar.barTintColor = color;
+        if (@available(iOS 13.0, *)) {
+            self.navigationBar.standardAppearance.backgroundColor = color;
+            self.navigationBar.compactAppearance.backgroundColor = color;
+            self.navigationBar.scrollEdgeAppearance.backgroundColor = color;
+        }
+        if (@available(iOS 15.0, *)) {
+            self.navigationBar.compactScrollEdgeAppearance.backgroundColor = color;
+        }
     }
     if ((value = attributes[RFViewControllerPreferredNavigationBarItemColorAttribute])) {
         self.navigationBar.tintColor = rf_isNull(value)? nil : value;;

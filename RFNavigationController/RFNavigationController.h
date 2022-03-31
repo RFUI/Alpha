@@ -2,7 +2,7 @@
  RFNavigationController
  RFUI
  
- Copyright (c) 2014-2016, 2018, 2020 BB9z
+ Copyright (c) 2014-2016, 2018, 2020, 2022 BB9z
  https://github.com/RFUI/Alpha
  
  The MIT License (MIT)

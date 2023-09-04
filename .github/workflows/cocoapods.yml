@@ -7,7 +7,7 @@ jobs:
     if: ${{ startsWith(github.ref, 'refs/heads') }}
     runs-on: macos-latest
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
       - name: Lint the podspec
         run: |
           pod lib lint --fail-fast --allow-warnings
@@ -18,7 +18,7 @@ jobs:
     env:
       COCOAPODS_TRUNK_TOKEN: ${{ secrets.COCOAPODS_TRUNK_TOKEN }}
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
       - name: Release the podspec
         run: |
           pod trunk push "RFAlpha.podspec"
